@@ -1059,6 +1059,33 @@ Route::group(['middleware' => 'auth'], function () {
             Route::resource('project-ratings', 'ClientProjectRatingController');
         });
 
+        Route::resource('task', 'ClientAllTasksController', ['only' => ['edit', 'update', 'index']]);
+
+        Route::group(
+            ['prefix' => 'task'], function () {
+
+            Route::get('all-tasks/dependent-tasks/{projectId}/{taskId?}', ['uses' => 'ClientAllTasksController@dependentTaskLists'])->name('all-tasks.dependent-tasks');
+            Route::post('all-tasks/data/{startDate?}/{endDate?}/{hideCompleted?}/{projectId?}', ['uses' => 'ClientAllTasksController@data'])->name('all-tasks.data');
+            Route::get('all-tasks/clients/{projectId}', ['uses' => 'ClientAllTasksController@clienwtsList'])->name('all-tasks.clients');
+            Route::get('all-tasks/ajaxCreate/{columnId?}', ['uses' => 'ClientAllTasksController@ajaxCreate'])->name('all-tasks.ajaxCreate');
+            Route::get('all-tasks/reminder/{taskid}', ['uses' => 'ClientAllTasksController@remindForTask'])->name('all-tasks.reminder');
+            Route::get('all-tasks/history/{taskid}', ['uses' => 'ClientAllTasksController@history'])->name('all-tasks.history');
+            Route::get('all-tasks/files/{taskid}', ['uses' => 'ClientAllTasksController@showFiles'])->name('all-tasks.show-files');
+            Route::get('all-tasks/pinned-task', ['uses' => 'ClientAllTasksController@pinnedItem'])->name('all-tasks.pinned-task');
+            Route::resource('all-tasks', 'ClientAllTasksController');
+
+            // taskboard resource
+            Route::post('taskboard/updateIndex', ['as' => 'taskboard.updateIndex', 'uses' => 'ClientAllTaskboardController@updateIndex']);
+            Route::resource('taskboard', 'ClientTaskboardController');
+
+            // task calendar routes
+            Route::resource('task-calendar', 'ClientCalendarController');
+
+            Route::get('task-files/download/{id}', ['uses' => 'TaskFilesController@download'])->name('task-files.download');
+            Route::resource('task-files', 'TaskFilesController');
+
+        });
+
         //region Products Routes
         Route::get('products/data', ['uses' => 'ClientProductController@data'])->name('products.data');
         Route::get('products/update-item', ['uses' => 'ClientProductController@addItems'])->name('products.update-item');

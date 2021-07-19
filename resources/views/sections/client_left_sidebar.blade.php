@@ -117,6 +117,18 @@
             @if(in_array('projects',$modules))
                 <li><a href="{{ route('client.projects.index') }}" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu">@lang('app.menu.projects') </span></a> </li>
             @endif
+
+
+            @if(in_array('tasks',$modules))
+            <li><a href="{{ route('client.task.index') }}" class="waves-effect"><i class="fa fa-tasks fa-fw"></i> <span class="hide-menu"> @lang('app.menu.tasks') <span class="fa arrow"></span> </span></a>
+                <ul class="nav nav-second-level">
+                    <li><a href="{{ route('client.all-tasks.index') }}">@lang('app.menu.tasks')</a></li>
+                    <li class="hidden-sm hidden-xs"><a href="{{ route('client.taskboard.index') }}">@lang('modules.tasks.taskBoard')</a></li>
+                    <li><a href="{{ route('client.task-calendar.index') }}">@lang('app.menu.taskCalendar')</a></li>
+                </ul>
+            </li>
+            @endif
+
             @if(in_array('product',$modules))
                 <li><a href="{{ route('client.products.index') }}" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu">@lang('app.menu.products') </span></a> </li>
             @endif
