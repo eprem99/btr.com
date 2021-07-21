@@ -55,7 +55,7 @@ class ClientAllTasksController extends ClientBaseController
         $this->startDate = Carbon::today()->subDays(15)->format($this->global->date_format);
         $this->endDate = Carbon::today()->addDays(15)->format($this->global->date_format);
 
-        return view('member.all-tasks.index', $this->data);
+        return view('client.all-tasks.index', $this->data);
     }
 
     public function data(Request $request, $startDate = null, $endDate = null, $hideCompleted = null, $projectId = null)
@@ -70,7 +70,7 @@ class ClientAllTasksController extends ClientBaseController
 
         $tasks = Task::leftJoin('projects', 'projects.id', '=', 'tasks.project_id')
             ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
-            ->join('users as member', 'task_users.user_id', '=', 'member.id')
+            ->join('users as client', 'task_users.user_id', '=', 'client.id')
             ->leftJoin('users as creator_user', 'creator_user.id', '=', 'tasks.created_by')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
             ->selectRaw('tasks.id, projects.project_name, tasks.heading, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
@@ -139,7 +139,7 @@ class ClientAllTasksController extends ClientBaseController
                 $action = '';
 
                 if ($this->user->can('edit_tasks') || ($this->global->task_self == 'yes' && $this->user->id == $row->created_by_id)) {
-                    $action .= '<a href="' . route('member.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
+                    $action .= '<a href="' . route('client.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
                       data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
                 }
 
@@ -171,9 +171,9 @@ class ClientAllTasksController extends ClientBaseController
             })
             ->editColumn('users', function ($row) {
                 $members = '';
-                foreach ($row->users as $member) {
-                    $members .= '<a href="' . route('admin.employees.show', [$member->id]) . '">';
-                    $members .= '<img data-toggle="tooltip" data-original-title="' . ucwords($member->name) . '" src="' . $member->image_url . '"
+                foreach ($row->users as $client) {
+                    $members .= '<a href="' . route('admin.employees.show', [$client->id]) . '">';
+                    $members .= '<img data-toggle="tooltip" data-original-title="' . ucwords($client->name) . '" src="' . $client->image_url . '"
                     alt="user" class="img-circle" width="25" height="25"> ';
                     $members .= '</a>';
                 }
@@ -211,7 +211,7 @@ class ClientAllTasksController extends ClientBaseController
                 if (is_null($row->project_id)) {
                     return "";
                 }
-                return '<a href="' . route('member.projects.show', $row->project_id) . '">' . ucfirst($row->project_name) . '</a>';
+                return '<a href="' . route('client.projects.show', $row->project_id) . '">' . ucfirst($row->project_name) . '</a>';
             })
             ->rawColumns(['board_column', 'action', 'project_name', 'created_by', 'due_date', 'users', 'heading'])
             ->removeColumn('project_id')
@@ -261,11 +261,12 @@ class ClientAllTasksController extends ClientBaseController
             $this->allTasks = [];
         }
 
-        return view('member.all-tasks.edit', $this->data);
+        return view('client.all-tasks.edit', $this->data);
     }
 
     public function update(StoreTask $request, $id)
     {
+
         $task = Task::findOrFail($id);
         $oldStatus = TaskboardColumn::findOrFail($task->board_column_id);
 
@@ -316,7 +317,7 @@ class ClientAllTasksController extends ClientBaseController
             $this->calculateProjectProgress($request->project_id);
         }
         return Reply::dataOnly(['taskID' => $task->id]);
-        //        return Reply::redirect(route('member.all-tasks.index'), __('messages.taskUpdatedSuccessfully'));
+        //        return Reply::redirect(route('client.all-tasks.index'), __('messages.taskUpdatedSuccessfully'));
     }
 
     public function destroy(Request $request, $id)
@@ -353,9 +354,12 @@ class ClientAllTasksController extends ClientBaseController
             $this->projects = Project::allProjects();
         }
 
-        $this->employees = User::allEmployees();
+       // $this->employees = User::allEmployees();
+        $this->clients = User::allClients();
+        dd($this->clients);
         $this->categories = TaskCategory::all();
         $this->taskLabels = TaskLabelList::all();
+
         $completedTaskColumn = TaskboardColumn::where('slug', '=', 'completed')->first();
         if ($completedTaskColumn) {
             $this->allTasks = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')->where('board_column_id', '<>', $completedTaskColumn->id)->select('tasks.*');
@@ -369,7 +373,7 @@ class ClientAllTasksController extends ClientBaseController
             $this->allTasks = [];
         }
 
-        return view('member.all-tasks.create', $this->data);
+        return view('client.all-tasks.create', $this->data);
     }
 
     public function membersList($projectId)
@@ -379,7 +383,7 @@ class ClientAllTasksController extends ClientBaseController
         } else {
             $this->members = ProjectClient::all();
         }
-        $list = view('member.all-tasks.members-list', $this->data)->render();
+        $list = view('client.all-tasks.members-list', $this->data)->render();
         return Reply::dataOnly(['html' => $list]);
     }
 
@@ -552,18 +556,18 @@ class ClientAllTasksController extends ClientBaseController
         }
 
         if ($request->board_column_id) {
-            return Reply::redirect(route('member.taskboard.index'), __('messages.taskCreatedSuccessfully'));
+            return Reply::redirect(route('client.taskboard.index'), __('messages.taskCreatedSuccessfully'));
         }
 
         return Reply::dataOnly(['taskID' => $task->id]);
 
-        //        return Reply::redirect(route('member.all-tasks.index'), __('messages.taskCreatedSuccessfully'));
+        //        return Reply::redirect(route('client.all-tasks.index'), __('messages.taskCreatedSuccessfully'));
     }
 
     public function showFiles($id)
     {
         $this->taskFiles = TaskFile::where('task_id', $id)->get();
-        return view('member.all-tasks.ajax-file-list', $this->data);
+        return view('client.all-tasks.ajax-file-list', $this->data);
     }
 
     public function remindForTask($taskID)
@@ -602,7 +606,7 @@ class ClientAllTasksController extends ClientBaseController
             ->orderBy('users.name')
             ->get();
             
-        $view = view('member.all-tasks.show', $this->data)->render();
+        $view = view('client.all-tasks.show', $this->data)->render();
         return Reply::dataOnly(['status' => 'success', 'view' => $view]);
     }
 
@@ -636,7 +640,7 @@ class ClientAllTasksController extends ClientBaseController
             $this->allTasks = [];
         }
 
-        $list = view('member.tasks.dependent-task-list', $this->data)->render();
+        $list = view('client.tasks.dependent-task-list', $this->data)->render();
         return Reply::dataOnly(['html' => $list]);
     }
 
@@ -657,7 +661,7 @@ class ClientAllTasksController extends ClientBaseController
             ->select('tasks.id', 'heading')
             ->get();
 
-        return view('member.tasks.pinned-task', $this->data);
+        return view('client.tasks.pinned-task', $this->data);
     }
 
     public function ajaxCreate($columnId)
@@ -688,6 +692,6 @@ class ClientAllTasksController extends ClientBaseController
             $this->allTasks = [];
         }
 
-        return view('member.all-tasks.ajax_create', $this->data);
+        return view('client.all-tasks.ajax_create', $this->data);
     }
 }

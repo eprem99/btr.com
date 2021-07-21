@@ -117,10 +117,10 @@ class ClientTaskboardController extends ClientBaseController
             $this->startDate = $startDate;
             $this->endDate = $endDate;
 
-            $view = view('member.taskboard.board_data', $this->data)->render();
+            $view = view('client.taskboard.board_data', $this->data)->render();
             return Reply::dataOnly(['view' => $view]);
         }
-        return view('member.taskboard.index', $this->data);
+        return view('client.taskboard.index', $this->data);
     }
 
     /**
@@ -130,7 +130,7 @@ class ClientTaskboardController extends ClientBaseController
      */
     public function create()
     {
-        return view('member.taskboard.create', $this->data);
+        return view('client.taskboard.create', $this->data);
     }
 
     /**
@@ -149,7 +149,7 @@ class ClientTaskboardController extends ClientBaseController
         $board->priority = ($maxPriority + 1);
         $board->save();
 
-        return Reply::redirect(route('member.taskboard.index'), __('messages.boardColumnSaved'));
+        return Reply::redirect(route('client.taskboard.index'), __('messages.boardColumnSaved'));
     }
 
     /**
@@ -173,7 +173,7 @@ class ClientTaskboardController extends ClientBaseController
     {
         $this->boardColumn = TaskboardColumn::findOrFail($id);
         $this->maxPriority = TaskboardColumn::max('priority');
-        $view =  view('member.taskboard.edit', $this->data)->render();
+        $view =  view('client.taskboard.edit', $this->data)->render();
         return Reply::dataOnly(['status' => 'success', 'view' => $view]);
     }
 
@@ -221,7 +221,7 @@ class ClientTaskboardController extends ClientBaseController
         $board->priority = $request->priority;
         $board->save();
 
-        return Reply::redirect(route('member.taskboard.index'), __('messages.boardColumnSaved'));
+        return Reply::redirect(route('client.taskboard.index'), __('messages.boardColumnSaved'));
     }
 
     /**

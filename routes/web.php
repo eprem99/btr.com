@@ -403,7 +403,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('invoices/{id}', ['uses' => 'ManageClientsController@showInvoices'])->name('clients.invoices');
             Route::get('payments/{id}', ['uses' => 'ManageClientsController@showPayments'])->name('clients.payments');
 
-            Route::get('contacts/data/{id}', ['uses' => 'ClientContactController@data'])->name('contacts.data');
+           Route::get('contacts/data/{id}', ['uses' => 'ClientContactController@data'])->name('contacts.data');
             Route::resource('contacts', 'ClientContactController');
         });
 
@@ -1033,6 +1033,7 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::resource('project-members', 'ClientProjectMembersController');
 
+            Route::post('tasks/change-status', ['uses' => 'ClientTasksController@changeStatus'])->name('tasks.changeStatus');
             Route::post('tasks/data/{projectId?}', ['uses' => 'ClientTasksController@data'])->name('tasks.data');
             Route::get('tasks/ajax-edit/{taskId?}', ['uses' => 'ClientTasksController@ajaxEdit'])->name('tasks.ajax-edit');
             Route::get('tasks/check-task/{taskID}', ['uses' => 'ClientTasksController@checkTask'])->name('tasks.checkTask');
@@ -1059,11 +1060,11 @@ Route::group(['middleware' => 'auth'], function () {
             Route::resource('project-ratings', 'ClientProjectRatingController');
         });
 
-        Route::resource('task', 'ClientAllTasksController', ['only' => ['edit', 'update', 'index']]);
+        Route::resource('task', 'ClientAllTasksController', ['only' => ['edit', 'update', 'index', 'create']]);
 
         Route::group(
             ['prefix' => 'task'], function () {
-
+            
             Route::get('all-tasks/dependent-tasks/{projectId}/{taskId?}', ['uses' => 'ClientAllTasksController@dependentTaskLists'])->name('all-tasks.dependent-tasks');
             Route::post('all-tasks/data/{startDate?}/{endDate?}/{hideCompleted?}/{projectId?}', ['uses' => 'ClientAllTasksController@data'])->name('all-tasks.data');
             Route::get('all-tasks/clients/{projectId}', ['uses' => 'ClientAllTasksController@clienwtsList'])->name('all-tasks.clients');
@@ -1073,6 +1074,10 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('all-tasks/files/{taskid}', ['uses' => 'ClientAllTasksController@showFiles'])->name('all-tasks.show-files');
             Route::get('all-tasks/pinned-task', ['uses' => 'ClientAllTasksController@pinnedItem'])->name('all-tasks.pinned-task');
             Route::resource('all-tasks', 'ClientAllTasksController');
+
+            Route::post('taskCategory/store-cat', ['uses' => 'ClientTaskCategoryController@storeCat'])->name('taskCategory.store-cat');
+            Route::get('taskCategory/create-cat', ['uses' => 'ClientTaskCategoryController@createCat'])->name('taskCategory.create-cat');
+            Route::resource('taskCategory', 'ClientTaskCategoryController');
 
             // taskboard resource
             Route::post('taskboard/updateIndex', ['as' => 'taskboard.updateIndex', 'uses' => 'ClientAllTaskboardController@updateIndex']);

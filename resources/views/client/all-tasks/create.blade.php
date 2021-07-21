@@ -1,4 +1,4 @@
-@extends('layouts.member-app')
+@extends('layouts.client-app')
 
 @section('page-title')
     <div class="row bg-title">
@@ -10,8 +10,8 @@
         <!-- .breadcrumb -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
             <ol class="breadcrumb">
-                <li><a href="{{ route('member.dashboard') }}">@lang('app.menu.home')</a></li>
-                <li><a href="{{ route('member.all-tasks.index') }}">@lang($pageTitle)</a></li>
+                <li><a href="{{ route('admin.dashboard') }}">@lang('app.menu.home')</a></li>
+                <li><a href="{{ route('client.all-tasks.index') }}">@lang($pageTitle)</a></li>
                 <li class="active">@lang('app.addNew')</li>
             </ol>
         </div>
@@ -55,11 +55,16 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label">@lang('modules.tasks.taskCategory')
+                                            <a href="javascript:;"
+                                               id="createTaskCategory"
+                                               class="btn btn-xs btn-outline btn-success">
+                                                <i class="fa fa-plus"></i> @lang('modules.taskCategory.addTaskCategory')
+                                            </a>
                                         </label>
-                                        <select class="selectpicker form-control" name="category_id" id="category_id"
+                                        <select class="select2 form-control" name="category_id" id="category_id"
                                                 data-style="form-control">
                                             @forelse($categories as $category)
                                                 <option value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
@@ -308,6 +313,29 @@
 
 @endsection
 
+
+    {{--Ajax Modal--}}
+    <div class="modal fade bs-modal-md in" id="taskCategoryModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" id="modal-data-application">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <span class="caption-subject font-red-sunglo bold uppercase" id="modelHeading"></span>
+                </div>
+                <div class="modal-body">
+                    Loading...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn blue">Save changes</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->.
+    </div>
+    {{--Ajax Modal Ends--}}
+
 @push('footer-script')
 <script src="{{ asset('plugins/bower_components/custom-select/custom-select.min.js') }}"></script>
 <script src="{{ asset('plugins/bower_components/bootstrap-select/bootstrap-select.min.js') }}"></script>
@@ -323,7 +351,7 @@
     Dropzone.autoDiscover = false;
     //Dropzone class
     myDropzone = new Dropzone("div#file-upload-dropzone", {
-        url: "{{ route('member.task-files.store') }}",
+        url: "{{ route('client.task-files.store') }}",
         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
         paramName: "file",
         maxFilesize: 10,
@@ -347,14 +375,14 @@
     myDropzone.on('completemultiple', function () {
         var msgs = "@lang('messages.taskCreatedSuccessfully')";
         $.showToastr(msgs, 'success');
-        window.location.href = '{{ route('member.all-tasks.index') }}'
+        window.location.href = '{{ route('client.all-tasks.index') }}'
 
     });
 
     //    update task
     $('#store-task').click(function () {
         $.easyAjax({
-            url: '{{route('member.all-tasks.store')}}',
+            url: '{{route('client.all-tasks.store')}}',
             container: '#storeTask',
             type: "POST",
             data: $('#storeTask').serialize(),
@@ -367,7 +395,7 @@
                 else{
                     var msgs = "@lang('messages.taskCreatedSuccessfully')";
                     $.showToastr(msgs, 'success');
-                    window.location.href = '{{ route('member.all-tasks.index') }}'
+                    window.location.href = '{{ route('client.all-tasks.index') }}'
                 }
             }
         })
@@ -396,7 +424,7 @@
 
     $('#project_id').change(function () {
         var id = $(this).val();
-        var url = '{{route('member.all-tasks.members', ':id')}}';
+        var url = '{{route('client.all-tasks.clients', ':id')}}';
         url = url.replace(':id', id);
 
         $.easyAjax({
@@ -410,7 +438,7 @@
         })
 
         // For getting dependent task
-        var dependentTaskUrl = '{{route('member.all-tasks.dependent-tasks', ':id')}}';
+        var dependentTaskUrl = '{{route('client.all-tasks.dependent-tasks', ':id')}}';
         dependentTaskUrl = dependentTaskUrl.replace(':id', id);
         $.easyAjax({
             url: dependentTaskUrl,
@@ -444,7 +472,11 @@
             $('#repeat-fields').hide();
         }
     })
-
+    $('#createTaskCategory').click(function(){
+        var url = '{{ route('client.taskCategory.create-cat')}}';
+        $('#modelHeading').html("@lang('modules.taskCategory.manageTaskCategory')");
+        $.ajaxModal('#taskCategoryModal', url);
+    })
     $('#dependent-task').change(function () {
         if($(this).is(':checked')){
             $('#dependent-fields').show();

@@ -1,4 +1,4 @@
-@extends('layouts.member-app')
+@extends('layouts.client-app')
 
 @section('page-title')
     <div class="row bg-title">
@@ -12,12 +12,8 @@
             <a href="javascript:;"  class="btn btn-outline btn-info btn-sm pinnedItem">@lang('app.pinnedTask') <i class="icon-pin icon-2"></i></a>
 
         @if($user->can('add_tasks') || $global->task_self == 'yes')
-                <a href="{{ route('member.all-tasks.create') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.tasks.newTask') <i class="fa fa-plus" aria-hidden="true"></i></a>
+                <a href="{{ route('client.all-tasks.create') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.tasks.newTask') <i class="fa fa-plus" aria-hidden="true"></i></a>
             @endif
-            <ol class="breadcrumb">
-                <li><a href="{{ route('member.dashboard') }}">@lang('app.menu.home')</a></li>
-                <li class="active">@lang($pageTitle)</li>
-            </ol>
         </div>
         <!-- /.breadcrumb -->
     </div>
@@ -287,7 +283,7 @@
             var hideCompleted = '0';
         }
 
-        var url = '{!!  route('member.all-tasks.data') !!}?&assignedBY='+ assignedBY+'&assignedTo='+ assignedTo+'&status='+ status+'&billable='+billable+'&_token={{ csrf_token() }}';
+        var url = '{!!  route('client.all-tasks.data') !!}?&assignedBY='+ assignedBY+'&assignedTo='+ assignedTo+'&status='+ status+'&billable='+billable+'&_token={{ csrf_token() }}';
 
         url = url.replace(':startDate', startDate);
         url = url.replace(':endDate', endDate);
@@ -323,7 +319,7 @@
                 { data: 'id', name: 'id' },
                 {data: 'heading', name: 'heading'},
                 {data: 'project_name', name: 'projects.project_name'},
-                {data: 'users', name: 'member.name'},
+                {data: 'users', name: 'client.name'},
                 // {data: 'created_by', name: 'creator_user.name', width: '15%'},
                 {data: 'due_date', name: 'due_date'},
                 {data: 'board_column', name: 'board_column', searchable: false},
@@ -377,7 +373,7 @@
         }).then(function (isConfirm) {
             if (isConfirm == 'confirm' || isConfirm == 'recurring') {
 
-                var url = "{{ route('member.all-tasks.destroy',':id') }}";
+                var url = "{{ route('client.all-tasks.destroy',':id') }}";
                 url = url.replace(':id', id);
 
                 var token = "{{ csrf_token() }}";
@@ -407,7 +403,7 @@
         $(".right-sidebar").slideDown(50).addClass("shw-rside");
 
         var id = $(this).data('task-id');
-        var url = "{{ route('member.all-tasks.show',':id') }}";
+        var url = "{{ route('client.all-tasks.show',':id') }}";
         url = url.replace(':id', id);
 
         $.easyAjax({
@@ -422,7 +418,7 @@
     })
 
     $('#tasks-table').on('click', '.change-status', function () {
-        var url = "{{route('member.tasks.changeStatus')}}";
+        var url = "{{route('client.tasks.changeStatus')}}";
         var token = "{{ csrf_token() }}";
         var id =  $(this).data('task-id');
         var status =  $(this).data('status');
@@ -442,7 +438,7 @@
 
     showTable();
     $('.pinnedItem').click(function(){
-        var url = '{{ route('member.all-tasks.pinned-task')}}';
+        var url = '{{ route('client.all-tasks.pinned-task')}}';
         $('#modelHeading').html('Pinned Task');
         $.ajaxModal('#editTimeLogModal',url);
     })

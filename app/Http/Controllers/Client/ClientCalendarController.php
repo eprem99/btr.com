@@ -31,12 +31,12 @@ class ClientCalendarController extends ClientBaseController
         }
         $this->tasks =  $this->tasks->groupBy('tasks.id');
         $this->tasks =  $this->tasks->get();
-        return view('member.task-calendar.index', $this->data);
+        return view('client.task-calendar.index', $this->data);
     }
 
     public function show($id)
     {
         $this->task = Task::findOrFail($id);
-        return view('member.task-calendar.show', $this->data);
+        return view('client.task-calendar.show', $this->data);
     }
 }

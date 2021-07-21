@@ -1,4 +1,4 @@
-@extends('layouts.member-app')
+@extends('layouts.client-app')
 
 @section('page-title')
     <div class="row bg-title">
@@ -10,8 +10,7 @@
         <!-- .breadcrumb -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
             <ol class="breadcrumb">
-                <li><a href="{{ route('member.dashboard') }}">@lang('app.menu.home')</a></li>
-                <li><a href="{{ route('member.all-tasks.index') }}">@lang($pageTitle)</a></li>
+                <li><a href="{{ route('client.all-tasks.index') }}">@lang($pageTitle)</a></li>
                 <li class="active">@lang('app.edit')</li>
             </ol>
         </div>
@@ -230,13 +229,13 @@
 
                                                 @endforeach
                                             @else
-                                                @foreach($task->project->members as $member)
+                                                @foreach($task->project->clients as $client)
                                                     @php
                                                         $selected = '';
                                                     @endphp
 
                                                     @foreach ($task->users as $item)
-                                                        @if($item->id == $member->user->id)
+                                                        @if($item->id == $client->user->id)
                                                             @php
                                                                 $selected = 'selected';
                                                             @endphp
@@ -245,7 +244,7 @@
                                                     @endforeach
 
                                                     <option {{ $selected }}
-                                                        value="{{ $member->user->id }}">{{ $member->user->name }}</option>
+                                                        value="{{ $client->user->id }}">{{ $client->user->name }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -336,7 +335,7 @@
 
                                                     @if(is_null($file->external_link))
                                                         &nbsp;&nbsp;
-                                                        <a href="{{ route('member.task-files.download', $file->id) }}"
+                                                        <a href="{{ route('client.task-files.download', $file->id) }}"
                                                            data-toggle="tooltip" data-original-title="Download"
                                                            class="btn btn-inverse btn-circle"><i
                                                                     class="fa fa-download"></i></a>
@@ -396,7 +395,7 @@
     Dropzone.autoDiscover = false;
     //Dropzone class
     myDropzone = new Dropzone("div#file-upload-dropzone", {
-        url: "{{ route('member.task-files.store') }}",
+        url: "{{ route('client.task-files.store') }}",
         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
         paramName: "file",
         maxFilesize: 10,
@@ -420,7 +419,7 @@
     myDropzone.on('completemultiple', function () {
         var msgs = "@lang('messages.taskUpdatedSuccessfully')";
         $.showToastr(msgs, 'success');
-        window.location.href = '{{ route('member.all-tasks.index') }}'
+        window.location.href = '{{ route('client.all-tasks.index') }}'
 
     });
     //    update task
@@ -431,7 +430,7 @@
         if(status == 'incomplete' && currentStatus == 'completed'){
 
             $.easyAjax({
-                url: '{{route('member.tasks.checkTask', [$task->id])}}',
+                url: '{{route('client.tasks.checkTask', [$task->id])}}',
                 type: "GET",
                 data: {},
                 success: function (data) {
@@ -467,7 +466,7 @@
 
     function updateTask(){
         $.easyAjax({
-            url: '{{route('member.all-tasks.update', [$task->id])}}',
+            url: '{{route('client.all-tasks.update', [$task->id])}}',
             container: '#updateTask',
             type: "POST",
             data: $('#updateTask').serialize(),
@@ -480,7 +479,7 @@
                 else{
                     var msgs = "@lang('messages.taskCreatedSuccessfully')";
                     $.showToastr(msgs, 'success');
-                    window.location.href = '{{ route('member.all-tasks.index') }}'
+                    window.location.href = '{{ route('client.all-tasks.index') }}'
                 }
             }
         })
@@ -542,7 +541,7 @@
         var id = $(this).val();
 
         // For getting dependent task
-        var dependentTaskUrl = '{{route('member.all-tasks.dependent-tasks', [':id', ':taskId'])}}';
+        var dependentTaskUrl = '{{route('client.all-tasks.dependent-tasks', [':id', ':taskId'])}}';
         dependentTaskUrl = dependentTaskUrl.replace(':id', id);
         dependentTaskUrl = dependentTaskUrl.replace(':taskId', '{{ $task->id }}');
         $.easyAjax({
