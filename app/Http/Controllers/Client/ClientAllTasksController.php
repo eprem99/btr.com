@@ -356,7 +356,7 @@ class ClientAllTasksController extends ClientBaseController
 
        // $this->employees = User::allEmployees();
         $this->clients = User::allClients();
-        dd($this->clients);
+      //  dd($this->clients);
         $this->categories = TaskCategory::all();
         $this->taskLabels = TaskLabelList::all();
 

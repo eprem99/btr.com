@@ -43,18 +43,6 @@
                         <div class="form-body">
                             <div class="row">
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('app.project')</label>
-                                        <select class="select2 form-control" data-placeholder="@lang("app.selectProject")" id="project_id" name="project_id">
-                                            <option value=""></option>
-                                            @foreach($projects as $project)
-                                                <option
-                                                value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label">@lang('modules.tasks.taskCategory')
