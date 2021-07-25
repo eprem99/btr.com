@@ -5,23 +5,6 @@
         <div class="panel-heading p-t-5 p-b-5"  >
             <div class="panel-title">
                 <h6 style="color: {{ $column->label_color }}">{{ ucwords($column->column_name) }}
-
-                    <div style="position: relative;" class="dropdown pull-right">
-                        <a href="javascript:;"  data-toggle="dropdown"  class="dropdown-toggle "><i class="ti-settings font-normal"></i></a>
-                        <ul role="menu" class="dropdown-menu">
-                            @if($user->can('add_tasks') || $global->task_self == 'yes')
-                            <li><a href="javascript:;" data-column-id="{{ $column->id }}" class="add-task">@lang('modules.tasks.newTask')</a></li>
-                            @endif
-                            @if ($user->can('edit_tasks'))
-                                <li><a href="javascript:;" data-column-id="{{ $column->id }}" class="edit-column" >@lang('app.edit')</a>
-                            @endif
-                            </li>
-                            @if($column->slug != 'completed' && $column->slug != 'incomplete' && $user->can('delete_tasks'))
-                                <li><a href="javascript:;" data-column-id="{{ $column->id }}" class="delete-column"  >@lang('app.delete')</a></li>
-                            @endif
-                        </ul>
-
-                    </div>
                 </h6>
             </div>
         </div>

@@ -135,23 +135,23 @@ class MemberAllTasksController extends MemberBaseController
         $tasks->get();
 
         return DataTables::of($tasks)
-            ->addColumn('action', function ($row) {
-                $action = '';
+            // ->addColumn('action', function ($row) {
+            //     $action = '';
 
-                if ($this->user->can('edit_tasks') || ($this->global->task_self == 'yes' && $this->user->id == $row->created_by_id)) {
-                    $action .= '<a href="' . route('member.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
-                      data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
-                }
+            //     if ($this->user->can('edit_tasks') || ($this->global->task_self == 'yes' && $this->user->id == $row->created_by_id)) {
+            //         $action .= '<a href="' . route('member.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
+            //           data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+            //     }
 
-                if ($this->user->can('delete_tasks') || ($this->global->task_self == 'yes' && $this->user->id == $row->created_by_id)) {
-                    $recurringTaskCount = Task::where('recurring_task_id', $row->id)->count();
-                    $recurringTask = $recurringTaskCount > 0 ? 'yes' : 'no';
+            //     if ($this->user->can('delete_tasks') || ($this->global->task_self == 'yes' && $this->user->id == $row->created_by_id)) {
+            //         $recurringTaskCount = Task::where('recurring_task_id', $row->id)->count();
+            //         $recurringTask = $recurringTaskCount > 0 ? 'yes' : 'no';
 
-                    $action .= '&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-circle sa-params"
-                      data-toggle="tooltip" data-task-id="' . $row->id . '" data-recurring="' . $recurringTask . '" data-original-title="Delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
-                }
-                return $action;
-            })
+            //         $action .= '&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-circle sa-params"
+            //           data-toggle="tooltip" data-task-id="' . $row->id . '" data-recurring="' . $recurringTask . '" data-original-title="Delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
+            //     }
+            //     return $action;
+            // })
             ->editColumn('due_date', function ($row) {
 
                 if ($row->due_date->endOfDay()->isPast()) {
@@ -207,12 +207,12 @@ class MemberAllTasksController extends MemberBaseController
                 $status .= '</div>';
                 return $status;
             })
-            ->editColumn('project_name', function ($row) {
-                if (is_null($row->project_id)) {
-                    return "";
-                }
-                return '<a href="' . route('member.projects.show', $row->project_id) . '">' . ucfirst($row->project_name) . '</a>';
-            })
+            // ->editColumn('project_name', function ($row) {
+            //     if (is_null($row->project_id)) {
+            //         return "";
+            //     }
+            //     return '<a href="' . route('member.projects.show', $row->project_id) . '">' . ucfirst($row->project_name) . '</a>';
+            // })
             ->rawColumns(['board_column', 'action', 'project_name', 'created_by', 'due_date', 'users', 'heading'])
             ->removeColumn('project_id')
             ->removeColumn('image')

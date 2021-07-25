@@ -159,7 +159,6 @@
                         <tr>
                             <th>#</th>
                             <th>@lang('app.task')</th>
-                            <th>@lang('app.project')</th>
                             <th>@lang('modules.tasks.assignTo')</th>
                             {{-- <th>@lang('modules.tasks.assignBy')</th> --}}
                             <th>@lang('app.dueDate')</th>
@@ -288,7 +287,7 @@
         url = url.replace(':startDate', startDate);
         url = url.replace(':endDate', endDate);
         url = url.replace(':hideCompleted', hideCompleted);
-        url = url.replace(':projectId', projectID);
+    //    url = url.replace(':projectId', projectID);
 
         table = $('#tasks-table').dataTable({
             destroy: true,
@@ -302,7 +301,7 @@
                     startDate : startDate,
                     endDate : endDate,
                     hideCompleted  : hideCompleted,
-                    projectId : projectID
+                  //  projectId : projectID
                 }
             },
             deferRender: true,
@@ -318,7 +317,7 @@
             columns: [
                 { data: 'id', name: 'id' },
                 {data: 'heading', name: 'heading'},
-                {data: 'project_name', name: 'projects.project_name'},
+              //  {data: 'project_name', name: 'projects.project_name'},
                 {data: 'users', name: 'client.name'},
                 // {data: 'created_by', name: 'creator_user.name', width: '15%'},
                 {data: 'due_date', name: 'due_date'},
@@ -342,62 +341,6 @@
         showTable();
     })
 
-    $('body').on('click', '.sa-params', function () {
-        var id = $(this).data('task-id');
-        var recurring = $(this).data('recurring');
-
-        var buttons = {
-            cancel: "No, cancel please!",
-            confirm: {
-                text: "Yes, delete it!",
-                value: 'confirm',
-                visible: true,
-                className: "danger",
-            }
-        };
-
-        if(recurring == 'yes')
-        {
-            buttons.recurring = {
-                text: "{{ trans('modules.tasks.deleteRecurringTasks') }}",
-                value: 'recurring'
-            }
-        }
-
-        swal({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.deleteTask')",
-            dangerMode: true,
-            icon: 'warning',
-            buttons: buttons,
-        }).then(function (isConfirm) {
-            if (isConfirm == 'confirm' || isConfirm == 'recurring') {
-
-                var url = "{{ route('client.all-tasks.destroy',':id') }}";
-                url = url.replace(':id', id);
-
-                var token = "{{ csrf_token() }}";
-                var dataObject = {'_token': token, '_method': 'DELETE'};
-
-                if(isConfirm == 'recurring')
-                {
-                    dataObject.recurring = 'yes';
-                }
-
-                $.easyAjax({
-                    type: 'POST',
-                    url: url,
-                    data: dataObject,
-                    success: function (response) {
-                        if (response.status == "success") {
-                            $.unblockUI();
-                            table._fnDraw();
-                        }
-                    }
-                });
-            }
-        });
-    });
 
     $('#tasks-table').on('click', '.show-task-detail', function () {
         $(".right-sidebar").slideDown(50).addClass("shw-rside");

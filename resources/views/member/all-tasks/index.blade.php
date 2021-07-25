@@ -11,9 +11,6 @@
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
             <a href="javascript:;"  class="btn btn-outline btn-info btn-sm pinnedItem">@lang('app.pinnedTask') <i class="icon-pin icon-2"></i></a>
 
-        @if($user->can('add_tasks') || $global->task_self == 'yes')
-                <a href="{{ route('member.all-tasks.create') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.tasks.newTask') <i class="fa fa-plus" aria-hidden="true"></i></a>
-            @endif
             <ol class="breadcrumb">
                 <li><a href="{{ route('member.dashboard') }}">@lang('app.menu.home')</a></li>
                 <li class="active">@lang($pageTitle)</li>
@@ -163,12 +160,11 @@
                         <tr>
                             <th>#</th>
                             <th>@lang('app.task')</th>
-                            <th>@lang('app.project')</th>
                             <th>@lang('modules.tasks.assignTo')</th>
                             {{-- <th>@lang('modules.tasks.assignBy')</th> --}}
                             <th>@lang('app.dueDate')</th>
                             <th>@lang('app.status')</th>
-                            <th>@lang('app.action')</th>
+
                         </tr>
                         </thead>
                     </table>
@@ -322,12 +318,12 @@
             columns: [
                 { data: 'id', name: 'id' },
                 {data: 'heading', name: 'heading'},
-                {data: 'project_name', name: 'projects.project_name'},
+               // {data: 'project_name', name: 'projects.project_name'},
                 {data: 'users', name: 'member.name'},
                 // {data: 'created_by', name: 'creator_user.name', width: '15%'},
                 {data: 'due_date', name: 'due_date'},
                 {data: 'board_column', name: 'board_column', searchable: false},
-                {data: 'action', name: 'action', "searchable": false}
+             //   {data: 'action', name: 'action', "searchable": false}
             ]
         });
     }

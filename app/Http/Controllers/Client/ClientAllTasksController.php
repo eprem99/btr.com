@@ -143,13 +143,6 @@ class ClientAllTasksController extends ClientBaseController
                       data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
                 }
 
-                if ($this->user->can('delete_tasks') || ($this->global->task_self == 'yes' && $this->user->id == $row->created_by_id)) {
-                    $recurringTaskCount = Task::where('recurring_task_id', $row->id)->count();
-                    $recurringTask = $recurringTaskCount > 0 ? 'yes' : 'no';
-
-                    $action .= '&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-circle sa-params"
-                      data-toggle="tooltip" data-task-id="' . $row->id . '" data-recurring="' . $recurringTask . '" data-original-title="Delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
-                }
                 return $action;
             })
             ->editColumn('due_date', function ($row) {
@@ -207,13 +200,8 @@ class ClientAllTasksController extends ClientBaseController
                 $status .= '</div>';
                 return $status;
             })
-            ->editColumn('project_name', function ($row) {
-                if (is_null($row->project_id)) {
-                    return "";
-                }
-                return '<a href="' . route('client.projects.show', $row->project_id) . '">' . ucfirst($row->project_name) . '</a>';
-            })
-            ->rawColumns(['board_column', 'action', 'project_name', 'created_by', 'due_date', 'users', 'heading'])
+
+            ->rawColumns(['board_column', 'action', 'created_by', 'due_date', 'users', 'heading'])
             ->removeColumn('project_id')
             ->removeColumn('image')
             ->removeColumn('label_color')
@@ -241,7 +229,7 @@ class ClientAllTasksController extends ClientBaseController
             $this->projects = Project::allProjects();
         }
 
-        $this->employees = User::allEmployees();
+        $this->employees = User::allClients();
         $this->categories = TaskCategory::all();
         $completedTaskColumn = TaskboardColumn::where('slug', '=', 'completed')->first();
         if ($completedTaskColumn) {
@@ -282,8 +270,8 @@ class ClientAllTasksController extends ClientBaseController
         $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
         $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
         $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-        $task->estimate_hours = $request->estimate_hours;
-        $task->estimate_minutes = $request->estimate_minutes;
+        $task->estimate_hours = '0';
+        $task->estimate_minutes = '0';
 
         $taskBoardColumn = TaskboardColumn::findOrFail($request->status);
         if ($taskBoardColumn->slug == 'completed') {
@@ -354,9 +342,9 @@ class ClientAllTasksController extends ClientBaseController
             $this->projects = Project::allProjects();
         }
 
-       // $this->employees = User::allEmployees();
-        $this->clients = User::allClients();
-      //  dd($this->clients);
+        $this->employees = User::allEmployees();
+      // $this->employees = User::allClienets();
+    //    dd($this->clients);
         $this->categories = TaskCategory::all();
         $this->taskLabels = TaskLabelList::all();
 
@@ -376,6 +364,9 @@ class ClientAllTasksController extends ClientBaseController
         return view('client.all-tasks.create', $this->data);
     }
 
+
+
+
     public function membersList($projectId)
     {
         if ($projectId != "all") {
@@ -389,6 +380,8 @@ class ClientAllTasksController extends ClientBaseController
 
     public function store(StoreTask $request)
     {
+
+ 
         $task = new Task();
         $task->heading = $request->heading;
         if ($request->description != '') {
@@ -396,24 +389,22 @@ class ClientAllTasksController extends ClientBaseController
         }
         $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
         $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
-        $task->project_id = $request->project_id;
+        $task->project_id = '1';
         $task->priority = $request->priority;
         $task->board_column_id = $this->global->default_task_status;
         $task->task_category_id = $request->category_id;
-        $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
-        $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-        $task->estimate_hours = $request->estimate_hours;
-        $task->estimate_minutes = $request->estimate_minutes;
+
+        $task->estimate_hours = '0';
+        $task->estimate_minutes = '0';
 
         if ($request->board_column_id) {
             $task->board_column_id = $request->board_column_id;
         }
-
+       
         $task->save();
-
+      //  echo 'easdasd';
         // save labels
-        $task->labels()->sync($request->task_labels);
+       // $task->labels()->sync($request->task_labels);
 
         if (!$this->user->can('add_tasks') && $this->global->task_self == 'yes') {
             $request->user_id = [$this->user->id];
@@ -427,18 +418,18 @@ class ClientAllTasksController extends ClientBaseController
             $taskDuration = $taskDuration + 1;
 
             $ganttTaskArray[] = [
-                'id' => $task->id,
+                'id' => 10,
                 'text' => $task->heading,
                 'start_date' => $task->start_date->format('Y-m-d'),
                 'duration' => $taskDuration,
                 'parent' => $parentGanttId,
-                'taskid' => $task->id
+                'taskid' => 10
             ];
 
             $gantTaskLinkArray[] = [
-                'id' => 'link_' . $task->id,
+                'id' => 'link_' . 10,
                 'source' => $task->dependent_task_id != '' ? $task->dependent_task_id : $parentGanttId,
-                'target' => $task->id,
+                'target' => 10,
                 'type' => $task->dependent_task_id != '' ? 0 : 1
             ];
         }
@@ -487,8 +478,8 @@ class ClientAllTasksController extends ClientBaseController
                     $newTask->board_column_id = $request->board_column_id;
                 }
 
-                $newTask->estimate_hours = $request->estimate_hours;
-                $newTask->estimate_minutes = $request->estimate_minutes;
+                $newTask->estimate_hours = '0';
+                $newTask->estimate_minutes = '0';
                 $newTask->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
                 $newTask->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         
@@ -542,7 +533,7 @@ class ClientAllTasksController extends ClientBaseController
         }
 
         //log search
-        $this->logSearchEntry($task->id, 'Task ' . $task->heading, 'admin.all-tasks.edit', 'task');
+      //  $this->logSearchEntry($task->id, 'Task ' . $task->heading, 'admin.all-tasks.edit', 'task');
 
         if ($request->page_name && $request->page_name == 'ganttChart') {
 

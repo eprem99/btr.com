@@ -207,10 +207,7 @@
                                            class="btn btn-inverse btn-circle"><i
                                                     class="fa fa-download"></i></a>
                                         @endif
-            
-                                        <a href="javascript:;" data-toggle="tooltip" data-original-title="Delete" data-file-id="{{ $file->id }}"
-                                           data-pk="list" class="btn btn-danger btn-circle file-delete"><i class="fa fa-times"></i></a>
-                                        
+                                                   
                                     </div>
                                 </div>
                             </li>

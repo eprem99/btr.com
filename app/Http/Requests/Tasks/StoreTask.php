@@ -75,7 +75,10 @@ class StoreTask extends CoreRequest
                 }
             }
         }
+
+        
         return $rules;
+
     }
 
     public function messages()

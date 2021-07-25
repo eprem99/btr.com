@@ -50,32 +50,14 @@
 
                         <div class="form-body">
                             <div class="row">
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('app.project')</label>
-                                        <select class="select2 form-control" data-placeholder="@lang("app.selectProject")" id="project_id" name="project_id">
-                                            <option value=""></option>
-                                            @foreach($projects as $project)
-                                                <option
-                                                        @if($project->id == $task->project_id) selected @endif
-                                                        value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
+                            <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label">@lang('modules.tasks.taskCategory')
                                         </label>
-                                        <select class="selectpicker form-control" name="category_id" id="category_id"
+                                        <select class="select2 form-control" name="category_id" id="category_id"
                                                 data-style="form-control">
                                             @forelse($categories as $category)
-                                                <option value="{{ $category->id }}"
-                                                        @if($task->task_category_id == $category->id)
-                                                        selected
-                                                        @endif
-                                                >{{ ucwords($category->category_name) }}</option>
+                                                <option value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
                                             @empty
                                                 <option value="">@lang('messages.noTaskCategoryAdded')</option>
                                             @endforelse
@@ -94,59 +76,6 @@
                                         <label class="control-label">@lang('app.description')</label>
                                         <textarea id="description" name="description" class="form-control summernote">{{ $task->description }}</textarea>
                                     </div>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <div class="form-group">
-
-                                        <div class="checkbox checkbox-info">
-                                            <input id="private-task" name="is_private" value="true"
-                                            @if ($task->is_private)
-                                                checked
-                                            @endif
-                                                   type="checkbox">
-                                            <label for="private-task">@lang('modules.tasks.makePrivate') <a class="mytooltip font-12" href="javascript:void(0)"> <i class="fa fa-info-circle"></i><span class="tooltip-content5"><span class="tooltip-text3"><span class="tooltip-inner2">@lang('modules.tasks.privateInfo')</span></span></span></a></label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <div class="form-group">
-
-                                        <div class="checkbox checkbox-info">
-                                            <input id="billable-task" name="billable" value="true"
-                                            @if ($task->billable)
-                                                checked
-                                            @endif
-                                                   type="checkbox">
-                                            <label for="billable-task">@lang('modules.tasks.billable') <a class="mytooltip font-12" href="javascript:void(0)"> <i class="fa fa-info-circle"></i><span class="tooltip-content5"><span class="tooltip-text3"><span class="tooltip-inner2">@lang('modules.tasks.billableInfo')</span></span></span></a></label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <div class="checkbox checkbox-info">
-                                            <input id="set-time-estimate"
-                                            @if ($task->estimate_hours > 0 || $task->estimate_minutes > 0)
-                                                checked
-                                            @endif
-                                            name="set_time_estimate" value="true" type="checkbox">
-                                            <label for="set-time-estimate">@lang('modules.tasks.setTimeEstimate')</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="set-time-estimate-fields" @if ($task->estimate_hours == 0 && $task->estimate_minutes == 0) style="display: none" @endif>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            
-                                            <input type="number" min="0" value="{{ $task->estimate_hours }}" class="w-50 p-5 p-10" name="estimate_hours" > @lang('app.hrs')
-                                            &nbsp;&nbsp;
-                                            <input type="number" min="0" value="{{ $task->estimate_minutes }}" name="estimate_minutes" class="w-50 p-5 p-10"> @lang('app.mins')
-                                        </div>
-                                    </div>
-                                   
                                 </div>
 
                                 <div class="col-md-12">
@@ -173,19 +102,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="control-label">@lang('app.label')</label>
-                                            <select id="multiselect" name="task_labels[]"  multiple="multiple" class="selectpicker form-control">
-                                                @foreach($taskLabels as $label)
-                                                    <option data-content="<label class='badge' style='background:{{ $label->label_color }};'>{{ $label->label_name }}</label> " value="{{ $label->id }}">{{ $label->label_name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.startDate')</label>
@@ -252,9 +168,9 @@
                                     </div>
                                 @endif
 
-                                @if($user->hasRole('admin'))
+
                                     <input type="hidden" value="{{ $user->id }}" name="user_id">
-                                @endif
+
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -375,6 +291,28 @@
         </div>
     </div>    <!-- .row -->
 
+    {{--Ajax Modal--}}
+    <div class="modal fade bs-modal-md in" id="taskCategoryModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" id="modal-data-application">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <span class="caption-subject font-red-sunglo bold uppercase" id="modelHeading"></span>
+                </div>
+                <div class="modal-body">
+                    Loading...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn blue">Save changes</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->.
+    </div>
+    {{--Ajax Modal Ends--}}
+
 @endsection
 
 @push('footer-script')
@@ -484,7 +422,11 @@
             }
         })
     }
-
+    $('#createTaskCategory').click(function(){
+        var url = '{{ route('client.taskCategory.create-cat')}}';
+        $('#modelHeading').html("@lang('modules.taskCategory.manageTaskCategory')");
+        $.ajaxModal('#taskCategoryModal', url);
+    })
     $('#due_date2').datepicker({
         format: '{{ $global->date_picker_format }}',
         autoclose: true,

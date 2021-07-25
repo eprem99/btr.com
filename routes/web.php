@@ -1060,7 +1060,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::resource('project-ratings', 'ClientProjectRatingController');
         });
 
-        Route::resource('task', 'ClientAllTasksController', ['only' => ['edit', 'update', 'index', 'create']]);
+        Route::resource('task', 'ClientAllTasksController', ['only' => ['edit', 'update', 'index', 'add_tasks']]);
 
         Route::group(
             ['prefix' => 'task'], function () {

@@ -104,26 +104,6 @@
         </div>
         @endif
 
-        @if(in_array('timelogs',$modules))
-        <div class="col-md-3 col-sm-6">
-            <a href="{{ route('client.all-time-logs.index') }}">
-                <div class="white-box">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <div>
-                                <span class="bg-warning-gradient"><i class="icon-clock"></i></span>
-                            </div>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <span class="widget-title"> @lang('modules.dashboard.totalHoursLogged')</span><br>
-                            <span class="counter">{{ $counts->totalHoursLogged }}</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        @endif
-
         @if(in_array('tasks',$modules))
         <div class="col-md-3 col-sm-6">
             <a href="{{ route('client.all-tasks.index') }}">

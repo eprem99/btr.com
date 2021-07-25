@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Worksuite',
+    'name' => 'BTR',
 
     /*
   |--------------------------------------------------------------------------
@@ -57,7 +57,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
         |--------------------------------------------------------------------------
@@ -69,7 +69,7 @@ return [
         | application. If disabled, a simple generic error page is shown.
         |
         */
-    'api_debug' => env('APP_API_DEBUG', false),
+    'api_debug' => env('APP_API_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------

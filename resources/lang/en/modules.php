@@ -312,10 +312,10 @@ return array(
     'position' => 'Board Column Position',
     'subTask' => 'Sub Task',
     'comment' => 'Comment',
-    'taskCategory' => 'Task category',
-    'selectTaskCategory' => 'Select Task category',
-    'noTaskCategory' => 'No Task category available',
-    'category' => 'Category',
+    'taskCategory' => 'Site',
+    'selectTaskCategory' => 'Select Site',
+    'noTaskCategory' => 'No Site available',
+    'category' => 'Site',
     'assignBy' => 'Assigned By',
     'markComplete' => 'Mark as complete',
     'markIncomplete' => 'Mark as incomplete',
@@ -1151,10 +1151,10 @@ return array(
   ),
   'taskCategory' =>
   array(
-    'addTaskCategory' => 'Task Category',
+    'addTaskCategory' => 'Site',
     'categoryName' => 'Category Name',
-    'manageTaskCategory' => 'Manage Task Category',
-    'taskCategory' => 'Task Category',
+    'manageTaskCategory' => 'Manage Site',
+    'taskCategory' => 'Site',
   ),
   'pushSettings' =>
   array(

@@ -284,7 +284,6 @@
                                                     <th>@lang('modules.tasks.assignBy')</th>
                                                     <th>@lang('app.dueDate')</th>
                                                     <th>@lang('app.status')</th>
-                                                    <th>@lang('app.action')</th>
                                                 </tr>
                                                 </thead>
                                             </table>
@@ -420,7 +419,6 @@
                 {data: 'created_by', name: 'creator_user.name'},
                 {data: 'due_date', name: 'due_date'},
                 {data: 'board_column', name: 'board_column', searchable: false},
-                {data: 'action', name: 'action', "searchable": false}
             ]
         });
     }
@@ -516,32 +514,6 @@
         })
     });
 
-    //    save new task
-    taskListPanel.on('click', '.edit-task', function () {
-        var id = $(this).data('task-id');
-        var url = "{{route('member.tasks.edit', ':id')}}";
-        url = url.replace(':id', id);
-
-        $.easyAjax({
-            url: url,
-            type: "GET",
-            container: '#task-list-panel',
-            data: {taskId: id},
-            success: function (data) {
-                editTaskPanel.html(data.html);
-                // taskListPanel.switchClass("col-md-12", "col-md-6", 1000, "easeInOutQuad");
-                newTaskpanel.addClass('hide').removeClass('show');
-                editTaskPanel.switchClass("hide", "show", 300, "easeInOutQuad");
-                $("body").tooltip({
-                    selector: '[data-toggle="tooltip"]'
-                });
-
-                $('html, body').animate({
-                    scrollTop: $("#task-list-panel").offset().top
-                }, 1000);
-            }
-        })
-    });
 
     //    change task status
     taskListPanel.on('click', '.task-check', function () {

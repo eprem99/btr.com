@@ -123,7 +123,6 @@
             <li><a href="{{ route('client.task.index') }}" class="waves-effect"><i class="fa fa-tasks fa-fw"></i> <span class="hide-menu"> @lang('app.menu.tasks') <span class="fa arrow"></span> </span></a>
                 <ul class="nav nav-second-level">
                     <li><a href="{{ route('client.all-tasks.index') }}">@lang('app.menu.tasks')</a></li>
-                    <li class="hidden-sm hidden-xs"><a href="{{ route('client.taskboard.index') }}">@lang('modules.tasks.taskBoard')</a></li>
                     <li><a href="{{ route('client.task-calendar.index') }}">@lang('app.menu.taskCalendar')</a></li>
                 </ul>
             </li>
