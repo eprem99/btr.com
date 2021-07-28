@@ -77,7 +77,7 @@ class ClientTasksController extends ClientBaseController
         $task->board_column_id = $taskBoardColumn->id;
         $task->task_category_id = $request->category_id;
         $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-        $task->is_private = 0;
+        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
         $task->billable   = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         $task->created_by = $this->user->id;
 

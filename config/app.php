@@ -57,7 +57,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', true),
+    'debug' => env('APP_DEBUG', false),
 
     /*
         |--------------------------------------------------------------------------
@@ -69,7 +69,7 @@ return [
         | application. If disabled, a simple generic error page is shown.
         |
         */
-    'api_debug' => env('APP_API_DEBUG', true),
+    'api_debug' => env('APP_API_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------

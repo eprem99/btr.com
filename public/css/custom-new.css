@@ -2057,3 +2057,10 @@ a.show-task-detail {
     color: #000000;
     font-weight: 400;
 }
+.logo img {
+	max-width: 110px;
+}
+.slimscrollsidebar {
+	margin-top: 110px;
+	padding-bottom: 158px;
+}

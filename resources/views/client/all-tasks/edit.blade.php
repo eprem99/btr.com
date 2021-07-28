@@ -78,7 +78,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
 
                                         <div class="checkbox checkbox-info">
@@ -88,7 +88,16 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
 
+                                        <div class="checkbox checkbox-info">
+                                            <input id="private-task" name="is_private" value="true"
+                                                   type="checkbox">
+                                            <label for="private-task">@lang('modules.tasks.makePrivate') <a class="mytooltip font-12" href="javascript:void(0)"> <i class="fa fa-info-circle"></i><span class="tooltip-content5"><span class="tooltip-text3"><span class="tooltip-inner2">@lang('modules.tasks.privateInfo')</span></span></span></a></label>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row" id="dependent-fields" @if($task->dependent_task_id == null) style="display: none" @endif>
                                     <div class="col-md-12">
                                         <div class="form-group">

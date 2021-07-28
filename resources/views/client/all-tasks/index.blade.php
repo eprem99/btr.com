@@ -9,7 +9,7 @@
         <!-- /.page title -->
         <!-- .breadcrumb -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-            <a href="javascript:;"  class="btn btn-outline btn-info btn-sm pinnedItem">@lang('app.pinnedTask') <i class="icon-pin icon-2"></i></a>
+
 
         @if($user->can('add_tasks') || $global->task_self == 'yes')
                 <a href="{{ route('client.all-tasks.create') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.tasks.newTask') <i class="fa fa-plus" aria-hidden="true"></i></a>
@@ -380,11 +380,11 @@
 
 
     showTable();
-    $('.pinnedItem').click(function(){
-        var url = '{{ route('client.all-tasks.pinned-task')}}';
-        $('#modelHeading').html('Pinned Task');
-        $.ajaxModal('#editTimeLogModal',url);
-    })
+    // $('.pinnedItem').click(function(){
+    //     var url = '{{ route('client.all-tasks.pinned-task')}}';
+    //     $('#modelHeading').html('Pinned Task');
+    //     $.ajaxModal('#editTimeLogModal',url);
+    // })
 
 </script>
 @endpush

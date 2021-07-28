@@ -49,7 +49,7 @@ class ClientAllTasksController extends ClientBaseController
 
         $this->employees = ($this->user->can('view_employees')) ? User::allEmployees() : User::where('id', $this->user->id)->get();
 
-        $this->clients = User::allClients();
+        $this->clients = User::allEmployees();
         $this->taskBoardStatus = TaskboardColumn::all();
 
         $this->startDate = Carbon::today()->subDays(15)->format($this->global->date_format);
@@ -75,7 +75,7 @@ class ClientAllTasksController extends ClientBaseController
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
             ->selectRaw('tasks.id, projects.project_name, tasks.heading, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
              tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color,
-              tasks.project_id, tasks.is_private ,( select count("id") from pinned where pinned.task_id = tasks.id and pinned.user_id = '.user()->id.') as pinned_task')
+              tasks.project_id, tasks.is_private,( select count("id") from pinned where pinned.task_id = tasks.id and pinned.user_id = '.user()->id.') as pinned_task')
             ->whereNull('projects.deleted_at')
             ->with('users', 'activeTimer')
             ->groupBy('tasks.id');
@@ -165,12 +165,13 @@ class ClientAllTasksController extends ClientBaseController
             ->editColumn('users', function ($row) {
                 $members = '';
                 foreach ($row->users as $client) {
-                    $members .= '<a href="' . route('admin.employees.show', [$client->id]) . '">';
-                    $members .= '<img data-toggle="tooltip" data-original-title="' . ucwords($client->name) . '" src="' . $client->image_url . '"
-                    alt="user" class="img-circle" width="25" height="25"> ';
-                    $members .= '</a>';
+
+                  //  $members .= '<a href="' . route('admin.employees.show', [$client->id]) . '">';
+                    $members .= ucwords($client->name);
+                  //  $members .= '</a>';
                 }
                 return $members;
+
             })
             ->editColumn('heading', function ($row) {
                 $pin = '';
@@ -189,14 +190,8 @@ class ClientAllTasksController extends ClientBaseController
                 return $name;
             })
             ->editColumn('board_column', function ($row) use ($taskBoardColumns) {
-                $status = '<div class="btn-group dropdown">';
-                $status .= '<button aria-expanded="true" data-toggle="dropdown" class="btn dropdown-toggle waves-effect waves-light btn-xs"  style="border-color: ' . $row->label_color . '; color: ' . $row->label_color . '" type="button">' . $row->board_column . ' <span class="caret"></span></button>';
-                $status .= '<ul role="menu" class="dropdown-menu pull-right">';
-                foreach ($taskBoardColumns as $key => $value) {
-                    $status .= '<li><a href="javascript:;" data-task-id="' . $row->id . '" class="change-status" data-status="' . $value->slug . '">' . $value->column_name . '  <span style="width: 15px; height: 15px; border-color: ' . $value->label_color . '; background: ' . $value->label_color . '"
-                    class="btn btn-warning btn-small btn-circle">&nbsp;</span></a></li>';
-                }
-                $status .= '</ul>';
+                $status = '<div class="">';
+                $status .= '<div class="waves-effect waves-light btn-xs"  style="border-color: ' . $row->label_color . '; color: ' . $row->label_color . '">' . $row->board_column . '</div>';
                 $status .= '</div>';
                 return $status;
             })
@@ -393,14 +388,16 @@ class ClientAllTasksController extends ClientBaseController
         $task->priority = $request->priority;
         $task->board_column_id = $this->global->default_task_status;
         $task->task_category_id = $request->category_id;
-
+        $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
+        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
+        $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         $task->estimate_hours = '0';
         $task->estimate_minutes = '0';
 
         if ($request->board_column_id) {
             $task->board_column_id = $request->board_column_id;
         }
-       
+        $task->project_id = $request->project_id;
         $task->save();
       //  echo 'easdasd';
         // save labels
