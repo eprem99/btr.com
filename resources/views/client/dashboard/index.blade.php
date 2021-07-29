@@ -13,44 +13,7 @@
         <!-- /.page title -->
         <!-- .breadcrumb -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
-            <span id="timer-section">
-                @if(!is_null($timer))
-                    <div class="nav navbar-top-links navbar-right">
-                        <a class="btn btn-rounded btn-default stop-timer-modal" href="javascript:;" data-timer-id="{{ $timer->id }}">
-                            <i class="ti-alarm-clock"></i>
-                            <span id="active-timer">{{ $timer->timer }}</span>
-                            <label class="label label-danger">@lang("app.stop")</label></a>
-                    </div>
-                @else
-                    <div class="nav navbar-top-links navbar-right">
-                        <a class="btn btn-outline btn-inverse timer-modal" href="javascript:;">@lang("modules.timeLogs.startTimer") <i class="fa fa-check-circle text-success"></i></a>
-                    </div>
-                @endif
-            </span>
-            @if(isset($activeTimerCount) && $user->can('view_timelogs'))
-            <span id="timer-section">
-                <div class="nav navbar-top-links navbar-right m-r-10">
-                    <a class="btn btn-rounded btn-default active-timer-modal" href="javascript:;">@lang("modules.projects.activeTimers")
-                        <span class="label label-danger" id="activeCurrentTimerCount">@if($activeTimerCount > 0) {{ $activeTimerCount }} @else 0 @endif</span>
-                    </a>
-                </div>
-            </span>
-            @endif
             <div class="col-md-6 pull-right text-right hidden-xs hidden-sm">
-                
-                @if($global->dashboard_clock == true)
-                    <span id="clock" class="dashboard-clock text-muted m-r-30"></span>
-                @endif
-
-
-                <select class="selectpicker language-switcher " data-width="fit">
-                    <option value="en" @if($user->locale == "en") selected @endif data-content='<span class="flag-icon flag-icon-gb"></span>'>En</option>
-                    @foreach($languageSettings as $language)
-                        <option value="{{ $language->language_code }}"
-                                @if($user->locale == $language->language_code) selected
-                                @endif  data-content='<span class="flag-icon @if($language->language_code == 'zh-CN') flag-icon-cn @elseif($language->language_code == 'zh-TW') flag-icon-tw @else flag-icon-{{ $language->language_code }} @endif"></span>'>{{ $language->language_code }}</option>
-                    @endforeach
-                </select>
 
             </div>
 
@@ -89,65 +52,67 @@
 
 <div class="white-box">
     <div class="row dashboard-stats front-dashboard">
-        @if(in_array('projects',$modules))
-        <div class="col-md-3 col-sm-6">
-            <a href="{{ route('member.projects.index') }}">
-                <div class="white-box">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <div>
-                                <span class="bg-info-gradient"><i class="icon-layers"></i></span>
-                            </div>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <span class="widget-title"> @lang('modules.dashboard.totalProjects')</span><br>
-                            <span class="counter">{{ $totalProjects }}</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        @endif
-
         @if(in_array('tasks',$modules))
-        <div class="col-md-3 col-sm-6">
-            <a href="{{ route('client.all-tasks.index') }}">
-                <div class="white-box">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <div>
-                                <span class="bg-danger-gradient"><i class="ti-alert"></i></span>
+        <div class="col-md-4 col-sm-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="{{ route('client.all-tasks.index') }}">
+                        <div class="white-box">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <div>
+                                        <span class="bg-danger-gradient"><i class="ti-alert"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <span class="widget-title"> @lang('modules.dashboard.totalPendingTasks')</span><br>
+                                    <span class="counter">{{ $counts->totalPendingTasks }}</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-xs-9 text-right">
-                            <span class="widget-title"> @lang('modules.dashboard.totalPendingTasks')</span><br>
-                            <span class="counter">{{ $counts->totalPendingTasks }}</span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
-            </a>
-        </div>
 
-        <div class="col-md-3 col-sm-6">
-            <a href="{{ route('client.all-tasks.index') }}">
-                <div class="white-box">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <div>
-                                <span class="bg-success-gradient"><i class="ti-check-box"></i></span>
+                <div class="col-md-12">
+                    <a href="{{ route('client.all-tasks.index') }}">
+                        <div class="white-box">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <div>
+                                        <span class="bg-success-gradient"><i class="ti-check-box"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <span class="widget-title"> @lang('modules.dashboard.totalCompletedTasks')</span><br>
+                                    <span class="counter">{{ $counts->totalCompletedTasks }}</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-xs-9 text-right">
-                            <span class="widget-title"> @lang('modules.dashboard.totalCompletedTasks')</span><br>
-                            <span class="counter">{{ $counts->totalCompletedTasks }}</span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
-            </a>
-        </div>
+
+                <div class="col-md-12">
+                    <a href="{{ route('client.all-tasks.index') }}">
+                        <div class="white-box">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <div>
+                                        <span class="bg-success-gradient"><i class="ti-check-box"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <span class="widget-title"> @lang('modules.dashboard.totalAllTasks')</span><br>
+                                    <span class="counter">{{ $counts->totalAllTasks }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>        
         @endif
         @if(in_array('tasks',$modules))
-        <div class="col-md-6">
+        <div class="col-md-8 col-sm-12">
             <div class="panel panel-inverse">
                 <div class="panel-heading">@lang('modules.dashboard.overdueTasks')</div>
                 <div class="panel-wrapper collapse in">
@@ -162,10 +127,7 @@
                                 <li class="list-group-item row" data-role="task">
                                     <div class="col-xs-8">
                                         {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
-                                        @if(!is_null($task->project_id) && !is_null($task->project))
-                                            <a href="{{ route('member.projects.show', $task->project_id) }}"
-                                                class="text-danger">{{ ucwords($task->project->project_name) }}</a>
-                                        @endif
+
                                     </div>
                                     <label class="label label-danger pull-right col-xs-4">{{ $task->due_date->format($global->date_format) }}</label>
                                 </li>
@@ -198,106 +160,11 @@
         <div class="col-md-12">
             <div class="white-box">
                 <h3 class="box-title">@lang('app.menu.taskCalendar')</h3>
-
-                <p>
-                    @lang('modules.taskCalendar.note')
-                </p>
-
                 <div id="calendar"></div>
             </div>
         </div>
     </div>
     <!-- .row -->
-
-
-
-    <div class="row">
-
-        @if(in_array('attendance',$modules) && $attendanceSettings->employee_clock_in_out == 'yes')
-        <div class="col-md-6">
-            <div class="panel panel-inverse">
-                <div class="panel-heading">@lang('app.menu.attendance')</div>
-                <div class="panel-wrapper collapse in">
-                    <div class="panel-body">
-
-                        <input type="hidden" id="current-latitude">
-                        <input type="hidden" id="current-longitude">
-                        @if (!isset($noClockIn))
-
-                            @if(!$checkTodayHoliday)
-                                @if($todayTotalClockin < $maxAttendanceInDay)
-                                    <div class="col-xs-6">
-                                        <h3>@lang('modules.attendance.clock_in')</h3>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <h3>@lang('modules.attendance.clock_in') IP</h3>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        @if(is_null($currenntClockIn))
-                                            {{ \Carbon\Carbon::now()->timezone($global->timezone)->format($global->time_format) }}
-                                        @else
-                                            {{ $currenntClockIn->clock_in_time->timezone($global->timezone)->format($global->time_format) }}
-                                        @endif
-                                    </div>
-                                    <div class="col-xs-6">
-                                        {{ $currenntClockIn->clock_in_ip ?? request()->ip() }}
-                                    </div>
-
-                                    @if(!is_null($currenntClockIn) && !is_null($currenntClockIn->clock_out_time))
-                                        <div class="col-xs-6 m-t-20">
-                                            <label for="">@lang('modules.attendance.clock_out')</label>
-                                            <br>{{ $currenntClockIn->clock_out_time->timezone($global->timezone)->format($global->time_format) }}
-                                        </div>
-                                        <div class="col-xs-6 m-t-20">
-                                            <label for="">@lang('modules.attendance.clock_out') IP</label>
-                                            <br>{{ $currenntClockIn->clock_out_ip }}
-                                        </div>
-                                    @endif
-
-                                    <div class="col-xs-8 m-t-20 truncate">
-                                        <label for="">@lang('modules.attendance.working_from')</label>
-                                        @if(is_null($currenntClockIn))
-                                            <input type="text" class="form-control" id="working_from" name="working_from">
-                                        @else
-                                            <br> {{ $currenntClockIn->working_from }}
-                                        @endif
-                                    </div>
-
-                                    <div class="col-xs-4 m-t-20">
-                                        <label class="m-t-30">&nbsp;</label>
-                                        @if(is_null($currenntClockIn))
-                                            <button class="btn btn-success btn-sm" id="clock-in">@lang('modules.attendance.clock_in')</button>
-                                        @endif
-                                        @if(!is_null($currenntClockIn) && is_null($currenntClockIn->clock_out_time))
-                                            <button class="btn btn-danger btn-sm" id="clock-out">@lang('modules.attendance.clock_out')</button>
-                                        @endif
-                                    </div>
-                                @else
-                                    <div class="col-xs-12">
-                                        <div class="alert alert-info">@lang('modules.attendance.maxClockIn')</div>
-                                    </div>
-                                @endif
-                            @else
-                                <div class="col-xs-12">
-                                    <div class="alert alert-info alert-dismissable">
-                                        <b>@lang('modules.dashboard.holidayCheck') {{ ucwords($checkTodayHoliday->occassion) }}.</b> </div>
-                                </div>
-                            @endif
-                        @else
-                            <div class="col-xs-12 text-center">
-                                <h4><i class="ti-alert text-danger"></i></h4>
-                                <h4>@lang('messages.officeTimeOver')</h4>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endif
-
-
-
-    </div>
 
     <div class="row" >
 

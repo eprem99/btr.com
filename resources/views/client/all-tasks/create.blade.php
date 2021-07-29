@@ -42,23 +42,33 @@
 
                         <div class="form-body">
                             <div class="row">
-
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">@lang('modules.tasks.taskCategory')
-                                            <a href="javascript:;"
-                                               id="createTaskCategory"
-                                               class="btn btn-xs btn-outline btn-success">
-                                                <i class="fa fa-plus"></i> @lang('modules.taskCategory.addTaskCategory')
+                                        <label class="control-label">@lang('app.project')
+                                       <a href="client.task-label.create" class="btn btn-xs btn-outline btn-success">
+                                                <i class="fa fa-plus"></i> Add Project
                                             </a>
                                         </label>
-                                        <select class="select2 form-control" name="category_id" id="category_id"
-                                                data-style="form-control">
-                                            @forelse($categories as $category)
-                                                <option value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
-                                            @empty
-                                                <option value="">@lang('messages.noTaskCategoryAdded')</option>
-                                            @endforelse
+                                        <select class="select2 form-control" data-placeholder="@lang("app.selectProject")" id="project_id" name="project_id">
+                                            <option value=""></option>
+                                            @foreach($projects as $project)
+                                                <option
+                                                value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Site
+                                       <a href="{{ route('client.task-label.create') }}" class="btn btn-xs btn-outline btn-success">
+                                                <i class="fa fa-plus"></i> Add Site
+                                            </a>
+                                        </label>
+                                        <select id="multiselect" name="task_labels[]"  multiple="multiple" class="selectpicker form-control">
+                                            @foreach($taskLabels as $label)
+                                                <option value="{{ $label->id }}">{{ $label->label_name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -78,40 +88,6 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-
-                                        <div class="checkbox checkbox-info">
-                                            <input id="dependent-task" name="dependent" value="yes"
-                                                   type="checkbox">
-                                            <label for="dependent-task">@lang('modules.tasks.dependent')</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-
-                                        <div class="checkbox checkbox-info">
-                                            <input id="private-task" name="is_private" value="true"
-                                                   type="checkbox">
-                                            <label for="private-task">@lang('modules.tasks.makePrivate') <a class="mytooltip font-12" href="javascript:void(0)"> <i class="fa fa-info-circle"></i><span class="tooltip-content5"><span class="tooltip-text3"><span class="tooltip-inner2">@lang('modules.tasks.privateInfo')</span></span></span></a></label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" id="dependent-fields" style="display: none">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="control-label">@lang('modules.tasks.dependentTask')</label>
-                                            <select class="select2 form-control" data-placeholder="@lang('modules.tasks.chooseTask')" name="dependent_task_id" id="dependent_task_id" >
-                                                <option value=""></option>
-                                                @foreach($allTasks as $allTask)
-                                                    <option value="{{ $allTask->id }}">{{ $allTask->heading }} (@lang('app.dueDate'): {{ $allTask->due_date->format($global->date_format) }})</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
                                         <label class="control-label required">@lang('app.startDate')</label>
                                         <input type="text" name="start_date" id="start_date2" class="form-control" autocomplete="off">
                                     </div>
@@ -126,88 +102,12 @@
 
                                 @if($user->can('add_tasks'))
                                     <!--/span-->
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="control-label required">@lang('modules.tasks.assignTo')</label>
-                                       
-                                            <select class="select2 select2-multiple " multiple="multiple" data-placeholder="@lang('modules.tasks.chooseAssignee')"  name="user_id[]" id="user_id">
-                                                <option value=""></option>
-                                                @foreach($employees as $employee)
-                                                    <option value="{{ $employee->id }}">{{ ucwords($employee->name) }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
+
                                     <!--/span-->
                                 @else
                                 <input type="hidden" name="user_id[]" value="{{ $user->id }}">
                                 @endif
 
-                                <div class="col-md-12">
-                                    <div class="form-group">
-
-                                        <div class="checkbox checkbox-info">
-                                            <input id="repeat-task" name="repeat" value="yes"
-                                                   type="checkbox">
-                                            <label for="repeat-task">@lang('modules.events.repeat')</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row" id="repeat-fields" style="display: none">
-                                    <div class="col-xs-12 col-md-12">
-                                        <div class="col-xs-6 col-md-3 ">
-                                            <div class="form-group">
-                                                <label>@lang('modules.events.repeatEvery')</label>
-                                                <input type="number" min="1" value="1" name="repeat_count" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6 col-md-3">
-                                            <div class="form-group">
-                                                <label>&nbsp;</label>
-                                                <select name="repeat_type" id="" class="form-control">
-                                                    <option value="day">@lang('app.day')</option>
-                                                    <option value="week">@lang('app.week')</option>
-                                                    <option value="month">@lang('app.month')</option>
-                                                    <option value="year">@lang('app.year')</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xs-6 col-md-3">
-                                            <div class="form-group">
-                                                <label>@lang('modules.events.cycles') <a class="mytooltip" href="javascript:void(0)"> <i class="fa fa-info-circle"></i><span class="tooltip-content5"><span class="tooltip-text3"><span class="tooltip-inner2">@lang('modules.tasks.cyclesToolTip')</span></span></span></a></label>
-                                                <input type="number" name="repeat_cycles" id="repeat_cycles" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label required">@lang('modules.tasks.priority')</label>
-
-                                        <div class="radio radio-danger">
-                                            <input type="radio" name="priority" id="radio13"
-                                                   value="high">
-                                            <label for="radio13" class="text-danger">
-                                                @lang('modules.tasks.high') </label>
-                                        </div>
-                                        <div class="radio radio-warning">
-                                            <input type="radio" name="priority"
-                                                   id="radio14" checked value="medium">
-                                            <label for="radio14" class="text-warning">
-                                                @lang('modules.tasks.medium') </label>
-                                        </div>
-                                        <div class="radio radio-success">
-                                            <input type="radio" name="priority" id="radio15"
-                                                   value="low">
-                                            <label for="radio15" class="text-success">
-                                                @lang('modules.tasks.low') </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--/span-->
 
                                 <div class="row m-b-20">
                                     <div class="col-md-12">

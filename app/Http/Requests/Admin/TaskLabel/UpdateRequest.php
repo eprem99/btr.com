@@ -31,7 +31,6 @@ class UpdateRequest extends CoreRequest
                     $query->where('id', '<>', $this->route('task_label'));
                 })
             ],
-            'color' => 'required',
         ];
     }
 }

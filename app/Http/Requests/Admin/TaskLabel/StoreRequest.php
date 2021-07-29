@@ -27,7 +27,6 @@ class StoreRequest extends CoreRequest
     {
         return [
             "label_name" => 'required',
-            'color' => 'required',
         ];
     }
 }

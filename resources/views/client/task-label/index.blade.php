@@ -1,4 +1,4 @@
-@extends('layouts.member-app')
+@extends('layouts.client-app')
 
 @section('page-title')
     <div class="row bg-title">
@@ -7,16 +7,14 @@
             <h4 class="page-title"><i class="{{ $pageIcon }}"></i> {{ __($pageTitle) }}</h4>
         </div>
         <!-- /.page title -->
-        <!-- .breadcrumb -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-            <a href="{{ route('member.task-label.create') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.taskLabel.createLabel') <i class="fa fa-plus" aria-hidden="true"></i></a>
+            <a href="{{ route('client.task-label.create') }}" class="btn btn-outline btn-success btn-sm">Create Site <i class="fa fa-plus" aria-hidden="true"></i></a>
 
             <ol class="breadcrumb">
-                <li><a href="{{ route('member.dashboard') }}">@lang('app.menu.home')</a></li>
+
                 <li class="active">{{ __($pageTitle) }}</li>
             </ol>
         </div>
-        <!-- /.breadcrumb -->
     </div>
 @endsection
 
@@ -87,7 +85,7 @@
             }, function(isConfirm){
                 if (isConfirm) {
 
-                    var url = "{{ route('member.task-label.destroy',':id') }}";
+                    var url = "{{ route('client.task-label.destroy',':id') }}";
                     url = url.replace(':id', id);
 
                     var token = "{{ csrf_token() }}";

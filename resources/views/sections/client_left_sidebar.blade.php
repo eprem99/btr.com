@@ -114,62 +114,39 @@
 
             <li><a href="{{ route('client.dashboard.index') }}" class="waves-effect"><i class="icon-speedometer fa-fw"></i> <span class="hide-menu">@lang('app.menu.dashboard') </span></a> </li>
 
-            @if(in_array('projects',$modules))
-                <li><a href="{{ route('client.projects.index') }}" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu">@lang('app.menu.projects') </span></a> </li>
-            @endif
-
-
             @if(in_array('tasks',$modules))
-            <li><a href="{{ route('client.task.index') }}" class="waves-effect"><i class="fa fa-tasks fa-fw"></i> <span class="hide-menu"> @lang('app.menu.tasks') <span class="fa arrow"></span> </span></a>
+            <li><a href="{{ route('client.task.index') }}" class="waves-effect"><i class="fa fa-tasks fa-fw"></i> <span class="hide-menu"> @lang('app.menu.work') <span class="fa arrow"></span> </span></a>
                 <ul class="nav nav-second-level">
-                    <li><a href="{{ route('client.all-tasks.index') }}">@lang('app.menu.tasks')</a></li>
+                    <li><a href="{{ route('client.all-tasks.index') }}">@lang('app.menu.work')</a></li>
+                    <li><a href="{{ route('client.all-tasks.create') }}">@lang('app.menu.newwork')</a></li>
                     <li><a href="{{ route('client.task-calendar.index') }}">@lang('app.menu.taskCalendar')</a></li>
                 </ul>
             </li>
             @endif
 
-            @if(in_array('product',$modules))
-                <li><a href="{{ route('client.products.index') }}" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu">@lang('app.menu.products') </span></a> </li>
-            @endif
-            
-            @if(in_array('tickets',$modules))
-                <li><a href="{{ route('client.tickets.index') }}" class="waves-effect"><i class="ti-ticket fa-fw"></i> <span class="hide-menu">@lang("app.menu.tickets") </span></a> </li>
+            <li><a href="{{ route('client.task-label.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> <span class="hide-menu">@lang('app.menu.taskLabel') <span class="fa arrow"></span> </span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="{{ route('client.task-label.index') }}">@lang('app.menu.browsetaskLabel')</a></li>
+                    <li><a href="{{ route('client.task-label.create') }}">@lang('app.menu.newtaskLabel')</a></li>
+                </ul>    
+            </li>
+
+            @if(in_array('projects',$modules))
+                <li><a href="{{ route('client.projects.index') }}" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu">@lang('app.menu.projects') </span></a> 
+
+                </li>
             @endif
 
+<!--             <li><a href="javascript:;" class="waves-effect"><i class="ti-pie-chart fa-fw"></i> <span class="hide-menu"> Reports <span class="fa arrow"></span> </span></a>
+                <ul class="nav nav-second-level">
+<li><a href="{{ route('client.reports.index') }}" class="waves-effect active"> <span class="hide-menu">Task Report </span></a> </li>                                                                                                                      
+                </ul>
+            </li> -->
             @if(in_array('invoices',$modules))
                 <li><a href="{{ route('client.invoices.index') }}" class="waves-effect"><i class="ti-receipt fa-fw"></i> <span class="hide-menu">@lang('app.menu.invoices') </span></a> </li>
                 <li><a href="{{ route('client.credit-notes.index') }}" class="waves-effect"><i class="ti-credit-card fa-fw"></i> <span class="hide-menu">@lang('app.credit-note') </span></a> </li>
             @endif
 
-            @if(in_array('estimates',$modules))
-                <li><a href="{{ route('client.estimates.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> <span class="hide-menu">@lang('app.menu.estimates') </span></a> </li>
-            @endif
-
-            @if(in_array('payments',$modules))
-                <li><a href="{{ route('client.payments.index') }}" class="waves-effect"><i class="fa fa-money fa-fw"></i> <span class="hide-menu">@lang('app.menu.payments') </span></a> </li>
-            @endif
-
-            @if(in_array('events',$modules))
-                <li><a href="{{ route('client.events.index') }}" class="waves-effect"><i class="icon-calender fa-fw"></i> <span class="hide-menu">@lang('app.menu.Events')</span></a> </li>
-            @endif
-
-            @if(in_array('contracts',$modules))
-                <li><a href="{{ route('client.contracts.index') }}" class="waves-effect"><i class="fa fa-file fa-fw"></i> <span class="hide-menu">@lang('app.menu.contracts')</span></a> </li>
-            @endif
-
-            @if($gdpr->enable_gdpr)
-                <li><a href="{{ route('client.gdpr.index') }}" class="waves-effect"><i class="icon-lock fa-fw"></i> <span class="hide-menu">@lang('app.menu.gdpr')</span></a> </li>
-            @endif
-
-            @if(in_array('notices',$modules))
-                <li><a href="{{ route('client.notices.index') }}" class="waves-effect"><i class="ti-layout-media-overlay fa-fw"></i> <span class="hide-menu">@lang("app.menu.noticeBoard") </span></a> </li>
-            @endif
-
-            @if(in_array('messages',$modules))
-                @if($messageSetting->allow_client_admin == 'yes' || $messageSetting->allow_client_employee == 'yes')
-                    <li><a href="{{ route('client.user-chat.index') }}" class="waves-effect"><i class="icon-envelope fa-fw"></i> <span class="hide-menu">@lang('app.menu.messages')</span></a> </li>
-                @endif
-            @endif
 
 
             @foreach ($worksuitePlugins as $item)

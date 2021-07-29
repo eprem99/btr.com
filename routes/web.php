@@ -1060,6 +1060,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::resource('project-ratings', 'ClientProjectRatingController');
         });
 
+
         Route::resource('task', 'ClientAllTasksController', ['only' => ['edit', 'update', 'index', 'add_tasks']]);
 
         Route::group(
@@ -1079,6 +1080,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('taskCategory/create-cat', ['uses' => 'ClientTaskCategoryController@createCat'])->name('taskCategory.create-cat');
             Route::resource('taskCategory', 'ClientTaskCategoryController');
 
+            Route::post('task-label/store-label', ['uses' => 'ClientTaskLabelController@storeLabel'])->name('task-label.store-label');
+            Route::get('task-label/create-label', ['uses' => 'ClientTaskLabelController@createLabel'])->name('task-label.create-label');
+            Route::resource('task-label', 'ClientTaskLabelController');
             // taskboard resource
             Route::post('taskboard/updateIndex', ['as' => 'taskboard.updateIndex', 'uses' => 'ClientAllTaskboardController@updateIndex']);
             Route::resource('taskboard', 'ClientTaskboardController');
@@ -1091,6 +1095,14 @@ Route::group(['middleware' => 'auth'], function () {
 
         });
 
+        Route::resource('reports', 'ClientTaskReportController', ['only' => ['edit', 'update', 'index']]); // hack to make left admin menu item active
+        Route::group(
+            ['prefix' => 'reports'], function () {
+            Route::post('task-report/data', ['uses' => 'ClientTaskReportController@data'])->name('task-report.data');
+            Route::get('task-report/export/{startDate?}/{endDate?}/{employeeId?}/{projectId?}', ['uses' => 'ClientTaskReportController@export'])->name('task-report.export');
+            Route::resource('task-report', 'ClientTaskReportController');
+            //endregion
+        });
         //region Products Routes
         Route::get('products/data', ['uses' => 'ClientProductController@data'])->name('products.data');
         Route::get('products/update-item', ['uses' => 'ClientProductController@addItems'])->name('products.update-item');

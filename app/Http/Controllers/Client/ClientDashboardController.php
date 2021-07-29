@@ -51,6 +51,7 @@ class ClientDashboardController extends ClientBaseController
                 DB::raw('(select IFNULL(sum(project_time_logs.total_minutes),0) from `project_time_logs` where user_id = ' . $this->user->id . ') as totalHoursLogged'),
                 DB::raw('(select count(tickets.id) from `tickets` where (status="open" or status="pending") and user_id = ' . $this->user->id . ') as totalUnResolvedTickets'),
                 DB::raw('(select count(tasks.id) from `tasks` inner join task_users on task_users.task_id=tasks.id where tasks.board_column_id=' . $completedTaskColumn->id . ' and task_users.user_id = ' . $this->user->id . ') as totalCompletedTasks'),
+                DB::raw('(select count(tasks.id) from `tasks` inner join task_users on task_users.task_id=tasks.id where task_users.user_id = ' . $this->user->id . ') as totalAllTasks'),
                 DB::raw('(select count(tasks.id) from `tasks` inner join task_users on task_users.task_id=tasks.id where tasks.board_column_id!=' . $completedTaskColumn->id . ' and task_users.user_id = ' . $this->user->id . ') as totalPendingTasks')
             )
             ->first();
@@ -88,6 +89,7 @@ class ClientDashboardController extends ClientBaseController
 
  
         $completedTaskColumn = TaskboardColumn::where('slug', '=', 'completed')->first();
+
         $this->tasks = Task::select('tasks.*')
             ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
             ->where('board_column_id', '<>', $completedTaskColumn->id);
