@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\DataTables\Admin\LabelDataTable;
+use App\DataTables\Member\LabelDataTable;
 use App\Helper\Reply;
 use App\Http\Requests\Admin\TaskLabel\StoreRequest;
 use App\Http\Requests\Admin\TaskLabel\UpdateRequest;
@@ -43,6 +43,7 @@ class ClientTaskLabelController extends ClientBaseController
 
     public function edit($id)
     {
+
         $this->taskLabel = TaskLabelList::find($id);
         return view('client.task-label.edit', $this->data);
     }
@@ -62,9 +63,10 @@ class ClientTaskLabelController extends ClientBaseController
 
     private function storeUpdate($request, $taskLabel)
     {
+        $json = json_encode($request->input());
         $taskLabel->label_name  = $request->label_name;
-        $taskLabel->color       = $request->color;
         $taskLabel->description = $request->description;
+        $taskLabel->contacts     = $json;
         $taskLabel->save();
 
         return $taskLabel;
@@ -72,7 +74,7 @@ class ClientTaskLabelController extends ClientBaseController
 
     public function destroy($id)
     {
-        TaskLabel::where('label_id', $id)->delete();
+        TaskLabel::where('site_id', $id)->delete();
         TaskLabelList::destroy($id);
 
         return Reply::success(__('messages.taskLabel.deletedSuccess'));
@@ -95,7 +97,7 @@ class ClientTaskLabelController extends ClientBaseController
 
         $labels = '';
         foreach ($allTaskLabels as $key => $value) {
-            $labels.= '<option data-content="<label class=\'badge b-all\' style=\'background:' . $value->label_color . '\'>' . $value->label_name . '</label> " value="' . $value->id . '">' . $value->label_name . '</option>';
+            $labels.= '<option>' . $value->site_name . '</label> " value="' . $value->id . '">' . $value->site_name . '</option>';
         }
         return Reply::successWithData(__('messages.taskLabel.addedSuccess'), ['labels' => $labels]);
     }

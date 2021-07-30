@@ -166,68 +166,68 @@ class ClientProjectsController extends ClientBaseController
                 return '<a href="' . route('client.projects.show', [$row->id]) . '" class="btn btn-success btn-circle"
                       data-toggle="tooltip" data-original-title="View Project Details"><i class="fa fa-search" aria-hidden="true"></i></a>';
             })
-            ->addColumn('members', function ($row) {
-                $members = '';
+            // ->addColumn('members', function ($row) {
+            //     $members = '';
 
-                if (count($row->members) > 0) {
-                    foreach ($row->members as $member) {
-                        $members .= ($member->user->image) ? '<img data-toggle="tooltip" data-original-title="' . ucwords($member->user->name) . '" src="' . asset_url('avatar/' . $member->user->image) . '"
-                        alt="user" class="img-circle" width="30" height="30"> ' : '<img data-toggle="tooltip" data-original-title="' . ucwords($member->user->name) . '" src="' . asset('img/default-profile-3.png') . '"
-                        alt="user" class="img-circle" width="30" height="30"> ';
-                    }
-                } else {
-                    $members .= __('messages.noMemberAddedToProject');
-                }
-                return $members;
-            })
+            //     if (count($row->members) > 0) {
+            //         foreach ($row->members as $member) {
+            //             $members .= ($member->user->image) ? '<img data-toggle="tooltip" data-original-title="' . ucwords($member->user->name) . '" src="' . asset_url('avatar/' . $member->user->image) . '"
+            //             alt="user" class="img-circle" width="30" height="30"> ' : '<img data-toggle="tooltip" data-original-title="' . ucwords($member->user->name) . '" src="' . asset('img/default-profile-3.png') . '"
+            //             alt="user" class="img-circle" width="30" height="30"> ';
+            //         }
+            //     } else {
+            //         $members .= __('messages.noMemberAddedToProject');
+            //     }
+            //     return $members;
+            // })
 
             ->editColumn('project_name', function ($row) {
                 return '<a href="' . route('client.projects.show', $row->id) . '">' . ucfirst($row->project_name) . '</a>';
             })
-            ->editColumn('start_date', function ($row) {
-                return $row->start_date->format($this->global->date_format);
-            })
-            ->editColumn('deadline', function ($row) {
-                if ($row->deadline) {
-                    return $row->deadline->format($this->global->date_format);
-                }
-                return '-';
-            })
-            ->editColumn('completion_percent', function ($row) {
-                if ($row->completion_percent < 50) {
-                    $statusColor = 'danger';
-                    $status = __('app.progress');
-                } elseif ($row->completion_percent >= 50 && $row->completion_percent < 75) {
-                    $statusColor = 'warning';
-                    $status = __('app.progress');
-                } else {
-                    $statusColor = 'success';
-                    $status = __('app.progress');
+            // ->editColumn('start_date', function ($row) {
+            //     return $row->start_date->format($this->global->date_format);
+            // })
+            // ->editColumn('deadline', function ($row) {
+            //     if ($row->deadline) {
+            //         return $row->deadline->format($this->global->date_format);
+            //     }
+            //     return '-';
+            // })
+            // ->editColumn('completion_percent', function ($row) {
+            //     if ($row->completion_percent < 50) {
+            //         $statusColor = 'danger';
+            //         $status = __('app.progress');
+            //     } elseif ($row->completion_percent >= 50 && $row->completion_percent < 75) {
+            //         $statusColor = 'warning';`
+            //         $status = __('app.progress');
+            //     } else {
+            //         $statusColor = 'success';
+            //         $status = __('app.progress');
 
-                    if ($row->completion_percent >= 100) {
-                        $status = __('app.progress');
-                    }
-                }
+            //         if ($row->completion_percent >= 100) {
+            //             $status = __('app.progress');
+            //         }
+            //     }
 
-                return '<h5>' . $status . '<span class="pull-right">' . $row->completion_percent . '%</span></h5><div class="progress">
-                  <div class="progress-bar progress-bar-' . $statusColor . '" aria-valuenow="' . $row->completion_percent . '" aria-valuemin="0" aria-valuemax="100" style="width: ' . $row->completion_percent . '%" role="progressbar"> <span class="sr-only">' . $row->completion_percent . '% Complete</span> </div>
-                </div>';
-            })
-            ->editColumn('status', function ($row) {
+            //     return '<h5>' . $status . '<span class="pull-right">' . $row->completion_percent . '%</span></h5><div class="progress">
+            //       <div class="progress-bar progress-bar-' . $statusColor . '" aria-valuenow="' . $row->completion_percent . '" aria-valuemin="0" aria-valuemax="100" style="width: ' . $row->completion_percent . '%" role="progressbar"> <span class="sr-only">' . $row->completion_percent . '% Complete</span> </div>
+            //     </div>';
+            // })
+            // ->editColumn('status', function ($row) {
 
-                if ($row->status == 'in progress') {
-                    $status = '<label class="label label-info">' . __('app.inProgress') . '</label>';
-                } else if ($row->status == 'on hold') {
-                    $status = '<label class="label label-warning">' . __('app.onHold') . '</label>';
-                } else if ($row->status == 'not started') {
-                    $status = '<label class="label label-warning">' . __('app.notStarted') . '</label>';
-                } else if ($row->status == 'canceled') {
-                    $status = '<label class="label label-danger">' . __('app.canceled') . '</label>';
-                } else if ($row->status == 'finished') {
-                    $status = '<label class="label label-success">' . __('app.finished') . '</label>';
-                }
-                return $status;
-            })
+            //     if ($row->status == 'in progress') {
+            //         $status = '<label class="label label-info">' . __('app.inProgress') . '</label>';
+            //     } else if ($row->status == 'on hold') {
+            //         $status = '<label class="label label-warning">' . __('app.onHold') . '</label>';
+            //     } else if ($row->status == 'not started') {
+            //         $status = '<label class="label label-warning">' . __('app.notStarted') . '</label>';
+            //     } else if ($row->status == 'canceled') {
+            //         $status = '<label class="label label-danger">' . __('app.canceled') . '</label>';
+            //     } else if ($row->status == 'finished') {
+            //         $status = '<label class="label label-success">' . __('app.finished') . '</label>';
+            //     }
+            //     return $status;
+            // })
             ->rawColumns(['project_name', 'action', 'members', 'completion_percent', 'status'])
             ->removeColumn('project_summary')
             ->removeColumn('notes')

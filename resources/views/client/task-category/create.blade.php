@@ -10,6 +10,7 @@
                 <tr>
                     <th>#</th>
                     <th>@lang('modules.taskCategory.categoryName')</th>
+                    <th>@lang('modules.taskCategory.projectvisibility')</th>
                     <th>@lang('app.action')</th>
                 </tr>
                 </thead>
@@ -18,6 +19,7 @@
                     <tr id="cat-{{ $category->id }}">
                         <td>{{ $key+1 }}</td>
                         <td>{{ ucwords($category->category_name) }}</td>
+                        <td>{{ ucwords($category->category_visibility) }}</td>
                         <td><a href="javascript:;" data-cat-id="{{ $category->id }}" class="btn btn-sm btn-danger btn-rounded delete-category">@lang("app.remove")</a></td>
                     </tr>
                 @empty
@@ -33,10 +35,23 @@
         {!! Form::open(['id'=>'createTaskCategoryForm','class'=>'ajax-form','method'=>'POST']) !!}
         <div class="form-body">
             <div class="row">
-                <div class="col-xs-12 ">
+                <div class="col-xs-6 ">
                     <div class="form-group">
                         <label>@lang('app.add') @lang('modules.taskCategory.categoryName')</label>
                         <input type="text" name="category_name" id="category_name" class="form-control">
+                    </div>
+                </div>
+                <div class="col-xs-6 ">
+                    <div class="form-group">
+                        <label>@lang('app.add') @lang('modules.taskCategory.projectvisibility')</label>
+                        <select class="select2 form-control" name="category_visibility" id="category_visibility"
+                                                data-style="form-control">
+                                <option value="0">Normal</option>
+                                <option value="1">Pilot</option>
+                                <option value="2">High</option>
+                                <option value="3">DSP</option>
+                                <option value="4">Cindy Behrends Priority Sites</option>
+                        </select>
                     </div>
                 </div>
             </div>

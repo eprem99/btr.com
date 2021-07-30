@@ -312,7 +312,7 @@ return array(
     'position' => 'Board Column Position',
     'subTask' => 'Sub Task',
     'comment' => 'Comment',
-    'taskCategory' => 'Site',
+    'taskCategory' => 'Project',
     'selectTaskCategory' => 'Select Site',
     'noTaskCategory' => 'No Site available',
     'category' => 'Site',
@@ -1151,10 +1151,11 @@ return array(
   ),
   'taskCategory' =>
   array(
-    'addTaskCategory' => 'Site',
-    'categoryName' => 'Category Name',
-    'manageTaskCategory' => 'Manage Site',
-    'taskCategory' => 'Site',
+    'addTaskCategory' => 'Add Project',
+    'categoryName' => 'Project Name',
+    'projectvisibility' => 'Project Visibility',
+    'manageTaskCategory' => 'Manage Project',
+    'taskCategory' => 'Project',
   ),
   'pushSettings' =>
   array(

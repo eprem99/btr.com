@@ -44,17 +44,20 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">@lang('app.project')
-                                       <a href="client.task-label.create" class="btn btn-xs btn-outline btn-success">
-                                                <i class="fa fa-plus"></i> Add Project
+                                        <label class="control-label">@lang('modules.tasks.taskCategory')
+                                            <a href="javascript:;"
+                                               id="createTaskCategory"
+                                               class="btn btn-xs btn-outline btn-success">
+                                                <i class="fa fa-plus"></i> @lang('modules.taskCategory.addTaskCategory')
                                             </a>
                                         </label>
-                                        <select class="select2 form-control" data-placeholder="@lang("app.selectProject")" id="project_id" name="project_id">
-                                            <option value=""></option>
-                                            @foreach($projects as $project)
-                                                <option
-                                                value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
-                                            @endforeach
+                                        <select class="select2 form-control" name="category_id" id="category_id"
+                                                data-style="form-control">
+                                            @forelse($categories as $category)
+                                                <option value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
+                                            @empty
+                                                <option value="">@lang('messages.noTaskCategoryAdded')</option>
+                                            @endforelse
                                         </select>
                                     </div>
                                 </div>
@@ -65,7 +68,7 @@
                                                 <i class="fa fa-plus"></i> Add Site
                                             </a>
                                         </label>
-                                        <select id="multiselect" name="task_labels[]"  multiple="multiple" class="selectpicker form-control">
+                                        <select name="task_labels" class="select2 form-control">
                                             @foreach($taskLabels as $label)
                                                 <option value="{{ $label->id }}">{{ $label->label_name }}</option>
                                             @endforeach
@@ -85,7 +88,33 @@
                                         <textarea id="description" name="description" class="form-control summernote"></textarea>
                                     </div>
                                 </div>
-
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.type')</label>
+                                        <select name="task_type" class="select2 form-control">
+                                            <option value="0">Work Order</option>
+                                            <option value="1">Site Survey</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.purchaseorder')</label>
+                                        <input type="text" name="task_purchase" class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.refno')</label>
+                                        <input type="text" name="task_refno" class="form-control" >
+                                     </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.equipment')</label>
+                                        <input type="text" name="task_Equipment" class="form-control" >
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.startDate')</label>

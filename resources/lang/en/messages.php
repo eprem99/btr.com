@@ -421,10 +421,10 @@ return array (
   'recoverRenewal' => 'You will not be able to recover the deleted renewal!',
   'taskLabel' =>
   array (
-    'deletedSuccess' => 'Label deleted successfully.',
-    'addedSuccess' => 'Label added successfully.',
-    'updatedSuccess' => 'Label updated successfully.',
-    'noTaskLabel' => 'No task label found.',
+    'deletedSuccess' => 'Site deleted successfully.',
+    'addedSuccess' => 'Site added successfully.',
+    'updatedSuccess' => 'Site updated successfully.',
+    'noTaskLabel' => 'No task site found.',
     'labelColorSuggestion' => ' Choose any color.
                             Or you can choose one of the suggested colors below.',
   ),

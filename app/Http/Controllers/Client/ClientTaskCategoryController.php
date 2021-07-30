@@ -56,6 +56,7 @@ class ClientTaskCategoryController extends ClientBaseController
     {
         $category = new TaskCategory();
         $category->category_name = $request->category_name;
+        $category->category_visibility = $request->category_visibility;
         $category->save();
 
         return Reply::success(__('messages.categoryAdded'));
@@ -72,6 +73,7 @@ class ClientTaskCategoryController extends ClientBaseController
     {
         $category = new TaskCategory();
         $category->category_name = $request->category_name;
+        $category->category_visibility = $request->category_visibility;
         $category->save();
         $categoryData = TaskCategory::all();
         return Reply::successWithData(__('messages.categoryAdded'), ['data' => $categoryData]);

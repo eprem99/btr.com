@@ -46,10 +46,6 @@
                         <tr>
                             <th>#</th>
                             <th>@lang('modules.projects.projectName')</th>
-                            <th>@lang('modules.projects.members')</th>
-                            <th>@lang('modules.projects.deadline')</th>
-                            <th>@lang('app.completion')</th>
-                            <th>@lang('app.status')</th>
                             <th>@lang('app.action')</th>
                         </tr>
                         </thead>
@@ -108,10 +104,10 @@
             columns: [
                 { data: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'project_name', name: 'project_name'},
-                { data: 'members', name: 'members' },
-                { data: 'deadline', name: 'deadline' },
-                { data: 'completion_percent', name: 'completion_percent' },
-                { data: 'status', name: 'status' },
+                // { data: 'members', name: 'members' },
+                // { data: 'deadline', name: 'deadline' },
+                // { data: 'completion_percent', name: 'completion_percent' },
+                // { data: 'status', name: 'status' },
                 { data: 'action', name: 'action' }
             ]
         });

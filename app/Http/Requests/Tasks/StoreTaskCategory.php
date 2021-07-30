@@ -25,7 +25,8 @@ class StoreTaskCategory extends CoreRequest
     public function rules()
     {
         return [
-            'category_name' => 'required|unique:task_category'
+            'category_name' => 'required|unique:task_category',
+            'category_visibility' => 'unique:task_category'
         ];
     }
 }

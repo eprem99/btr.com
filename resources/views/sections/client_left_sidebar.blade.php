@@ -131,12 +131,6 @@
                 </ul>    
             </li>
 
-            @if(in_array('projects',$modules))
-                <li><a href="{{ route('client.projects.index') }}" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu">@lang('app.menu.projects') </span></a> 
-
-                </li>
-            @endif
-
 <!--             <li><a href="javascript:;" class="waves-effect"><i class="ti-pie-chart fa-fw"></i> <span class="hide-menu"> Reports <span class="fa arrow"></span> </span></a>
                 <ul class="nav nav-second-level">
 <li><a href="{{ route('client.reports.index') }}" class="waves-effect active"> <span class="hide-menu">Task Report </span></a> </li>                                                                                                                      
