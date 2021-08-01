@@ -21,28 +21,6 @@
 
         <!-- This is the message dropdown -->
         <ul class="nav navbar-top-links navbar-right pull-right visible-xs">
-            @if(isset($activeTimerCount))
-            <li class="dropdown hidden-xs">
-            <span id="timer-section">
-                <div class="nav navbar-top-links navbar-right pull-right m-t-10">
-                    <a class="btn btn-rounded btn-default timer-modal" href="javascript:;">@lang("modules.projects.activeTimers")
-                        <span class="label label-danger" id="activeCurrentTimerCount">@if($activeTimerCount > 0) {{ $activeTimerCount }} @else 0 @endif</span>
-                    </a>
-                </div>
-            </span>
-            </li>
-            @endif
-
-
-            <li class="dropdown">
-                <select class="selectpicker language-switcher" data-width="fit">
-                    <option value="en" @if($global->locale == "en") selected @endif data-content='<span class="flag-icon flag-icon-gb"></span> En'>En</option>
-                    @foreach($languageSettings as $language)
-                        <option value="{{ $language->language_code }}" @if($global->locale == $language->language_code) selected @endif  data-content='<span class="flag-icon flag-icon-{{ $language->language_code }}"></span> {{ $language->language_code }}'>{{ $language->language_code }}</option>
-                    @endforeach
-                </select>
-            </li>
-
             <!-- .Task dropdown -->
             <li class="dropdown" id="top-notification-dropdown">
                 <a class="dropdown-toggle waves-effect waves-light show-user-notifications" data-toggle="dropdown" href="#">
@@ -67,9 +45,6 @@
                 ><i class="fa fa-power-off"></i>
                 </a>
             </li>
-
-
-
         </ul>
 
     </div>

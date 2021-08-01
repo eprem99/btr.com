@@ -157,13 +157,16 @@
                            id="tasks-table">
                         <thead>
                         <tr>
-                            <th>#</th>
+                            <th>@lang('app.task.wo')</th>
                             <th>@lang('app.task')</th>
+                            <th>@lang('app.tasksite')</th>
+                            <th>@lang('app.tasksiteid')</th>
+                            <th>@lang('app.manager')</th>
                             <th>@lang('modules.tasks.assignTo')</th>
                             {{-- <th>@lang('modules.tasks.assignBy')</th> --}}
                             <th>@lang('app.dueDate')</th>
                             <th>@lang('app.status')</th>
-                            <th>@lang('app.action')</th>
+                            <!-- <th>@lang('app.action')</th> -->
                         </tr>
                         </thead>
                     </table>
@@ -317,12 +320,15 @@
             columns: [
                 { data: 'id', name: 'id' },
                 {data: 'heading', name: 'heading'},
+                {data: 'site', name: 'site'},
+                {data: 'siteid', name: 'siteid'},
+                {data: 'manager', name: 'manager'},
               //  {data: 'project_name', name: 'projects.project_name'},
                 {data: 'users', name: 'client.name'},
                 // {data: 'created_by', name: 'creator_user.name', width: '15%'},
                 {data: 'due_date', name: 'due_date'},
                 {data: 'board_column', name: 'board_column', searchable: false},
-                {data: 'action', name: 'action', "searchable": false}
+                // {data: 'action', name: 'action', "searchable": false}
             ]
         });
     }

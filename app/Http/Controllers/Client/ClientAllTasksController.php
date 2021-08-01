@@ -135,16 +135,35 @@ class ClientAllTasksController extends ClientBaseController
         $tasks->get();
 
         return DataTables::of($tasks)
-            ->addColumn('action', function ($row) {
-                $action = '';
+            // ->addColumn('action', function ($row) {
+            //     $action = '';
 
-                if ($this->user->can('edit_tasks') || ($this->global->task_self == 'yes' && $this->user->id == $row->created_by_id)) {
-                    $action .= '<a href="' . route('client.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
-                      data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
-                }
+            //     if ($this->user->can('edit_tasks') || ($this->global->task_self == 'yes' && $this->user->id == $row->created_by_id)) {
+            //         $action .= '<a href="' . route('client.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
+            //           data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+            //     }
 
-                return $action;
+            //     return $action;
+            // })
+
+            ->addColumn('site', function ($row) {
+                $site = 'Site ';
+
+               return $site;
             })
+
+            ->addColumn('siteid', function ($row) {
+                $site = 'Site ID';
+
+               return $site;
+            })
+
+            ->addColumn('manager', function ($row) {
+                $site = 'Project Manager';
+
+               return $site;
+            })
+
             ->editColumn('due_date', function ($row) {
 
                 if ($row->due_date->endOfDay()->isPast()) {

@@ -168,42 +168,7 @@
 
     <div class="row" >
 
-        @if(in_array('projects',$modules))
-        <div class="col-md-6" id="project-timeline">
-            <div class="panel panel-inverse">
-                <div class="panel-heading">@lang('modules.dashboard.projectActivityTimeline')</div>
-                <div class="panel-wrapper collapse in">
-                    <div class="panel-body">
-                        <div class="steamline">
-                            @forelse($projectActivities as $activity)
-                                <div class="sl-item">
-                                    <div class="sl-left"><i class="fa fa-circle text-info"></i>
-                                    </div>
-                                    <div class="sl-right">
-                                        <div><h6><a href="{{ route('member.projects.show', $activity->project_id) }}" class="font-bold">{{ ucwords($activity->project_name) }}:</a> {{ $activity->activity }}</h6> <span class="sl-date">{{ $activity->created_at->timezone($global->timezone)->diffForHumans() }}</span></div>
-                                    </div>
-                                </div>
-                                @empty
-                                <div class="text-center">
-                                    <div class="empty-space" style="height: 200px;">
-                                        <div class="empty-space-inner">
-                                            <div class="icon" style="font-size:20px"><i
-                                                        class="fa fa-history"></i>
-                                            </div>
-                                            <div class="title m-b-15">@lang("messages.noProjectActivity")
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endforelse
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endif
-
-        @if(in_array('notices',$modules) && $user->can('view_notice'))
+       @if(in_array('notices',$modules) && $user->can('view_notice'))
         <div class="col-md-6" id="notices-timeline">
             <div class="panel panel-inverse">
                 <div class="panel-heading">@lang('modules.module.noticeBoard')</div>

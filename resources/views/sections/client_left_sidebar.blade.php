@@ -87,8 +87,6 @@
     <div class="sidebar-nav navbar-collapse slimscrollsidebar">
 
         <ul class="nav" id="side-menu">
-
-
             <li class="user-pro hidden-md  hidden-sm  hidden-lg">
                 @if(is_null($user->image))
                     <a href="#" class="waves-effect"><img src="{{ asset('img/default-profile-3.png') }}" alt="user-img" class="img-circle"> <span class="hide-menu">{{ (strlen($user->name) > 24) ? substr(ucwords($user->name), 0, 20).'..' : ucwords($user->name) }}
@@ -131,11 +129,6 @@
                 </ul>    
             </li>
 
-<!--             <li><a href="javascript:;" class="waves-effect"><i class="ti-pie-chart fa-fw"></i> <span class="hide-menu"> Reports <span class="fa arrow"></span> </span></a>
-                <ul class="nav nav-second-level">
-<li><a href="{{ route('client.reports.index') }}" class="waves-effect active"> <span class="hide-menu">Task Report </span></a> </li>                                                                                                                      
-                </ul>
-            </li> -->
             @if(in_array('invoices',$modules))
                 <li><a href="{{ route('client.invoices.index') }}" class="waves-effect"><i class="ti-receipt fa-fw"></i> <span class="hide-menu">@lang('app.menu.invoices') </span></a> </li>
                 <li><a href="{{ route('client.credit-notes.index') }}" class="waves-effect"><i class="ti-credit-card fa-fw"></i> <span class="hide-menu">@lang('app.credit-note') </span></a> </li>
