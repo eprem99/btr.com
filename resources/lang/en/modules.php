@@ -99,6 +99,7 @@ return array(
     'typeWiseTicket' => 'Type Wise Ticket',
     'statusWiseTicket' => 'Status Wise Ticket',
     'channelWiseTicket' => 'Channel Wise Ticket',
+    'totalAllTasks' => 'All tasks',
   ),
   'client' =>
   array(
@@ -283,6 +284,7 @@ return array(
     'chooseDepartment' => 'Choose Department',
     'hideFinishedProjects' => 'Hide Finished Projects',
     'noClientFound' => 'No Client Found',
+
   ),
   'tasks' =>
   array(
@@ -311,7 +313,8 @@ return array(
     'tasksTable' => 'Tasks Table',
     'position' => 'Board Column Position',
     'subTask' => 'Sub Task',
-    'comment' => 'Comment',
+    'comment' => 'Question',
+    'noCommentFound' => 'No question found.',
     'taskCategory' => 'Project',
     'selectTaskCategory' => 'Select Site',
     'noTaskCategory' => 'No Site available',
@@ -353,6 +356,12 @@ return array(
     'site' => 'Site',
     'siteid' => 'Site ID',
     'manager' => 'Manager',
+    'po' => 'PO',
+    'reference' => 'Reference',
+    'traking' => 'Traking',
+    'wodetails' => 'Work Order Details',
+    'siteinfo' => 'Site Information',
+    'sitecontacts' => 'Site Contacts'
   ),
   'invoices' =>
   array(

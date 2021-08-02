@@ -43,11 +43,9 @@ class ClientTaskNoteController extends ClientBaseController
         $note->task_id = $request->taskId;
         $note->user_id = $this->user->id;
         $note->save();
-dd($request->taskId);
         $data = TaskNote::where('task_id', $request->taskId)->orderBy('id', 'desc')->get();
 
         $view = view('client.all-tasks.task_note', $data)->render();
-dd($view);
         return Reply::dataOnly(['status' => 'success', 'view' => $view]);
     }
 

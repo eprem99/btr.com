@@ -13,46 +13,90 @@
         <div class="col-xs-12 col-md-9 p-t-20 b-r h-scroll">
 
             <div class="col-xs-12">
-                <a href="{{route('front.task-share',[$task->hash])}}" target="_blank" data-toggle="tooltip" data-placement="bottom"
-                    data-original-title="@lang('app.share')" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right m-l-5"> <i class="fa fa-share-alt"></i></a>
                 <a href="javascript:;" id="reminderButton" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right  m-l-5 @if($task->board_column->slug == 'completed') hidden @endif" title="@lang('messages.remindToAssignedEmployee')"><i class="fa fa-bell"></i> @lang('modules.tasks.reminder')</a>
 
-
-                @if ($task->board_column->slug != 'completed')
-
-                    @if (count($task->activeTimerAll) > 0)
-                        <a href="javascript:;" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right  m-l-5 timer-modal"><i class="fa fa-clock-o"></i> @lang('modules.projects.activeTimers')
-                            <span class="badge badge-purple">{{ count($task->activeTimerAll) }}</span>
-                        </a>
-                    @endif
-                @endif
-    
-    
             </div>
             <div class="col-xs-12">
-                <h4>
-                    {{ ucwords($task->heading) }}
-                </h4>
-                
-                @if(!is_null($task->project_id))
-                    <p><i class="icon-layers"></i> {{ ucfirst($task->project->project_name) }}</p>
-                @endif
-
-
-                <h5>
-                    @if($task->task_category_id)
-                        <label class="label label-default text-dark font-light">{{ ucwords($task->category->category_name) }}</label>
-                    @endif
-
-               </h5>
-
+                <h2>
+                     @lang('modules.tasks.wodetails')
+                </h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <P>
+                            <strong>Work Order:  </strong>{{ ucwords($task->heading) }}
+                        </P>
+                        
+                        @if(!is_null($task->project_id))
+                            <p><strong>Work Order:  </strong> {{ ucfirst($task->project->project_name) }}</p>
+                        @endif
+                        <p>
+                            @if($task->task_category_id)
+                            <strong>Project:  </strong>{{ ucwords($task->category->category_name) }}
+                            @endif
+                       </p>
+                       <p>
+                            <strong>PO Number:  </strong>
+                       </p>
+                       <p>
+                            <strong>Client Ref No.:  </strong>
+                       </p>
+                       <p>
+                            <strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}
+                       </p>
+                       <p>
+    
+                            <strong>Summery:  </strong> {!! $task->exception ?? __('messages.noDescriptionAdded') !!}
+                       </p>
+                       <p>
+                            <strong>Work Order Type:  </strong>
+                       </p>
+                       <p>
+                            <strong>Client:  </strong> {{ ucwords($task->users[0]->name) }}
+                       </p>
+                       <p>
+                            <strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}
+                       </p>
+                    </div>
+                    <div class="col-md-6">
+                    <h3>
+                         @lang('modules.tasks.siteinfo')
+                    </h3>
+                    @php 
+                    $contacts = json_decode($task->label[0]->label->contacts, true);
+                    @endphp
+                    <P>
+                            <strong>Site ID: </strong> {{$task->label[0]->label->id}}
+                        </P>
+                       <p>
+                            <strong>Site Name:  </strong> {{$task->label[0]->label->label_name}}
+                       </p>
+                       <p>
+                            <strong>Time Zone:  </strong>
+                       </p>
+                       <p>
+                            <strong>Address:  </strong>{{$contacts['site_address']}}
+                       </p>
+                       <h3>
+                           @lang('modules.tasks.sitecontacts')
+                       </h3>
+                       <p>
+                            <strong>Primary:  </strong> {{ ucwords($task->create_by->name) }}
+                       </p>
+                       <p>
+                            <strong>Phone:  </strong> {{$contacts['site_phone']}}
+                       </p>
+                       <p>
+                            <strong>Email:  </strong> {{$contacts['site_pemail']}}
+                       </p>
+                    </div>
+                </div>
     
             </div>
     
             <ul class="nav customtab nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#home1" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">@lang('app.task')</a></li>
                 <li role="presentation" class=""><a href="#messages1" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false">@lang('app.file') (<span id="totalUploadedFiles">{{ sizeof($task->files) }}</span>) </a></li>
-                
+                <li role="presentation" class=""><a href="#settings1" aria-controls="settings" role="tab" data-toggle="tab" aria-expanded="false">@lang('modules.tasks.comment') ({{ count($task->comments) }})</a></li>
                 <li role="presentation" class=""><a href="#notes1" aria-controls="note" role="tab" data-toggle="tab" aria-expanded="false">@lang('app.notes') ({{ count($task->notes) }})</a></li>
 
                 <li role="presentation" >  <a href="#history1" id="view-task-history" role="tab" data-toggle="tab" aria-expanded="false" data-task-id="{{ $task->id }}" > <span class="hidden-xs">@lang('modules.tasks.history')</span></a></li>
@@ -94,8 +138,7 @@
                                 <span @if($task->due_date->isPast()) class="text-danger" @endif>
                                     {{ $task->due_date->format($global->date_format) }}
                                 </span>
-                                <span style="color: {{ $task->board_column->label_color }}" id="columnStatus"> {{ $task->board_column->column_name }}</span>
-    
+
                             </div>
                         </div>
                      
@@ -207,6 +250,43 @@
                     </div>
                 </div>
                 
+                <div role="tabpanel" class="tab-pane" id="settings1">
+                    <div class="col-xs-12">
+                        <h4>@lang('modules.tasks.comment')</h4>
+                    </div>
+    
+                    <div class="col-xs-12" id="comment-container">
+                        <div id="comment-list">
+                            @forelse($task->comments as $comment)
+                                <div class="row b-b m-b-5 font-12">
+                                    <div class="col-xs-12 m-b-5">
+                                        <span class="font-semi-bold">{{ ucwords($comment->user->name) }}</span> <span class="text-muted font-12">{{ ucfirst($comment->created_at->diffForHumans()) }}</span>
+                                    </div>
+                                    <div class="col-xs-10">
+                                        {!! ucfirst($comment->comment)  !!}
+                                    </div>
+                                    <div class="col-xs-2 text-right">
+                                        <a href="javascript:;" data-comment-id="{{ $comment->id }}" class="btn btn-xs  btn-outline btn-default" onclick="deleteComment('{{ $comment->id }}');return false;"><i class="fa fa-trash"></i> @lang('app.delete')</a>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-xs-12">
+                                    @lang('modules.tasks.noCommentFound')
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+    
+                    <div class="form-group" id="comment-box">
+                        <div class="col-xs-12 m-t-10">
+                            <textarea name="comment" id="task-comment" class="summernote" placeholder="@lang('modules.tasks.comment')"></textarea>
+                        </div>
+                        <div class="col-xs-12">
+                            <a href="javascript:;" id="submit-comment" class="btn btn-info btn-sm"><i class="fa fa-send"></i> @lang('app.submit')</a>
+                        </div>
+                    </div>
+    
+                </div>
   
                 <div role="tabpanel" class="tab-pane" id="notes1">
                     <div class="col-xs-12">
@@ -276,6 +356,7 @@
                         <img src="{{ $item->image_url }}" data-toggle="tooltip"
                              data-original-title="{{ ucwords($item->name) }}" data-placement="right"
                              class="img-circle" width="35" height="35" alt="">
+                             {{ ucwords($item->name) }}
                     @endforeach
                     <hr>
                 </div>
@@ -304,64 +385,6 @@
                     </span>
                     <hr>
                 </div>
-
-                @if ($task->estimate_hours > 0 || $task->estimate_minutes > 0)
-                    <div class="col-xs-12 ">
-                        <label class="font-12" for="">@lang('app.estimate')</label><br>
-                       
-                        <span>
-                            {{ $task->estimate_hours }} @lang('app.hrs') 
-                            {{ $task->estimate_minutes }} @lang('app.mins')
-                        </span>
-                        <hr>
-                    </div>
-
-                    <div class="col-xs-12 ">
-                        <label class="font-12" for="">@lang('modules.employees.hoursLogged')</label><br>
-                        <span>
-                            @php
-                                $timeLog = intdiv($task->timeLogged->sum('total_minutes'), 60) . ' ' . __('app.hrs') . ' ';
-
-                                if (($task->timeLogged->sum('total_minutes') % 60) > 0) {
-                                    $timeLog .= ($task->timeLogged->sum('total_minutes') % 60) . ' ' . __('app.mins');
-                                }
-                            @endphp 
-                            <span @if ($task->total_estimated_minutes < $task->timeLogged->sum('total_minutes')) class="text-danger font-semi-bold" @endif>
-                                {{ $timeLog }}
-                            </span>
-                        </span>
-                        <hr>
-                    </div>
-                @else
-                    <div class="col-xs-12 ">
-                        <label class="font-12" for="">@lang('modules.employees.hoursLogged')</label><br>
-                        <span>
-                            @php
-                                $timeLog = intdiv($task->timeLogged->sum('total_minutes'), 60) . ' ' . __('app.hrs') . ' ';
-
-                                if (($task->timeLogged->sum('total_minutes') % 60) > 0) {
-                                    $timeLog .= ($task->timeLogged->sum('total_minutes') % 60) . ' ' . __('app.mins');
-                                }
-                            @endphp 
-                            <span>
-                                {{ $timeLog }}
-                            </span>
-                        </span>
-                        <hr>
-                    </div>
-                @endif
-
-                @if(sizeof($task->label))
-                    <div class="col-xs-12">
-                        <label class="font-12" for="">@lang('app.label')</label><br>
-                        <span>
-                            @foreach($task->label as $key => $label)
-                                <label class="badge text-capitalize font-semi-bold" style="background:{{ $label->label->label_color }}">{{ ucwords($label->label->label_name) }} </label>
-                            @endforeach
-                        </span>
-                        <hr>
-                    </div>
-                @endif
 
             </div>
 
@@ -425,7 +448,23 @@ var myDropzone;
         myDropzone.removeAllFiles();
     });
 
-
+    $('#submit-comment').click(function () {
+        var comment = $('#task-comment').val();
+        var token = '{{ csrf_token() }}';
+        $.easyAjax({
+            url: '{{ route("client.task-comment.store") }}',
+            type: "POST",
+            data: {'_token': token, comment: comment, taskId: '{{ $task->id }}'},
+            success: function (response) {
+                if (response.status == "success") {
+                    $('#comment-list').html(response.view);
+                    $('.summernote').summernote("reset");
+                    $('.note-editable').html('');
+                    $('#task-comment').val('');
+                }
+            }
+        })
+    })
     $('#reminderButton').click(function () {
         swal({
             title: "@lang('messages.sweetAlertTitle')",

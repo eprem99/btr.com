@@ -157,6 +157,16 @@ class ClientAllTasksController extends ClientBaseController
 
                return $site;
             })
+            ->addColumn('taskpo', function ($row) {
+                $site = '';
+
+               return $site;
+            })
+            ->addColumn('reference', function ($row) {
+                $site = '';
+
+               return $site;
+            })
 
             ->addColumn('manager', function ($row) {
                 $site = 'Project Manager';
@@ -579,6 +589,7 @@ class ClientAllTasksController extends ClientBaseController
 
     public function remindForTask($taskID)
     {
+        
         $task = Task::with('users')->findOrFail($taskID);
 
         // Send  reminder notification to user

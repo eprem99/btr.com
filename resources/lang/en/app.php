@@ -31,7 +31,7 @@ return array (
   'address' => 'Address',
   'completed' => 'Completed',
   'hideCompletedTasks' => 'Hide Completed Tasks',
-  'dueDate' => 'Due Date',
+  'dueDate' => 'End Date',
   'status' => 'Status',
   'selectStatus' => 'Select Status',
   'task' => 'Task',

@@ -165,7 +165,9 @@
                             <th>@lang('modules.tasks.assignTo')</th>
                             {{-- <th>@lang('modules.tasks.assignBy')</th> --}}
                             <th>@lang('modules.tasks.dueDate')</th>
-                            <th>@lang('app.status')</th>
+                            <th>@lang('modules.tasks.traking')</th>
+                            <th>@lang('modules.tasks.po')</th>
+                            <th>@lang('modules.tasks.reference')</th>
                             <!-- <th>@lang('app.action')</th> -->
                         </tr>
                         </thead>
@@ -318,7 +320,7 @@
             },
             "order": [[0, "desc"]],
             columns: [
-                { data: 'id', name: 'id' },
+                {data: 'id', name: 'id' },
                 {data: 'heading', name: 'heading'},
                 {data: 'site', name: 'site'},
                 {data: 'siteid', name: 'siteid'},
@@ -328,6 +330,8 @@
                 // {data: 'created_by', name: 'creator_user.name', width: '15%'},
                 {data: 'due_date', name: 'due_date'},
                 {data: 'board_column', name: 'board_column', searchable: false},
+                {data: 'taskpo', name: 'taskpo'},
+                {data: 'reference', name: 'reference'},
                 // {data: 'action', name: 'action', "searchable": false}
             ]
         });
