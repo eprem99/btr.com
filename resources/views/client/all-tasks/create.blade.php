@@ -12,7 +12,7 @@
             <ol class="breadcrumb">
                 <li><a href="{{ route('admin.dashboard') }}">@lang('app.menu.home')</a></li>
                 <li><a href="{{ route('client.all-tasks.index') }}">@lang($pageTitle)</a></li>
-                <li class="active">@lang('app.addNew')</li>
+                <li class="active">@lang('app.menu.newwork')</li>
             </ol>
         </div>
         <!-- /.breadcrumb -->
@@ -35,7 +35,7 @@
         <div class="col-md-12">
 
             <div class="panel panel-inverse">
-                <div class="panel-heading"> @lang('modules.tasks.newTask')</div>
+                <div class="panel-heading">@lang('app.menu.newwork')</div>
                 <div class="panel-wrapper collapse in" aria-expanded="true">
                     <div class="panel-body">
                         {!! Form::open(['id'=>'storeTask','class'=>'ajax-form','method'=>'POST']) !!}
@@ -47,12 +47,13 @@
                                         <label class="control-label">@lang('modules.tasks.taskCategory')
                                             <a href="javascript:;"
                                                id="createTaskCategory"
-                                               class="btn btn-xs btn-outline btn-success">
+                                               class="btn btn-xs btn-outline btn-success" style="float:right; margin-left:15px;">
                                                 <i class="fa fa-plus"></i> @lang('modules.taskCategory.addTaskCategory')
                                             </a>
                                         </label>
                                         <select class="select2 form-control" name="category_id" id="category_id"
                                                 data-style="form-control">
+                                                <option value="">--</option>
                                             @forelse($categories as $category)
                                                 <option value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
                                             @empty
@@ -63,11 +64,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Site
-                                       <a href="{{ route('client.task-label.create') }}" class="btn btn-xs btn-outline btn-success">
-                                                <i class="fa fa-plus"></i> Add Site
+                                        <label class="control-label required mb-2"><span>@lang('modules.tasks.site')</span>
+                                        <a href="{{ route('client.task-label.create') }}" class="btn btn-xs btn-outline btn-success" style="float:right; margin-left:15px;">
+                                                <i class="fa fa-plus"></i>@lang('modules.tasks.addsite') 
                                             </a>
                                         </label>
+
                                         <select name="task_labels" class="select2 form-control">
                                             @foreach($taskLabels as $label)
                                                 <option value="{{ $label->id }}">{{ $label->label_name }}</option>
@@ -77,7 +79,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="control-label required">@lang('app.title')</label>
+                                        <label class="control-label required">@lang('modules.tasks.summary')</label>
                                         <input type="text" id="heading" name="heading" class="form-control" >
                                     </div>
                                 </div>
@@ -92,8 +94,10 @@
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.type')</label>
                                         <select name="task_type" class="select2 form-control">
-                                            <option value="0">Work Order</option>
-                                            <option value="1">Site Survey</option>
+                                            <option value="0">Site Survey</option>
+                                            <option value="1">Installation</option>
+                                            <option value="2">Retrofit</option>
+                                            <option value="3">Service Call</option>
                                         </select>
                                     </div>
                                 </div>
@@ -101,18 +105,6 @@
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.purchaseorder')</label>
                                         <input type="text" name="task_purchase" class="form-control" >
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('app.refno')</label>
-                                        <input type="text" name="task_refno" class="form-control" >
-                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('app.equipment')</label>
-                                        <input type="text" name="task_Equipment" class="form-control" >
                                     </div>
                                 </div>
                                 <div class="col-md-6">

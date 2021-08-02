@@ -158,17 +158,17 @@
                         <thead>
                         <tr>
                             <th>@lang('modules.tasks.wo')</th>
-                            <th>@lang('app.task')</th>
+                            <th>@lang('modules.tasks.summery')</th>
                             <th>@lang('modules.tasks.site')</th>
                             <th>@lang('modules.tasks.siteid')</th>
                             <th>@lang('modules.tasks.manager')</th>
-                            <th>@lang('modules.tasks.assignTo')</th>
-                            {{-- <th>@lang('modules.tasks.assignBy')</th> --}}
+                            <!-- <th>@lang('modules.tasks.assignTo')</th>
+                            {{-- <th>@lang('modules.tasks.assignBy')</th> --}} -->
                             <th>@lang('modules.tasks.dueDate')</th>
                             <th>@lang('modules.tasks.traking')</th>
                             <th>@lang('modules.tasks.po')</th>
-                            <th>@lang('modules.tasks.reference')</th>
-                            <!-- <th>@lang('app.action')</th> -->
+                            <th>@lang('modules.tasks.status')</th>
+                            <th>@lang('app.action')</th>
                         </tr>
                         </thead>
                     </table>
@@ -326,13 +326,13 @@
                 {data: 'siteid', name: 'siteid'},
                 {data: 'manager', name: 'manager'},
               //  {data: 'project_name', name: 'projects.project_name'},
-                {data: 'users', name: 'client.name'},
+                // {data: 'users', name: 'client.name'},
                 // {data: 'created_by', name: 'creator_user.name', width: '15%'},
                 {data: 'due_date', name: 'due_date'},
-                {data: 'board_column', name: 'board_column', searchable: false},
+                {data: 'traking', name: 'traking'},
                 {data: 'taskpo', name: 'taskpo'},
-                {data: 'reference', name: 'reference'},
-                // {data: 'action', name: 'action', "searchable": false}
+                {data: 'board_column', name: 'board_column', searchable: false},
+                {data: 'action', name: 'action', "searchable": false}
             ]
         });
     }

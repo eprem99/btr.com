@@ -173,6 +173,61 @@ class ClientTasksController extends ClientBaseController
 
 
     /**
+     * @param Request $request
+     * @return array
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function changeStatus(Request $request)
+    {
+        $taskId = $request->taskId;
+        $status = $request->status;
+
+        $task = Task::with('project')->findOrFail($taskId);
+
+        if ($task->is_task_user || (!is_null($task->project_id) && $task->project->isProjectAdmin) || $this->user->can('edit_tasks') || $task->created_by == user()->id) {
+            $taskBoardColumn = TaskboardColumn::where('slug', $status)->first();
+
+            $task->board_column_id = $taskBoardColumn->id;
+            if ($taskBoardColumn->slug == 'completed') {
+                $task->completed_on = Carbon::today()->format('Y-m-d');
+                $task->save();
+            } else {
+                $task->completed_on = null;
+            }
+
+            $task->save();
+
+            $this->logTaskActivity($task->id, $this->user->id, "statusActivity", $task->board_column_id);
+
+            if ($task->project_id != null) {
+                if ($task->project->calculate_task_progress == "true") {
+                    //calculate project progress if enabled
+                    $this->calculateProjectProgress($task->project_id);
+                }
+                $this->project = Project::find($task->project_id);
+                if ($this->project->isProjectAdmin || $this->user->can('edit_tasks'))
+                    $this->project->tasks = Task::where('project_id', $this->project->id)->orderBy($request->sortBy, 'desc')->get();
+                else
+                    $this->project->tasks = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')
+                    ->where('project_id', $this->project->id)
+                    ->where('task_users.user_id', $this->user->id)
+                    ->select('tasks.*')
+                    ->orderBy($request->sortBy, 'desc')
+                    ->get();
+            }
+
+            $this->task = $task;
+
+            $view = view('client.tasks.task-list-ajax', $this->data)->render();
+
+            return Reply::successWithData(__('messages.taskUpdatedSuccessfully'),  ['html' => $view, 'textColor' => $task->board_column->label_color, 'column' => $task->board_column->column_name]);
+        } else {
+            return Reply::error(Lang::get('messages.unAuthorisedUser'));
+        }
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

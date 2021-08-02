@@ -135,25 +135,25 @@ class ClientAllTasksController extends ClientBaseController
         $tasks->get();
 
         return DataTables::of($tasks)
-            // ->addColumn('action', function ($row) {
-            //     $action = '';
+            ->addColumn('action', function ($row) {
+                $action = '';
 
-            //     if ($this->user->can('edit_tasks') || ($this->global->task_self == 'yes' && $this->user->id == $row->created_by_id)) {
-            //         $action .= '<a href="' . route('client.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
-            //           data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
-            //     }
+                if ($this->user->can('edit_tasks') || ($this->global->task_self == 'yes' && $this->user->id == $row->created_by_id)) {
+                    $action .= '<a href="' . route('client.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
+                      data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                }
 
-            //     return $action;
-            // })
+                return $action;
+            })
 
             ->addColumn('site', function ($row) {
-                $site = 'Site ';
+                $site = $row->label_color;
 
                return $site;
             })
 
             ->addColumn('siteid', function ($row) {
-                $site = 'Site ID';
+                $site = $row->id;
 
                return $site;
             })
@@ -162,6 +162,12 @@ class ClientAllTasksController extends ClientBaseController
 
                return $site;
             })
+            ->addColumn('traking', function ($row) {
+                $site = '';
+
+               return $site;
+            })
+
             ->addColumn('reference', function ($row) {
                 $site = '';
 
@@ -194,10 +200,7 @@ class ClientAllTasksController extends ClientBaseController
             ->editColumn('users', function ($row) {
                 $members = '';
                 foreach ($row->users as $client) {
-
-                  //  $members .= '<a href="' . route('admin.employees.show', [$client->id]) . '">';
                     $members .= ucwords($client->name);
-                  //  $members .= '</a>';
                 }
                 return $members;
 
@@ -219,8 +222,14 @@ class ClientAllTasksController extends ClientBaseController
                 return $name;
             })
             ->editColumn('board_column', function ($row) use ($taskBoardColumns) {
-                $status = '<div class="">';
-                $status .= '<div class="waves-effect waves-light btn-xs"  style="border-color: ' . $row->label_color . '; color: ' . $row->label_color . '">' . $row->board_column . '</div>';
+                $status = '<div class="btn-group dropdown">';
+                $status .= '<button aria-expanded="true" data-toggle="dropdown" class="btn dropdown-toggle waves-effect waves-light btn-xs"  style="border-color: ' . $row->label_color . '; color: ' . $row->label_color . '" type="button">' . $row->board_column . ' <span class="caret"></span></button>';
+                $status .= '<ul role="menu" class="dropdown-menu pull-right">';
+                foreach ($taskBoardColumns as $key => $value) {
+                    $status .= '<li><a href="javascript:;" data-task-id="' . $row->id . '" class="change-status" data-status="' . $value->slug . '">' . $value->column_name . '  <span style="width: 15px; height: 15px; border-color: ' . $value->label_color . '; background: ' . $value->label_color . '"
+                    class="btn btn-warning btn-small btn-circle">&nbsp;</span></a></li>';
+                }
+                $status .= '</ul>';
                 $status .= '</div>';
                 return $status;
             })
@@ -430,7 +439,7 @@ class ClientAllTasksController extends ClientBaseController
         $task->save();
       //  echo 'easdasd';
         // save labels
-       // $task->labels()->sync($request->task_labels);
+        $task->labels()->sync($request->task_labels);
 
         if (!$this->user->can('add_tasks') && $this->global->task_self == 'yes') {
             $request->user_id = [$this->user->id];

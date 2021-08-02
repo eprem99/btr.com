@@ -416,7 +416,7 @@
     @endif
 
     function showNoticeModal(id) {
-        var url = '{{ route('member.notices.show', ':id') }}';
+        var url = '{{ route('client.notices.show', ':id') }}';
         url = url.replace(':id', id);
         $.ajaxModal('#projectTimerModal', url);
     }
@@ -425,7 +425,7 @@
             $(".right-sidebar").slideDown(50).addClass("shw-rside");
 
             var id = $(this).data('task-id');
-            var url = "{{ route('member.all-tasks.show',':id') }}";
+            var url = "{{ route('client.all-tasks.show',':id') }}";
             url = url.replace(':id', id);
 
             $.easyAjax({

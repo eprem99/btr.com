@@ -23,29 +23,22 @@
                 <div class="row">
                     <div class="col-md-6">
                         <P>
-                            <strong>Work Order:  </strong>{{ ucwords($task->heading) }}
+                            <strong>Work Order:  </strong>{{ ucwords($task->id) }}
                         </P>
                         
-                        @if(!is_null($task->project_id))
-                            <p><strong>Work Order:  </strong> {{ ucfirst($task->project->project_name) }}</p>
-                        @endif
-                        <p>
-                            @if($task->task_category_id)
+                        @if($task->task_category_id)
                             <strong>Project:  </strong>{{ ucwords($task->category->category_name) }}
-                            @endif
+                        @endif
                        </p>
                        <p>
-                            <strong>PO Number:  </strong>
-                       </p>
-                       <p>
-                            <strong>Client Ref No.:  </strong>
+                            <strong>PO Number:  </strong> 
                        </p>
                        <p>
                             <strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}
                        </p>
                        <p>
     
-                            <strong>Summery:  </strong> {!! $task->exception ?? __('messages.noDescriptionAdded') !!}
+                            <strong>Summary:  </strong> {{ ucwords($task->heading) }}
                        </p>
                        <p>
                             <strong>Work Order Type:  </strong>
@@ -94,7 +87,7 @@
             </div>
     
             <ul class="nav customtab nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#home1" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">@lang('app.task')</a></li>
+                <li role="presentation" class="active"><a href="#home1" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">@lang('app.description')</a></li>
                 <li role="presentation" class=""><a href="#messages1" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false">@lang('app.file') (<span id="totalUploadedFiles">{{ sizeof($task->files) }}</span>) </a></li>
                 <li role="presentation" class=""><a href="#settings1" aria-controls="settings" role="tab" data-toggle="tab" aria-expanded="false">@lang('modules.tasks.comment') ({{ count($task->comments) }})</a></li>
                 <li role="presentation" class=""><a href="#notes1" aria-controls="note" role="tab" data-toggle="tab" aria-expanded="false">@lang('app.notes') ({{ count($task->notes) }})</a></li>
@@ -178,7 +171,6 @@
                         
                         <div class="row">
                             <div class="col-xs-12 col-md-12 m-t-10">
-                                <label class="font-bold">@lang('app.description')</label><br>
                                 <div class="task-description m-t-10">
                                     {!! $task->description ?? __('messages.noDescriptionAdded') !!}
                                 </div>
@@ -251,10 +243,6 @@
                 </div>
                 
                 <div role="tabpanel" class="tab-pane" id="settings1">
-                    <div class="col-xs-12">
-                        <h4>@lang('modules.tasks.comment')</h4>
-                    </div>
-    
                     <div class="col-xs-12" id="comment-container">
                         <div id="comment-list">
                             @forelse($task->comments as $comment)
@@ -288,11 +276,7 @@
     
                 </div>
   
-                <div role="tabpanel" class="tab-pane" id="notes1">
-                    <div class="col-xs-12">
-                        <h4>@lang('app.notes')</h4>
-                    </div>
-    
+                <div role="tabpanel" class="tab-pane" id="notes1">    
                     <div class="col-xs-12" id="note-container">
                         <div id="note-list">
                             @forelse($task->notes as $note)
@@ -344,7 +328,6 @@
 
             <div class="row">
                 <div class="col-xs-12 p-10 p-t-20 ">
-                    <label class="font-12" for="">@lang('app.status')</label><br>
                     <span id="columnStatusColor" style="width: 15px; height: 15px; background-color: {{ $task->board_column->label_color }}" class="btn btn-small btn-circle">&nbsp;</span> <span id="columnStatus">{{ $task->board_column->column_name }}</span>
                 </div>
 
