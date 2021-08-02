@@ -33,7 +33,7 @@ class StoreTask extends CoreRequest
         $rules = [
             'heading' => 'required',
             'due_date' => ['required' , new CheckDateFormat(null,$setting->date_format) , new CheckEqualAfterDate('start_date',$setting->date_format)],
-            'priority' => 'required',
+             'priority' => 'required',
             
         ];
 

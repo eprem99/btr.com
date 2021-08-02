@@ -1023,7 +1023,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('dashboard', 'ClientDashboardController');
 
         Route::resource('profile', 'ClientProfileController');
-
+       
+        Route::resource('task-note', 'ClientTaskNoteController');
         // Project section
         Route::get('projects/data', ['uses' => 'ClientProjectsController@data'])->name('projects.data');
         Route::resource('projects', 'ClientProjectsController');

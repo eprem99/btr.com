@@ -411,6 +411,7 @@
                                                 </div>
                                             </div>
                                             <input type="hidden" name="taskID" id="taskID">
+                                            
                                             <input type="hidden" name="addedFiles" id="addedFiles">
                                         </div>
                                     </div>

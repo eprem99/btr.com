@@ -136,7 +136,7 @@
                                 @else
                                 <input type="hidden" name="user_id[]" value="{{ $user->id }}">
                                 @endif
-
+                                <input type="hidden" name="priority" value="medium">
 
                                 <div class="row m-b-20">
                                     <div class="col-md-12">

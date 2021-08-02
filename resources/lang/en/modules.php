@@ -293,7 +293,7 @@ return array(
     'changeStatus' => 'Change Status',
     'lastCreated' => 'Last Created',
     'dueSoon' => 'Due Soon',
-    'dueDate' => 'Due Date',
+    'dueDate' => 'Scheduled',
     'assignTo' => 'Assigned To',
     'high' => 'High',
     'medium' => 'Medium',
@@ -348,7 +348,11 @@ return array(
     'assignMe' => 'Assign to me',
     'setTimeEstimate' => 'Set time estimate',
     'users' => 'Users',
-      'noSubTaskFound' => 'No Sub Task Found',
+    'noSubTaskFound' => 'No Sub Task Found',
+    'wo' => 'WO',
+    'site' => 'Site',
+    'siteid' => 'Site ID',
+    'manager' => 'Manager',
   ),
   'invoices' =>
   array(

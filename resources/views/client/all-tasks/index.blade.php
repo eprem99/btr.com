@@ -157,14 +157,14 @@
                            id="tasks-table">
                         <thead>
                         <tr>
-                            <th>@lang('app.task.wo')</th>
+                            <th>@lang('modules.tasks.wo')</th>
                             <th>@lang('app.task')</th>
-                            <th>@lang('app.tasksite')</th>
-                            <th>@lang('app.tasksiteid')</th>
-                            <th>@lang('app.manager')</th>
+                            <th>@lang('modules.tasks.site')</th>
+                            <th>@lang('modules.tasks.siteid')</th>
+                            <th>@lang('modules.tasks.manager')</th>
                             <th>@lang('modules.tasks.assignTo')</th>
                             {{-- <th>@lang('modules.tasks.assignBy')</th> --}}
-                            <th>@lang('app.dueDate')</th>
+                            <th>@lang('modules.tasks.dueDate')</th>
                             <th>@lang('app.status')</th>
                             <!-- <th>@lang('app.action')</th> -->
                         </tr>
