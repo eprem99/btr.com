@@ -38,6 +38,49 @@ class AllTasksDataTable extends BaseDataTable
                 $action .= '</ul> </div>';
                 return $action;
             })
+            ->addColumn('site', function ($row) {
+                $site = '';            
+                if ($row->label_name) {
+                    $site = $row->label_name;
+                } 
+               return $site;
+            })
+
+            ->addColumn('siteid', function ($row) {
+                $site = '';            
+                if ($row->contacts) {
+                    $contacts = json_decode($row->contacts, true);
+                    if($contacts['site_id']){
+                        $site = $contacts['site_id'];
+                    }else{
+                        $site = '';
+                    }
+                } 
+                
+               return $site;
+            })
+            ->addColumn('taskpo', function ($row) {
+                $site = '';
+
+               return $site;
+            })
+            ->addColumn('traking', function ($row) {
+                $site = '';
+
+               return $site;
+            })
+
+            ->addColumn('reference', function ($row) {
+                $site = '';
+
+               return $site;
+            })
+
+            ->addColumn('manager', function ($row) {
+                $site = 'Project Manager';
+
+               return $site;
+            })
             ->editColumn('due_date', function ($row) {
 
                 if ($row->due_date->endOfDay()->isPast()) {

@@ -62,8 +62,9 @@ class ManageTaskLabelController extends AdminBaseController
 
     private function storeUpdate($request, $taskLabel)
     {
+        $json = json_encode($request->input());
         $taskLabel->label_name  = $request->label_name;
-        $taskLabel->color       = $request->color;
+        $taskLabel->contacts     = $json;
         $taskLabel->description = $request->description;
         $taskLabel->save();
 

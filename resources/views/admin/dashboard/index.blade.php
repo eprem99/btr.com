@@ -15,63 +15,7 @@
             <h4 class="page-title"><i class="{{ $pageIcon }}"></i> @lang($pageTitle)</h4>
         </div>
         <!-- /.page title -->
-        <!-- .breadcrumb -->
-        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
 
-            <div class="col-md-6 pull-right text-right hidden-xs hidden-sm">
-                {!! Form::open(['id'=>'createProject','class'=>'ajax-form','method'=>'POST']) !!}
-                <div class="btn-group dropdown keep-open pull-right m-l-10">
-                    <button aria-expanded="true" data-toggle="dropdown"
-                            class="btn bg-white b-all dropdown-toggle waves-effect waves-light"
-                            type="button"><i class="icon-settings"></i>
-                    </button>
-                    <ul role="menu" class="dropdown-menu  dropdown-menu-right dashboard-settings">
-                            <li class="b-b"><h4>@lang('modules.dashboard.dashboardWidgets')</h4></li>
-
-                        @foreach ($widgets as $widget)
-                            @php
-                                $wname = \Illuminate\Support\Str::camel($widget->widget_name);
-                            @endphp
-                            <li>
-                                <div class="checkbox checkbox-info ">
-                                    <input id="{{ $widget->widget_name }}" name="{{ $widget->widget_name }}" value="true"
-                                        @if ($widget->status)
-                                            checked
-                                        @endif
-                                            type="checkbox">
-                                    <label for="{{ $widget->widget_name }}">@lang('modules.dashboard.' . $wname)</label>
-                                </div>
-                            </li>
-                        @endforeach
-
-                        <li>
-                            <button type="button" id="save-form" class="btn btn-success btn-sm btn-block">@lang('app.save')</button>
-                        </li>
-
-                    </ul>
-                </div>
-                {!! Form::close() !!}
-
-                @if($global->dashboard_clock == true)
-                    <span id="clock" class="dashboard-clock text-muted m-r-30"></span>
-                @endif
-                
-                <select class="selectpicker language-switcher" data-width="fit">
-                    <option value="en" @if($global->locale == "en") selected @endif data-content='<span class="flag-icon flag-icon-gb" title="English"></span>'>En</option>
-                    @foreach($languageSettings as $language)
-                        <option value="{{ $language->language_code }}" @if($global->locale == $language->language_code) selected @endif  data-content='<span class="flag-icon flag-icon-{{ $language->language_code }}" title="{{ ucfirst($language->language_name) }}"></span>'>{{ $language->language_code }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <ol class="breadcrumb">
-                <li><a href="{{ route('admin.dashboard') }}">@lang('app.menu.home')</a></li>
-                <li class="active">@lang($pageTitle)</li>
-            </ol>
-
-
-        </div>
-        <!-- /.breadcrumb -->
     </div>
 @endsection
 
@@ -363,18 +307,6 @@
                 </div>
             @endif
 
-            @if(in_array('leaves',$modules) && in_array('settings_leaves',$activeWidgets))
-                <div class="col-md-6">
-                    <div class="panel panel-inverse">
-                        <div class="panel-heading">@lang('modules.dashboard.settingsLeaves')</div>
-                        <div class="panel-wrapper collapse in" style="overflow: auto">
-                            <div class="panel-body">
-                                <div id="calendar"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
 
             @if(in_array('tickets',$modules) && in_array('new_tickets',$activeWidgets))
                 <div class="col-md-6">
@@ -586,7 +518,16 @@
                     </div>
                 </div>
             @endif
-
+            <div class="col-md-12">
+                    <div class="panel panel-inverse">
+                        <div class="panel-heading">@lang('modules.taskCalendar.note')</div>
+                        <div class="panel-wrapper collapse in" style="overflow: auto">
+                            <div class="panel-body">
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
         </div>
         <!-- .row -->
@@ -676,58 +617,20 @@
 @push('footer-script')
 
     <script>
-        jQuery('#due_date3').datepicker({
-            autoclose: true,
-            todayHighlight: true
-        });
-        var taskEvents = [
-            @foreach($leaves as $leave)
-            @if($leave->status == 'approved')
-            {
-                id: '{{ ucfirst($leave->id) }}',
-                title: '{{ ucfirst($leave->user->name) }}',
-                start: '{{ $leave->leave_date->format("Y-m-d") }}',
-                end: '{{ $leave->leave_date->format("Y-m-d") }}',
-                className: 'bg-{{ $leave->type->color }}'
-            },
-            @else
-            {
-                id: '{{ ucfirst($leave->id) }}',
-                title: '<i class="fa fa-warning"></i> {{ ucfirst($leave->user->name) }}',
-                start: '{{ $leave->leave_date->format("Y-m-d") }}',
-                end: '{{ $leave->leave_date->format("Y-m-d") }}',
-                className: 'bg-{{ $leave->type->color }}'
-            },
-            @endif
-            @endforeach
-        ];
+    var taskEvents = [
+        @foreach($tasks as $task)
+        {
+            id: '{{ $task->id }}',
+            title: "{!! ucfirst($task->heading) !!}",
+            start: '{{ $task->start_date->format("Y-m-d") }}',
+            end:  '{{ $task->due_date->addDay()->format("Y-m-d") }}',
+            color  : '{{ $task->board_column->label_color }}'
+        },
+        @endforeach
+    ];
 
-        var getEventDetail = function (id) {
-            var url = '{{ route('admin.leaves.show', ':id')}}';
-            url = url.replace(':id', id);
-
-            $('#modelHeading').html('Event');
-            $.ajaxModal('#eventDetailModal', url);
-        }
-
-        var calendarLocale = '{{ $global->locale }}';
-
-        $('.leave-action').click(function () {
-            var action = $(this).data('leave-action');
-            var leaveId = $(this).data('leave-id');
-            var url = '{{ route("admin.leaves.leaveAction") }}';
-
-            $.easyAjax({
-                type: 'POST',
-                url: url,
-                data: {'action': action, 'leaveId': leaveId, '_token': '{{ csrf_token() }}'},
-                success: function (response) {
-                    if (response.status == 'success') {
-                        window.location.reload();
-                    }
-                }
-            });
-        })
+    // only use for sidebar call method
+    function showTable(){}
     </script>
 
 
@@ -750,6 +653,7 @@
     <script src="{{ asset('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('js/moment-timezone.js') }}"></script>
     <script>
+
     var initialLocaleCode = '{{ $global->locale }}';
     document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
@@ -782,21 +686,26 @@
         },
         editable: false,
         dayMaxEvents: true, // allow "more" link when too many events
-        events: taskEvents,
-        eventDidMount: function(info){
-            if (info.el.querySelector('.fc-event-title') !== null) {
-                info.el.querySelector('.fc-event-title').innerHTML = info.event.title;
-            }
-            if (info.el.querySelector('.fc-list-event-title') !== null) {
-                info.el.querySelector('.fc-list-event-title').innerHTML = info.event.title;
-            }
-
-        }
-        
+        events: taskEvents
       });
   
       calendar.render();
     });
+    var getEventDetail = function (id) {
+        $(".right-sidebar").slideDown(50).addClass("shw-rside");
+        var url = "{{ route('admin.all-tasks.show',':id') }}";
+        url = url.replace(':id', id);
+
+        $.easyAjax({
+            type: 'GET',
+            url: url,
+            success: function (response) {
+                if (response.status == "success") {
+                    $('#right-sidebar-content').html(response.view);
+                }
+            }
+        });
+    }
   
 </script>
     <script>
@@ -804,42 +713,7 @@
             location.reload();
         }
         $(document).ready(function () {
-        @if(!empty(json_decode($chartData)))
-            var chartData = {!!  $chartData !!};
 
-            function barChart() {
-
-                Morris.Bar({
-                    element: 'morris-area-chart',
-                    data: chartData,
-                    xkey: 'date',
-                    ykeys: ['total'],
-                    labels: ['Earning'],
-                    pointSize: 3,
-                    fillOpacity: 0,
-                    barColors: ['#6fbdff'],
-                    behaveLikeLine: true,
-                    gridLineColor: '#e0e0e0',
-                    lineWidth: 2,
-                    hideHover: 'auto',
-                    lineColors: ['#e20b0b'],
-                    resize: true
-
-                });
-
-            }
-
-
-
-            @if(in_array('payments',$modules) && in_array('recent_earnings',$activeWidgets))
-            barChart();
-            @endif
-            @endif
-
-            // $(".counter").counterUp({
-            //     delay: 100,
-            //     time: 1200
-            // });
 
             $('.vcarousel').carousel({
                 interval: 3000
@@ -865,13 +739,6 @@
             });
         })
 
-        $('.add-sub-task').click(function () {
-            var id = $(this).data('task-id');
-            var url = '{{ route('admin.sub-task.create')}}?task_id='+id;
-
-            $('#subTaskModelHeading').html('Sub Task');
-            $.ajaxModal('#subTaskModal', url);
-        })
 
         $('.keep-open .dropdown-menu').on({
             "click":function(e){
@@ -879,69 +746,10 @@
             }
         });
 
-        $('#save-form').click(function () {
-            $.easyAjax({
-                url: '{{route('admin.dashboard.widget', "admin-dashboard")}}',
-                container: '#createProject',
-                type: "POST",
-                redirect: true,
-                data: $('#createProject').serialize(),
-                success: function(){
-                    window.location.reload();
-                }
-            })
-        });
+
 
     </script>
-    <script>
-        @if(\Froiden\Envato\Functions\EnvatoUpdate::showReview())
-        $(document).ready(function () {
-            $('#reviewModal').modal('show');
-        })
-        function hideReviewModal(type) {
-            var url = "{{ route('hide-review-modal',':type') }}";
-            url = url.replace(':type', type);
 
-            $.easyAjax({
-                url: url,
-                type: "GET",
-                container: "#reviewModal",
-            });
-        }
-        @endif
-    </script>
     
-<script>
-/** clock timer start here */
-function currentTime() {
-    let date = new Date(); 
-    date = moment.tz(date, "{{ $global->timezone }}");
-    
-    // console.log(moment.tz(date, "America/New_York"));
 
-    let hour = date.hour();
-    let min = date.minutes();
-    let sec = date.seconds();
-    let midday = "AM";
-    midday = (hour >= 12) ? "PM" : "AM"; 
-    @if($global->time_format == 'h:i A')
-        hour = (hour == 0) ? 12 : ((hour > 12) ? (hour - 12): hour); /* assigning hour in 12-hour format */
-    @endif
-    hour = updateTime(hour);
-    min = updateTime(min);
-    document.getElementById("clock").innerText = `${hour} : ${min} ${midday}` 
-    const time = setTimeout(function(){ currentTime() }, 1000);
-}
-
-function updateTime(timer) { 
-  if (timer < 10) {
-    return "0" + timer;
-  }
-  else {
-    return timer;
-  }
-}
-
-currentTime();
-    </script>
 @endpush

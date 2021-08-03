@@ -50,34 +50,38 @@
                         <div class="form-body">
                             <div class="row">
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('app.project')</label>
-                                        <select class="select2 form-control" data-placeholder="@lang("app.selectProject")" id="project_id" name="project_id">
-                                            <option value="all">--</option>
-                                            @foreach($projects as $project)
-                                                <option
-                                                        value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 ">
+                            <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">@lang('modules.tasks.taskCategory')
                                             <a href="javascript:;"
                                                id="createTaskCategory"
-                                               class="btn btn-xs btn-outline btn-success">
+                                               class="btn btn-xs btn-outline btn-success" style="float:right; margin-left:15px;">
                                                 <i class="fa fa-plus"></i> @lang('modules.taskCategory.addTaskCategory')
                                             </a>
                                         </label>
                                         <select class="select2 form-control" name="category_id" id="category_id"
                                                 data-style="form-control">
+                                                <option value="">--</option>
                                             @forelse($categories as $category)
                                                 <option value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
                                             @empty
                                                 <option value="">@lang('messages.noTaskCategoryAdded')</option>
                                             @endforelse
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label required mb-2"><span>@lang('modules.tasks.site')</span>
+                                        <a href="{{ route('admin.task-label.create') }}" class="btn btn-xs btn-outline btn-success" style="float:right; margin-left:15px;">
+                                                <i class="fa fa-plus"></i>@lang('modules.tasks.addsite') 
+                                            </a>
+                                        </label>
+
+                                        <select name="task_labels" class="select2 form-control">
+                                            @foreach($taskLabels as $label)
+                                                <option value="{{ $label->id }}">{{ $label->label_name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -93,16 +97,6 @@
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.description')</label>
                                         <textarea id="description" name="description" class="form-control summernote"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-
-                                        <div class="checkbox checkbox-info">
-                                            <input id="dependent-task" name="dependent" value="yes"
-                                                   type="checkbox">
-                                            <label for="dependent-task">@lang('modules.tasks.dependent')</label>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -137,7 +131,8 @@
                                                        autocomplete="off">
                                             </div>
                                         </div>
-    
+
+
                                         <!--/span-->
                                         <div class="col-md-3">
                                             <div class="form-group">
@@ -160,127 +155,23 @@
                                             </div>
                                         </div>
                                     </div>
-    
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="control-label">@lang('app.label')
-                                                    <a href="javascript:;"
-                                                       id="createTaskLabel"
-                                                       class="btn btn-xs btn-outline btn-success">
-                                                        <i class="fa fa-plus"></i> @lang('app.add') @lang('app.menu.taskLabel')
-                                                    </a>
-                                                </label>
-                                                <select id="multiselect" name="task_labels[]"  multiple="multiple" class="selectpicker form-control">
-                                                    @foreach($taskLabels as $label)
-                                                        <option data-content="<label class='badge b-all' style='background:{{ $label->label_color }};'>{{ $label->label_name }}</label> " value="{{ $label->id }}">{{ $label->label_name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.type')</label>
+                                        <select name="task_type" class="select2 form-control">
+                                            <option value="0">Site Survey</option>
+                                            <option value="1">Installation</option>
+                                            <option value="2">Retrofit</option>
+                                            <option value="3">Service Call</option>
+                                        </select>
                                     </div>
-    
-    
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-    
-                                                <div class="checkbox checkbox-info">
-                                                    <input id="private-task" name="is_private" value="true" type="checkbox">
-                                                    <label for="private-task">@lang('modules.tasks.makePrivate') 
-                                                        <a class="mytooltip font-12" href="javascript:void(0)"> 
-                                                        <i class="fa fa-info-circle"></i>
-                                                        <span class="tooltip-content5">
-                                                            <span class="tooltip-text3">
-                                                                <span class="tooltip-inner2">@lang('modules.tasks.privateInfo')</span>
-                                                            </span>
-                                                        </span>
-                                                        </a>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <div class="checkbox checkbox-info">
-                                                    <input id="billable-task" checked name="billable" value="true" type="checkbox">
-                                                    <label for="billable-task">@lang('modules.tasks.billable') 
-                                                        <a class="mytooltip font-12" href="javascript:void(0)"> 
-                                                            <i class="fa fa-info-circle"></i>
-                                                            <span class="tooltip-content5">
-                                                                <span class="tooltip-text3">
-                                                                    <span class="tooltip-inner2">@lang('modules.tasks.billableInfo')</span>
-                                                                </span>
-                                                            </span>
-                                                        </a>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <div class="checkbox checkbox-info">
-                                                    <input id="set-time-estimate" name="set_time_estimate" value="true" type="checkbox">
-                                                    <label for="set-time-estimate">@lang('modules.tasks.setTimeEstimate')</label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div id="set-time-estimate-fields" style="display: none">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    
-                                                    <input type="number" min="0" value="0" class="w-50 p-5 p-10" name="estimate_hours" > @lang('app.hrs')
-                                                    &nbsp;&nbsp;
-                                                    <input type="number" min="0" value="0" name="estimate_minutes" class="w-50 p-5 p-10"> @lang('app.mins')
-                                                </div>
-                                            </div>
-                                           
-                                        </div>
-    
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.purchaseorder')</label>
+                                        <input type="text" name="task_purchase" class="form-control" >
                                     </div>
-
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-        
-                                                <div class="checkbox checkbox-info">
-                                                    <input id="repeat-task" name="repeat" value="yes"
-                                                           type="checkbox">
-                                                    <label for="repeat-task">@lang('modules.events.repeat')</label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div id="repeat-fields" style="display: none">
-                                            <div class="col-md-3 ">
-                                                <div class="form-group">
-                                                    <label>@lang('modules.events.repeatEvery')</label>
-                                                    <input type="number" min="1" value="1" name="repeat_count" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label>&nbsp;</label>
-                                                    <select name="repeat_type" id="" class="form-control">
-                                                        <option value="day">@lang('app.day')</option>
-                                                        <option value="week">@lang('app.week')</option>
-                                                        <option value="month">@lang('app.month')</option>
-                                                        <option value="year">@lang('app.year')</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-        
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label>@lang('modules.events.cycles') <a class="mytooltip" href="javascript:void(0)"> <i class="fa fa-info-circle"></i><span class="tooltip-content5"><span class="tooltip-text3"><span class="tooltip-inner2">@lang('modules.tasks.cyclesToolTip')</span></span></span></a></label>
-                                                    <input type="number" name="repeat_cycles" id="repeat_cycles" class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                </div>
                                     
     
                                   
@@ -355,42 +246,6 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-9">
-                                            <div class="form-group">
-                                                <label class="control-label">@lang('modules.tasks.priority')</label>
-
-                                                <div class="radio-list">
-                                                    <label class="radio-inline p-0">
-                                                        <div class="radio radio-danger">
-                                                            <input type="radio" name="priority" id="radio13"
-                                                                value="high">
-                                                            <label for="radio13" class="text-danger">
-                                                                @lang('modules.tasks.high') </label>
-                                                        </div>
-                                                    </label>
-                                                    <label class="radio-inline">
-                                                        <div class="radio radio-warning">
-                                                            <input type="radio" name="priority"
-                                                                id="radio14" checked value="medium">
-                                                            <label for="radio14" class="text-warning">
-                                                                @lang('modules.tasks.medium') </label>
-                                                        </div>
-                                                    </label>
-                                                    <label class="radio-inline">
-                                                        <div class="radio radio-success">
-                                                            <input type="radio" name="priority" id="radio15"
-                                                                value="low">
-                                                            <label for="radio15" class="text-success">
-                                                                @lang('modules.tasks.low') </label>
-                                                        </div>
-                                                    </label>
-                                                </div>
-    
-                                                
-                                               
-                                               
-                                            </div>
-                                        </div>
                                     </div>
                                     <!--/span-->
                                     <div class="row m-b-20">

@@ -412,7 +412,9 @@ class ManageAllTasksController extends AdminBaseController
 
     public function show($id)
     {
-        $this->task = Task::with('board_column', 'subtasks', 'project', 'users', 'files', 'label', 'comments', 'activeTimerAll')->findOrFail($id)->withCustomFields();
+        $this->task = Task::with('board_column', 'subtasks', 'project', 'users', 'files', 'label', 'comments', 'activeTimerAll')
+        ->join('task_label_list', 'tasks.site_id', 'task_label_list.id')
+        ->findOrFail($id)->withCustomFields();
         
         $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')
             ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id')

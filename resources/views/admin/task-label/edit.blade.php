@@ -17,6 +17,10 @@
     }
 </style>
 @endpush
+@php
+$contacts = json_decode($taskLabel->contacts, true);
+
+@endphp
 @section('page-title')
     <div class="row bg-title">
         <!-- .page title -->
@@ -38,78 +42,176 @@
 
 @section('content')
 
-    <div class="row">
+<div class="row">
         <div class="panel panel-inverse">
             <div class="panel panel-inverse">
                 <div class="panel-heading"> @lang('app.edit') @lang('app.menu.taskLabel')</div>
 
-                <p class="text-muted m-b-10 font-13"></p>
+                <p class="text-muted m-b-30 font-13"></p>
 
                 <div class="panel-wrapper collapse in" aria-expanded="true">
                     <div class="panel-body">
                         {!! Form::open(['id'=>'createContract','class'=>'ajax-form','method'=>'PUT']) !!}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="company_name" class="required">@lang('app.label') @lang('app.name')</label>
-                                    <input type="text" class="form-control" name="label_name" value="{{ $taskLabel->label_name }}" />
-                                </div>
-                            </div>
-
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="company_name" class="required">@lang('app.name')</label>
+    
+                            <input type="text" class="form-control" name="label_name" value="{{ $taskLabel->label_name }}" />
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="site_id"> @lang('app.site.id')</label>
+                            <input type="text" class="form-control" name="site_id" value="{{ $contacts['site_id'] }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="site_phone"> @lang('app.site.phone')</label>
+                            <input type="text" class="form-control" name="site_phone" value="{{ $contacts['site_phone'] }}" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="site_fax"> @lang('app.site.fax')</label>
+                            <input type="text" class="form-control" name="site_fax" value="{{ $contacts['site_fax'] }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="site_address" class="required"> @lang('app.site.address')</label>
+                            <input type="text" class="form-control" name="site_address" value="{{ $contacts['site_address'] }}" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="site_suiteunit"> @lang('app.site.suiteunit')</label>
+                            <input type="text" class="form-control" name="site_suiteunit" value="{{ $contacts['site_suiteunit'] }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="site_country" class="required"> @lang('app.site.country')</label>
+                            <select name="site_country" class="form-control" id="country">
+                                <option value>@lang('app.site.country')</option>
+                                <option @if($contacts['site_country'] == 1) selected @endif value="1">UNITED STATES</option>
+                                <option @if($contacts['site_country'] == 2) selected @endif value="2">CANADA</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                        <label for="site_state" class="required"> @lang('app.site.state')</label>
+                        <select name="site_state" class="select2 form-control" id="state">
+                        <option value="0"> -- Select -- </option>
+                        </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="site_city" class="required"> @lang('app.site.city')</label>
+                            <input type="text" class="form-control" name="site_city" value="{{ $contacts['site_city'] }}" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="site_zip" class="required"> @lang('app.site.zip')</label>
+                            <input type="text" class="form-control" name="site_zip" value="{{ $contacts['site_zip'] }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="site_timezone"> @lang('app.site.timezone')</label>
+                            <input type="text" class="form-control" name="site_timezone" value="{{ $contacts['site_timezone'] }}" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="site_notification"> @lang('app.site.notification') 
+                                <input type="checkbox" class="form-control" name="site_notification" value="true"  @if($contacts['site_notification']
+                                        == "true") checked @endif/></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="site_latitude"> @lang('app.site.latitude')</label>
+                            <input type="text" class="form-control" name="site_latitude" value="{{ $contacts['site_latitude'] }}" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="site_longitude"> @lang('app.site.longitude')</label>
+                            <input type="text" class="form-control" name="site_longitude" value="{{ $contacts['site_longitude'] }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="site_pname" class="required"> @lang('app.site.pname')</label>
+                            <input type="text" class="form-control" name="site_pname" value="{{ $contacts['site_pname'] }}" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="site_pphone" class="required"> @lang('app.site.pphone')</label>
+                            <input type="text" class="form-control" name="site_pphone" value="{{ $contacts['site_pphone'] }}" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="site_pemail" class="required"> @lang('app.site.pemail')</label>
+                            <input type="email" class="form-control" name="site_pemail" value="{{ $contacts['site_pemail'] }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="site_sname"> @lang('app.site.sname')</label>
+                            <input type="text" class="form-control" name="site_sname" value="{{ $contacts['site_sname'] }}" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="site_sphone"> @lang('app.site.sphone')</label>
+                            <input type="text" class="form-control" name="site_sphone" value="{{ $contacts['site_sphone'] }}" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="site_semail"> @lang('app.site.semail')</label>
+                            <input type="email" class="form-control" name="site_semail" value="{{ $contacts['site_semail'] }}" />
+                        </div>
+                    </div>
+                </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="description">@lang('app.description') </label>
-                                    <textarea class="form-control" name="description">{{ $taskLabel->description }} </textarea>
+
+                                    <textarea name="description" class="form-control">{{ $taskLabel->description }} </textarea>
                                 </div>
 
-                            </div>
-                        </div>
-                        <div class="row m-b-20">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="required">@lang('modules.sticky.colors')</label>
-                                    <div class="example m-b-10">
-                                        <input type="text" class="complex-colorpicker form-control" name="color" id="color" value="{{ $taskLabel->color }}"  />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <p>
-                                    @lang('messages.taskLabel.labelColorSuggestion')
-                                </p>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="suggest-colors">
-                                    <a style="background-color: #0033CC" data-color="#0033CC" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #428BCA" data-color="#428BCA" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #CC0033" data-color="#CC0033" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #44AD8E" data-color="#44AD8E" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #A8D695" data-color="#A8D695" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #5CB85C" data-color="#5CB85C" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #69D100" data-color="#69D100" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #004E00" data-color="#004E00" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #34495E" data-color="#34495E" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #7F8C8D" data-color="#7F8C8D" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #A295D6" data-color="#A295D6" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #5843AD" data-color="#5843AD" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #8E44AD" data-color="#8E44AD" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #FFECDB" data-color="#FFECDB" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #AD4363" data-color="#AD4363" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #D10069" data-color="#D10069" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #FF0000" data-color="#FF0000" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #D9534F" data-color="#D9534F" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #D1D100" data-color="#D1D100" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #F0AD4E" data-color="#F0AD4E" href="javascript:;">&nbsp;
-                                    </a><a style="background-color: #AD8D43" data-color="#AD8D43" href="javascript:;">&nbsp;
-                                    </a></div>
                             </div>
                         </div>
                         <button type="submit" id="save-form" class="btn btn-success waves-effect waves-light m-r-10">
                             @lang('app.save')
                         </button>
-                        <a href="{{ url()->previous() }}" class="btn btn-default waves-effect waves-light">@lang('app.back')</a>
+                        <button type="reset" class="btn btn-inverse waves-effect waves-light">@lang('app.reset')</button>
                     </div>
                     {!! Form::close() !!}
                 </div>

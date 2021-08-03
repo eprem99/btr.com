@@ -96,27 +96,77 @@
             </li>
 
 
-            @foreach($mainMenuSettings as $menu)
-                {{-- Check menu have childrens --}}
-                @if(isset($menu['children']))
-                    <li><a href="javascript:;" class="waves-effect"><i class="{{ $menu['icon'] }} fa-fw"></i> <span class="hide-menu"> {{ __($menu['translate_name']) }} <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level sub-menu-ul">
-                            @foreach($menu['children'] as $subMenu)
-                                {{-- Check module permissions --}}
-                                @if(in_array($subMenu['module'], $modules) || $subMenu['module'] == 'visibleToAll')
-                                    <li><a href="{{ is_null($subMenu['route']) ? 'javascript:;' : route(trim($subMenu['route'])) }}" class="waves-effect"> <span class="hide-menu">{{ __($subMenu['translate_name']) }} </span></a> </li>
-                                @endif
-                            @endforeach
+            <ul class="nav" id="side-menu">
+            <li class="sidebar-search hidden-sm hidden-md hidden-lg">
+                <!-- input-group -->
+                <div class="input-group custom-search-form">
+                    <input type="text" class="form-control" placeholder="Search..."> <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"> <i class="fa fa-search"></i> </button>
+                            </span> </div>
+                <!-- /input-group -->
+            </li>
+
+            <li class="user-pro hidden-sm hidden-md hidden-lg">
+                                    <a href="#" class="waves-effect"><img src="/user-uploads/avatar/887b1c2277300303f1fd1bee0c504a4e.png" alt="user-img" class="img-circle"> <span class="hide-menu">VECTO
+                            <span class="fa arrow"></span></span>
+                    </a>
+                                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a href="/member/dashboard">
+                            <i class="fa fa-sign-in fa-fw"></i> Login As Employee                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="/logout" onclick="event.preventDefault();
+                                                        document.getElementById('logout-form').submit();"><i class="fa fa-power-off fa-fw"></i> Logout</a>
+
+                    </li>
+                </ul>
+            </li>
+
+
+                            
+            <li class=""><a href="javascript:;" class="waves-effect"><i class="icon-speedometer fa-fw"></i> 
+            <span class="hide-menu"> Dashboard <span class="fa arrow"></span> </span></a>
+                        <ul class="nav nav-second-level sub-menu-ul collapse" aria-expanded="false">
+                                                            
+                                                                    <li><a href="/admin/dashboard" class="waves-effect"> <span class="hide-menu">Dashboard </span></a> </li>
+                    </ul>
+                    </li>
+                                            
+                    <li><a href="javascript:;" class="waves-effect"><i class="icon-people fa-fw"></i> <span class="hide-menu">Users <span class="fa arrow"></span> </span></a>
+                        <ul class="nav nav-second-level sub-menu-ul collapse">
+                                                            
+                                                                    <li><a href="/admin/clients" class="waves-effect"> <span class="hide-menu">Clients </span></a> </li>
+                                                                    <li><a href="/admin/employees/employees" class="waves-effect"> <span class="hide-menu">Techs</span></a> </li>
+                                                                                            
+                                                                                    </ul>
+                    </li>
+                                            
+                                            
+                                    <li><a href="javascript:;" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu"> Work Orders <span class="fa arrow"></span> </span></a>
+                        <ul class="nav nav-second-level sub-menu-ul collapse">
+                                                            
+                                                                                            
+                                                                                            
+                                                                    <li><a href="/admin/task/all-tasks" class="waves-effect"> <span class="hide-menu">Work Order </span></a> </li>
+                                                                    <li><a href="/admin/task/all-tasks/create" class="waves-effect"> <span class="hide-menu">New Work Order </span></a> </li>
+                  
+                                                                    <li><a href="/admin/task/task-calendar" class="waves-effect"> <span class="hide-menu">Work Calendar </span></a> </li>
+                                                                                            
+                                                                        </ul>
+                    </li>
+                                            
+                           <li><a href="javascript:;" class="waves-effect"><i class="icon-people fa-fw"></i> <span class="hide-menu">Site <span class="fa arrow"></span> </span></a>
+                        <ul class="nav nav-second-level sub-menu-ul collapse">
+                               <li><a href="/admin/task/task-label" class="waves-effect"> <span class="hide-menu">Sites</span></a> </li>
+                               <li><a href="/admin/task/task-label/create" class="waves-effect"> <span class="hide-menu">Add Site</span></a> </li>
                         </ul>
                     </li>
-                @else
-                    {{-- Check menu on root and check permissions of that module --}}
-                    @if(in_array($menu['module'], $modules) || $menu['module'] == 'visibleToAll')
-                        <li><a href="{{ is_null($menu['route']) ? 'javascript:;' : route(trim($menu['route'])) }}" class="waves-effect"><i class="{{ $menu['icon'] }} fa-fw"></i> <span class="hide-menu">{{ __($menu['translate_name']) }} </span></a> </li>
-                    @endif
-
-                @endif
-            @endforeach
+                    </li>
+                    
+                            
+            
+        </ul>
 
             @foreach ($worksuitePlugins as $item)
                 @if(View::exists(strtolower($item).'::sections.left_sidebar'))

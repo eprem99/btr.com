@@ -1306,12 +1306,7 @@ return array(
   ),
   'taskLabel' =>
   array(
-    'createLabel' => 'Create Label',
-  ),
-
-  'taskLabel' =>
-  array(
-    'createLabel' => 'Create Label',
+    'createLabel' => 'Create Site',
   ),
   'recurringInvoice' =>
   array(

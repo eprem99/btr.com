@@ -182,6 +182,11 @@ class AdminDashboardController extends AdminBaseController
         if ($exists && is_null($this->global->purchase_code)) {
             return redirect(route('verify-purchase'));
         }
+        $this->tasks = Task::select('tasks.*')
+            ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
+            ->groupBy('tasks.id')
+            ->get();
+
         return view('admin.dashboard.index', $this->data);
     }
 

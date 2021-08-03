@@ -9,7 +9,6 @@
         <!-- /.page title -->
         <!-- .breadcrumb -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-            <a href="javascript:;"  class="btn btn-outline btn-info btn-sm pinnedItem">@lang('app.pinnedTask') <i class="icon-pin icon-2"></i></a>
             <a href="{{ route('admin.task-label.index') }}" class="btn btn-outline btn-primary btn-sm"> @lang('app.menu.taskLabel') </a>
             <a href="{{ route('admin.all-tasks.create') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.tasks.newTask') <i class="fa fa-plus" aria-hidden="true"></i></a>
             <ol class="breadcrumb">
@@ -56,23 +55,6 @@
         </div>
     </div>
 
-    <div class="col-md-12">
-        <h5 class="box-title m-t-20">@lang('app.selectProject')</h5>
-
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-12">
-                    <select class="select2 form-control" data-placeholder="@lang('app.selectProject')" id="project_id">
-                        <option value="all">@lang('app.all')</option>
-                    @foreach($projects as $project)
-                            <option
-                                    value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="col-md-12">
         <h5 class="box-title">@lang('app.select') @lang('app.client')</h5>
 

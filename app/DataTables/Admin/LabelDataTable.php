@@ -30,21 +30,64 @@ class LabelDataTable extends BaseDataTable
 
                 return $action;
             })
-            ->editColumn('label_name', function ($row) {
-
-                if ($row->color) {
-                    return '<label class="badge" style="background: ' . $row->color . ';">' . ucwords($row->label_name) . '</label>';
-                }
-                return '<label class="badge"  style="background:#3b0ae1;">' . ucwords($row->label_name) . '</label>';
+            ->editColumn('id', function ($row) {
+                return ucwords($row->id);
             })
-            ->editColumn('description', function ($row) {
-                if ($row->description) {
-                    return ucwords($row->description);
+
+            ->editColumn('site_id', function ($row) {
+                if($row->contacts){
+                    $siteid = json_decode($row->contacts, true);
+ 
+                        return ucwords($siteid['site_id']);
                 }
                 return '--';
+
+            })
+
+            ->editColumn('label_name', function ($row) {
+                return ucwords($row->label_name);
+            })
+
+            ->editColumn('site_city', function ($row) {
+                if($row->contacts){
+                    $siteid = json_decode($row->contacts, true);
+                    if($siteid['site_city'] != NULL){
+                        return ucwords($siteid['site_city']);
+                    }else{
+                        return '--';
+
+                    }
+                        return ucwords($siteid['site_city']);
+                }
+                return '--';
+
+            })
+            ->editColumn('site_state', function ($row) {
+                if($row->contacts){
+                    $siteid = json_decode($row->contacts, true);
+                        return ucwords($siteid['site_state']);
+                }
+                return '--';
+
+            })
+            ->editColumn('site_phone', function ($row) {
+                if($row->contacts){
+                    $siteid = json_decode($row->contacts, true);
+                        return ucwords($siteid['site_phone']);
+                }
+                return '--';
+
+            })
+
+            ->editColumn('created_at', function ($row) {
+                if($row->created_at){
+                        return ucwords($row->created_at);
+                }
+                return '--';
+
             })
             ->addIndexColumn()
-            ->rawColumns(['action', 'label_name', 'color']);
+            ->rawColumns(['action', 'label_name']);
     }
 
     /**
@@ -55,7 +98,7 @@ class LabelDataTable extends BaseDataTable
     {
         $request = $this->request();
 
-        return $model->select('id', 'label_name', 'color', 'description');
+        return $model->select('id','label_name','contacts', 'created_at');
     }
 
     /**
@@ -101,11 +144,12 @@ class LabelDataTable extends BaseDataTable
     protected function getColumns()
     {
         return [
-            '#' => ['data' => 'id', 'name' => 'id', 'visible' => true],
-            //            __('app.id') => ['data' => 'id', 'name' => 'id', 'visible' => false],
-            __('app.labelName') => ['data' => 'label_name', 'name' => 'label_name'],
-            //            __('app.color')  => ['data' => 'color', 'name' => 'color'],
-            __('app.description') => ['data' => 'description', 'name' => 'description'],
+            __('app.site.id')  => ['data' => 'site_id', 'name' => 'contacts'],
+            __('app.site.name') => ['data' => 'label_name', 'name' => 'label_name'],
+            __('app.site.city')  => ['data' => 'site_city', 'name' => 'contacts'],
+            __('app.site.state')  => ['data' => 'site_state', 'name' => 'contacts'],
+            __('app.site.phone')  => ['data' => 'site_phone', 'name' => 'contacts'],
+            __('app.site.scheduled')  => ['data' => 'created_at', 'name' => 'created_at'],
             Column::computed('action', __('app.action'))
                 ->exportable(false)
                 ->printable(false)
