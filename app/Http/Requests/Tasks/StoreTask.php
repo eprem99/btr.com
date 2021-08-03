@@ -33,7 +33,7 @@ class StoreTask extends CoreRequest
         $rules = [
             'heading' => 'required',
             'due_date' => ['required' , new CheckDateFormat(null,$setting->date_format) , new CheckEqualAfterDate('start_date',$setting->date_format)],
-             'priority' => 'required',
+           //  'priority' => 'required',
             
         ];
 
@@ -62,7 +62,7 @@ class StoreTask extends CoreRequest
 
         if ($this->has('set_time_estimate')) {
           //  $rules['estimate_hours'] = 'required|integer|min:0';
-            $rules['estimate_minutes'] = 'required|integer|min:0';
+           // $rules['estimate_minutes'] = 'required|integer|min:0';
         }
 
         if (request()->get('custom_fields_data')) {
