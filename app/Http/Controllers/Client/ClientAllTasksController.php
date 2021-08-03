@@ -73,7 +73,9 @@ class ClientAllTasksController extends ClientBaseController
             ->join('users as client', 'task_users.user_id', '=', 'client.id')
             ->leftJoin('users as creator_user', 'creator_user.id', '=', 'tasks.created_by')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
-            ->selectRaw('tasks.id, projects.project_name, tasks.heading, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
+          //  ->join('task_labels', 'tasks.id', '=', 'task_labels.task_id')
+            ->join('task_label_list', 'tasks.site_id', '=', 'task_label_list.id')
+            ->selectRaw('tasks.id, projects.project_name, tasks.heading, task_label_list.label_name, task_label_list.contacts, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
              tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color,
               tasks.project_id, tasks.is_private,( select count("id") from pinned where pinned.task_id = tasks.id and pinned.user_id = '.user()->id.') as pinned_task')
             ->whereNull('projects.deleted_at')
@@ -133,7 +135,7 @@ class ClientAllTasksController extends ClientBaseController
         }
 
         $tasks->get();
-
+// dd($tasks->label_name);
         return DataTables::of($tasks)
             ->addColumn('action', function ($row) {
                 $action = '';
@@ -147,14 +149,24 @@ class ClientAllTasksController extends ClientBaseController
             })
 
             ->addColumn('site', function ($row) {
-                $site = $row->label_color;
-
+                $site = '';            
+                if ($row->label_name) {
+                    $site = $row->label_name;
+                } 
                return $site;
             })
 
             ->addColumn('siteid', function ($row) {
-                $site = $row->id;
-
+                $site = '';            
+                if ($row->contacts) {
+                    $contacts = json_decode($row->contacts, true);
+                    if($contacts['site_id']){
+                        $site = $contacts['site_id'];
+                    }else{
+                        $site = '';
+                    }
+                } 
+                
                return $site;
             })
             ->addColumn('taskpo', function ($row) {
@@ -314,6 +326,7 @@ class ClientAllTasksController extends ClientBaseController
         }
 
         $task->project_id = $request->project_id;
+        $task->site_id = $request->task_labels;
         $task->save();
 
         // save labels

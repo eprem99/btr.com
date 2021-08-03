@@ -80,6 +80,7 @@ class ClientTasksController extends ClientBaseController
         $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
         $task->billable   = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         $task->created_by = $this->user->id;
+        $task->site_id = $request->task_labels;
 
         if ($request->milestone_id != '') {
             $task->milestone_id = $request->milestone_id;
