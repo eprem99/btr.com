@@ -261,6 +261,8 @@
                                             </div>
                                         </div>
                                         <input type="hidden" name="taskID" id="taskID">
+                                        <input type="hidden" name="estimate_hours" value="1">
+                                        <input type="hidden" name="estimate_minutes" value="1">
                                     </div>
                                 </div>
                                 <div class="row" id="list">

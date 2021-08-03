@@ -245,7 +245,9 @@
                                                 </select>
                                             </div>
                                         </div>
-
+                                        <input type="hidden" name="estimate_hours" value="1">
+                                        <input type="hidden" name="estimate_minutes" value="1">
+                                        <input type="hidden" name="priority" value="medium">
                                     </div>
                                     <!--/span-->
                                     <div class="row m-b-20">

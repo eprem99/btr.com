@@ -61,7 +61,7 @@ class StoreTask extends CoreRequest
         }
 
         if ($this->has('set_time_estimate')) {
-            $rules['estimate_hours'] = 'required|integer|min:0';
+          //  $rules['estimate_hours'] = 'required|integer|min:0';
             $rules['estimate_minutes'] = 'required|integer|min:0';
         }
 

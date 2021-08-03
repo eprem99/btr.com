@@ -125,7 +125,7 @@
     
 
     <div class="col-md-12">
-        <h5 class="box-title">@lang('app.select') @lang('app.label')</h5>
+        <h5 class="box-title">@lang('app.select') @lang('app.menu.taskLabel')</h5>
 
         <div class="form-group">
             <div class="row">
@@ -156,16 +156,7 @@
             </div>
         </div>
     </div>
-<div class="col-md-12">
-        <div class="form-group">
-            <h5 class="box-title">@lang('app.billableTask')</h5>
-            <select class="form-control select2" name="billable" id="billable" data-style="form-control">
-                <option value="all">@lang('modules.client.all')</option>
-                <option value="1">@lang('app.yes')</option>
-                <option value="0">@lang('app.no')</option>
-            </select>
-        </div>
-    </div>
+
     <div class="col-md-12 m-b-10">
         <div class="checkbox checkbox-info">
             <input type="checkbox" checked id="hide-completed-tasks">

@@ -6,7 +6,7 @@
     }
 </style>
 
-<div class="rpanel-title"> @lang('app.task') #{{ $task->id }} <span><i class="ti-close right-side-toggle"></i></span> </div>
+<div class="rpanel-title"> @lang('modules.tasks.Task') #{{ $task->id }} <span><i class="ti-close right-side-toggle"></i></span> </div>
 <div class="r-panel-body p-t-0">
 
     <div class="row">
@@ -366,8 +366,9 @@
                     <label class="font-12" for="">@lang('modules.tasks.assignTo')</label><br>
                     @foreach ($task->users as $item)
                         <img src="{{ $item->image_url }}" data-toggle="tooltip"
-                             data-original-title="{{ ucwords($item->name) }}" data-placement="right"
+                             data-original-title="" data-placement="right"
                              class="img-circle" width="35" height="35" alt="">
+                             {{ ucwords($item->name) }}
                     @endforeach
                     <hr>
                 </div>
@@ -473,7 +474,7 @@ var myDropzone;
         }).then(function (isConfirm) {
             if (isConfirm) {
 
-                var url = '{{ route('admin.all-tasks.reminder', $task->id)}}';
+                var url = '{{ route('member.all-tasks.reminder', $task->id)}}';
 
                 $.easyAjax({
                     type: 'GET',
@@ -485,34 +486,6 @@ var myDropzone;
             }
         });
     })
-
-    function saveSubTask() {
-        $.easyAjax({
-            url: '{{route('admin.sub-task.store')}}',
-            container: '#createSubTask',
-            type: "POST",
-            data: $('#createSubTask').serialize(),
-            success: function (response) {
-                $('#subTaskModal').modal('hide');
-                $('#sub-task-list').html(response.view)
-            }
-        })
-    }
-
-    function updateSubTask(id) {
-        var url = '{{ route('admin.sub-task.update', ':id')}}';
-        url = url.replace(':id', id);
-        $.easyAjax({
-            url: url,
-            container: '#createSubTask',
-            type: "POST",
-            data: $('#createSubTask').serialize(),
-            success: function (response) {
-                $('#subTaskModal').modal('hide');
-                $('#sub-task-list').html(response.view)
-            }
-        })
-    }
 
     $('#view-task-history').click(function () {
         var id = $(this).data('task-id');
@@ -551,43 +524,6 @@ var myDropzone;
         ]
     });
 
-    $('body').on('click', '.delete-sub-task', function () {
-        var id = $(this).data('sub-task-id');
-        swal({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.deleteSubtaskText')",
-            dangerMode: true,
-            icon: 'warning',
-            buttons: {
-                cancel: "@lang('messages.confirmNoArchive')",
-                confirm: {
-                    text: "@lang('messages.confirmDelete')",
-                    value: true,
-                    visible: true,
-                    className: "danger",
-                }
-            }
-        }).then(function (isConfirm) {
-            if (isConfirm) {
-
-                var url = "{{ route('admin.sub-task.destroy',':id') }}";
-                url = url.replace(':id', id);
-
-                var token = "{{ csrf_token() }}";
-
-                $.easyAjax({
-                    type: 'POST',
-                    url: url,
-                    data: {'_token': token, '_method': 'DELETE'},
-                    success: function (response) {
-                        if (response.status == "success") {
-                            $('#sub-task-list').html(response.view);
-                        }
-                    }
-                });
-            }
-        });
-    });
 
 
     $('#submit-comment').click(function () {
