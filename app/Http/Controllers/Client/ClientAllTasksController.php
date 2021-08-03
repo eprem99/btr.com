@@ -457,7 +457,7 @@ class ClientAllTasksController extends ClientBaseController
         $task->save();
       //  echo 'easdasd';
         // save labels
-        $task->labels()->sync($request->task_labels);
+      //  $task->labels()->sync($request->task_labels);
 
         if (!$this->user->can('add_tasks') && $this->global->task_self == 'yes') {
             $request->user_id = [$this->user->id];

@@ -96,9 +96,6 @@ class ManageAllTasksController extends AdminBaseController
         $task->task_category_id = $request->category_id;
         $task->priority = $request->priority;
         $task->board_column_id = $request->status;
-        $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
-        $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         $task->estimate_hours = '0';
         $task->estimate_minutes = '0';
         $task->wo_type = $request->task_type;
@@ -120,7 +117,7 @@ class ManageAllTasksController extends AdminBaseController
         $task->save();
 
         // save labels
-        $task->labels()->sync($request->task_labels);
+      //  $task->labels()->sync($request->task_labels);
 
         // To add custom fields data
         if ($request->get('custom_fields_data')) {
@@ -224,14 +221,11 @@ class ManageAllTasksController extends AdminBaseController
         $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
         $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
         if ($request->project_id != "all") {
-            $task->project_id = $request->project_id;
+            $task->project_id = '1';
         }
         $task->task_category_id = $request->category_id;
         $task->priority = $request->priority;
         $task->board_column_id = $taskBoardColumn->id;
-        $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
-        $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         $task->estimate_hours = '0';
         $task->estimate_minutes = '0';
 
@@ -314,21 +308,19 @@ class ManageAllTasksController extends AdminBaseController
                 $newTask->priority = $request->priority;
                 $newTask->board_column_id = $taskBoardColumn->id;
                 $newTask->recurring_task_id = $task->id;
-                $newTask->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-
+                $newTask->task_labels = $task->site_id;
+                
                 if ($request->board_column_id) {
                     $newTask->board_column_id = $request->board_column_id;
                 }
                 
-                $newTask->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
-                $newTask->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
                 $newTask->estimate_hours = '0';
                 $newTask->estimate_minutes = '0';
                 $newTask->wo_type = $request->task_type;
                 $newTask->p_order = $request->task_purchase;
 
                 $newTask->save();
-                $newTask->labels()->sync($request->task_labels);
+               // $newTask->labels()->sync($request->task_labels);
 
                 // For gantt chart
                 if ($request->page_name && $request->page_name == 'ganttChart') {
@@ -384,8 +376,8 @@ class ManageAllTasksController extends AdminBaseController
 //         if ($request->board_column_id) {
 //             return Reply::redirect(route('admin.taskboard.index'), __('messages.taskCreatedSuccessfully'));
 //         }
-        return Reply::dataOnly(['taskID' => $task->id]);
-        //        return Reply::redirect(route('admin.all-tasks.index'), __('messages.taskCreatedSuccessfully'));
+       // return Reply::dataOnly(['taskID' => $task->id]);
+        return Reply::redirect(route('admin.all-tasks.index'), __('messages.taskCreatedSuccessfully'));
     }
 
     public function ajaxCreate($columnId)

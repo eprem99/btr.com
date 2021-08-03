@@ -85,8 +85,10 @@ class ManageTasksController extends AdminBaseController
         $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
         $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
         $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-        $task->estimate_hours = $request->estimate_hours;
-        $task->estimate_minutes = $request->estimate_minutes;
+        $task->estimate_hours = '0';
+        $task->estimate_minutes = '0';
+        $task->wo_type = $request->task_type;
+        $task->p_order = $request->task_purchase;
 
         if ($request->milestone_id != '') {
             $task->milestone_id = $request->milestone_id;
@@ -178,11 +180,10 @@ class ManageTasksController extends AdminBaseController
         $task->priority = $request->priority;
         $task->task_category_id = $request->category_id;
         $task->board_column_id = $request->status;
-        $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
-        $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-        $task->estimate_hours = $request->estimate_hours;
-        $task->estimate_minutes = $request->estimate_minutes;
+        $task->estimate_hours = '0';
+        $task->estimate_minutes = '0';
+        $task->wo_type = $request->task_type;
+        $task->p_order = $request->task_purchase;
 
         $taskBoardColumn = TaskboardColumn::findOrFail($request->status);
         if ($taskBoardColumn->slug == 'completed') {
