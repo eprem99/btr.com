@@ -55,13 +55,13 @@
                          @lang('modules.tasks.siteinfo')
                     </h3>
                     @php 
-                    $contacts = json_decode($task->label[0]->label->contacts, true);
+                    $contacts = json_decode($task->contacts, true);
                     @endphp
                     <P>
-                            <strong>Site ID: </strong> {{$task->label[0]->label->id}}
+                            <strong>Site ID: </strong> {{$task->site_id}}
                         </P>
                        <p>
-                            <strong>Site Name:  </strong> {{$task->label[0]->label->label_name}}
+                            <strong>Site Name:  </strong> {{$task->label_name}}
                        </p>
                        <p>
                             <strong>Time Zone:  </strong>

@@ -622,7 +622,9 @@ class ClientAllTasksController extends ClientBaseController
 
     public function show($id)
     {
-        $this->task = Task::with('board_column', 'label', 'label.label', 'subtasks', 'project', 'users', 'files', 'comments', 'activeTimer', 'notes')->findOrFail($id);
+        $this->task = Task::with('board_column', 'subtasks', 'users', 'files', 'comments', 'activeTimer', 'notes')
+        ->join('task_label_list', 'tasks.site_id', 'task_label_list.id')
+        ->findOrFail($id);
 
         $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')
             ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id')
@@ -646,6 +648,8 @@ class ClientAllTasksController extends ClientBaseController
             ->orderBy('users.name')
             ->get();
             
+        
+
         $view = view('client.all-tasks.show', $this->data)->render();
         return Reply::dataOnly(['status' => 'success', 'view' => $view]);
     }
