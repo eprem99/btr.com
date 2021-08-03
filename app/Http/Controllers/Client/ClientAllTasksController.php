@@ -317,6 +317,8 @@ class ClientAllTasksController extends ClientBaseController
         $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         $task->estimate_hours = '0';
         $task->estimate_minutes = '0';
+        $task->wo_type = $request->task_type;
+        $task->p_order = $request->task_purchase;
 
         $taskBoardColumn = TaskboardColumn::findOrFail($request->status);
         if ($taskBoardColumn->slug == 'completed') {
@@ -444,6 +446,9 @@ class ClientAllTasksController extends ClientBaseController
         $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         $task->estimate_hours = '0';
         $task->estimate_minutes = '0';
+
+        $task->wo_type = $request->task_type;
+        $task->p_order = $request->task_purchase;
 
         if ($request->board_column_id) {
             $task->board_column_id = $request->board_column_id;
