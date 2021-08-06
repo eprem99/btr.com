@@ -99,8 +99,10 @@ class ManageAllTasksController extends AdminBaseController
         $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
         $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
         $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-        $task->estimate_hours = $request->estimate_hours;
-        $task->estimate_minutes = $request->estimate_minutes;
+        $task->estimate_hours = '0';
+        $task->estimate_minutes = '0';
+        $task->wo_type = $request->task_type;
+        $task->p_order = $request->task_purchase;
 
         $taskBoardColumn = TaskboardColumn::findOrFail($request->status);
 
@@ -230,8 +232,8 @@ class ManageAllTasksController extends AdminBaseController
         $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
         $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
         $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-        $task->estimate_hours = $request->estimate_hours;
-        $task->estimate_minutes = $request->estimate_minutes;
+        $task->estimate_hours = '0';
+        $task->estimate_minutes = '0';
 
         if ($request->board_column_id) {
             $task->board_column_id = $request->board_column_id;
@@ -320,8 +322,10 @@ class ManageAllTasksController extends AdminBaseController
                 
                 $newTask->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
                 $newTask->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-                $newTask->estimate_hours = $request->estimate_hours;
-                $newTask->estimate_minutes = $request->estimate_minutes;
+                $newTask->estimate_hours = '0';
+                $newTask->estimate_minutes = '0';
+                $newTask->wo_type = $request->task_type;
+                $newTask->p_order = $request->task_purchase;
 
                 $newTask->save();
                 $newTask->labels()->sync($request->task_labels);
@@ -412,7 +416,9 @@ class ManageAllTasksController extends AdminBaseController
 
     public function show($id)
     {
-        $this->task = Task::with('board_column', 'subtasks', 'project', 'users', 'files', 'label', 'comments', 'activeTimerAll')->findOrFail($id)->withCustomFields();
+        $this->task = Task::with('board_column', 'subtasks', 'project', 'users', 'files', 'label', 'comments', 'activeTimerAll')
+        ->join('task_label_list', 'tasks.site_id', 'task_label_list.id')
+        ->findOrFail($id)->withCustomFields();
         
         $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')
             ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id')

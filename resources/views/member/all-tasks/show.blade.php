@@ -13,29 +13,10 @@
         <div class="col-xs-12 col-md-9 p-t-20 b-r h-scroll">
 
             <div class="col-xs-12">
-                <a href="{{route('front.task-share',[$task->hash])}}" target="_blank" data-toggle="tooltip" data-placement="bottom"
-                    data-original-title="@lang('app.share')" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right m-l-5"> <i class="fa fa-share-alt"></i></a>
                 <a href="javascript:;" id="completedButton" class="btn btn-success btn-sm m-b-10 btn-rounded @if($task->board_column->slug == 'completed') hidden @endif "  onclick="markComplete('completed')" ><i class="fa fa-check"></i> @lang('modules.tasks.markComplete')</a>
                 <a href="javascript:;" id="inCompletedButton" class="btn btn-default btn-outline btn-sm m-b-10 btn-rounded @if($task->board_column->slug != 'completed') hidden @endif"  onclick="markComplete('incomplete')"><i class="fa fa-times"></i> @lang('modules.tasks.markIncomplete')</a>
-                @if($task->board_column->slug != 'completed' && ($user->can('edit_tasks') || $task->created_by == $user->id))
-                    <a href="javascript:;" id="reminderButton" class="btn btn-default btn-sm m-b-10 m-l-5 btn-rounded btn-outline pull-right" title="@lang('messages.remindToAssignedEmployee')"><i class="fa fa-bell"></i> @lang('modules.tasks.reminder')</a>
-                @endif
 
-                @php $pin = $task->pinned() @endphp
-                <a href="javascript:;" class="btn btn-sm btn-info @if(!$pin) btn-outline @endif pull-right m-l-5"   data-placement="bottom"  data-toggle="tooltip" data-original-title="@if($pin) @lang('app.unpin') @else @lang('app.pin') @endif"  data-pinned="@if($pin) pinned @else unpinned @endif" id="pinnedItem" >
-                    <i class="icon-pin icon-2 pin-icon  @if($pin) pinned @else unpinned @endif" ></i>
-                </a>
-                @if ($task->board_column->slug != 'completed')
-
-                    @if (is_null($task->activeTimer) && !is_null($task->is_task_user))
-                        <a href="javascript:;" id="start-task-timer"  class="btn btn-info btn-sm m-b-10 btn-rounded btn-outline pull-right m-l-5"> <i class="fa fa-clock-o"></i> @lang('modules.timeLogs.startTimer')</a>
-                    @elseif (!is_null($task->activeTimer) && !is_null($task->is_task_user))
-                        <a href="javascript:;" data-toggle="tooltip" id="stop-task-timer" data-placement="bottom"
-                        data-original-title="@lang('app.stop')" data-time-id="{{ $task->activeTimer->id }}" class="btn btn-inverse btn-sm m-b-10 btn-rounded btn-outline pull-right m-l-5 w-100"> <span id="active-task-timer" class="b-r m-r-5 p-r-5">{{ $task->activeTimer->timer }}</span> <i class="fa fa-stop text-danger"></i></a>
-                    @endif
-                @endif
-
-            </div>
+           </div>
             <div class="col-xs-12">
                 <h4>
                     {{ ucwords($task->heading) }}
@@ -44,27 +25,11 @@
                     <p><i class="icon-layers"></i> {{ ucfirst($task->project->project_name) }}</p>
                 @endif
 
-                <h5>
-                    @if($task->task_category_id)
-                        <label class="label label-default text-dark font-light">{{ ucwords($task->category->category_name) }}</label>
-                    @endif
-
-                    <label class="font-light label
-                    @if($task->priority == 'high')
-                            label-danger
-                    @elseif($task->priority == 'medium') label-warning @else label-success @endif
-                            ">
-                        <span class="text-dark">@lang('modules.tasks.priority') ></span>  {{ ucfirst($task->priority) }}
-                    </label>
-                </h5>
-
             </div>
 
             <ul class="nav customtab nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#home1" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">@lang('app.task')</a></li>
-                <li role="presentation" class=""><a href="#profile1" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false">@lang('modules.tasks.subTask')({{ count($task->subtasks) }})</a></li>
                 <li role="presentation" class=""><a href="#messages1" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false">@lang('app.file') (<span id="totalUploadedFiles">{{ sizeof($task->files) }}</span>) </a></li>
-                <li role="presentation" class=""><a href="#timelogs1" aria-controls="settings" role="tab" data-toggle="tab" aria-expanded="false">@lang('app.menu.timeLogs') </a></li>
                 <li role="presentation" class=""><a href="#settings1" aria-controls="settings" role="tab" data-toggle="tab" aria-expanded="false">@lang('modules.tasks.comment') ({{ count($task->comments) }})</a></li>
 
                 <li role="presentation" >  <a href="#history1" id="view-task-history" role="tab" data-toggle="tab" aria-expanded="false" data-task-id="{{ $task->id }}" > <span class="hidden-xs">@lang('modules.tasks.history')</span></a></li>
@@ -120,42 +85,6 @@
                         </div>
 
                     </div>
-                </div>
-
-                <div role="tabpanel" class="tab-pane" id="profile1">
-                    <div class="col-xs-12 m-b-10">
-                        <a href="javascript:;"  data-task-id="{{ $task->id }}" class="add-sub-task"><i class="icon-plus"></i> @lang('app.add') @lang('modules.tasks.subTask')</a>
-                    </div>
-                    <div class="col-xs-12 m-t-5">
-                        <h5><i class="ti-check-box"></i> @lang('modules.tasks.subTask')
-                            @if (count($task->subtasks) > 0)
-                                <span class="pull-right"><span class="donut" data-peity='{ "fill": ["#00c292", "#eeeeee"],    "innerRadius": 5, "radius": 8 }'>{{ count($task->completedSubtasks) }}/{{ count($task->subtasks) }}</span> <span class="text-muted font-12">{{ floor((count($task->completedSubtasks)/count($task->subtasks))*100) }}%</span></span>
-                            @endif
-
-                        </h5>
-
-                        <ul class="list-group b-t" id="sub-task-list">
-                            @foreach($task->subtasks as $subtask)
-                                <li class="list-group-item row">
-                                    <div class="col-xs-9">
-                                        <div class="checkbox checkbox-success checkbox-circle task-checkbox">
-                                            <input class="task-check" data-sub-task-id="{{ $subtask->id }}" id="checkbox{{ $subtask->id }}" type="checkbox"
-                                                @if($subtask->status == 'complete') checked @endif>
-                                            <label for="checkbox{{ $subtask->id }}">&nbsp;</label>
-                                            <span>{{ ucfirst($subtask->title) }}</span>
-                                        </div>
-                                        @if($subtask->due_date)<span class="text-muted m-l-5"> - @lang('modules.invoices.due'): {{ $subtask->due_date->format($global->date_format) }}</span>@endif
-                                    </div>
-
-                                    <div class="col-xs-3 text-right">
-                                        <a href="javascript:;" data-sub-task-id="{{ $subtask->id }}" class="edit-sub-task"><i class="fa fa-pencil"></i></a>&nbsp;
-                                        <a href="javascript:;" data-sub-task-id="{{ $subtask->id }}" class="delete-sub-task"><i class="fa fa-trash"></i></a>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-
                 </div>
 
                 <div role="tabpanel" class="tab-pane" id="messages1">
@@ -220,48 +149,6 @@
                     </div>
                 </div>
 
-                <div role="tabpanel" class="tab-pane" id="timelogs1">
-    
-                    <div class="col-xs-12">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>@lang('app.employee')</th>
-                                    <th>@lang('modules.employees.hoursLogged')</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($employees as $item)
-                                <tr>
-                                    <td>
-                                        <img src="{{ $item->image_url }}" width="35" height="35" class="img-circle">
-                                        <span class="font-semi-bold">{{ ucwords($item->name) }}</span><br>
-                                    </td>
-                                    <td>
-                                        @php
-                                            $timeLog = intdiv($item->total_minutes, 60) . ' ' . __('app.hrs') . ' ';
-
-                                            if (($item->total_minutes % 60) > 0) {
-                                                $timeLog .= ($item->total_minutes % 60) . ' ' . __('app.mins');
-                                            }
-                                        @endphp 
-                                        {{ $timeLog }} 
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="2">
-                                        @lang('messages.noRecordFound')
-                                    </td>
-                                    
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-    
-                </div>
 
                 <div role="tabpanel" class="tab-pane" id="settings1">
 
@@ -332,6 +219,7 @@
                         <img src="{{ $item->image_url }}" data-toggle="tooltip"
                              data-original-title="{{ ucwords($item->name) }}" data-placement="right"
                              class="img-circle" width="35" height="35" alt="">
+                             {{ ucwords($item->name) }}
                     @endforeach
                     <hr>
                 </div>
@@ -361,64 +249,6 @@
                     <hr>
                 </div>
 
-                @if ($task->estimate_hours > 0 || $task->estimate_minutes > 0)
-                    <div class="col-xs-12 ">
-                        <label class="font-12" for="">@lang('app.estimate')</label><br>
-                       
-                        <span>
-                            {{ $task->estimate_hours }} @lang('app.hrs') 
-                            {{ $task->estimate_minutes }} @lang('app.mins')
-                        </span>
-                        <hr>
-                    </div>
-
-                    <div class="col-xs-12 ">
-                        <label class="font-12" for="">@lang('modules.employees.hoursLogged')</label><br>
-                        <span>
-                            @php
-                                $timeLog = intdiv($task->timeLogged->sum('total_minutes'), 60) . ' ' . __('app.hrs') . ' ';
-
-                                if (($task->timeLogged->sum('total_minutes') % 60) > 0) {
-                                    $timeLog .= ($task->timeLogged->sum('total_minutes') % 60) . ' ' . __('app.mins');
-                                }
-                            @endphp 
-                            <span @if ($task->total_estimated_minutes < $task->timeLogged->sum('total_minutes')) class="text-danger font-semi-bold" @endif>
-                                {{ $timeLog }}
-                            </span>
-                        </span>
-                        <hr>
-                    </div>
-                @else
-                    <div class="col-xs-12 ">
-                        <label class="font-12" for="">@lang('modules.employees.hoursLogged')</label><br>
-                        <span>
-                            @php
-                                $timeLog = intdiv($task->timeLogged->sum('total_minutes'), 60) . ' ' . __('app.hrs') . ' ';
-
-                                if (($task->timeLogged->sum('total_minutes') % 60) > 0) {
-                                    $timeLog .= ($task->timeLogged->sum('total_minutes') % 60) . ' ' . __('app.mins');
-                                }
-                            @endphp 
-                            <span>
-                                {{ $timeLog }}
-                            </span>
-                        </span>
-                        <hr>
-                    </div>
-                @endif
-
-                @if(sizeof($task->label))
-                    <div class="col-xs-12">
-                        <label class="font-12" for="">@lang('app.label')</label><br>
-                        <span>
-                            @foreach($task->label as $key => $label)
-                                <label class="badge text-capitalize font-semi-bold" style="background:{{ $label->label->label_color }}">{{ ucwords($label->label->label_name) }} </label>
-                            @endforeach
-                        </span>
-                        <hr>
-                    </div>
-                @endif
-
             </div>
 
 
@@ -439,23 +269,6 @@
 
 <script>
     var myDropzone;
-    $('body').on('click', '.edit-sub-task', function () {
-        var id = $(this).data('sub-task-id');
-        var url = '{{ route('member.sub-task.edit', ':id')}}';
-        url = url.replace(':id', id);
-
-        $('#subTaskModelHeading').html('Sub Task');
-        $.ajaxModal('#subTaskModal', url);
-    });
-
-    $('body').on('click', '.add-sub-task', function () {
-        console.log('add-sub-task');
-        var id = $(this).data('task-id');
-        var url = '{{ route('member.sub-task.create')}}?task_id='+id;
-
-        $('#subTaskModelHeading').html('Sub Task');
-        $.ajaxModal('#subTaskModal', url);
-    });
 
     $(function() {
         Dropzone.autoDiscover = false;
@@ -490,64 +303,7 @@
         myDropzone.removeAllFiles();
 
     });
-    $('#reminderButton').click(function () {
-        swal({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.sendReminder')",
-            dangerMode: true,
-            icon: 'warning',
-            buttons: {
-                cancel: "@lang('messages.confirmNoArchive')",
-                confirm: {
-                    text: "@lang('messages.confirmSend')",
-                    value: true,
-                    visible: true,
-                    className: "danger",
-                }
-            }
-        }).then(function (isConfirm) {
-            if (isConfirm) {
 
-                var url = '{{ route('member.all-tasks.reminder', $task->id)}}';
-
-                $.easyAjax({
-                    type: 'GET',
-                    url: url,
-                    success: function (response) {
-                        //
-                    }
-                });
-            }
-        });
-    })
-
-    function saveSubTask() {
-        $.easyAjax({
-            url: '{{route('member.sub-task.store')}}',
-            container: '#createSubTask',
-            type: "POST",
-            data: $('#createSubTask').serialize(),
-            success: function (response) {
-                $('#subTaskModal').modal('hide');
-                $('#sub-task-list').html(response.view)
-            }
-        })
-    }
-
-    function updateSubTask(id) {
-        var url = '{{ route('member.sub-task.update', ':id')}}';
-        url = url.replace(':id', id);
-        $.easyAjax({
-            url: url,
-            container: '#createSubTask',
-            type: "POST",
-            data: $('#createSubTask').serialize(),
-            success: function (response) {
-                $('#subTaskModal').modal('hide');
-                $('#sub-task-list').html(response.view)
-            }
-        })
-    }
 
     $('#view-task-history').click(function () {
         var id = $(this).data('task-id');
@@ -827,38 +583,6 @@
         })
     }
 
-    $('#start-task-timer').click(function () {
-        var task_id = "{{ $task->id }}";
-        var project_id = "{{ $task->project_id }}";
-        var user_id = "{{ user()->id }}";
-        var memo = "{{ $task->heading }}";
-        var token = "{{ csrf_token() }}";
-
-        $.easyAjax({
-            url: '{{route('member.time-log.store')}}',
-            container: '#startTimer',
-            type: "POST",
-            data: {task_id: task_id, project_id: project_id, memo: memo, '_token': token, user_id: user_id},
-            success: function (data) {
-                refreshTask(task_id);
-            }
-        })
-    });
-
-    $('#stop-task-timer').click(function () {
-        var id = $(this).data('time-id');
-        var url = '{{route('member.all-time-logs.stopTimer', ':id')}}';
-        url = url.replace(':id', id);
-        var token = '{{ csrf_token() }}';
-        $.easyAjax({
-            url: url,
-            type: "POST",
-            data: {timeId: id, _token: token},
-            success: function (data) {
-                refreshTask("{{ $task->id }}");
-            }
-        })
-    });
 
     function refreshTask(taskId) {
         var id = taskId;
@@ -875,93 +599,6 @@
             }
         });
     }
-
-    $('body').on('click', '#pinnedItem', function(){
-        var type = $('#pinnedItem').attr('data-pinned');
-        var id = {{ $task->id }};
-        var pinType = 'task';
-
-        var dataPin = type.trim(type);
-        if(dataPin == 'pinned'){
-            swal({
-                title: "@lang('messages.sweetAlertTitle')",
-                text: "@lang('messages.unpinTask')",
-                dangerMode: true,
-                icon: 'warning',
-                buttons: {
-                    cancel: "@lang('messages.confirmNoArchive')",
-                    confirm: {
-                        text: "@lang('messages.confirmUnpin')",
-                        value: true,
-                        visible: true,
-                        className: "danger",
-                    }
-                }
-            }).then(function (isConfirm) {
-                if (isConfirm) {
-                    var url = "{{ route('member.pinned.destroy',':id') }}";
-                    url = url.replace(':id', id);
-
-                    var token = "{{ csrf_token() }}";
-                    $.easyAjax({
-                        type: 'POST',
-                        url: url,
-                        data: {'_token': token, '_method': 'DELETE','type':pinType},
-                        success: function (response) {
-                            if (response.status == "success") {
-                                $.unblockUI();
-                                $('.pin-icon').removeClass('pinned');
-                                $('.pin-icon').addClass('unpinned');
-                                $('#pinnedItem').attr('data-pinned','unpinned');
-                                $('#pinnedItem').attr('data-original-title','Pin');
-                                $("#pinnedItem").tooltip("hide");
-                                table._fnDraw();
-                            }
-                        }
-                    })
-                }
-            });
-        }
-        else {
-            swal({
-                title: "@lang('messages.sweetAlertTitle')",
-                text: "@lang('messages.pinTask')",
-                dangerMode: true,
-                icon: 'warning',
-                buttons: {
-                    cancel: "@lang('messages.confirmNoArchive')",
-                    confirm: {
-                        text: "@lang('app.yes')",
-                        value: true,
-                        visible: true,
-                        className: "danger",
-                    }
-                }
-            }).then(function (isConfirm) {
-                if (isConfirm) {
-                    var url = "{{ route('member.pinned.store') }}?type="+pinType;
-
-                    var token = "{{ csrf_token() }}";
-                    $.easyAjax({
-                        type: 'POST',
-                        url: url,
-                        data: {'_token': token,'task_id':id},
-                        success: function (response) {
-                            if (response.status == "success") {
-                                $.unblockUI();
-                                $('.pin-icon').removeClass('unpinned');
-                                $('.pin-icon').addClass('pinned');
-                                $('#pinnedItem').attr('data-pinned','pinned');
-                                $('#pinnedItem').attr('data-original-title','Unpin');
-                                $("#pinnedItem").tooltip("hide");
-                                table._fnDraw();
-                            }
-                        }
-                    });
-                }
-            });
-        }
-    });
 
 </script>
 
@@ -1008,48 +645,3 @@
     });
 
 </script>
-
-@if ($task->board_column->slug != 'completed' && !is_null($task->activeTimer))
-    <script>
-
-        $(document).ready(function(e) {
-            var $worked = $("#active-task-timer");
-            function updateTimer() {
-                var myTime = $worked.html();
-                var ss = myTime.split(":");
-
-                var hours = ss[0];
-                var mins = ss[1];
-                var secs = ss[2];
-                secs = parseInt(secs)+1;
-
-                if(secs > 59){
-                    secs = '00';
-                    mins = parseInt(mins)+1;
-                }
-
-                if(mins > 59){
-                    secs = '00';
-                    mins = '00';
-                    hours = parseInt(hours)+1;
-                }
-
-                if(hours.toString().length < 2) {
-                    hours = '0'+hours;
-                }
-                if(mins.toString().length < 2) {
-                    mins = '0'+mins;
-                }
-                if(secs.toString().length < 2) {
-                    secs = '0'+secs;
-                }
-                var ts = hours+':'+mins+':'+secs;
-
-                $worked.html(ts);
-                setTimeout(updateTimer, 1000);
-            }
-            setTimeout(updateTimer, 1000);
-        });
-
-    </script>
-@endif

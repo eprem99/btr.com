@@ -7,16 +7,6 @@
             <h4 class="page-title"><i class="{{ $pageIcon }}"></i> @lang($pageTitle)</h4>
         </div>
         <!-- /.page title -->
-        <!-- .breadcrumb -->
-        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-            <a href="javascript:;"  class="btn btn-outline btn-info btn-sm pinnedItem">@lang('app.pinnedTask') <i class="icon-pin icon-2"></i></a>
-
-            <ol class="breadcrumb">
-                <li><a href="{{ route('member.dashboard') }}">@lang('app.menu.home')</a></li>
-                <li class="active">@lang($pageTitle)</li>
-            </ol>
-        </div>
-        <!-- /.breadcrumb -->
     </div>
 @endsection
 
@@ -437,11 +427,5 @@
 
 
     showTable();
-    $('.pinnedItem').click(function(){
-        var url = '{{ route('member.all-tasks.pinned-task')}}';
-        $('#modelHeading').html('Pinned Task');
-        $.ajaxModal('#editTimeLogModal',url);
-    })
-
 </script>
 @endpush

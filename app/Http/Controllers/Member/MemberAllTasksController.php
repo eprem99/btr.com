@@ -278,6 +278,9 @@ class MemberAllTasksController extends MemberBaseController
         $task->priority = $request->priority;
         $task->board_column_id = $request->status;
         $task->task_category_id = $request->category_id;
+        $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
+        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
+        $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         $task->estimate_hours = '0';
         $task->estimate_minutes = '0';
         $task->wo_type = $request->task_type;
@@ -395,10 +398,11 @@ class MemberAllTasksController extends MemberBaseController
         $task->priority = $request->priority;
         $task->board_column_id = $this->global->default_task_status;
         $task->task_category_id = $request->category_id;
-        $task->estimate_hours = '0';
-        $task->estimate_minutes = '0';
-        $task->wo_type = $request->task_type;
-        $task->p_order = $request->task_purchase;
+        $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
+        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
+        $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
+        $task->estimate_hours = $request->estimate_hours;
+        $task->estimate_minutes = $request->estimate_minutes;
 
         if ($request->board_column_id) {
             $task->board_column_id = $request->board_column_id;
@@ -481,11 +485,10 @@ class MemberAllTasksController extends MemberBaseController
                     $newTask->board_column_id = $request->board_column_id;
                 }
 
-                $task->estimate_hours = '0';
-                $task->estimate_minutes = '0';
-                $task->wo_type = $request->task_type;
-                $task->p_order = $request->task_purchase;
-
+                $newTask->estimate_hours = $request->estimate_hours;
+                $newTask->estimate_minutes = $request->estimate_minutes;
+                $newTask->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
+                $newTask->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         
 
                 $newTask->save();

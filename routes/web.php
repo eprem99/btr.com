@@ -17,15 +17,6 @@ Route::post('/consent/l/update/{lead}', ['uses' => 'PublicLeadGdprController@upd
 Route::get('/consent/l/{lead}', ['uses' => 'PublicLeadGdprController@consent'])->name('front.gdpr.consent');
 Route::post('/forms/l/update/{lead}', ['uses' => 'PublicLeadGdprController@updateLead'])->name('front.gdpr.lead.update');
 Route::get('/forms/l/{lead}', ['uses' => 'PublicLeadGdprController@lead'])->name('front.gdpr.lead');
-Route::get('/contract/{id}', ['uses' => 'PublicUrlController@contractView'])->name('front.contract.show');
-Route::get('/contract/download/{id}', ['uses' => 'PublicUrlController@contractDownload'])->name('front.contract.download');
-Route::get('/contract/sign-modal/{id}', ['uses' => 'PublicUrlController@contractSignModal'])->name('front.contract.sign-modal');
-Route::post('/contract/sign/{id}', ['uses' => 'PublicUrlController@contractSign'])->name('front.contract.sign');
-Route::get('/estimate/{id}', ['uses' => 'PublicUrlController@estimateView'])->name('front.estimate.show');
-Route::post('/estimate/decline/{id}', ['uses' => 'PublicUrlController@decline'])->name('front.estimate.decline');
-Route::get('/estimate/accept/{id}', ['uses' => 'PublicUrlController@acceptModal'])->name('front.estimate.accept');
-Route::post('/estimate/accept/{id}', ['uses' => 'PublicUrlController@accept'])->name('front.accept-estimate');
-Route::get('/estimate/download/{id}', ['uses' => 'PublicUrlController@estimateDownload'])->name('front.estimateDownload');
 
 Route::get('/taskboard-data', ['uses' => 'HomeController@taskBoardData'])->name('front.taskBoardData');
 Route::get('/taskboard/{encrypt}', ['uses' => 'HomeController@taskboard'])->name('front.taskboard');
@@ -39,14 +30,6 @@ Route::get('/task-share/{id}', ['uses' => 'HomeController@taskShare'])->name('fr
 Route::post('/invoice-stripe/stripe-modal/', ['uses' => 'HomeController@stripeModal'])->name('front.stripe-modal');
 Route::get('/invoice/{id}', ['uses' => 'HomeController@invoice'])->name('front.invoice');
 Route::get('/invoice/download/{id}', ['uses' => 'HomeController@downloadInvoice'])->name('front.invoiceDownload');
-Route::get('/lead-form', ['uses' => 'HomeController@leadForm'])->name('front.leadForm');
-Route::post('/lead-form/leadStore', ['uses' => 'HomeController@leadStore'])->name('front.leadStore');
-Route::get('/ticket-form', ['uses' => 'HomeController@ticketForm'])->name('front.ticketForm');
-Route::post('/ticket-form/ticketStore', ['uses' => 'HomeController@ticketStore'])->name('front.ticketStore');
-Route::get('/proposal/{id}', ['uses' => 'HomeController@proposal'])->name('front.proposal');
-Route::get('/proposal-action/{id}', ['uses' => 'HomeController@proposalAction'])->name('front.proposal-action');
-Route::post('/proposal-action-post/{id}', ['uses' => 'HomeController@proposalActionStore'])->name('front.proposal-action-post');
-Route::get('/proposal/download/{id}', ['uses' => 'HomeController@downloadProposal'])->name('front.download-proposal');
 
 Route::get('/', ['uses' => 'HomeController@login']);
 
@@ -57,14 +40,6 @@ Route::post('/verify-webhook', ['as' => 'verify-webhook', 'uses' => 'StripeWebho
 Route::group(
     ['namespace' => 'Client', 'prefix' => 'client', 'as' => 'client.'], function () {
 
-    Route::post('stripe/{invoiceId}', array('as' => 'stripe', 'uses' => 'StripeController@paymentWithStripe',));
-    Route::post('stripe-public/{invoiceId}', array('as' => 'stripe-public', 'uses' => 'StripeController@paymentWithStripePublic',));
-    Route::get('paypal-public/{invoiceId}', array('as' => 'paypal-public', 'uses' => 'PaypalController@paymentWithpaypalPublic',));
-    Route::get('paypal/{invoiceId}', array('as' => 'paypal', 'uses' => 'PaypalController@paymentWithpaypal',));
-    Route::get('paypal', array('as' => 'status', 'uses' => 'PaypalController@getPaymentStatus',));
-    Route::get('paypal-recurring', array('as' => 'paypal-recurring', 'uses' => 'PaypalController@payWithPaypalRecurrring',));
-
-    Route::post('pay-with-razorpay', array('as' => 'pay-with-razorpay', 'uses' => 'RazorPayController@payWithRazorPay',));
 });
 
 // Social Auth
@@ -96,20 +71,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('clients/create/{clientID?}', ['uses' => 'ManageClientsController@create'])->name('clients.create');
         Route::resource('clients', 'ManageClientsController', ['except' => ['create']]);
 
-        Route::get('leads/kanban-board', ['uses' => 'LeadController@kanbanboard'])->name('leads.kanbanboard');
-        Route::get('leads/gdpr/{leadID}', ['uses' => 'LeadController@gdpr'])->name('leads.gdpr');
-        Route::get('leads/export/{followUp?}/{client?}', ['uses' => 'LeadController@export'])->name('leads.export');
-        Route::post('leads/change-status', ['uses' => 'LeadController@changeStatus'])->name('leads.change-status');
-        Route::get('leads/follow-up/{leadID}', ['uses' => 'LeadController@followUpCreate'])->name('leads.follow-up');
-        Route::get('leads/followup/{leadID}', ['uses' => 'LeadController@followUpShow'])->name('leads.followup');
-        Route::post('leads/follow-up-store', ['uses' => 'LeadController@followUpStore'])->name('leads.follow-up-store');
-        Route::get('leads/follow-up-edit/{id?}', ['uses' => 'LeadController@editFollow'])->name('leads.follow-up-edit');
-        Route::post('leads/follow-up-update', ['uses' => 'LeadController@UpdateFollow'])->name('leads.follow-up-update');
-        Route::post('leads/follow-up-delete/{id}', ['uses' => 'LeadController@deleteFollow'])->name('leads.follow-up-delete');
-        Route::get('leads/follow-up-sort', ['uses' => 'LeadController@followUpSort'])->name('leads.follow-up-sort');
-        Route::post('leads/save-consent-purpose-data/{lead}', ['uses' => 'LeadController@saveConsentLeadData'])->name('leads.save-consent-purpose-data');
-        Route::get('leads/consent-purpose-data/{lead}', ['uses' => 'LeadController@consentPurposeData'])->name('leads.consent-purpose-data');
-      
+
         Route::resource('leadCategory', 'LeadCategoyController');
         Route::resource('clientCategory', 'ClientCategoryController');
         Route::resource('clientSubCategory', 'ClientSubCategoryController');
@@ -125,23 +87,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('lead-files/thumbnail', ['uses' => 'LeadFilesController@thumbnailShow'])->name('lead-files.thumbnail');
         Route::resource('lead-files', 'LeadFilesController');
 
-        // Proposal routes
-        Route::get('proposals/data/{id?}', ['uses' => 'ProposalController@data'])->name('proposals.data');
-        Route::get('proposals/download/{id}', ['uses' => 'ProposalController@download'])->name('proposals.download');
-        Route::get('proposals/create/{leadID?}', ['uses' => 'ProposalController@create'])->name('proposals.create');
-        Route::get('proposals/send/{id?}', ['uses' => 'ProposalController@sendProposal'])->name('proposals.send');
-        Route::get('proposals/convert-proposal/{id?}', ['uses' => 'ProposalController@convertProposal'])->name('proposals.convert-proposal');
-        Route::get('proposals/detail/{id?}', ['uses' => 'ProposalController@detail'])->name('proposals.detail');
-        Route::resource('proposals', 'ProposalController' , ['except' => ['create']]);
 
-        // Holidays
-        Route::get('holidays/calendar-month', 'HolidaysController@getCalendarMonth')->name('holidays.calendar-month');
-        Route::get('holidays/view-holiday/{year?}', 'HolidaysController@viewHoliday')->name('holidays.view-holiday');
-        Route::get('holidays/mark_sunday', 'HolidaysController@Sunday')->name('holidays.mark-sunday');
-        Route::get('holidays/calendar/{year?}', 'HolidaysController@holidayCalendar')->name('holidays.calendar');
-        Route::get('holidays/mark-holiday', 'HolidaysController@markHoliday')->name('holidays.mark-holiday');
-        Route::post('holidays/mark-holiday-store', 'HolidaysController@markDayHoliday')->name('holidays.mark-holiday-store');
-        Route::resource('holidays', 'HolidaysController');
 
         Route::group(
             ['prefix' => 'employees'], function () {
