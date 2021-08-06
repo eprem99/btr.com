@@ -352,68 +352,6 @@
         $('.selectpicker').selectpicker();
     });
 
-    $('.language-switcher').change(function () {
-        var lang = $(this).val();
-        $.easyAjax({
-            url: '{{ route("member.language.change-language") }}',
-            data: {'lang': lang},
-            success: function (data) {
-                if (data.status == 'success') {
-                    window.location.reload();
-                }
-            }
-        });
-    });
-
-    $('#clock-in').click(function () {
-        var workingFrom = $('#working_from').val();
-
-        var currentLatitude = document.getElementById("current-latitude").value;
-        var currentLongitude = document.getElementById("current-longitude").value;
-
-        var token = "{{ csrf_token() }}";
-
-        $.easyAjax({
-            url: '{{route('member.attendances.store')}}',
-            type: "POST",
-            data: {
-                working_from: workingFrom,
-                currentLatitude: currentLatitude,
-                currentLongitude: currentLongitude,
-                _token: token
-            },
-            success: function (response) {
-                if(response.status == 'success'){
-                    window.location.reload();
-                }
-            }
-        })
-    })
-
-    @if(!is_null($currenntClockIn))
-    $('#clock-out').click(function () {
-
-        var token = "{{ csrf_token() }}";
-        var currentLatitude = document.getElementById("current-latitude").value;
-        var currentLongitude = document.getElementById("current-longitude").value;
-
-        $.easyAjax({
-            url: '{{route('member.attendances.update', $currenntClockIn->id)}}',
-            type: "POST",
-            data: {
-                currentLatitude: currentLatitude,
-                currentLongitude: currentLongitude,
-                _method: 'PUT',
-                _token: token
-            },
-            success: function (response) {
-                if(response.status == 'success'){
-                    window.location.reload();
-                }
-            }
-        })
-    })
-    @endif
 
     function showNoticeModal(id) {
         var url = '{{ route('client.notices.show', ':id') }}';
@@ -441,63 +379,8 @@
 
 </script>
 
-@if ($attendanceSettings->radius_check == 'yes')
-<script>
-    var currentLatitude = document.getElementById("current-latitude");
-    var currentLongitude = document.getElementById("current-longitude");
-    var x = document.getElementById("current-latitude");
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-           // x.innerHTML = "Geolocation is not supported by this browser.";
-        }
-    }
-
-    function showPosition(position) {
-        // x.innerHTML = "Latitude: " + position.coords.latitude +
-        // "<br>Longitude: " + position.coords.longitude;
-
-        currentLatitude.value = position.coords.latitude;
-        currentLongitude.value = position.coords.longitude;
-    }
-    getLocation();
-</script>
-@endif
 
 <script>
-/** clock timer start here */
-function currentTime() {
-    let date = new Date(); 
-    date = moment.tz(date, "{{ $global->timezone }}");
-    
-    // console.log(moment.tz(date, "America/New_York"));
-
-    let hour = date.hour();
-    let min = date.minutes();
-    let sec = date.seconds();
-    let midday = "AM";
-    midday = (hour >= 12) ? "PM" : "AM"; 
-    @if($global->time_format == 'h:i A')
-        hour = (hour == 0) ? 12 : ((hour > 12) ? (hour - 12): hour); /* assigning hour in 12-hour format */
-    @endif
-    hour = updateTime(hour);
-    min = updateTime(min);
-    document.getElementById("clock").innerText = `${hour} : ${min} ${midday}` 
-    const time = setTimeout(function(){ currentTime() }, 1000);
-}
-
-function updateTime(timer) { /* appending 0 before time elements if less than 10 */
-  if (timer < 10) {
-    return "0" + timer;
-  }
-  else {
-    return timer;
-  }
-}
-
-currentTime();
-
     jQuery('#date-range').datepicker({
         toggleActive: true,
         format: '{{ $global->date_picker_format }}',
