@@ -84,7 +84,7 @@
                             </div>
 
                             <!--/row-->
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-md-6 ">
                                     <div class="form-group">
                                         <label class="required">@lang('app.designation') <button  id="designation-setting" type="button" class="btn btn-xs btn-outline btn-info"><i class="ti-settings"></i> @lang('messages.manageDesignation')</button></label>
@@ -109,37 +109,46 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
-
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="control-label"><i
-                                                    class="fa fa-slack"></i> @lang('modules.employees.slackUsername')
-                                        </label>
-                                        <div class="input-group"><span class="input-group-addon">@</span>
-                                            <input autocomplete="nope" type="text" id="slack_username"
-                                                   name="slack_username" class="form-control">
+                                        <label>@lang('modules.stripeCustomerAddress.country')</label>
+                                        <select name="country" class="form-control" id="country">
+                                            <option value>@lang('app.site.country')</option>
+                                            <option value="1">UNITED STATES</option>
+                                            <option value="2">CANADA</option>
+                                        </select>
+                                    </div>
+                                </div>   
+                                <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>@lang('modules.stripeCustomerAddress.state')</label>
+                                            <select name="state" class="select2 form-control" id="state">
+                                                <option value="0"> -- Select -- </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>@lang('modules.stripeCustomerAddress.city')</label>
+                                            <input type="text" name="city" id="city"  value="{{ $leadDetail->city ?? '' }}"   class="form-control">
                                         </div>
                                     </div>
                                 </div>
+                            <div class="row">
                                 <!--/span-->
-
                                 <div class="col-md-3">
+                                    <label>@lang('app.mobile')</label>
                                     <div class="form-group">
-                                        <label class="required">@lang('modules.employees.joiningDate')</label>
-                                        <input type="text" autocomplete="off" name="joining_date" id="joining_date"
-                                               class="form-control" value="">
+                                        <select class="select2 phone_country_code form-control" name="phone_code">
+                                            @foreach ($countries as $item)
+                                                <option value="{{ $item->id }}">+{{ $item->phonecode.' ('.$item->iso.')' }}</option>
+                                            @endforeach
+                                        </select>
+                                        <input type="tel" name="mobile" id="mobile" class="mobile" autocomplete="nope">
                                     </div>
-                                </div>
-                                <!--/span-->
-
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>@lang('modules.employees.lastDate')</label>
-                                        <input type="text" autocomplete="off" name="last_date" id="end_date"
-                                               class="form-control">
-                                    </div>
+                                   
                                 </div>
 
                                 <div class="col-md-3">
@@ -166,35 +175,9 @@
 
                             </div>
                             <!--/span-->
-                            <div class="row">
-                                <div class="col-md-12 ">
-                                    <div class="form-group">
-                                        <label>@lang('app.skills')</label>
-                                        <input name='tags' placeholder='@lang('app.skills')' value=''>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!--/row-->
                             <div class="row">
-                                <div class="col-md-3">
-                                    <label>@lang('app.mobile')</label>
-                                    <div class="form-group">
-                                        <select class="select2 phone_country_code form-control" name="phone_code">
-                                            @foreach ($countries as $item)
-                                                <option value="{{ $item->id }}">+{{ $item->phonecode.' ('.$item->iso.')' }}</option>
-                                            @endforeach
-                                        </select>
-                                        <input type="tel" name="mobile" id="mobile" class="mobile" autocomplete="nope">
-                                    </div>
-                                   
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>@lang('modules.employees.hourlyRate') ({{ $global->currency->currency_code }})</label>
-                                        <input type="number" step=".01" min="0" name="hourly_rate" id="hourly_rate" class="form-control">
-                                    </div>
-                                </div>
+
                                 <!--/span-->
 
                                 <div class="col-md-3">

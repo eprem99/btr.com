@@ -120,7 +120,7 @@
                         <ul class="nav nav-second-level sub-menu-ul">
                             @foreach($menu['children'] as $subMenu)
                                 {{-- Check module permissions --}}
-                                @if(in_array($subMenu['module'], $modules) || $subMenu['module'] == 'visibleToAll')
+                                @if(in_array($subMenu['module'], $modules) && $subMenu['hidden'] != 1 || $subMenu['module'] == 'visibleToAll' && $subMenu['hidden'] != 1)
                                     <li><a href="{{ is_null($subMenu['route']) ? 'javascript:;' : route(trim($subMenu['route'])) }}" class="waves-effect"> <span class="hide-menu">{{ __($subMenu['translate_name']) }} </span></a> </li>
                                 @endif
                             @endforeach

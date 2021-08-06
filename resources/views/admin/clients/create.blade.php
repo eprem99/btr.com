@@ -45,96 +45,26 @@
                             <input type="hidden" name="lead" value="{{ $leadDetail->id }}">
                         @endif
                             <div class="form-body">
-                                <h3 class="box-title">@lang('modules.client.companyDetails')</h3>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="control-label">@lang('modules.client.companyName')</label>
-                                            <input type="text" id="company_name" name="company_name" value="{{ $leadDetail->company_name ?? '' }}" class="form-control" >
-                                        </div>
-                                    </div>
-                                    <!--/span-->
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="control-label">@lang('modules.client.website')</label>
-                                            <input type="text" id="website" name="website" value="{{ $leadDetail->website ?? '' }}" class="form-control" >
-                                        </div>
-                                    </div>
-                                    <!--/span-->
-                                </div>
-                                <!--/row-->
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label">@lang('app.address')</label>
-                                            <textarea name="address"  id="address"  rows="3" value="{{ $leadDetail->address ?? '' }}" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <!--/span-->
-
-                                </div>
-                                <!--/row-->
-                                <div class="row">
-                                <div class="col-md-3 ">
-                                        <label>@lang('app.mobile')</label>
-                                        <div class="form-group">
-                                        <select class="select2 phone_country_code form-control" name="phone_code">
-                                                @foreach ($countries as $item)
-                                                    <option value="{{ $item->id }}">+{{ $item->phonecode.' ('.$item->iso.')' }}</option>
-                                                @endforeach
-                                            </select>
-                                            <input type="tel" name="mobile" id="mobile" class="mobile" autocomplete="nope" value="{{ $leadDetail->mobile ?? '' }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 ">
-                                        <div class="form-group">
-                                            <label>@lang('modules.client.officePhoneNumber')</label>
-                                            <input type="text" name="office" id="office"  value="{{ $leadDetail->office ?? '' }}" class="form-control">
-                                        </div>
-                                    </div>
-                                <div class="col-md-3 ">
-                                        <div class="form-group">
-                                            <label>@lang('modules.stripeCustomerAddress.city')</label>
-                                            <input type="text" name="city" id="city"  value="{{ $leadDetail->city ?? '' }}"   class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 ">
-                                        <div class="form-group">
-                                            <label>@lang('modules.stripeCustomerAddress.state')</label>
-                                            <input type="text" name="state" id="state"  value="{{ $leadDetail->country ?? '' }}" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                <div class="col-md-3 ">
-                                        <div class="form-group">
-                                            <label>@lang('modules.stripeCustomerAddress.postalCode')</label>
-                                            <input type="text" name="postal_code" id="postalCode"  value="{{ $leadDetail->postal_code ?? '' }}"   class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <h3 class="box-title">@lang('modules.client.clientBasicDetails')</h3>
+                            <h3 class="box-title">@lang('modules.client.clientBasicDetails')</h3>
                                 <hr>
                                 <div class="row">
                                 <div class="col-md-1 ">
-                                        <div class="form-group" style="margin-top: 23px">
+                                <label class="required">@lang('app.gender')</label>
                                         <select name="salutation" id="salutation" class="form-control">
                                             <option value="">--</option>
                                              <option value="mr">@lang('app.mr')</option>
                                             <option value="mrs">@lang('app.mrs')</option>
                                         </select>
-                                        </div>
                                     </div>
 
-                                    <div class="col-md-3 ">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="required">@lang('modules.client.clientName')</label>
                                             <input type="text" name="name" id="name"  value="{{ $leadDetail->client_name ?? '' }}"   class="form-control">
                                         </div>
                                     </div>
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="required">@lang('modules.client.clientEmail')</label>
                                             <input style="opacity: 0;position: absolute;">
@@ -145,7 +75,7 @@
                                     <!--/span-->
 
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="required">@lang('modules.client.password')</label>
                                             <input type="password" style="opacity: 0;position: absolute;">
@@ -161,7 +91,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="">@lang('modules.client.clientCategory')
@@ -198,54 +128,73 @@
                                             </div>
                                         </div>
                                     
-                                </div>
+                                </div> -->
                                 <!--/row-->
+
+                                <div class="row">
+                                <div class="col-md-4">
+                                        <label>@lang('app.mobile')</label>
+                                        <div class="form-group">
+                                        <select class="select2 phone_country_code form-control" name="phone_code">
+                                                @foreach ($countries as $item)
+                                                    <option value="{{ $item->id }}">+{{ $item->phonecode.' ('.$item->iso.')' }}</option>
+                                                @endforeach
+                                            </select>
+                                            <input type="tel" name="mobile" id="mobile" class="mobile" autocomplete="nope" value="{{ $leadDetail->mobile ?? '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>@lang('modules.client.officePhoneNumber')</label>
+                                            <input type="text" name="office" id="office"  value="{{ $leadDetail->office ?? '' }}" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>@lang('modules.stripeCustomerAddress.postalCode')</label>
+                                            <input type="text" name="postal_code" id="postalCode"  value="{{ $leadDetail->postal_code ?? '' }}"   class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>@lang('modules.stripeCustomerAddress.country')</label>
+                                        <select name="country" class="form-control" id="country">
+                                            <option value>@lang('app.site.country')</option>
+                                            <option value="1">UNITED STATES</option>
+                                            <option value="2">CANADA</option>
+                                        </select>
+                                    </div>
+                                </div>   
+                                <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>@lang('modules.stripeCustomerAddress.state')</label>
+                                            <select name="state" class="select2 form-control" id="state">
+                                                <option value="0"> -- Select -- </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>@lang('modules.stripeCustomerAddress.city')</label>
+                                            <input type="text" name="city" id="city"  value="{{ $leadDetail->city ?? '' }}"   class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label">@lang('app.address')</label>
+                                            <textarea name="address"  id="address"  rows="3" value="{{ $leadDetail->address ?? '' }}" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
                                 <h3 class="box-title">@lang('modules.client.clientOtherDetails')</h3>
                                 <hr>
-                                <div class="row">
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Skype</label>
-                                            <input type="text" name="skype" id="skype" class="form-control">
-                                        </div>
-                                    </div>
-                                    <!--/span-->
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Linkedin</label>
-                                            <input type="text" name="linkedin" id="linkedin" class="form-control">
-                                        </div>
-                                    </div>
-                                    <!--/span-->
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Twitter</label>
-                                            <input type="text" name="twitter" id="twitter" class="form-control">
-                                        </div>
-                                    </div>
-                                    <!--/span-->
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Facebook</label>
-                                            <input type="text" name="facebook" id="facebook" class="form-control">
-                                        </div>
-                                    </div>
-                                    <!--/span-->
-                                </div>
-                                <!--/row-->
 
                                 <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="gst_number">@lang('app.gstNumber')</label>
-                                            <input type="text" id="gst_number" name="gst_number" class="form-control" value="">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label>@lang('app.login')</label>
                                             <select name="login" id="login" class="form-control">
@@ -254,7 +203,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <div class="m-b-10">
                                                 <label class="control-label">@lang('modules.client.sendCredentials')</label>
@@ -275,7 +224,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <div class="m-b-10">
                                                 <label class="control-label">@lang('modules.emailSettings.emailNotifications')</label>
@@ -297,69 +246,7 @@
                                 </div>
                                 <!--/row-->
 
-                                <div class="row">
-                                    @if(isset($fields))
-                                        @foreach($fields as $field)
-                                            <div class="col-md-4">
-                                                <label>{{ ucfirst($field->label) }}</label>
-                                                <div class="form-group">
-                                                    @if( $field->type == 'text')
-                                                        <input type="text" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}" value="{{$editUser->custom_fields_data['field_'.$field->id] ?? ''}}">
-                                                    @elseif($field->type == 'password')
-                                                        <input type="password" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}" value="{{$editUser->custom_fields_data['field_'.$field->id] ?? ''}}">
-                                                    @elseif($field->type == 'number')
-                                                        <input type="number" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}" value="{{$editUser->custom_fields_data['field_'.$field->id] ?? ''}}">
-
-                                                    @elseif($field->type == 'textarea')
-                                                        <textarea name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" id="{{$field->name}}" cols="3">{{$editUser->custom_fields_data['field_'.$field->id] ?? ''}}</textarea>
-
-                                                    @elseif($field->type == 'radio')
-                                                        <div class="radio-list">
-                                                            @foreach($field->values as $key=>$value)
-                                                                <label class="radio-inline @if($key == 0) p-0 @endif">
-                                                                    <div class="radio radio-info">
-                                                                        <input type="radio" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" id="optionsRadios{{$key.$field->id}}" value="{{$value}}" @if(isset($clientDetail) && $clientDetail->custom_fields_data['field_'.$field->id] == $value) checked @elseif($key==0) checked @endif>>
-                                                                        <label for="optionsRadios{{$key.$field->id}}">{{$value}}</label>
-                                                                    </div>
-                                                                </label>
-                                                            @endforeach
-                                                        </div>
-                                                    @elseif($field->type == 'select')
-                                                        {!! Form::select('custom_fields_data['.$field->name.'_'.$field->id.']',
-                                                                $field->values,
-                                                                 isset($editUser)?$editUser->custom_fields_data['field_'.$field->id]:'',['class' => 'form-control gender'])
-                                                         !!}
-
-                                                    @elseif($field->type == 'checkbox')
-                                                        <div class="mt-checkbox-inline">
-                                                            @foreach($field->values as $key => $value)
-                                                                <label class="mt-checkbox mt-checkbox-outline">
-                                                                    <input name="custom_fields_data[{{$field->name.'_'.$field->id}}][]" type="checkbox" value="{{$key}}"> {{$value}}
-                                                                    <span></span>
-                                                                </label>
-                                                            @endforeach
-                                                        </div>
-                                                    @elseif($field->type == 'date')
-                                                        <input type="text" class="form-control form-control-inline date-picker" size="16" name="custom_fields_data[{{$field->name.'_'.$field->id}}]"
-                                                                value="{{ isset($editUser->dob)?Carbon\Carbon::parse($editUser->dob)->format('Y-m-d'):Carbon\Carbon::now()->format('m/d/Y')}}">
-                                                    @endif
-                                                    <div class="form-control-focus"> </div>
-                                                    <span class="help-block"></span>
-
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label>@lang('app.shippingAddress')</label>
-                                        <div class="form-group">
-                                            <textarea name="shipping_address" id="shipping_address" class="form-control" rows="4"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
+                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>@lang('app.note')</label>
                                         <div class="form-group">
@@ -488,6 +375,23 @@
         $('#modelHeading').html('...');
         $.ajaxModal('#clientCategoryModal', url);
     })
+    $('#country').select2({
+        }).on("change", function (e) {
+        console.log(e.val);
+        if(e.val == 1){
+            $('#state').html(
+                '<option value="1">Alabama</option><option value="2">Alaska</option><option value="60">American Samoa</option><option value="4">Arizona</option><option value="5">Arkansas</option><option value="6">California</option><option value="8">Colorado</option><option value="9">Connecticut</option><option value="10">Delaware</option><option value="11">District of Columbia</option><option value="12">Florida</option><option value="13">Georgia</option><option value="66">Guam</option><option value="15">Hawaii</option><option value="16">Idaho</option><option value="17">Illinois</option><option value="18">Indiana</option><option value="19">Iowa</option><option value="20">Kansas</option><option value="21">Kentucky</option><option value="22">Louisiana</option><option value="23">Maine</option><option value="24">Maryland</option><option value="25">Massachusetts</option><option value="26">Michigan</option><option value="27">Minnesota</option><option value="28">Mississippi</option><option value="29">Missouri</option><option value="30">Montana</option><option value="31">Nebraska</option><option value="32">Nevada</option><option value="33">New Hampshire</option><option value="34">New Jersey</option><option value="35">New Mexico</option><option value="36">New York</option><option value="37">North Carolina</option><option value="38">North Dakota</option><option value="69">Northern Mariana Islands</option><option value="39">Ohio</option><option value="40">Oklahoma</option><option value="41">Oregon</option><option value="42">Pennsylvania</option><option value="72">Puerto Rico</option><option value="44">Rhode Island</option><option value="45">South Carolina</option><option value="46">South Dakota</option><option value="47">Tennessee</option><option value="48">Texas</option><option value="78">U.S. Virgin Islands</option><option value="49">Utah</option><option value="50">Vermont</option><option value="51">Virginia</option><option value="53">Washington</option><option value="54">West Virginia</option><option value="55">Wisconsin</option><option value="56">Wyoming</option>'
+            )
+        }else if(e.val == 2){
+            $('#state').html(
+                '<option value="87">Alberta</option><option value="84">British Columbia</option><option value="83">Manitoba</option><option value="82">New Brunswick</option><option value="88">Newfoundland and Labrado</option><option value="89">Northwest Territories</option><option value="81">Nova Scotia</option><option value="91">Nunavut</option><option value="79">Ontario</option><option value="85">Prince Edward Island</option><option value="80">Quebec</option><option value="86">Saskatchewan</option><option value="90">Yukon</option>'
+            ) 
+        }else if(e.val == null || e.val == '') {
+            $('#state').html(
+                '<option value="0"> -- Select -- </option>'
+            )    
+        }
+    });   
 </script>
 @endpush
 

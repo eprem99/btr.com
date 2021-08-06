@@ -67,7 +67,7 @@ class AdminBaseController extends Controller
             $this->subMenuSettings = sub_menu_settings();
             $this->invoiceSetting = invoice_setting();
             $this->menuInnerSettingMenu = $this->innerSettingMenu();
-
+            
             $this->user = user();
             $this->modules = $this->user->modules;
             $this->unreadNotificationCount = count($this->user->unreadNotifications);

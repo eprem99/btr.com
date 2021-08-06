@@ -62,30 +62,6 @@
                     </p>
                 </div>
                 <div class="col-md-12">
-                    <div class="suggest-colors">
-                        <a style="background-color: #0033CC" data-color="#0033CC" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #428BCA" data-color="#428BCA" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #CC0033" data-color="#CC0033" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #44AD8E" data-color="#44AD8E" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #A8D695" data-color="#A8D695" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #5CB85C" data-color="#5CB85C" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #69D100" data-color="#69D100" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #004E00" data-color="#004E00" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #34495E" data-color="#34495E" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #7F8C8D" data-color="#7F8C8D" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #A295D6" data-color="#A295D6" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #5843AD" data-color="#5843AD" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #8E44AD" data-color="#8E44AD" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #FFECDB" data-color="#FFECDB" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #AD4363" data-color="#AD4363" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #D10069" data-color="#D10069" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #FF0000" data-color="#FF0000" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #D9534F" data-color="#D9534F" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #D1D100" data-color="#D1D100" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #F0AD4E" data-color="#F0AD4E" href="javascript:;">&nbsp;
-                        </a><a style="background-color: #AD8D43" data-color="#AD8D43" href="javascript:;">&nbsp;
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>

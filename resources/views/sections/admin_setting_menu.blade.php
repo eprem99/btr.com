@@ -1,12 +1,15 @@
 @section('other-section')
 <ul class="nav tabs-vertical">
+
     @foreach($subMenuSettings as $menu)
-        @if(in_array($menu['module'], $modules) || $menu['module'] == 'visibleToAll')
-            @if($menu['menu_name'] != 'updates')
+        @if(in_array($menu['module'], $modules) && $menu['hidden'] != 1 || $menu['module'] == 'visibleToAll' && $menu['hidden'] != 1 )
+            @if($menu['menu_name'] != 'updates' || $menu['hidden'] != 1)
+            
                 <li class="tab @if(\Illuminate\Support\Facades\Route::currentRouteName() == $menu['route']) active @endif">
                     <a href="{{ isset($menu['children']) ? route($menu['children'][0]['route']) :  route($menu['route']) }}">@lang($menu['translate_name'])</a></li>
-            @else
-                @if($global->system_update == 1)
+                   
+                    @else
+                @if($global->system_update == 1 || $menu['hidden'] != 1 )
                     <li class="tab @if(\Illuminate\Support\Facades\Route::currentRouteName() == $menu['route']) active @endif">
                         <a href="{{ route($menu['route']) }}">@lang($menu['translate_name'])</a></li>
                 @endif

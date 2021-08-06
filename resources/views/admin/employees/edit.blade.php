@@ -42,7 +42,7 @@
                         {!! Form::open(['id'=>'updateEmployee','class'=>'ajax-form','method'=>'PUT']) !!}
                         <div class="form-body">
                             <div class="row">
-                                <div class="col-md-4 ">
+                                <div class="col-md-2 ">
                                     <div class="form-group">
                                         <label class="required">@lang('modules.employees.employeeId')</label>
                                         <a class="mytooltip" href="javascript:void(0)">
@@ -53,7 +53,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label class="required">@lang('modules.employees.employeeName')</label>
                                         <input type="text" name="name" id="name" class="form-control"
@@ -61,7 +61,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label class="required">@lang('modules.employees.employeeEmail')</label>
                                         <input type="email" name="email" id="email" class="form-control"
@@ -72,8 +72,7 @@
                                 <!--/span-->
                             </div>
                             <div class="row">
-
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label class="required">@lang('modules.employees.employeePassword')</label>
                                         <input type="password" name="password" id="password"  readonly="readonly" onfocus="this.removeAttribute('readonly');" class="form-control auto-complete-off" >
@@ -81,9 +80,7 @@
                                         <span class="help-block"> @lang('modules.employees.updatePasswordNote')</span>
                                     </div>
                                 </div>
-                                <!--/span-->
-
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <label>@lang('app.mobile')</label>
                                     <div class="form-group">
                                         <select class="select2 phone_country_code form-control" name="phone_code">
@@ -100,11 +97,24 @@
                                     </div>
                                    
                                 </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>@lang('modules.employees.gender')</label>
+                                        <select name="gender" id="gender" class="form-control">
+                                            <option @if($userDetail->gender == 'male') selected
+                                                    @endif value="male">@lang('app.male')</option>
+                                            <option @if($userDetail->gender == 'female') selected
+                                                    @endif value="female">@lang('app.female')</option>
+                                            <option @if($userDetail->gender == 'others') selected
+                                                    @endif value="others">@lang('app.others')</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <!--/span-->
                             </div>
                             <!--/row-->
 
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-md-6 ">
                                     <div class="form-group">
                                         <label class="required">@lang('app.designation') <button  id="designation-setting" type="button" class="btn btn-xs btn-outline btn-info"><i class="ti-settings"></i> @lang('messages.manageDesignation')</button></label>
@@ -129,57 +139,35 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-
+                            </div> -->
                             <div class="row">
-
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="control-label"><i
-                                                    class="fa fa-slack"></i> @lang('modules.employees.slackUsername')
-                                        </label>
-                                        <div class="input-group"><span class="input-group-addon">@</span>
-                                            <input type="text" id="slack_username" name="slack_username"
-                                                   class="form-control" autocomplete="nope"
-                                                   value="{{ $employeeDetail->slack_username ?? '' }}">
+                                        <label>@lang('modules.stripeCustomerAddress.country')</label>
+                                        <select name="country" class="form-control" id="country">
+                                            <option value>@lang('app.site.country')</option>
+                                            <option value="1">UNITED STATES</option>
+                                            <option value="2">CANADA</option>
+                                        </select>
+                                    </div>
+                                </div>   
+                                <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>@lang('modules.stripeCustomerAddress.state')</label>
+                                            <select name="state" class="select2 form-control" id="state">
+                                                <option value="0"> -- Select -- </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>@lang('modules.stripeCustomerAddress.city')</label>
+                                            <input type="text" name="city" id="city"  value="{{ $leadDetail->city ?? '' }}"   class="form-control">
                                         </div>
                                     </div>
                                 </div>
-                                <!--/span-->
-
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="required">@lang('modules.employees.joiningDate')</label>
-                                        <input type="text" autocomplete="off" name="joining_date" id="joining_date"
-                                               value="@if($employeeDetail && $employeeDetail->joining_date){{ $employeeDetail->joining_date->format($global->date_format) }}@endif"
-                                               class="form-control">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>@lang('modules.employees.lastDate')</label>
-                                        <input type="text" autocomplete="off" name="last_date" id="end_date" value="@if($employeeDetail && $employeeDetail->last_date) {{ $employeeDetail->last_date->format($global->date_format) }} @endif" class="form-control">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>@lang('modules.employees.gender')</label>
-                                        <select name="gender" id="gender" class="form-control">
-                                            <option @if($userDetail->gender == 'male') selected
-                                                    @endif value="male">@lang('app.male')</option>
-                                            <option @if($userDetail->gender == 'female') selected
-                                                    @endif value="female">@lang('app.female')</option>
-                                            <option @if($userDetail->gender == 'others') selected
-                                                    @endif value="others">@lang('app.others')</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
+ 
                             <!--/row-->
-
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group">
@@ -191,24 +179,9 @@
 
                             </div>
                             <!--/span-->
+  
                             <div class="row">
-                                <div class="col-md-12 ">
-                                    <div class="form-group">
-                                        <label>@lang('app.skills')</label>
-                                        <input name='tags' placeholder='@lang('app.skills')' value='{{implode(',', $userDetail->skills()) }}' >
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>@lang('modules.employees.hourlyRate')</label>
-                                        <input type="number" step=".01" min="0" name="hourly_rate" id="hourly_rate" class="form-control"
-                                               value="{{ $employeeDetail->hourly_rate ?? '' }}">
-                                    </div>
-                                </div>
-                                <!--/span-->
+                                    <!--/span-->
 
                                 <div class="col-md-3">
                                     <div class="form-group">

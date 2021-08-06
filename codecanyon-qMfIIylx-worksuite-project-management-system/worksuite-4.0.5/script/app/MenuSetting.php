@@ -18,18 +18,20 @@ class MenuSetting extends Model
         $menus = Menu::where('setting_menu', 0)->get();
 
         $menuSettings = [];
-
+//dd($menus);
         foreach($settings as $key => $setting) {
             if(isset($setting->children)){
                 $children = $setting->children;
 
                 $menuObj = $menus->filter(function($item) use($setting) {
+                    if($setting->id)
                     return $item->id == $setting->id;
                 })->first();
 
                 if($menuObj) {
                     $menuSettings[$key] = [
                         'id' => $menuObj->id,
+                        'hidden' => $menuObj->hidden_menu,
                         'menu_name' => $menuObj->menu_name,
                         'translate_name' => $menuObj->translate_name,
                         'translated_name' => __($menuObj->translate_name),
@@ -48,6 +50,7 @@ class MenuSetting extends Model
                     if($menuObj) {
                         $menuSettings[$key]['children'][] = [
                             'id' => $menuObj->id,
+                            'hidden' => $menuObj->hidden_menu,
                             'menu_name' => $menuObj->menu_name,
                             'translate_name' => $menuObj->translate_name,
                             'translated_name' => __($menuObj->translate_name),
@@ -66,6 +69,7 @@ class MenuSetting extends Model
                 if($menuObj) {
                     $menuSettings[$key] = [
                         'id' => $menuObj->id,
+                        'hidden' => $menuObj->hidden_menu,
                         'menu_name' => $menuObj->menu_name,
                         'translate_name' => $menuObj->translate_name,
                         'translated_name' => __($menuObj->translate_name),
@@ -90,7 +94,7 @@ class MenuSetting extends Model
 
         // fetch all menus
         $menus = Menu::where('setting_menu', 1)->get();
-
+    //    dd($menus);
         $settingMenu = [];
 
         foreach($settings as $key => $setting) {
@@ -104,6 +108,7 @@ class MenuSetting extends Model
                 if($menuObj) {
                     $settingMenu[$key] = [
                         'id' => $menuObj->id,
+                        'hidden' => $menuObj->hidden_menu,
                         'menu_name' => $menuObj->menu_name,
                         'translate_name' => $menuObj->translate_name,
                         'translated_name' => __($menuObj->translate_name),
@@ -122,6 +127,7 @@ class MenuSetting extends Model
                     if($menuObj) {
                         $settingMenu[$key]['children'][] = [
                             'id' => $menuObj->id,
+                            'hidden' => $menuObj->hidden_menu,
                             'menu_name' => $menuObj->menu_name,
                             'translate_name' => $menuObj->translate_name,
                             'translated_name' => __($menuObj->translate_name),
@@ -140,6 +146,7 @@ class MenuSetting extends Model
                 if($menuObj) {
                     $settingMenu[$key] = [
                         'id' => $menuObj->id,
+                        'hidden' => $menuObj->hidden_menu,
                         'menu_name' => $menuObj->menu_name,
                         'translate_name' => $menuObj->translate_name,
                         'translated_name' => __($menuObj->translate_name),
