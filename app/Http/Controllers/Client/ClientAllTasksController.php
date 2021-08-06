@@ -446,6 +446,7 @@ class ClientAllTasksController extends ClientBaseController
         $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         $task->estimate_hours = '0';
         $task->estimate_minutes = '0';
+        $task->site_id = $request->task_labels;
 
         $task->wo_type = $request->task_type;
         $task->p_order = $request->task_purchase;

@@ -44,7 +44,7 @@
                                 @if (!is_null($task->label))
                                     <div class="p-10">
                                         @foreach($task->label as $key => $label)
-                                            <label class="badge text-capitalize font-semi-bold" style="background:{{ $label->label->label_color }}">{{ ucwords($label->label->label_name) }} </label>
+                                            {{ ucwords($label->label->label_name) }} 
                                         @endforeach
                                     </div>
                                 @endif
