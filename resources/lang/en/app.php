@@ -559,6 +559,8 @@ return array (
   'proposal' => 'Proposal',
   'hsnSacCode' => 'HSN/SAC Code',
   'hsnSacCodeShow' => 'HSN/SAC Code Show',
-    'sendReminder' => 'Send Reminder',
-    'before' => 'Before',
+  'sendReminder' => 'Send Reminder',
+  'before' => 'Before',
+  'qty' => 'Surface Quantity',
+  'sporttype' => 'Sport Type',
 );

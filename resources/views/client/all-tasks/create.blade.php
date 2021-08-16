@@ -77,10 +77,16 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('modules.tasks.summary')</label>
                                         <input type="text" id="heading" name="heading" class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.purchaseorder')</label>
+                                        <input type="text" name="task_purchase" class="form-control" >
                                     </div>
                                 </div>
                                 <!--/span-->
@@ -90,23 +96,33 @@
                                         <textarea id="description" name="description" class="form-control summernote"></textarea>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.type')</label>
                                         <select name="task_type" class="select2 form-control">
-                                            <option value="0">Site Survey</option>
-                                            <option value="1">Installation</option>
-                                            <option value="2">Retrofit</option>
-                                            <option value="3">Service Call</option>
+                                            @foreach($wotype as $type)
+                                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="control-label">@lang('app.purchaseorder')</label>
-                                        <input type="text" name="task_purchase" class="form-control" >
+                                        <label class="control-label">@lang('app.sporttype')</label>
+                                        <select name="sport_type" class="select2 form-control">
+                                            @foreach($sport as $type)
+                                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.qty')</label>
+                                        <input type="text" name="task_qty" class="form-control" value="">
+                                    </div>
+                                </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.startDate')</label>
@@ -116,7 +132,7 @@
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label required">@lang('app.dueDate')</label>
+                                        <label class="control-label">@lang('app.dueDate')</label>
                                         <input type="text" name="due_date" id="due_date2" autocomplete="off" class="form-control">
                                     </div>
                                 </div>

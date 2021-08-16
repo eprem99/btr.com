@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TaskboardColumn extends BaseModel
 {
-    protected $fillable = ['column_name', 'slug', 'label_color', 'priority'];
+    protected $fillable = ['column_name', 'slug', 'label_color', 'priority', 'role_id'];
 
     public function tasks()
     {

@@ -96,8 +96,6 @@ class ManageAllTasksController extends AdminBaseController
         $task->task_category_id = $request->category_id;
         $task->priority = $request->priority;
         $task->board_column_id = $request->status;
-        $task->estimate_hours = '0';
-        $task->estimate_minutes = '0';
         $task->site_id = $request->task_labels;
         $task->wo_type = $request->task_type;
         $task->p_order = $request->task_purchase;
@@ -222,7 +220,7 @@ class ManageAllTasksController extends AdminBaseController
         $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
         $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
         if ($request->project_id != "all") {
-            $task->project_id = $request->project_id;
+            $task->project_id = 1;
         }
         $task->task_category_id = $request->category_id;
         $task->priority = $request->priority;
@@ -230,8 +228,6 @@ class ManageAllTasksController extends AdminBaseController
         $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
         $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
         $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-        $task->estimate_hours = '0';
-        $task->estimate_minutes = '0';
         $task->site_id = $request->task_labels;
         $task->wo_type = $request->task_type;
         $task->p_order = $request->task_purchase;
@@ -309,7 +305,7 @@ class ManageAllTasksController extends AdminBaseController
                 $newTask->due_date = $repeatDueDate->format('Y-m-d');
                 // $newTask->user_id = $request->user_id;
                 if ($request->project_id != "all") {
-                    $newTask->project_id = $request->project_id;
+                    $newTask->project_id = 1;
                 }
                 $newTask->task_category_id = $request->category_id;
                 $newTask->priority = $request->priority;
@@ -323,8 +319,7 @@ class ManageAllTasksController extends AdminBaseController
                 
                 $newTask->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
                 $newTask->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-                $newTask->estimate_hours = '0';
-                $newTask->estimate_minutes = '0';
+
                 $newTask->wo_type = $request->task_type;
                 $newTask->p_order = $request->task_purchase;
 

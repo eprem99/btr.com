@@ -51,41 +51,6 @@
     </div>
 
     <div class="col-md-12">
-        <h5 class="box-title">@lang('app.selectProject')</h5>
-
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-12">
-                    <select class="select2 form-control" data-placeholder="@lang('app.selectProject')" id="project_id">
-                        <option value="all">@lang('app.all')</option>
-                        @foreach($projects as $project)
-                            <option
-                                    value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-12">
-        <h5 class="box-title">@lang('app.select') @lang('modules.tasks.assignTo')</h5>
-
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-12">
-                    <select class="select2 form-control" data-placeholder="@lang('modules.tasks.assignTo')" id="assignedTo">
-                        <option value="all">@lang('app.all')</option>
-                        @foreach($employees as $employee)
-                            <option
-                                    value="{{ $employee->id }}">{{ ucwords($employee->name) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12">
         <h5 class="box-title">@lang('app.select') @lang('modules.tasks.assignBy')</h5>
 
         <div class="form-group">
@@ -119,16 +84,6 @@
         </div>
     </div>
     <div class="col-md-12">
-                <div class="form-group">
-                    <h5 class="box-title">@lang('app.billableTask')</h5>
-                    <select class="form-control select2" name="billable" id="billable" data-style="form-control">
-                        <option value="all">@lang('modules.client.all')</option>
-                        <option value="1">@lang('app.yes')</option>
-                        <option value="0">@lang('app.no')</option>
-                    </select>
-                </div>
-            </div>
-    <div class="col-md-12">
         <div class="checkbox checkbox-info">
             <input type="checkbox" checked id="hide-completed-tasks">
             <label for="hide-completed-tasks">@lang('app.hideCompletedTasks')</label>
@@ -161,7 +116,7 @@
                             <th>@lang('modules.tasks.summery')</th>
                             <th>@lang('modules.tasks.site')</th>
                             <th>@lang('modules.tasks.siteid')</th>
-                            <th>@lang('modules.tasks.manager')</th>
+                            <!-- <th>@lang('modules.tasks.manager')</th> -->
                             <!-- <th>@lang('modules.tasks.assignTo')</th>
                             {{-- <th>@lang('modules.tasks.assignBy')</th> --}} -->
                             <th>@lang('modules.tasks.dueDate')</th>
@@ -324,7 +279,7 @@
                 {data: 'heading', name: 'heading'},
                 {data: 'site', name: 'site'},
                 {data: 'siteid', name: 'siteid'},
-                {data: 'manager', name: 'manager'},
+                // {data: 'manager', name: 'manager'},
               //  {data: 'project_name', name: 'projects.project_name'},
                 // {data: 'users', name: 'client.name'},
                 // {data: 'created_by', name: 'creator_user.name', width: '15%'},

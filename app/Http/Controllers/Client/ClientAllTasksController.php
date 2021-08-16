@@ -11,6 +11,8 @@ use App\ProjectClient;
 use App\Task;
 use App\TaskboardColumn;
 use App\TaskCategory;
+use App\WoType;
+use App\SportType;
 use App\TaskFile;
 use App\TaskLabel;
 use App\TaskLabelList;
@@ -74,10 +76,11 @@ class ClientAllTasksController extends ClientBaseController
             ->leftJoin('users as creator_user', 'creator_user.id', '=', 'tasks.created_by')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
           //  ->join('task_labels', 'tasks.id', '=', 'task_labels.task_id')
+            ->join('role_user as role', 'task_users.user_id', '=', 'role.user_id')
             ->join('task_label_list', 'tasks.site_id', '=', 'task_label_list.id')
-            ->selectRaw('tasks.id, projects.project_name, tasks.heading, task_label_list.label_name, task_label_list.contacts, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
-             tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color,
-              tasks.project_id, tasks.is_private,( select count("id") from pinned where pinned.task_id = tasks.id and pinned.user_id = '.user()->id.') as pinned_task')
+            ->selectRaw('tasks.id, projects.project_name, tasks.heading, task_label_list.label_name, task_label_list.id as ids, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
+             tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color, role.role_id,
+              tasks.project_id, ( select count("id") from pinned where pinned.task_id = tasks.id and pinned.user_id = '.user()->id.') as pinned_task')
             ->whereNull('projects.deleted_at')
             ->with('users', 'activeTimer')
             ->groupBy('tasks.id');
@@ -88,13 +91,6 @@ class ClientAllTasksController extends ClientBaseController
             $q->orWhereBetween(DB::raw('DATE(tasks.`start_date`)'), [$startDate, $endDate]);
         });
 
-        if ($projectId != 0 && $projectId !=  null && $projectId !=  'all') {
-            $tasks->where('tasks.project_id', '=', $projectId);
-        }
-
-        if ($request->assignedTo != '' && $request->assignedTo !=  null && $request->assignedTo !=  'all') {
-            $tasks->where('task_users.user_id', '=', $request->assignedTo);
-        }
 
         if ($request->assignedBY != '' && $request->assignedBY !=  null && $request->assignedBY !=  'all') {
             $tasks->where('creator_user.id', '=', $request->assignedBY);
@@ -103,9 +99,7 @@ class ClientAllTasksController extends ClientBaseController
         if ($request->status != '' && $request->status !=  null && $request->status !=  'all') {
             $tasks->where('tasks.board_column_id', '=', $request->status);
         }
-        if ($request->billable != '' && $request->billable !=  null && $request->billable !=  'all') {
-            $tasks->where('tasks.billable', '=', $request->billable);
-        }
+
         if ($hideCompleted == '1') {
             $tasks->where('tasks.board_column_id', '<>', $taskBoardColumn->id);
         }
@@ -117,7 +111,7 @@ class ClientAllTasksController extends ClientBaseController
                         function ($q1) {
                             $q1->where(
                                 function ($q3) {
-                                    $q3->where('tasks.is_private', 0);
+                                 //   $q3->where('tasks.is_private', 0);
                                     $q3->where('task_users.user_id', $this->user->id);
                                 }
                             );
@@ -126,7 +120,7 @@ class ClientAllTasksController extends ClientBaseController
                     );
                     $q->orWhere(
                         function ($q2) {
-                            $q2->where('tasks.is_private', 1);
+                         //   $q2->where('tasks.is_private', 1);
                             $q2->where('task_users.user_id', $this->user->id);
                         }
                     );
@@ -158,13 +152,14 @@ class ClientAllTasksController extends ClientBaseController
 
             ->addColumn('siteid', function ($row) {
                 $site = '';            
-                if ($row->contacts) {
-                    $contacts = json_decode($row->contacts, true);
-                    if($contacts['site_id']){
-                        $site = $contacts['site_id'];
-                    }else{
-                        $site = '';
-                    }
+                if ($row->ids) {
+                    $site = $row->ids;
+                    // $contacts = json_decode($row->contacts, true);
+                    // if($contacts['site_id']){
+                    //     $site = $contacts['site_id'];
+                    // }else{
+                    //     $site = '';
+                    // }
                 } 
                 
                return $site;
@@ -186,11 +181,11 @@ class ClientAllTasksController extends ClientBaseController
                return $site;
             })
 
-            ->addColumn('manager', function ($row) {
-                $site = 'Project Manager';
+            // ->addColumn('manager', function ($row) {
+            //     $site = 'Project Manager';
 
-               return $site;
-            })
+            //    return $site;
+            // })
 
             ->editColumn('due_date', function ($row) {
 
@@ -219,18 +214,11 @@ class ClientAllTasksController extends ClientBaseController
             })
             ->editColumn('heading', function ($row) {
                 $pin = '';
-                if(($row->pinned_task) ){
-                    $pin = '<br><span class="font-12"  data-toggle="tooltip" data-original-title="'.__('app.pinned').'"><i class="icon-pin icon-2"></i></span>';
-                }
+                // if(($row->pinned_task) ){
+                //     $pin = '<br><span class="font-12"  data-toggle="tooltip" data-original-title="'.__('app.pinned').'"><i class="icon-pin icon-2"></i></span>';
+                // }
 
                 $name = '<a href="javascript:;" data-task-id="' . $row->id . '" class="show-task-detail">' . ucfirst($row->heading) . '</a> '.$pin;
-                if ($row->is_private) {
-                    $name .= ' <i data-toggle="tooltip" data-original-title="' . __('app.private') . '" class="fa fa-lock" style="color: #ea4c89"></i>';
-                }
-
-                if ($row->activeTimer) {
-                    $name .= '<br><label class="label label-inverse" data-toggle="tooltip" data-original-title="' . __('modules.projects.activeTimers') . '" > <i class="fa fa-clock-o" ></i> '.$row->activeTimer->timer.'</label>';
-                }
                 return $name;
             })
             ->editColumn('board_column', function ($row) use ($taskBoardColumns) {
@@ -238,8 +226,10 @@ class ClientAllTasksController extends ClientBaseController
                 $status .= '<button aria-expanded="true" data-toggle="dropdown" class="btn dropdown-toggle waves-effect waves-light btn-xs"  style="border-color: ' . $row->label_color . '; color: ' . $row->label_color . '" type="button">' . $row->board_column . ' <span class="caret"></span></button>';
                 $status .= '<ul role="menu" class="dropdown-menu pull-right">';
                 foreach ($taskBoardColumns as $key => $value) {
+                    if($value->role_id == $row->role_id ){
                     $status .= '<li><a href="javascript:;" data-task-id="' . $row->id . '" class="change-status" data-status="' . $value->slug . '">' . $value->column_name . '  <span style="width: 15px; height: 15px; border-color: ' . $value->label_color . '; background: ' . $value->label_color . '"
                     class="btn btn-warning btn-small btn-circle">&nbsp;</span></a></li>';
+                    }
                 }
                 $status .= '</ul>';
                 $status .= '</div>';
@@ -260,7 +250,9 @@ class ClientAllTasksController extends ClientBaseController
             abort(403);
         }
 
-        $this->taskBoardColumns = TaskboardColumn::all();
+        $this->taskBoardColumns = TaskboardColumn::where('role_id', '=', '3')->get();
+        $this->wotype = WoType::all();
+        $this->sport = SportType::all();
         $this->task = Task::with('label')->findOrFail($id);
         $this->labelIds = $this->task->label->pluck('label_id')->toArray();
         $this->taskLabels = TaskLabelList::all();
@@ -312,12 +304,9 @@ class ClientAllTasksController extends ClientBaseController
         $task->priority = $request->priority;
         $task->board_column_id = $request->status;
         $task->task_category_id = $request->category_id;
-        $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
-        $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-        $task->estimate_hours = '0';
-        $task->estimate_minutes = '0';
-        $task->wo_type = $request->task_type;
+        $task->wo_id = $request->task_type;
+        $task->sport_id = $request->sport_type;
+        $task->qty = $request->task_qty;
         $task->p_order = $request->task_purchase;
 
         $taskBoardColumn = TaskboardColumn::findOrFail($request->status);
@@ -327,12 +316,12 @@ class ClientAllTasksController extends ClientBaseController
             $task->completed_on = null;
         }
 
-        $task->project_id = $request->project_id;
+        $task->project_id = 1;
         $task->site_id = $request->task_labels;
         $task->save();
 
         // save labels
-        $task->labels()->sync($request->task_labels);
+      //  $task->labels()->sync($request->task_labels);
 
         if (!$this->user->can('add_tasks') && $this->global->task_self == 'yes') {
             $request->user_id = [$this->user->id];
@@ -348,10 +337,10 @@ class ClientAllTasksController extends ClientBaseController
             );
         }
 
-        if ($request->project_id) {
-            //calculate project progress if enabled
-            $this->calculateProjectProgress($request->project_id);
-        }
+        // if ($request->project_id) {
+        //     //calculate project progress if enabled
+        //     $this->calculateProjectProgress($request->project_id);
+        // }
         return Reply::dataOnly(['taskID' => $task->id]);
         //        return Reply::redirect(route('client.all-tasks.index'), __('messages.taskUpdatedSuccessfully'));
     }
@@ -395,7 +384,8 @@ class ClientAllTasksController extends ClientBaseController
     //    dd($this->clients);
         $this->categories = TaskCategory::all();
         $this->taskLabels = TaskLabelList::all();
-
+        $this->wotype = WoType::all();
+        $this->sport = SportType::all();
         $completedTaskColumn = TaskboardColumn::where('slug', '=', 'completed')->first();
         if ($completedTaskColumn) {
             $this->allTasks = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')->where('board_column_id', '<>', $completedTaskColumn->id)->select('tasks.*');
@@ -431,34 +421,29 @@ class ClientAllTasksController extends ClientBaseController
 
  
         $task = new Task();
+
         $task->heading = $request->heading;
         if ($request->description != '') {
             $task->description = $request->description;
         }
         $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
         $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
-        $task->project_id = '1';
-        $task->priority = $request->priority;
         $task->board_column_id = $this->global->default_task_status;
         $task->task_category_id = $request->category_id;
-        $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
-        $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-        $task->estimate_hours = '0';
-        $task->estimate_minutes = '0';
         $task->site_id = $request->task_labels;
-
-        $task->wo_type = $request->task_type;
+        $task->wo_id = $request->task_type;
+        $task->sport_id = $request->sport_type;
+        $task->qty = $request->task_qty;
         $task->p_order = $request->task_purchase;
 
         if ($request->board_column_id) {
             $task->board_column_id = $request->board_column_id;
         }
-        $task->project_id = $request->project_id;
+        $task->project_id = 1;
         $task->save();
       //  echo 'easdasd';
         // save labels
-        $task->labels()->sync($request->task_labels);
+       //  $task->labels()->sync($request->task_labels);
 
         if (!$this->user->can('add_tasks') && $this->global->task_self == 'yes') {
             $request->user_id = [$this->user->id];
@@ -531,15 +516,12 @@ class ClientAllTasksController extends ClientBaseController
                 if ($request->board_column_id) {
                     $newTask->board_column_id = $request->board_column_id;
                 }
-
-                $newTask->estimate_hours = '0';
-                $newTask->estimate_minutes = '0';
-                $newTask->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
+            //    $newTask->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
                 $newTask->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         
 
                 $newTask->save();
-                $newTask->labels()->sync($request->task_labels);
+              //  $newTask->labels()->sync($request->task_labels);
 
                 if (!$this->user->can('add_tasks') && $this->global->task_self == 'yes') {
                     $request->user_id = [$this->user->id];

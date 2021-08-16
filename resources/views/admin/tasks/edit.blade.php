@@ -61,7 +61,11 @@
                                         <select class="select2 form-control" name="category_id" id="category_id"
                                                 data-style="form-control">
                                             @forelse($categories as $category)
-                                                <option value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
+                                                @if($category->id == $task->task_category_id)
+                                                    <option selected value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
+                                                @else
+                                                    <option value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
+                                                @endif
                                             @empty
                                                 <option value="">@lang('messages.noTaskCategoryAdded')</option>
                                             @endforelse
@@ -76,9 +80,14 @@
                                             </a>
                                         </label>
 
+      
                                         <select name="task_labels" class="select2 form-control">
                                             @foreach($taskLabels as $label)
-                                                <option value="{{ $label->id }}">{{ $label->label_name }}</option>
+                                                @if($label->id == $task->site_id)
+                                                    <option selected value="{{ $label->id }}">{{ $label->label_name }}</option>
+                                                @else
+                                                    <option value="{{ $label->id }}">{{ $label->label_name }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>

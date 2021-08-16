@@ -62,7 +62,11 @@
                                         <select class="select2 form-control" name="category_id" id="category_id"
                                                 data-style="form-control">
                                             @forelse($categories as $category)
-                                                <option value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
+                                                @if($category->id == $task->task_category_id)
+                                                    <option selected value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
+                                                @else
+                                                    <option value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
+                                                @endif
                                             @empty
                                                 <option value="">@lang('messages.noTaskCategoryAdded')</option>
                                             @endforelse
@@ -79,7 +83,11 @@
 
                                         <select name="task_labels" class="select2 form-control">
                                             @foreach($taskLabels as $label)
-                                                <option value="{{ $label->id }}">{{ $label->label_name }}</option>
+                                                @if($label->id == $task->site_id)
+                                                    <option selected value="{{ $label->id }}">{{ $label->label_name }}</option>
+                                                @else
+                                                    <option value="{{ $label->id }}">{{ $label->label_name }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>
@@ -97,43 +105,46 @@
                                         <textarea id="description" name="description" class="form-control summernote">{{ $task->description }}</textarea>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.type')</label>
                                         <select name="task_type" class="select2 form-control">
-                                            <option value="0">Site Survey</option>
-                                            <option value="1">Installation</option>
-                                            <option value="2">Retrofit</option>
-                                            <option value="3">Service Call</option>
+                                            @foreach($wotype as $type)
+                                                @if($type->id == $task->wo_id)
+                                                    <option selected value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @else
+                                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @endif
+                                            @endforeach
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.sporttype')</label>
+                                        <select name="sport_type" class="select2 form-control">
+                                            @foreach($sport as $type)
+                                                @if($type->id == $task->sport_id)
+                                                    <option selected value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @else
+                                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.qty')</label>
+                                        <input type="text" name="task_qty" class="form-control" value="@if($task->qty){{ $task->qty}}@endif" >
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.purchaseorder')</label>
-                                        <input type="text" name="task_purchase" class="form-control" >
+                                        <input type="text" name="task_purchase" class="form-control" value="@if($task->p_order){{ $task->p_order }}@endif" >
                                     </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label required">@lang('app.startDate')</label>
-                                        <input type="text" name="start_date" autocomplete="off" id="start_date2" class="form-control" autocomplete="off" value="@if($task->start_date != '-0001-11-30 00:00:00' && $task->start_date != null){{ $task->start_date->format($global->date_format) }}@endif">
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label required">@lang('app.dueDate')</label>
-                                        <input type="text" name="due_date" id="due_date2" autocomplete="off" class="form-control" value="{{ $task->due_date->format($global->date_format) }}">
-                                    </div>
-                                </div>
-
-
-
-                                    <input type="hidden" value="{{ $user->id }}" name="user_id">
-                                    <input type="hidden" value="medium" name="priority">
-
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -145,6 +156,24 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label required">@lang('app.startDate')</label>
+                                        <input type="text" name="start_date" autocomplete="off" id="start_date2" class="form-control" autocomplete="off" value="@if($task->start_date != '-0001-11-30 00:00:00' && $task->start_date != null){{ $task->start_date->format($global->date_format) }}@endif">
+                                    </div>
+                                </div>
+                                <!--/span-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.dueDate')</label>
+                                        <input type="text" name="due_date" id="due_date2" autocomplete="off" class="form-control" value="{{ $task->due_date->format($global->date_format) }}">
+                                    </div>
+                                </div>
+
+
+
+                                    <input type="hidden" value="{{ $user->id }}" name="user_id">
+                                    <input type="hidden" value="medium" name="priority">
 
                             </div>
                             <!--/row-->
