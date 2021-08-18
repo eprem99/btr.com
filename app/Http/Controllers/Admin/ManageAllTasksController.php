@@ -42,7 +42,7 @@ class ManageAllTasksController extends AdminBaseController
     public function index(AllTasksDataTable $dataTable)
     {
         if (!request()->ajax()) {
-            $this->projects = Project::allProjects();
+          //  $this->projects = Project::allProjects();
             $this->clients = User::allClients();
             $this->employees = User::allEmployees();
             $this->taskBoardStatus = TaskboardColumn::all();
@@ -97,7 +97,7 @@ class ManageAllTasksController extends AdminBaseController
         $task->priority = $request->priority;
         $task->board_column_id = $request->status;
         $task->site_id = $request->task_labels;
-        $task->wo_type = $request->task_type;
+        $task->wo_id = $request->task_type;
         $task->p_order = $request->task_purchase;
 
         $taskBoardColumn = TaskboardColumn::findOrFail($request->status);
@@ -186,6 +186,7 @@ class ManageAllTasksController extends AdminBaseController
         return Reply::dataOnly(['html' => $list]);
     }
 
+    
     public function dependentTaskLists($projectId, $taskId = null)
     {
         $completedTaskColumn = TaskboardColumn::where('slug', '!=', 'completed')->first();
@@ -225,9 +226,9 @@ class ManageAllTasksController extends AdminBaseController
         $task->task_category_id = $request->category_id;
         $task->priority = $request->priority;
         $task->board_column_id = $taskBoardColumn->id;
-        $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
-        $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
+      //  $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
+      //  $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
+      //  $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         $task->site_id = $request->task_labels;
         $task->wo_type = $request->task_type;
         $task->p_order = $request->task_purchase;
@@ -317,8 +318,8 @@ class ManageAllTasksController extends AdminBaseController
                     $newTask->board_column_id = $request->board_column_id;
                 }
                 
-                $newTask->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
-                $newTask->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
+                // $newTask->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
+                // $newTask->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
 
                 $newTask->wo_type = $request->task_type;
                 $newTask->p_order = $request->task_purchase;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\DataTables\Admin\AllTasksDataTable;
 use App\Events\TaskReminderEvent;
 use App\Helper\Reply;
 use App\Http\Requests\Tasks\StoreTask;
@@ -14,14 +15,12 @@ use App\TaskCategory;
 use App\WoType;
 use App\SportType;
 use App\TaskFile;
-use App\TaskLabel;
 use App\TaskLabelList;
 use App\Traits\ProjectProgress;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\Facades\DataTables;
 use App\TaskUser;
 
 
@@ -42,206 +41,47 @@ class ClientAllTasksController extends ClientBaseController
         });
     }
 
-    public function index()
+    public function index(AllTasksDataTable $dataTable)
     {
-        $this->projects = ($this->user->can('view_projects')) ? Project::orderBy('project_name', 'asc')->get() : Project::select('projects.*')->join('project_members', 'project_members.project_id', '=', 'projects.id')
-            ->where('project_members.user_id', $this->user->id)
-            ->orderBy('project_name', 'asc')
-            ->get();
+        if (!request()->ajax()) {
+          //  $this->projects = Project::allProjects();
+            $this->clients = User::allClients();
+            $this->employees = User::allEmployees();
+            $this->taskBoardStatus = TaskboardColumn::all();
+            $this->taskCategories = TaskCategory::all();
+            $this->taskLabels = TaskLabelList::all();
+            $this->startDate = Carbon::today()->subDays(15)->format($this->global->date_format);
+            $this->endDate = Carbon::today()->addDays(15)->format($this->global->date_format);
+        }
 
-        $this->employees = ($this->user->can('view_employees')) ? User::allEmployees() : User::where('id', $this->user->id)->get();
-
-        $this->clients = User::allEmployees();
-        $this->taskBoardStatus = TaskboardColumn::all();
-
-        $this->startDate = Carbon::today()->subDays(15)->format($this->global->date_format);
-        $this->endDate = Carbon::today()->addDays(15)->format($this->global->date_format);
-
-        return view('client.all-tasks.index', $this->data);
+        return $dataTable->render('client.all-tasks.index', $this->data);
     }
 
-    public function data(Request $request, $startDate = null, $endDate = null, $hideCompleted = null, $projectId = null)
+        /**
+     * Get columns.
+     *
+     * @return array
+     */
+    protected function getColumns()
     {
-        $startDate = Carbon::createFromFormat($this->global->date_format, $request->startDate)->toDateString();
-        $endDate = Carbon::createFromFormat($this->global->date_format, $request->endDate)->toDateString();
-        $projectId =  $request->projectId;
-        $hideCompleted = $request->hideCompleted;
-
-        $taskBoardColumn = TaskboardColumn::completeColumn();
-        $taskBoardColumns = TaskboardColumn::orderBy('priority', 'asc')->get();
-
-        $tasks = Task::leftJoin('projects', 'projects.id', '=', 'tasks.project_id')
-            ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
-            ->join('users as client', 'task_users.user_id', '=', 'client.id')
-            ->leftJoin('users as creator_user', 'creator_user.id', '=', 'tasks.created_by')
-            ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
-          //  ->join('task_labels', 'tasks.id', '=', 'task_labels.task_id')
-            ->join('role_user as role', 'task_users.user_id', '=', 'role.user_id')
-            ->join('task_label_list', 'tasks.site_id', '=', 'task_label_list.id')
-            ->selectRaw('tasks.id, projects.project_name, tasks.heading, task_label_list.label_name, task_label_list.id as ids, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
-             tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color, role.role_id,
-              tasks.project_id, ( select count("id") from pinned where pinned.task_id = tasks.id and pinned.user_id = '.user()->id.') as pinned_task')
-            ->whereNull('projects.deleted_at')
-            ->with('users', 'activeTimer')
-            ->groupBy('tasks.id');
-
-        $tasks->where(function ($q) use ($startDate, $endDate) {
-            $q->whereBetween(DB::raw('DATE(tasks.`due_date`)'), [$startDate, $endDate]);
-
-            $q->orWhereBetween(DB::raw('DATE(tasks.`start_date`)'), [$startDate, $endDate]);
-        });
-
-
-        if ($request->assignedBY != '' && $request->assignedBY !=  null && $request->assignedBY !=  'all') {
-            $tasks->where('creator_user.id', '=', $request->assignedBY);
-        }
-
-        if ($request->status != '' && $request->status !=  null && $request->status !=  'all') {
-            $tasks->where('tasks.board_column_id', '=', $request->status);
-        }
-
-        if ($hideCompleted == '1') {
-            $tasks->where('tasks.board_column_id', '<>', $taskBoardColumn->id);
-        }
-
-        if (!$this->user->can('view_tasks')) {
-            $tasks->where(
-                function ($q) {
-                    $q->where(
-                        function ($q1) {
-                            $q1->where(
-                                function ($q3) {
-                                 //   $q3->where('tasks.is_private', 0);
-                                    $q3->where('task_users.user_id', $this->user->id);
-                                }
-                            );
-                            $q1->orWhere('tasks.created_by', $this->user->id);
-                        }
-                    );
-                    $q->orWhere(
-                        function ($q2) {
-                         //   $q2->where('tasks.is_private', 1);
-                            $q2->where('task_users.user_id', $this->user->id);
-                        }
-                    );
-                }
-            );
-        }
-
-        $tasks->get();
-// dd($tasks->label_name);
-        return DataTables::of($tasks)
-            ->addColumn('action', function ($row) {
-                $action = '';
-
-                if ($this->user->can('edit_tasks') || ($this->global->task_self == 'yes' && $this->user->id == $row->created_by_id)) {
-                    $action .= '<a href="' . route('client.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
-                      data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
-                }
-
-                return $action;
-            })
-
-            ->addColumn('site', function ($row) {
-                $site = '';            
-                if ($row->label_name) {
-                    $site = $row->label_name;
-                } 
-               return $site;
-            })
-
-            ->addColumn('siteid', function ($row) {
-                $site = '';            
-                if ($row->ids) {
-                    $site = $row->ids;
-                    // $contacts = json_decode($row->contacts, true);
-                    // if($contacts['site_id']){
-                    //     $site = $contacts['site_id'];
-                    // }else{
-                    //     $site = '';
-                    // }
-                } 
-                
-               return $site;
-            })
-            ->addColumn('taskpo', function ($row) {
-                $site = '';
-
-               return $site;
-            })
-            ->addColumn('traking', function ($row) {
-                $site = '';
-
-               return $site;
-            })
-
-            ->addColumn('reference', function ($row) {
-                $site = '';
-
-               return $site;
-            })
-
-            // ->addColumn('manager', function ($row) {
-            //     $site = 'Project Manager';
-
-            //    return $site;
-            // })
-
-            ->editColumn('due_date', function ($row) {
-
-                if ($row->due_date->endOfDay()->isPast()) {
-                    return '<span class="text-danger">' . $row->due_date->format($this->global->date_format) . '</span>';
-                } elseif ($row->due_date->setTimezone($this->global->timezone)->isToday()) {
-                    return '<span class="text-success">' . __('app.today') . '</span>';
-                }
-                return '<span >' . $row->due_date->format($this->global->date_format) . '</span>';
-            })
-            ->editColumn('created_by', function ($row) {
-                if (!is_null($row->created_by)) {
-                    return ($row->created_image) ? '<img src="' . asset_url('avatar/' . $row->created_image) . '"
-                                                            alt="user" class="img-circle" width="25" height="25"> ' . ucwords($row->created_by) : '<img src="' . asset('img/default-profile-3.png') . '"
-                                                            alt="user" class="img-circle" width="25" height="25"> ' . ucwords($row->created_by);
-                }
-                return '-';
-            })
-            ->editColumn('users', function ($row) {
-                $members = '';
-                foreach ($row->users as $client) {
-                    $members .= ucwords($client->name);
-                }
-                return $members;
-
-            })
-            ->editColumn('heading', function ($row) {
-                $pin = '';
-                // if(($row->pinned_task) ){
-                //     $pin = '<br><span class="font-12"  data-toggle="tooltip" data-original-title="'.__('app.pinned').'"><i class="icon-pin icon-2"></i></span>';
-                // }
-
-                $name = '<a href="javascript:;" data-task-id="' . $row->id . '" class="show-task-detail">' . ucfirst($row->heading) . '</a> '.$pin;
-                return $name;
-            })
-            ->editColumn('board_column', function ($row) use ($taskBoardColumns) {
-                $status = '<div class="btn-group dropdown">';
-                $status .= '<button aria-expanded="true" data-toggle="dropdown" class="btn dropdown-toggle waves-effect waves-light btn-xs"  style="border-color: ' . $row->label_color . '; color: ' . $row->label_color . '" type="button">' . $row->board_column . ' <span class="caret"></span></button>';
-                $status .= '<ul role="menu" class="dropdown-menu pull-right">';
-                foreach ($taskBoardColumns as $key => $value) {
-                    if($value->role_id == $row->role_id ){
-                    $status .= '<li><a href="javascript:;" data-task-id="' . $row->id . '" class="change-status" data-status="' . $value->slug . '">' . $value->column_name . '  <span style="width: 15px; height: 15px; border-color: ' . $value->label_color . '; background: ' . $value->label_color . '"
-                    class="btn btn-warning btn-small btn-circle">&nbsp;</span></a></li>';
-                    }
-                }
-                $status .= '</ul>';
-                $status .= '</div>';
-                return $status;
-            })
-
-            ->rawColumns(['board_column', 'action', 'created_by', 'due_date', 'users', 'heading'])
-            ->removeColumn('project_id')
-            ->removeColumn('image')
-            ->removeColumn('label_color')
-            ->addIndexColumn()
-            ->make(true);
+        return [
+            __('app.id') => ['data' => 'id', 'name' => 'id', 'visible' => false, 'exportable' => false],
+            '#' => ['data' => 'id', 'name' => 'id', 'visible' => true],
+            __('app.task') => ['data' => 'heading', 'name' => 'heading'],
+            __('app.project')  => ['data' => 'project_name', 'name' => 'projects.project_name'],
+            __('modules.tasks.assigned') => ['data' => 'name', 'name' => 'name', 'visible' => false],
+            __('modules.tasks.assignTo') => ['data' => 'users', 'name' => 'member.name', 'exportable' => false],
+            __('app.dueDate') => ['data' => 'due_date', 'name' => 'due_date'],
+            __('app.status') => ['data' => 'status', 'name' => 'status', 'visible' => false],
+            __('app.columnStatus') => ['data' => 'board_column', 'name' => 'board_column', 'exportable' => false, 'searchable' => false],
+            Column::computed('action', __('app.action'))
+                ->exportable(false)
+                ->printable(false)
+                ->orderable(false)
+                ->searchable(false)
+                ->width(150)
+                ->addClass('text-center')
+        ];
     }
 
     public function edit($id)
@@ -473,97 +313,6 @@ class ClientAllTasksController extends ClientBaseController
             ];
         }
 
-        // Add repeated task
-        if ($request->has('repeat') && $request->repeat == 'yes') {
-            $repeatCount = $request->repeat_count;
-            $repeatType = $request->repeat_type;
-            $repeatCycles = $request->repeat_cycles;
-            $startDate = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
-            $dueDate = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
-
-
-            for ($i = 1; $i < $repeatCycles; $i++) {
-                $repeatStartDate = Carbon::createFromFormat('Y-m-d', $startDate);
-                $repeatDueDate = Carbon::createFromFormat('Y-m-d', $dueDate);
-
-                if ($repeatType == 'day') {
-                    $repeatStartDate = $repeatStartDate->addDays($repeatCount);
-                    $repeatDueDate = $repeatDueDate->addDays($repeatCount);
-                } else if ($repeatType == 'week') {
-                    $repeatStartDate = $repeatStartDate->addWeeks($repeatCount);
-                    $repeatDueDate = $repeatDueDate->addWeeks($repeatCount);
-                } else if ($repeatType == 'month') {
-                    $repeatStartDate = $repeatStartDate->addMonths($repeatCount);
-                    $repeatDueDate = $repeatDueDate->addMonths($repeatCount);
-                } else if ($repeatType == 'year') {
-                    $repeatStartDate = $repeatStartDate->addYears($repeatCount);
-                    $repeatDueDate = $repeatDueDate->addYears($repeatCount);
-                }
-
-
-                $newTask = new Task();
-                $newTask->heading = $request->heading;
-                if ($request->description != '') {
-                    $newTask->description = $request->description;
-                }
-                $newTask->start_date = $repeatStartDate->format('Y-m-d');
-                $newTask->due_date = $repeatDueDate->format('Y-m-d');
-                $newTask->project_id = $request->project_id;
-                $newTask->priority = $request->priority;
-                $newTask->task_category_id = $request->category_id;
-                $newTask->recurring_task_id = $task->id;
-
-                if ($request->board_column_id) {
-                    $newTask->board_column_id = $request->board_column_id;
-                }
-            //    $newTask->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
-                $newTask->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-        
-
-                $newTask->save();
-              //  $newTask->labels()->sync($request->task_labels);
-
-                if (!$this->user->can('add_tasks') && $this->global->task_self == 'yes') {
-                    $request->user_id = [$this->user->id];
-                }
-
-                foreach ($request->user_id as $key => $value) {
-                    TaskUser::create(
-                        [
-                            'user_id' => $value,
-                            'task_id' => $newTask->id
-                        ]
-                    );
-                }
-
-                // For gantt chart
-                if ($request->page_name && $request->page_name == 'ganttChart') {
-                    $parentGanttId = $request->parent_gantt_id;
-                    $taskDuration = $newTask->due_date->diffInDays($newTask->start_date);
-                    $taskDuration = $taskDuration + 1;
-
-                    $ganttTaskArray[] = [
-                        'id' => $newTask->id,
-                        'text' => $newTask->heading,
-                        'start_date' => $newTask->start_date->format('Y-m-d'),
-                        'duration' => $taskDuration,
-                        'parent' => $parentGanttId,
-                        'taskid' => $newTask->id
-                    ];
-
-                    $gantTaskLinkArray[] = [
-                        'id' => 'link_' . $newTask->id,
-                        'source' => $parentGanttId,
-                        'target' => $newTask->id,
-                        'type' => 1
-                    ];
-                }
-
-                $startDate = $newTask->start_date->format('Y-m-d');
-                $dueDate = $newTask->due_date->format('Y-m-d');
-            }
-        }
-
         if ($request->project_id) {
             $this->calculateProjectProgress($request->project_id);
         }
@@ -610,24 +359,19 @@ class ClientAllTasksController extends ClientBaseController
 
     public function show($id)
     {
-        $this->task = Task::with('board_column', 'subtasks', 'users', 'files', 'comments', 'activeTimer', 'notes')
-        ->join('task_label_list', 'tasks.site_id', 'task_label_list.id')
+        $this->task = Task::with('board_column', 'users', 'files', 'comments', 'activeTimer', 'notes', 'labels')
+       // ->join('task_label_list', 'tasks.site_id', 'task_label_list.id')
         ->findOrFail($id);
 
         $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')
             ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id')
             ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id');
 
-        $where = 'and project_time_logs.task_id="' . $id . '" ';
         
         $this->employees = $this->employees->select(
             'users.name',
             'users.image',
-            'users.id',
-            'designations.name as designation_name',
-            DB::raw(
-                "(SELECT SUM(project_time_logs.total_minutes) FROM project_time_logs WHERE project_time_logs.user_id = users.id $where GROUP BY project_time_logs.user_id) as total_minutes"
-            )
+            'users.id'
         );
 
         $this->employees = $this->employees->where('project_time_logs.task_id', '=', $id);

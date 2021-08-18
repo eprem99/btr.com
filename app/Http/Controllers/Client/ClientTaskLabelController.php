@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\TaskLabel\StoreRequest;
 use App\Http\Requests\Admin\TaskLabel\UpdateRequest;
 use App\TaskLabel;
 use App\TaskLabelList;
+use App\User;
 
 class ClientTaskLabelController extends ClientBaseController
 {
@@ -31,6 +32,7 @@ class ClientTaskLabelController extends ClientBaseController
 
     public function create()
     {
+        $this->clients = User::allClients();
         return view('client.task-label.create', $this->data);
     }
 
@@ -45,6 +47,7 @@ class ClientTaskLabelController extends ClientBaseController
     {
 
         $this->taskLabel = TaskLabelList::find($id);
+        $this->clients = User::allClients();
         return view('client.task-label.edit', $this->data);
     }
 

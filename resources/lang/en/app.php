@@ -94,6 +94,8 @@ return array (
       'semail' => 'Secondary Contact Email',
       'description' => 'General Site Notes',
       'scheduled' => 'Scheduled',
+      'client' => 'Client',
+
     ),
   'menu' => 
   array (

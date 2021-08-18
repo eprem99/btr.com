@@ -22,7 +22,7 @@ class TaskboardColumn extends BaseModel
     {
         return cache()->remember(
             'taskboard-complete', 60*60*24, function () {
-                return TaskboardColumn::where('slug', 'completed')->first();
+                return TaskboardColumn::where('slug', 'closed')->first();
             }
         );
     }

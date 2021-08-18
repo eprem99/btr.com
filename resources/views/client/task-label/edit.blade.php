@@ -52,8 +52,16 @@ $contacts = json_decode($taskLabel->contacts, true);
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="site_id"> @lang('app.site.id')</label>
-                            <input type="text" class="form-control" name="site_id" value="{{ $contacts['site_id'] }}" />
+                            <label for="site_client"> @lang('app.site.client')</label>
+                            <select name="site_client" class="select2 form-control required" id="client">
+                                @foreach($clients as $client)
+                                    @if($client->id == $contacts['site_client'])
+                                        <option selected value="{{$client->id}}">{{$client->name}} </option>
+                                    @else
+                                        <option value="{{$client->id}}">{{$client->name}} </option>
+                                    @endif
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>

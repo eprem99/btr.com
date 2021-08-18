@@ -129,7 +129,7 @@ class MemberDashboardController extends MemberBaseController
 
         $this->languageSettings = language_setting();
 
-        $completedTaskColumn = TaskboardColumn::where('slug', '=', 'completed')->first();
+        $completedTaskColumn = TaskboardColumn::where('slug', '=', 'closed')->first();
         $this->tasks = Task::select('tasks.*')
             ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
             ->where('board_column_id', '<>', $completedTaskColumn->id);

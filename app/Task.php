@@ -48,9 +48,14 @@ class Task extends BaseModel
         return $this->belongsToMany(User::class, 'task_users');
     }
 
+    public function wotype()
+    {
+        return $this->belongsTo(WoType::class, 'wo_id');
+    }
+
     public function labels()
     {
-        return $this->belongsToMany(TaskLabelList::class, 'task_labels', 'task_id', 'label_id');
+        return $this->belongsTo(TaskLabelList::class, 'site_id');
     }
 
     public function create_by()

@@ -66,7 +66,7 @@ class AdminDashboardController extends AdminBaseController
         $taskBoardColumn = TaskboardColumn::all();
 
         $completedTaskColumn = $taskBoardColumn->filter(function ($value, $key) {
-            return $value->slug == 'completed';
+            return $value->slug == 'closed';
         })->first();
 
         $this->counts = DB::table('users')

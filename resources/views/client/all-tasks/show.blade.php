@@ -22,65 +22,32 @@
                 </h2>
                 <div class="row">
                     <div class="col-md-6">
-                        <P>
-                            <strong>Work Order:  </strong>{{ ucwords($task->id) }}
-                        </P>
-                        
-                        @if($task->task_category_id)
-                            <strong>Project:  </strong>{{ ucwords($task->category->category_name) }}
-                        @endif
-                       </p>
-                       <p>
-                            <strong>PO Number:  </strong> 
-                       </p>
-                       <p>
-                            <strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}
-                       </p>
-                       <p>
-    
-                            <strong>Summary:  </strong> {{ ucwords($task->heading) }}
-                       </p>
-                       <p>
-                            <strong>Work Order Type:  </strong>
-                       </p>
-                       <p>
-                            <strong>Client:  </strong> {{ ucwords($task->users[0]->name) }}
-                       </p>
-                       <p>
-                            <strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}
-                       </p>
+                       @if($task->labels->id)<P><strong>Work Order:  </strong>{{ ucwords($task->id) }}</P>@endif
+                       @if($task->task_category_id)<p><strong>Project:  </strong>{{ ucwords($task->category->category_name) }}</p>@endif
+                       @if($task->p_order)<p><strong>PO Number:  </strong> {{ ucwords($task->p_order) }}</p>@endif
+                       @if($task->start_date)<p><strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}</p>@endif
+                       @if($task->heading)<p><strong>Summary:  </strong> {{ ucwords($task->heading) }}</p>@endif
+                       @if($task->wotype->name)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
+                       @if($task->users[0]->name)<p><strong>Client:  </strong> {{ ucwords($task->users[0]->name) }}</p>@endif
+                       @if($task->create_by->name)<p><strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}</p>@endif
                     </div>
                     <div class="col-md-6">
                     <h3>
                          @lang('modules.tasks.siteinfo')
                     </h3>
                     @php 
-                    $contacts = json_decode($task->contacts, true);
+                    $contacts = json_decode($task->labels->contacts, true);
                     @endphp
-                    <P>
-                            <strong>Site ID: </strong> {{$task->site_id}}
-                        </P>
-                       <p>
-                            <strong>Site Name:  </strong> {{$task->label_name}}
-                       </p>
-                       <p>
-                            <strong>Time Zone:  </strong>
-                       </p>
-                       <p>
-                            <strong>Address:  </strong>{{$contacts['site_address']}}
-                       </p>
+                            @if($task->labels->id)<P><strong>Site ID: </strong> {{$task->labels->id}}</P>@endif
+                            @if($task->labels->label_name)<P><strong>Site Name:  </strong> {{$task->labels->label_name}}</p>@endif
+                            @if($task->labels->id)<P><strong>Time Zone:  </strong></p>@endif
+                            @if($contacts['site_address'])<P><strong>Address:  </strong>{{$contacts['site_address']}}</p>@endif
                        <h3>
-                           @lang('modules.tasks.sitecontacts')
+                            @lang('modules.tasks.sitecontacts')
                        </h3>
-                       <p>
-                            <strong>Primary:  </strong> {{ ucwords($task->create_by->name) }}
-                       </p>
-                       <p>
-                            <strong>Phone:  </strong> {{$contacts['site_phone']}}
-                       </p>
-                       <p>
-                            <strong>Email:  </strong> {{$contacts['site_pemail']}}
-                       </p>
+                            @if($contacts['site_pname'])<P><strong>Primary:  </strong> {{ $contacts['site_pname'] }}</p>@endif
+                            @if($contacts['site_pphone'])<P><strong>Phone:  </strong> {{$contacts['site_pphone']}}</p>@endif
+                            @if($contacts['site_pemail'])<P><strong>Email:  </strong> {{$contacts['site_pemail']}}</p>@endif
                     </div>
                 </div>
     
@@ -336,10 +303,14 @@
 
                     <label class="font-12" for="">@lang('modules.tasks.assignTo')</label><br>
                     @foreach ($task->users as $item)
-                        <img src="{{ $item->image_url }}" data-toggle="tooltip"
-                             data-original-title="{{ ucwords($item->name) }}" data-placement="right"
-                             class="img-circle" width="35" height="35" alt="">
-                             {{ ucwords($item->name) }}
+                        
+                            <img src="{{ $item->image_url }}" data-toggle="tooltip"
+                                data-original-title="{{ ucwords($item->name) }}" data-placement="right"
+                                class="img-circle" width="35" height="35" alt="">
+                                {{ ucwords($item->name) }}
+                                @if($item->mobile)<P><strong>Phone: </strong> {{$item->mobile}}</P>@endif
+
+                       
                     @endforeach
                     <hr>
                 </div>
@@ -347,7 +318,6 @@
                     <div class="col-xs-12">
                         <label class="font-12" for="">@lang('modules.tasks.assignBy')</label><br>
                         <img src="{{ $task->create_by->image_url }}" class="img-circle" width="35" height="35" alt="">
-
                         {{ ucwords($task->create_by->name) }}
                         <hr>
                     </div>

@@ -25,7 +25,7 @@ class ManageRolePermissionController extends AdminBaseController
 
     public function index()
     {
-        $this->roles = Role::with('permissions')->where('id', '>', 3)->get();
+        $this->roles = Role::with('permissions')->where('id', '>', 1)->get();
 
         $this->totalPermissions = Permission::count();
         $this->modulesData = Module::with('permissions')->get();

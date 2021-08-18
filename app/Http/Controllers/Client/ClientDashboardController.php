@@ -88,7 +88,7 @@ class ClientDashboardController extends ClientBaseController
         $this->userActivities = $this->userActivities->get();
 
  
-        $completedTaskColumn = TaskboardColumn::where('slug', '=', 'completed')->first();
+        $completedTaskColumn = TaskboardColumn::where('slug', '=', 'closed')->first();
         $this->tasks = Task::select('tasks.*')
             ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
             ->where('board_column_id', '<>', $completedTaskColumn->id);

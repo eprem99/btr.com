@@ -6,6 +6,8 @@ namespace App\DataTables\Member;
 use App\DataTables\BaseDataTable;
 use App\TaskLabelList;
 use Yajra\DataTables\Html\Column;
+use Yajra\DataTables\Html\Button;
+use App\User;
 
 class LabelDataTable extends BaseDataTable
 {
@@ -34,11 +36,11 @@ class LabelDataTable extends BaseDataTable
                 return ucwords($row->id);
             })
 
-            ->editColumn('site_id', function ($row) {
+            ->editColumn('client', function ($row) {
                 if($row->contacts){
                     $siteid = json_decode($row->contacts, true);
- 
-                        return ucwords($siteid['site_id']);
+                    $client = User::allClients()->where('id','=',$siteid['site_client']);
+                        return $siteid['site_client'];
                 }
                 return '--';
 
@@ -121,9 +123,9 @@ class LabelDataTable extends BaseDataTable
             ->stateSave(true)
             ->processing(true)
             ->language(__("app.datatable"))
-//            ->buttons(
-//                Button::make(['extend' => 'export', 'buttons' => ['excel', 'csv'], 'text' => '<i class="fa fa-download"></i> ' . trans('app.exportExcel') . '&nbsp;<span class="caret"></span>'])
-//            )
+           ->buttons(
+               Button::make(['extend' => 'export', 'buttons' => ['excel', 'pdf'], 'text' => '<i class="fa fa-download"></i> ' . trans('app.exportExcel') . '&nbsp;<span class="caret"></span>'])
+           )
             ->parameters([
                 'initComplete' => 'function () {
                    window.LaravelDataTables["taskLabelList-table"].buttons().container()
@@ -148,8 +150,9 @@ class LabelDataTable extends BaseDataTable
            // '#' => ['data' => 'id', 'name' => 'id'],
          // __('app.id') => ['data' => 'id', 'name' => 'id', 'visible' => false],
            // __('app.subject') => ['data' => 'subject', 'name' => 'subject'],
-            __('app.site.id')  => ['data' => 'site_id', 'name' => 'contacts'],
+            __('app.site.id')  => ['data' => 'id', 'name' => 'contacts'],
             __('app.site.name') => ['data' => 'label_name', 'name' => 'label_name'],
+            __('app.site.client') => ['data' => 'client', 'name' => 'client'],
             __('app.site.city')  => ['data' => 'site_city', 'name' => 'contacts'],
             __('app.site.state')  => ['data' => 'site_state', 'name' => 'contacts'],
             __('app.site.phone')  => ['data' => 'site_phone', 'name' => 'contacts'],
@@ -160,7 +163,7 @@ class LabelDataTable extends BaseDataTable
                 ->printable(false)
                 ->orderable(false)
                 ->searchable(false)
-                ->width(70)
+                ->width(50)
                 ->addClass('text-center')
         ];
     }

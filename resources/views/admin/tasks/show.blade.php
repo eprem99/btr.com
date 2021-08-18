@@ -16,11 +16,11 @@
                 <a href="{{route('admin.all-tasks.edit',$task->id)}}" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right m-l-5"> <i class="fa fa-edit"></i> @lang('app.edit')</a>
 
     
-                <a href="javascript:;" id="completedButton" class="btn btn-success btn-sm m-b-10 btn-rounded @if($task->board_column->slug == 'completed') hidden @endif "  onclick="markComplete('completed')" ><i class="fa fa-check"></i> @lang('modules.tasks.markComplete')</a>
+                <a href="javascript:;" id="completedButton" class="btn btn-success btn-sm m-b-10 btn-rounded @if($task->board_column->slug == 'closed') hidden @endif "  onclick="markComplete('closed')" ><i class="fa fa-check"></i> @lang('modules.tasks.markComplete')</a>
     
-                <a href="javascript:;" id="inCompletedButton" class="btn btn-default btn-outline btn-sm m-b-10 btn-rounded @if($task->board_column->slug != 'completed') hidden @endif"  onclick="markComplete('incomplete')"><i class="fa fa-times"></i> @lang('modules.tasks.markIncomplete')</a>
+                <a href="javascript:;" id="inCompletedButton" class="btn btn-default btn-outline btn-sm m-b-10 btn-rounded @if($task->board_column->slug != 'closed') hidden @endif"  onclick="markComplete('created')"><i class="fa fa-times"></i> @lang('modules.tasks.markIncomplete')</a>
      
-                <a href="javascript:;" id="reminderButton" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right  m-l-5 @if($task->board_column->slug == 'completed') hidden @endif" title="@lang('messages.remindToAssignedEmployee')"><i class="fa fa-bell"></i> @lang('modules.tasks.reminder')</a>
+                <a href="javascript:;" id="reminderButton" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right  m-l-5 @if($task->board_column->slug == 'closed') hidden @endif" title="@lang('messages.remindToAssignedEmployee')"><i class="fa fa-bell"></i> @lang('modules.tasks.reminder')</a>
 
 
                 @if ($task->board_column->slug != 'completed')
@@ -40,62 +40,32 @@
                 </h2>
                 <div class="row">
                     <div class="col-md-6">
-                        <P>
-                            <strong>Work Order:  </strong>{{ ucwords($task->id) }}
-                        </P>
-                        
-                        @if($task->task_category_id)
-                            <strong>Project:  </strong>{{ ucwords($task->category->category_name) }}
-                        @endif
-                       </p>
-                       <p>
-                            <strong>PO Number:  </strong> 
-                       </p>
-                       <p>
-                            <strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}
-                       </p>
-                       <p>
-    
-                            <strong>Summary:  </strong> {{ ucwords($task->heading) }}
-                       </p>
-                       <p>
-                            <strong>Work Order Type:  </strong>
-                       </p>
-
-                            <strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}
-                       </p>
+                       @if($task->labels->id)<P><strong>Work Order:  </strong>{{ ucwords($task->id) }}</P>@endif
+                       @if($task->task_category_id)<p><strong>Project:  </strong>{{ ucwords($task->category->category_name) }}</p>@endif
+                       @if($task->p_order)<p><strong>PO Number:  </strong> {{ ucwords($task->p_order) }}</p>@endif
+                       @if($task->start_date)<p><strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}</p>@endif
+                       @if($task->heading)<p><strong>Summary:  </strong> {{ ucwords($task->heading) }}</p>@endif
+                       @if($task->wotype->name)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
+                       @if($task->users[0]->name)<p><strong>Client:  </strong> {{ ucwords($task->users[0]->name) }}</p>@endif
+                       @if($task->create_by->name)<p><strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}</p>@endif
                     </div>
                     <div class="col-md-6">
                     <h3>
                          @lang('modules.tasks.siteinfo')
                     </h3>
                     @php 
-                    $contacts = json_decode($task->contacts, true);
+                    $contacts = json_decode($task->labels->contacts, true);
                     @endphp
-                    <P>
-                            <strong>Site ID: </strong> {{$task->site_id}}
-                        </P>
-                       <p>
-                            <strong>Site Name:  </strong> {{$task->label_name}}
-                       </p>
-                       <p>
-                            <strong>Time Zone:  </strong>
-                       </p>
-                       <p>
-                            <strong>Address:  </strong>{{$contacts['site_address']}}
-                       </p>
+                            @if($task->labels->id)<P><strong>Site ID: </strong> {{$task->labels->id}}</P>@endif
+                            @if($task->labels->label_name)<P><strong>Site Name:  </strong> {{$task->labels->label_name}}</p>@endif
+                            @if($task->labels->id)<P><strong>Time Zone:  </strong></p>@endif
+                            @if($contacts['site_address'])<P><strong>Address:  </strong>{{$contacts['site_address']}}</p>@endif
                        <h3>
-                           @lang('modules.tasks.sitecontacts')
+                            @lang('modules.tasks.sitecontacts')
                        </h3>
-                       <p>
-                            <strong>Primary:  </strong> {{ ucwords($task->create_by->name) }}
-                       </p>
-                       <p>
-                            <strong>Phone:  </strong> {{$contacts['site_phone']}}
-                       </p>
-                       <p>
-                            <strong>Email:  </strong> {{$contacts['site_pemail']}}
-                       </p>
+                            @if($contacts['site_pname'])<P><strong>Primary:  </strong> {{ $contacts['site_pname'] }}</p>@endif
+                            @if($contacts['site_pphone'])<P><strong>Phone:  </strong> {{$contacts['site_pphone']}}</p>@endif
+                            @if($contacts['site_pemail'])<P><strong>Email:  </strong> {{$contacts['site_pemail']}}</p>@endif
                     </div>
                 </div>
     
@@ -369,6 +339,7 @@
                              data-original-title="" data-placement="right"
                              class="img-circle" width="35" height="35" alt="">
                              {{ ucwords($item->name) }}
+                             @if($item->mobile)<P><strong>Phone: </strong> {{$item->mobile}}</P>@endif
                     @endforeach
                     <hr>
                 </div>
@@ -609,7 +580,7 @@ var myDropzone;
 
         var id = '{{ $task->id }}';
 
-        if(status == 'completed'){
+        if(status == 'closed'){
             var checkUrl = '{{route('admin.tasks.checkTask', ':id')}}';
             checkUrl = checkUrl.replace(':id', id);
             $.easyAjax({
@@ -665,7 +636,7 @@ var myDropzone;
             success: function (data) {
                 $('#columnStatusColor').css('background-color', data.textColor);
                 $('#columnStatus').html(data.column);
-                if(status == 'completed'){
+                if(status == 'closed'){
 
                     $('#inCompletedButton').removeClass('hidden');
                     $('#completedButton').addClass('hidden');

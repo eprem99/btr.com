@@ -297,7 +297,7 @@ return array(
     'lastCreated' => 'Last Created',
     'dueSoon' => 'Due Soon',
     'dueDate' => 'Scheduled',
-    'assignTo' => 'Planned Tech On Site',
+    'assignTo' => 'Assign To',
     'high' => 'High',
     'medium' => 'Medium',
     'low' => 'Low',

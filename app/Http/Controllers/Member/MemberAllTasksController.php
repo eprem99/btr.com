@@ -75,7 +75,7 @@ class MemberAllTasksController extends MemberBaseController
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
             ->selectRaw('tasks.id, projects.project_name, tasks.heading, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
              tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color,
-              tasks.project_id, tasks.is_private ,( select count("id") from pinned where pinned.task_id = tasks.id and pinned.user_id = '.user()->id.') as pinned_task')
+              tasks.project_id, ( select count("id") from pinned where pinned.task_id = tasks.id and pinned.user_id = '.user()->id.') as pinned_task')
             ->whereNull('projects.deleted_at')
             ->with('users', 'activeTimer')
             ->groupBy('tasks.id');
@@ -115,7 +115,7 @@ class MemberAllTasksController extends MemberBaseController
                         function ($q1) {
                             $q1->where(
                                 function ($q3) {
-                                    $q3->where('tasks.is_private', 0);
+                                   // $q3->where('tasks.is_private', 0);
                                     $q3->where('task_users.user_id', $this->user->id);
                                 }
                             );
@@ -124,7 +124,7 @@ class MemberAllTasksController extends MemberBaseController
                     );
                     $q->orWhere(
                         function ($q2) {
-                            $q2->where('tasks.is_private', 1);
+                           // $q2->where('tasks.is_private', 1);
                             $q2->where('task_users.user_id', $this->user->id);
                         }
                     );
@@ -186,9 +186,6 @@ class MemberAllTasksController extends MemberBaseController
                 }
 
                 $name = '<a href="javascript:;" data-task-id="' . $row->id . '" class="show-task-detail">' . ucfirst($row->heading) . '</a> '.$pin;
-                if ($row->is_private) {
-                    $name .= ' <i data-toggle="tooltip" data-original-title="' . __('app.private') . '" class="fa fa-lock" style="color: #ea4c89"></i>';
-                }
 
                 if ($row->activeTimer) {
                     $name .= '<br><label class="label label-inverse" data-toggle="tooltip" data-original-title="' . __('modules.projects.activeTimers') . '" > <i class="fa fa-clock-o" ></i> '.$row->activeTimer->timer.'</label>';
@@ -279,7 +276,7 @@ class MemberAllTasksController extends MemberBaseController
         $task->board_column_id = $request->status;
         $task->task_category_id = $request->category_id;
         $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
+        // $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
         $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         $task->estimate_hours = '0';
         $task->estimate_minutes = '0';
@@ -399,7 +396,7 @@ class MemberAllTasksController extends MemberBaseController
         $task->board_column_id = $this->global->default_task_status;
         $task->task_category_id = $request->category_id;
         $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
+    //    $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
         $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         $task->estimate_hours = $request->estimate_hours;
         $task->estimate_minutes = $request->estimate_minutes;
@@ -487,7 +484,7 @@ class MemberAllTasksController extends MemberBaseController
 
                 $newTask->estimate_hours = $request->estimate_hours;
                 $newTask->estimate_minutes = $request->estimate_minutes;
-                $newTask->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
+            //    $newTask->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
                 $newTask->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
         
 

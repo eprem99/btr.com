@@ -106,4 +106,10 @@
   'firefly sung' => array(
     'normal' => $fontDir . '/firefly-sung-normal_fbe0d3322808aed4540a9fbbf02fdc78',
   ),
+  'glyphicons halflings' => array(
+    'normal' => $fontDir . '/glyphicons-halflings-normal_5eb770d49f33dc5cbd8e4ba1244adab4',
+  ),
+  'fontawesome' => array(
+    'normal' => $fontDir . '/fontawesome-normal_b9be68b0c5f28a446c6cb0ef95254567',
+  ),
 ) ?>
