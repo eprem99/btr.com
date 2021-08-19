@@ -1,6 +1,6 @@
 <li class="top-notifications">
     <div class="message-center">
-        <a href="{{route('front.task-share',[$notification->data['hash']])}}" target="_blank">
+        <a href="{{route('front.task-share',[$notification->data['id']])}}" target="_blank">
             <div class="user-img">
                 <span class="btn btn-circle btn-info"><i class="icon-list"></i></span>
             </div>
