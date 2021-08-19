@@ -129,6 +129,13 @@
                 </ul>    
             </li>
 
+            <li><a href="{{ route('client.clients.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> <span class="hide-menu">@lang('app.menu.clients') <span class="fa arrow"></span> </span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="{{ route('client.clients.index') }}">@lang('app.menu.browseclient')</a></li>
+                    <li><a href="{{ route('client.clients.create') }}">@lang('app.menu.newclient')</a></li>
+                </ul>    
+            </li>
+
             @if(in_array('invoices',$modules))
                 <li><a href="{{ route('client.invoices.index') }}" class="waves-effect"><i class="ti-receipt fa-fw"></i> <span class="hide-menu">@lang('app.menu.invoices') </span></a> </li>
                 <li><a href="{{ route('client.credit-notes.index') }}" class="waves-effect"><i class="ti-credit-card fa-fw"></i> <span class="hide-menu">@lang('app.credit-note') </span></a> </li>

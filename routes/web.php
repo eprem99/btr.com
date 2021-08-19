@@ -973,7 +973,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('task-note', 'ClientTaskNoteController');
         // Project section
         Route::get('projects/data', ['uses' => 'ClientProjectsController@data'])->name('projects.data');
+        
         Route::resource('projects', 'ClientProjectsController');
+
+        Route::get('clients/create/{clientID?}', ['uses' => 'ClientClientsController@create'])->name('clients.create');
+       // Route::get('clients/store', ['uses' => 'ClientClientsController@store'])->name('clients.store');
+        Route::resource('clients', 'ClientClientsController', ['except' => ['create']]);
+        
+        Route::resource('clientCategory', 'ClientCategoryController');
 
         Route::group(
             ['prefix' => 'projects'], function () {

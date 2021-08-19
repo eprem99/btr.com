@@ -102,6 +102,8 @@ return array (
     'home' => 'Home',
     'dashboard' => 'Dashboard',
     'clients' => 'Clients',
+    'browseclient' => 'Browse Clients',
+    'newclient' => 'New Client',
     'employees' => 'Techs',
     'projects' => 'Projects',
     'taskCalendar' => 'Work Calendar',

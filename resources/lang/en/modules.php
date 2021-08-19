@@ -133,7 +133,7 @@ return array(
     'assignProject' => 'Assign Project',
     'cell' => 'Cell',
     'officePhoneNumber' => 'Office Phone Number',
-    'clientCategory'=>'Client Category',
+    'clientCategory'=>'Client Company',
     'clientSubCategory' => 'Client Sub Category',
   ),
   'credit-notes' =>
