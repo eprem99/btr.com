@@ -109,30 +109,6 @@
         </div>
         <div class="col-md-12">
             <div class="form-group">
-                <h5>@lang('modules.productCategory.subCategory')</h5>
-                <select class="form-control select2" name="sub_category_id" id="sub_category_id"
-                        data-style="form-control">
-                    <option value="all">@lang('modules.client.all')</option>
-                    @foreach($subcategories as $subcategory)
-                        <option value="{{$subcategory->id}}">{{ $subcategory->category_name }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="form-group">
-                <h5>@lang('modules.logTimeSetting.project')</h5>
-                <select class="form-control select2" name="project_id" id="project_id"
-                        data-style="form-control">
-                    <option value="all">@lang('modules.client.all')</option>
-                    @foreach($projects as $project)
-                        <option value="{{$project->id}}">{{ $project->project_name }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="form-group">
                 <h5>@lang('modules.contracts.contractType')</h5>
                 <select class="form-control select2" name="contract_type_id" id="contract_type_id"
                         data-style="form-control">
@@ -269,9 +245,7 @@
                 var status = $('#status').val();
                 var client = $('#client').val();
                 var category_id = $('#category_id').val();
-                var sub_category_id = $('#sub_category_id').val();
-                var project_id = $('#project_id').val();
-                var contract_type_id = $('#contract_type_id').val();
+                var sub_category_id = $('#state_id').val();
                 var country_id = $('#country_id').val();
 
                 data['startDate'] = startDate;
@@ -279,9 +253,7 @@
                 data['status'] = status;
                 data['client'] = client;
                 data['category_id'] = category_id;
-                data['sub_category_id'] = sub_category_id;
-                data['project_id'] = project_id;
-                data['contract_type_id'] = contract_type_id;
+                data['state_id'] = sub_category_id;
                 data['country_id'] = country_id;
 
             });

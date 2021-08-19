@@ -3,7 +3,7 @@
 namespace App\DataTables\Admin;
 
 use App\DataTables\BaseDataTable;
-use App\Product;
+use App\ClientDetails;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +26,7 @@ class ClientsDataTable extends BaseDataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($row) {
-                if($this->user->can('delete-client')){
+                if(in_array('clients',$this->user->modules)){
                     $action = '<div class="btn-group dropdown m-r-10">
                     <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle waves-effect waves-light" type="button"><i class="fa fa-gears "></i></button>
                     <ul role="menu" class="dropdown-menu pull-right">
@@ -84,11 +84,26 @@ class ClientsDataTable extends BaseDataTable
     public function query(User $model)
     {
         $request = $this->request();
+        
+
+        if(!in_array('clients',$this->user->modules)){
+        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
         $users = User::withoutGlobalScope('active')->join('role_user', 'role_user.user_id', '=', 'users.id')
             ->leftJoin('client_details', 'users.id', '=', 'client_details.user_id')
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
             ->select('users.id', 'users.name', 'users.email', 'users.created_at', 'users.status')
+            ->where('client_details.category_id', '=', $this->clientDetail->category_id)
             ->where('roles.name', 'client');
+        }else{
+            $users = User::withoutGlobalScope('active')
+            ->join('role_user', 'role_user.user_id', '=', 'users.id')
+            ->leftJoin('client_details', 'users.id', '=', 'client_details.user_id')
+            ->join('roles', 'roles.id', '=', 'role_user.role_id')
+            ->select('users.id', 'users.name', 'users.email', 'users.created_at', 'users.status')
+            ->where('roles.name', 'client');  
+        }    
+
+
 
         if ($request->startDate !== null && $request->startDate != 'null' && $request->startDate != '') {
             $startDate = Carbon::createFromFormat($this->global->date_format, $request->startDate)->toDateString();

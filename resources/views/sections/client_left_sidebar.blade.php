@@ -129,7 +129,7 @@
                 </ul>    
             </li>
 
-            <li><a href="{{ route('client.clients.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> <span class="hide-menu">@lang('app.menu.clients') <span class="fa arrow"></span> </span> </a>
+            <li><a href="{{ route('client.clients.index') }}" class="waves-effect"><i class="icon-people fa-fw"></i> <span class="hide-menu">@lang('app.menu.clients') <span class="fa arrow"></span> </span> </a>
                 <ul class="nav nav-second-level">
                     <li><a href="{{ route('client.clients.index') }}">@lang('app.menu.browseclient')</a></li>
                     <li><a href="{{ route('client.clients.create') }}">@lang('app.menu.newclient')</a></li>

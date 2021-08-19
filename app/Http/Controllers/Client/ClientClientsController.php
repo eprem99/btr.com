@@ -32,6 +32,7 @@ class ClientClientsController extends ClientBaseController
         });
     }
 
+
     /**
      * Display a listing of the resource.
      *
@@ -40,10 +41,10 @@ class ClientClientsController extends ClientBaseController
     public function index(ClientsDataTable $dataTable)
     {
         if (!request()->ajax()) {
+            $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
             $this->categories = ClientCategory::all();
-            $this->clients = User::allClients();
+            $this->clients = User::allClients()->where('client_details.category_id', '=', $this->clientDetail->category_id);
             $this->countries = Country::all();
-
             $this->totalClients = count($this->clients);
         }
 

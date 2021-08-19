@@ -91,7 +91,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                <!-- <div class="row">
+                                <div class="row">
                                     <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="">@lang('modules.client.clientCategory')
@@ -109,26 +109,8 @@
                                                 </select>
                                             </div>
                                         </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="">@lang('modules.client.clientSubCategory')
-                                                        <a href="javascript:;" id="addClientSubCategory" class="text-info"><i
-                                                                class="ti-settings text-info"></i> </a>
-                                                </label>
-                                                <select class="select2 form-control" data-placeholder="@lang('modules.client.clientSubCategory')"  id="sub_category_id" name="sub_category_id">
-                                                <option value="">@lang('messages.selectSubCategory')</option>
-                                                @forelse($subcategories as $subcategory)
-                                                <option value="{{ $subcategory->id }}">{{ ucwords($subcategory->category_name) }}</option>
-                                                  @empty
-                                                <option value="">@lang('messages.noCategoryAdded')</option>
-                                                 @endforelse
-                                                    
-                                                </select>
-                                            </div>
-                                        </div>
                                     
-                                </div> -->
+                                </div>
                                 <!--/row-->
 
                                 <div class="row">
@@ -298,26 +280,6 @@
 
 
 <script>
-     var subCategories = @json($subcategories);
-        $('#category_id').change(function (e) {
-            // get projects of selected users
-            var opts = '';
-
-            var subCategory = subCategories.filter(function (item) {
-                return item.category_id == e.target.value
-            });
-            subCategory.forEach(project => {
-                console.log(project);
-            opts += `<option value='${project.id}'>${project.category_name}</option>`
-        })
-
-            $('#sub_category_id').html('<option value="">Select Sub Category...</option>'+opts)
-            $("#sub_category_id").select2({
-                formatNoMatches: function () {
-                    return "{{ __('messages.noRecordFound') }}";
-                }
-            });
-        });
     $(".date-picker").datepicker({
         todayHighlight: true,
         autoclose: true
@@ -367,11 +329,6 @@
     });
     $('#addClientCategory').click(function () {
         var url = '{{ route('admin.clientCategory.create')}}';
-        $('#modelHeading').html('...');
-        $.ajaxModal('#clientCategoryModal', url);
-    })
-    $('#addClientSubCategory').click(function () {
-        var url = '{{ route('admin.clientSubCategory.create')}}';
         $('#modelHeading').html('...');
         $.ajaxModal('#clientCategoryModal', url);
     })

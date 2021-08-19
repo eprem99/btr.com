@@ -65,10 +65,15 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>@lang('modules.stripeCustomerAddress.country')</label>
-                                        <select name="country" class="form-control" id="country">
+                                        <select name="country_id" class="form-control" id="country">
                                             <option value>@lang('app.site.country')</option>
-                                            <option value="1">UNITED STATES</option>
-                                            <option value="2">CANADA</option>
+                                            @foreach ($countries as $item)
+                                                <option
+                                                @if ($item->id == $userDetail->country_id)
+                                                    selected
+                                                @endif
+                                                value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>   
@@ -92,24 +97,14 @@
                             <div class="col-md-4">
                                         <div class="form-group">
                                             <label>@lang('modules.stripeCustomerAddress.postalCode')</label>
-                                            <input type="text" name="postal_code" id="postalCode"  value="{{ $leadDetail->postal_code ?? '' }}"   class="form-control">
+                                            <input type="text" name="postal_code" id="postalCode"  value="{{ $leadDetail->postal_code ?? '' }}"  class="form-control">
                                         </div>
                                     </div>
                                 <!--/span-->                              
                                 <div class="col-md-4">
                                     <label>@lang('app.mobile')</label>
                                     <div class="form-group">
-                                        <select class="select2 phone_country_code form-control" name="phone_code">
-                                            <option value="">--</option>
-                                            @foreach ($countries as $item)
-                                                <option
-                                                @if ($item->id == $userDetail->country_id)
-                                                    selected
-                                                @endif
-                                                value="{{ $item->id }}">+{{ $item->phonecode.' ('.$item->iso.')' }}</option>
-                                            @endforeach
-                                        </select>
-                                        <input type="tel" name="mobile" id="mobile" class="mobile" autocomplete="nope" value="{{ $userDetail->mobile }}">
+                                        <input type="tel" name="mobile" id="mobile"  class="form-control" autocomplete="nope" value="{{ $userDetail->mobile }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">

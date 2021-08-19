@@ -42,10 +42,6 @@
                             <hr>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('modules.client.companyName')</label>
-                                        <input type="text" id="company_name" name="company_name" class="form-control"  value="{{ $clientDetail->company_name ?? '' }}">
-                                    </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-6">
@@ -163,24 +159,6 @@
                                          </select>
                                      </div>
                                 </div> 
-                            <div class="col-md-3">
-                                 <div class="form-group">
-                                     <label for="">@lang('modules.client.clientSubCategory')
-                                     <a href="javascript:;" id="addClientSubCategory" class="text-info"><i
-                                                                class="ti-settings text-info"></i> </a>
-                                    </label>
-                                   
-                                      <select class="select2 form-control" data-placeholder="@lang('modules.client.clientSubCategory')"  id="sub_category_id" name="sub_category_id">
-                                      <option value="">@lang('messages.selectSubCategory')</option>
-                                      @forelse($subcategories as $subcategory)
-                                     
-                                       <option @if( $subcategory->id == $clientDetail->sub_category_id) selected @endif value="{{ $subcategory->id }}">{{ ucwords($subcategory->category_name) }}</option>
-                                         @empty
-                                         <option value="">@lang('messages.noCategoryAdded')</option>
-                                        @endforelse                            
-                                     </select>
-                                   </div>
-                              </div>
                             </div>
 
                             <div class="row">
@@ -391,26 +369,6 @@
 <script src="{{ asset('plugins/bower_components/summernote/dist/summernote.min.js') }}"></script>
 
 <script>
-     var subCategories = @json($subcategories);
-        $('#category_id').change(function (e) {
-            // get projects of selected users
-            var opts = '';
-
-            var subCategory = subCategories.filter(function (item) {
-                return item.category_id == e.target.value
-            });
-            subCategory.forEach(project => {
-                console.log(project);
-            opts += `<option value='${project.id}'>${project.category_name}</option>`
-        })
-
-            $('#sub_category_id').html('<option value="">Select Sub Category...</option>'+opts)
-            $("#sub_category_id").select2({
-                formatNoMatches: function () {
-                    return "{{ __('messages.noRecordFound') }}";
-                }
-            });
-        });
     $(".date-picker").datepicker({
         todayHighlight: true,
         autoclose: true

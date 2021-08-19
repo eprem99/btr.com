@@ -18,8 +18,6 @@ use App\Traits\CurrencyExchange;
 use App\UniversalSearch;
 use App\User;
 use App\ClientCategory;
-use App\ClientSubCategory;
-use App\Contract;
 use App\ContractType;
 use App\Project;
 use Illuminate\Support\Facades\DB;
@@ -52,7 +50,6 @@ class ManageClientsController extends AdminBaseController
     public function index(ClientsDataTable $dataTable)
     {
         if (!request()->ajax()) {
-            $this->subcategories = ClientSubCategory::all();
             $this->categories = ClientCategory::all();
             $this->clients = User::allClients();
             $this->projects = Project::all();
@@ -79,7 +76,6 @@ class ManageClientsController extends AdminBaseController
 
         $client = new ClientDetails();
         $this->categories = ClientCategory::all();
-        $this->subcategories = ClientSubCategory::all();
         $this->fields = $client->getCustomFieldGroupsWithFields()->fields;
 
         if (request()->ajax()) {
@@ -104,7 +100,7 @@ class ManageClientsController extends AdminBaseController
         $data['country_id'] = $request->input('phone_code');
         $data['name'] = $request->input('salutation')." ".$request->input('name');
         $data['category_id'] = $request->input('category_id');
-        $data['sub_category_id'] = $request->input('sub_category_id');
+        $data['state_id'] = $request->input('state_id');
         $user = User::create($data);
         $user->client_details()->create($data);
 
@@ -119,19 +115,19 @@ class ManageClientsController extends AdminBaseController
         cache()->forget('all-clients');
 
         //log search
-        $this->logSearchEntry($user->id, $user->name, 'admin.clients.edit', 'client');
-        $this->logSearchEntry($user->id, $user->email, 'admin.clients.edit', 'client');
-        if (!is_null($user->client_details->company_name)) {
-            $this->logSearchEntry($user->id, $user->client_details->company_name, 'admin.clients.edit', 'client');
-        }
+        // $this->logSearchEntry($user->id, $user->name, 'admin.clients.edit', 'client');
+        // $this->logSearchEntry($user->id, $user->email, 'admin.clients.edit', 'client');
+        // if (!is_null($user->client_details->company_name)) {
+        //     $this->logSearchEntry($user->id, $user->client_details->company_name, 'admin.clients.edit', 'client');
+        // }
 
-        if ($request->has('lead')) {
-            $lead = Lead::findOrFail($request->lead);
-            $lead->client_id = $user->id;
-            $lead->save();
+        // if ($request->has('lead')) {
+        //     $lead = Lead::findOrFail($request->lead);
+        //     $lead->client_id = $user->id;
+        //     $lead->save();
 
-            return Reply::redirect(route('admin.leads.index'), __('messages.leadClientChangeSuccess'));
-        }
+        //     return Reply::redirect(route('admin.leads.index'), __('messages.leadClientChangeSuccess'));
+        // }
 
         if ($request->has('ajax_create')) {
             $teams = User::allClients();
@@ -157,7 +153,6 @@ class ManageClientsController extends AdminBaseController
     public function show($id)
     {
         $this->categories = ClientCategory::all();
-        $this->subcategories = ClientSubCategory::all();
         $this->client = User::withoutGlobalScope('active')->findOrFail($id);
         $this->clientDetail = ClientDetails::where('user_id', '=', $this->client->id)->first();
         $this->clientStats = $this->clientStats($id);
@@ -181,7 +176,6 @@ class ManageClientsController extends AdminBaseController
         $this->clientDetail = ClientDetails::where('user_id', '=', $this->userDetail->id)->first();
         $this->countries = Country::all();
         $this->categories = ClientCategory::all();
-        $this->subcategories = ClientSubCategory::all();
         if (!is_null($this->clientDetail)) {
             $this->clientDetail = $this->clientDetail->withCustomFields();
             $this->fields = $this->clientDetail->getCustomFieldGroupsWithFields()->fields;
@@ -202,7 +196,6 @@ class ManageClientsController extends AdminBaseController
         $data =  $request->all();
 
         unset($data['password']);
-        unset($data['phone_code']);
         if ($request->password != '') {
             $data['password'] = Hash::make($request->input('password'));
         }
@@ -211,7 +204,7 @@ class ManageClientsController extends AdminBaseController
 
         if ($user->client_details) {
             $data['category_id'] = $request->input('category_id');
-             $data['sub_category_id'] = $request->input('sub_category_id');
+             $data['state_id'] = $request->input('state_id');
             $fields = $request->only($user->client_details->getFillable());
             $user->client_details->fill($fields);
             $user->client_details->save();
