@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\TaskLabel\UpdateRequest;
 use App\TaskLabel;
 use App\TaskLabelList;
 use App\User;
+use App\ClientDetails;
 
 class ClientTaskLabelController extends ClientBaseController
 {
@@ -66,9 +67,12 @@ class ClientTaskLabelController extends ClientBaseController
 
     private function storeUpdate($request, $taskLabel)
     {
+        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
         $json = json_encode($request->input());
         $taskLabel->label_name  = $request->label_name;
         $taskLabel->description = $request->description;
+        $taskLabel->company     = $this->clientDetail->category_id;
+        $taskLabel->user_id     = $this->user->id;
         $taskLabel->contacts     = $json;
         $taskLabel->save();
 

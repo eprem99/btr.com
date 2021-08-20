@@ -73,7 +73,7 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-12">
-                    <select class="select2 form-control" data-placeholder="@lang('modules.tasks.assignTo')" id="assignedBY">
+                    <select class="select2 form-control" data-placeholder="@lang('modules.tasks.assignTo')" id="assignedTo">
                         <option value="all">@lang('app.all')</option>
                         @foreach($employees as $employee)
                             <option

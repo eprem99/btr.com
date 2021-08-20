@@ -63,7 +63,7 @@ class ClientBaseController extends Controller
         parent::__construct();
         // Inject currently logged in user object into every view of user dashboard
 
-        $this->companyName = $this->global->company_name;
+      //  $this->companyName = $this->global->company_name;
 
         $this->setFileSystemConfigs();
 

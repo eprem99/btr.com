@@ -26,6 +26,10 @@ class StoreTaskCategory extends CoreRequest
     {
         return [
             'category_name' => 'required|unique:task_category',
+            'category_phone' => 'required',
+            'category_email' => 'required|email',
+            'category_address' => 'required',
+            'category_country' => 'required',
             'category_visibility' => 'unique:task_category'
         ];
     }

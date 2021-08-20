@@ -970,7 +970,6 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::resource('profile', 'ClientProfileController');
        
-        Route::resource('task-note', 'ClientTaskNoteController');
         // Project section
         Route::get('projects/data', ['uses' => 'ClientProjectsController@data'])->name('projects.data');
         
@@ -980,6 +979,10 @@ Route::group(['middleware' => 'auth'], function () {
        // Route::get('clients/store', ['uses' => 'ClientClientsController@store'])->name('clients.store');
         Route::resource('clients', 'ClientClientsController', ['except' => ['create']]);
         
+        Route::get('company/edit', ['uses' => 'ClientCategoryController@edit'])->name('company.edit');
+
+        Route::post('company/update', ['uses' => 'ClientCategoryController@update'])->name('company.update');
+
         Route::resource('clientCategory', 'ClientCategoryController');
 
         Route::group(
@@ -1133,6 +1136,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         //task comments
         Route::resource('task-comment', 'ClientTaskCommentController');
+        //task note
+        Route::resource('task-note', 'ClientTaskNoteController');
 
         //region contracts routes
         Route::get('contracts/data', ['as' => 'contracts.data', 'uses' => 'ClientContractController@data']);

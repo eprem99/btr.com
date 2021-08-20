@@ -4,13 +4,29 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Country;
 use App\ClientCategory;
-use App\ClientSubCategory;
+use App\ClientDetails;
 use App\Helper\Reply;
 use App\Http\Requests\Admin\Client\StoreClientCategory;
 
 class ClientCategoryController extends ClientBaseController
 {
+ 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->pageTitle = 'app.menu.company';
+        $this->pageIcon = 'ti-layout-column3';
+        $this->middleware(function ($request, $next) {
+            if ($this->user->can('add-client')) {
+                abort(403);
+            }
+            return $next($request);
+        });
+    }
+ 
+ 
     /**
      * Display a listing of the resource.
      *
@@ -64,9 +80,12 @@ class ClientCategoryController extends ClientBaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit()
     {
-        //
+        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
+        $this->category = ClientCategory::where('id', '=',$this->clientDetail->category_id)->first();
+        $this->countries = Country::all();
+        return view('client.clients.create_category_edit', $this->data);
     }
 
     /**
@@ -76,21 +95,16 @@ class ClientCategoryController extends ClientBaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreClientCategory $request)
     {
-        //
+        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
+        $id = $this->clientDetail->category_id;
+        $company = ClientCategory::findOrFail($id);
+        $data =  $request->all();
+
+        $company->update($data);
+
+        return Reply::redirect(route('client.company.edit'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        ClientCategory::destroy($id);
-        $categoryData = ClientCategory::all();
-        return Reply::successWithData(__('messages.categoryDeleted'),['data'=> $categoryData]);
-    }
 }

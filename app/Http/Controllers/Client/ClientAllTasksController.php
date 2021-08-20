@@ -20,7 +20,7 @@ use App\Traits\ProjectProgress;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\ClientDetails;
 use App\TaskUser;
 
 
@@ -89,13 +89,15 @@ class ClientAllTasksController extends ClientBaseController
         if (!$this->user->can('edit_tasks') && $this->global->task_self == 'no') {
             abort(403);
         }
+        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
+        $this->clients = User::allClients()->where('client_details.category_id', '=', $this->clientDetail->category_id);
 
         $this->taskBoardColumns = TaskboardColumn::where('role_id', '=', '3')->get();
         $this->wotype = WoType::all();
         $this->sport = SportType::all();
         $this->task = Task::with('label')->findOrFail($id);
         $this->labelIds = $this->task->label->pluck('label_id')->toArray();
-        $this->taskLabels = TaskLabelList::all();
+        $this->taskLabels = TaskLabelList::where('company', '=', $this->clientDetail->category_id)->get();
         if (!$this->user->can('add_tasks') && $this->global->task_self == 'yes') {
             $this->projects = Project::join('project_members', 'project_members.project_id', '=', 'projects.id')
                 ->join('users', 'users.id', '=', 'project_members.user_id')
@@ -219,11 +221,13 @@ class ClientAllTasksController extends ClientBaseController
             $this->projects = Project::allProjects();
         }
 
+        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
+        $this->clients = User::allClients()->where('client_details.category_id', '=', $this->clientDetail->category_id);
         $this->employees = User::allEmployees();
       // $this->employees = User::allClienets();
     //    dd($this->clients);
         $this->categories = TaskCategory::all();
-        $this->taskLabels = TaskLabelList::all();
+        $this->taskLabels = TaskLabelList::where('company', '=', $this->clientDetail->category_id)->get();
         $this->wotype = WoType::all();
         $this->sport = SportType::all();
         $completedTaskColumn = TaskboardColumn::where('slug', '=', 'completed')->first();
@@ -359,10 +363,9 @@ class ClientAllTasksController extends ClientBaseController
 
     public function show($id)
     {
-        $this->task = Task::with('board_column', 'users', 'files', 'comments', 'activeTimer', 'notes', 'labels')
-       // ->join('task_label_list', 'tasks.site_id', 'task_label_list.id')
-        ->findOrFail($id);
-
+        $this->task = Task::with('board_column', 'users', 'files', 'comments', 'notes', 'labels', 'wotype', 'sporttype')->findOrFail($id);
+        $this->clientDetail = User::where('id', '=', $this->task->client_id)->first();
+        $this->sport = SportType::all();
         $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')
             ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id')
             ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id');
@@ -427,18 +430,6 @@ class ClientAllTasksController extends ClientBaseController
         return Reply::dataOnly(['status' => 'success', 'view' => $view]);
     }
 
-    /**
-     * @return mixed
-     */
-    public function pinnedItem()
-    {
-        $this->pinnedItems = Pinned::join('tasks', 'tasks.id', '=', 'pinned.task_id')
-            ->where('pinned.user_id','=',user()->id)
-            ->select('tasks.id', 'heading')
-            ->get();
-
-        return view('client.tasks.pinned-task', $this->data);
-    }
 
     public function ajaxCreate($columnId)
     {

@@ -13,22 +13,25 @@
         <div class="col-xs-12 col-md-9 p-t-20 b-r h-scroll">
 
             <div class="col-xs-12">
+            <a href="{{route('client.all-tasks.edit',$task->id)}}" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right m-l-5"> <i class="fa fa-edit"></i> @lang('app.edit')</a>
                 <a href="javascript:;" id="reminderButton" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right  m-l-5 @if($task->board_column->slug == 'completed') hidden @endif" title="@lang('messages.remindToAssignedEmployee')"><i class="fa fa-bell"></i> @lang('modules.tasks.reminder')</a>
 
             </div>
             <div class="col-xs-12">
-                <h2>
-                     @lang('modules.tasks.wodetails')
-                </h2>
                 <div class="row">
+                <h3>
+                     @lang('modules.tasks.wodetails')
+                </h3>
                     <div class="col-md-6">
                        @if($task->labels->id)<P><strong>Work Order:  </strong>{{ ucwords($task->id) }}</P>@endif
                        @if($task->task_category_id)<p><strong>Project:  </strong>{{ ucwords($task->category->category_name) }}</p>@endif
-                       @if($task->p_order)<p><strong>PO Number:  </strong> {{ ucwords($task->p_order) }}</p>@endif
+                       <!-- @if($task->p_order)<p><strong>PO Number:  </strong> {{ ucwords($task->p_order) }}</p>@endif -->
                        @if($task->start_date)<p><strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}</p>@endif
                        @if($task->heading)<p><strong>Summary:  </strong> {{ ucwords($task->heading) }}</p>@endif
                        @if($task->wotype->name)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
-                       @if($task->users[0]->name)<p><strong>Client:  </strong> {{ ucwords($task->users[0]->name) }}</p>@endif
+                       @if($task->sporttype->name)<p><strong>Sport Type:  </strong> {{ ucwords($task->sporttype->name) }}</p>@endif
+                       @if($task->qty)<p><strong>Surface Quantity: </strong> {{ ucwords($task->qty) }}</p>@endif
+                       @if($task->client_id)<p><strong>Client:  </strong> {{ ucwords($clientDetail->name) }}</p>@endif
                        @if($task->create_by->name)<p><strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}</p>@endif
                     </div>
                     <div class="col-md-6">
@@ -38,16 +41,16 @@
                     @php 
                     $contacts = json_decode($task->labels->contacts, true);
                     @endphp
-                            @if($task->labels->id)<P><strong>Site ID: </strong> {{$task->labels->id}}</P>@endif
-                            @if($task->labels->label_name)<P><strong>Site Name:  </strong> {{$task->labels->label_name}}</p>@endif
-                            @if($task->labels->id)<P><strong>Time Zone:  </strong></p>@endif
-                            @if($contacts['site_address'])<P><strong>Address:  </strong>{{$contacts['site_address']}}</p>@endif
-                       <h3>
-                            @lang('modules.tasks.sitecontacts')
-                       </h3>
-                            @if($contacts['site_pname'])<P><strong>Primary:  </strong> {{ $contacts['site_pname'] }}</p>@endif
-                            @if($contacts['site_pphone'])<P><strong>Phone:  </strong> {{$contacts['site_pphone']}}</p>@endif
-                            @if($contacts['site_pemail'])<P><strong>Email:  </strong> {{$contacts['site_pemail']}}</p>@endif
+                        @if($task->labels->id)<P><strong>Site ID: </strong> {{$task->labels->id}}</P>@endif
+                        @if($task->labels->label_name)<P><strong>Site Name:  </strong> {{$task->labels->label_name}}</p>@endif
+                        @if($task->labels->id)<P><strong>Time Zone:  </strong></p>@endif
+                        @if($contacts['site_address'])<P><strong>Address:  </strong>{{$contacts['site_address']}}</p>@endif
+                    <h3>
+                        @lang('modules.tasks.sitecontacts')
+                    </h3>
+                        @if($contacts['site_pname'])<P><strong>Primary:  </strong> {{ $contacts['site_pname'] }}</p>@endif
+                        @if($contacts['site_pphone'])<P><strong>Phone:  </strong> {{$contacts['site_pphone']}}</p>@endif
+                        @if($contacts['site_pemail'])<P><strong>Email:  </strong> {{$contacts['site_pemail']}}</p>@endif
                     </div>
                 </div>
     
@@ -512,8 +515,8 @@ var myDropzone;
         var id = {{ $task->id }};
         url = url.replace(':id', id);
 
-        $('#subTaskModelHeading').html('Sub Task');
-        $.ajaxModal('#subTaskModal', url);
+       // $('#subTaskModelHeading').html('Sub Task');
+      //  $.ajaxModal('#subTaskModal', url);
     });
 
     function deleteNote (id) {

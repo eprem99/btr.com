@@ -43,36 +43,20 @@ $contacts = json_decode($taskLabel->contacts, true);
                     <div class="panel-body">
                         {!! Form::open(['id'=>'createContract','class'=>'ajax-form','method'=>'PUT']) !!}
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="company_name" class="required">@lang('app.name')</label>
     
                             <input type="text" class="form-control" name="label_name" value="{{ $taskLabel->label_name }}" />
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label for="site_client"> @lang('app.site.client')</label>
-                            <select name="site_client" class="select2 form-control required" id="client">
-                                @foreach($clients as $client)
-                                    @if($client->id == $contacts['site_client'])
-                                        <option selected value="{{$client->id}}">{{$client->name}} </option>
-                                    @else
-                                        <option value="{{$client->id}}">{{$client->name}} </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="site_phone"> @lang('app.site.phone')</label>
+                            <label for="site_phone"  class="required"> @lang('app.site.phone')</label>
                             <input type="text" class="form-control" name="site_phone" value="{{ $contacts['site_phone'] }}" />
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="site_fax"> @lang('app.site.fax')</label>
                             <input type="text" class="form-control" name="site_fax" value="{{ $contacts['site_fax'] }}" />

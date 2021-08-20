@@ -42,7 +42,7 @@
 
                         <div class="form-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">@lang('modules.tasks.taskCategory')
                                             <a href="javascript:;"
@@ -62,7 +62,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label required mb-2"><span>@lang('modules.tasks.site')</span>
                                         <a href="{{ route('client.task-label.create') }}" class="btn btn-xs btn-outline btn-success" style="float:right; margin-left:15px;">
@@ -77,18 +77,28 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 9px;" for="client" class="required"> @lang('app.site.client')</label>
+                                        <select name="client_id" class="select2 form-control" id="client">
+                                            @foreach($clients as $client)
+                                                <option value="{{$client->id}}">{{$client->name}} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('modules.tasks.summary')</label>
                                         <input type="text" id="heading" name="heading" class="form-control" >
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.purchaseorder')</label>
                                         <input type="text" name="task_purchase" class="form-control" >
                                     </div>
-                                </div>
+                                </div> -->
                                 <!--/span-->
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -137,14 +147,10 @@
                                     </div>
                                 </div>
 
-                                @if($user->can('add_tasks'))
                                     <!--/span-->
-
+                                    <input type="hidden" name="user_id[]" value="{{ $user->id }}">
                                     <!--/span-->
-                                @else
-                                <input type="hidden" name="user_id[]" value="{{ $user->id }}">
-                                @endif
-                                <input type="hidden" name="priority" value="medium">
+                               
 
                                 <div class="row m-b-20">
                                     <div class="col-md-12">

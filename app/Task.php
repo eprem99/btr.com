@@ -53,6 +53,11 @@ class Task extends BaseModel
         return $this->belongsTo(WoType::class, 'wo_id');
     }
 
+    public function sporttype()
+    {
+        return $this->belongsTo(sportType::class, 'sport_id');
+    }
+
     public function labels()
     {
         return $this->belongsTo(TaskLabelList::class, 'site_id');
@@ -68,20 +73,12 @@ class Task extends BaseModel
         return $this->belongsTo(TaskCategory::class, 'task_category_id');
     }
 
-    public function subtasks()
-    {
-        return $this->hasMany(SubTask::class, 'task_id');
-    }
 
     public function history()
     {
         return $this->hasMany(TaskHistory::class, 'task_id')->orderBy('id', 'desc');
     }
 
-    public function completedSubtasks()
-    {
-        return $this->hasMany(SubTask::class, 'task_id')->where('sub_tasks.status', 'complete');
-    }
 
     public function incompleteSubtasks()
     {

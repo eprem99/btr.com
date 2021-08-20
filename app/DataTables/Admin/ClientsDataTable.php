@@ -197,7 +197,6 @@ class ClientsDataTable extends BaseDataTable
             __('app.id') => ['data' => 'id', 'name' => 'id', 'visible' => false],
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false],
             __('app.name') => ['data' => 'name', 'name' => 'name'],
-            // __('modules.client.companyName') => ['data' => 'company_name', 'name' => 'client_details.company_name'],
             __('app.email') => ['data' => 'email', 'name' => 'email'],
             __('app.status') => ['data' => 'status', 'name' => 'status'],
             __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at'],

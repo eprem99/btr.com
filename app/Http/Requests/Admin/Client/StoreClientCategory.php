@@ -25,7 +25,11 @@ class StoreClientCategory extends CoreRequest
     public function rules()
     {
         return [
-            'category_name' => 'required'
+            'category_name' => 'required',
+            'category_phone' => 'required',
+            'category_email' => 'required|email',
+            'category_address' => 'required',
+            'category_country' => 'required',
         ];
     }
 }

@@ -8,6 +8,7 @@ use App\TaskLabelList;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Button;
 use App\User;
+use App\ClientDetails;
 
 class LabelDataTable extends BaseDataTable
 {
@@ -37,10 +38,10 @@ class LabelDataTable extends BaseDataTable
             })
 
             ->editColumn('client', function ($row) {
-                if($row->contacts){
-                    $siteid = json_decode($row->contacts, true);
-                    $client = User::allClients()->where('id','=',$siteid['site_client']);
-                        return $siteid['site_client'];
+                if($row->user_id){
+                  //  $siteid = json_decode($row->contacts, true);
+                    $client = User::allClients()->where('id', '=', $row->user_id)->first();
+                        return $client->name;
                 }
                 return '--';
 
@@ -100,8 +101,9 @@ class LabelDataTable extends BaseDataTable
     public function query(TaskLabelList $model)
     {
         $request = $this->request();
+        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
 
-        return $model->select('id','label_name','contacts', 'created_at');
+        return $model->select('id', 'label_name', 'user_id', 'contacts', 'created_at')->where('company', '=', $this->clientDetail->category_id);
     }
 
     /**

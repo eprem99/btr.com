@@ -29,7 +29,7 @@ class UpdateClientRequest extends CoreRequest
             'slack_username' => 'nullable|unique:employee_details,slack_username,'.$this->route('client'),
             'name'  => 'required',
             'website' => 'nullable|url',
-            'phone_code' => 'required_with:mobile',
+         //   'phone_code' => 'required_with:mobile',
         ];
 
         if (request()->get('custom_fields_data')) {

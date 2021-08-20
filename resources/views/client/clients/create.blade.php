@@ -93,7 +93,7 @@
                                 <div class="col-md-4">
                                         <label>@lang('app.mobile')</label>
                                         <div class="form-group">
-                                            <input type="tel" name="mobile" id="mobile"  value="">
+                                            <input type="tel" name="mobile" id="mobile"  value="" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -208,6 +208,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden" name="category_id" value="{{$clientDetail->category_id}}">
                             </div>
                             <div class="form-actions">
                                 <button type="submit" id="save-form" class="btn btn-success"> <i class="fa fa-check"></i> @lang('app.save')</button>

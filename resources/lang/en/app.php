@@ -223,6 +223,7 @@ return array (
     'financeDashboard' => 'Finance Dashboard',
     'expensesRecurring' => 'Recurring Expenses',
     'projectRating' => 'Project Rating',
+    'company' => 'Company'
   ),
   'language' => 'Language',
   'delete' => 'Delete',

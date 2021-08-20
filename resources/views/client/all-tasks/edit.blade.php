@@ -50,7 +50,7 @@
 
                         <div class="form-body">
                             <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">@lang('modules.tasks.taskCategory')
                                         <a href="javascript:;"
@@ -73,7 +73,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label required mb-2"><span>@lang('modules.tasks.site')</span>
                                         <a href="{{ route('client.task-label.create') }}" class="btn btn-xs btn-outline btn-success" style="float:right; margin-left:15px;">
@@ -92,10 +92,30 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 9px;" for="client" class="required"> @lang('app.site.client')</label>
+                                        <select name="client_id" class="select2 form-control" id="client">
+                                            @foreach($clients as $client)
+                                                <option value="{{$client->id}}">{{$client->name}} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.title')</label>
                                         <input type="text" id="heading" name="heading" class="form-control" value="{{ $task->heading }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>@lang('app.status')</label>
+                                        <select name="status" id="status" class="form-control">
+                                            @foreach($taskBoardColumns as $taskBoardColumn)
+                                                <option @if($task->board_column_id == $taskBoardColumn->id) selected @endif value="{{$taskBoardColumn->id}}">{{ $taskBoardColumn->column_name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <!--/span-->
@@ -139,23 +159,13 @@
                                         <input type="text" name="task_qty" class="form-control" value="@if($task->qty){{ $task->qty}}@endif" >
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.purchaseorder')</label>
                                         <input type="text" name="task_purchase" class="form-control" value="@if($task->p_order){{ $task->p_order }}@endif" >
                                     </div>
-                                </div>
+                                </div> -->
                                 <!--/span-->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>@lang('app.status')</label>
-                                        <select name="status" id="status" class="form-control">
-                                            @foreach($taskBoardColumns as $taskBoardColumn)
-                                                <option @if($task->board_column_id == $taskBoardColumn->id) selected @endif value="{{$taskBoardColumn->id}}">{{ $taskBoardColumn->column_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.startDate')</label>

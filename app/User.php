@@ -224,7 +224,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
                     ->join('role_user', 'role_user.user_id', '=', 'users.id')
                     ->join('roles', 'roles.id', '=', 'role_user.role_id')
                     ->join('client_details', 'users.id', '=', 'client_details.user_id')
-                    ->select('users.id', 'users.name', 'users.email', 'users.created_at', 'client_details.company_name', 'users.image', 'users.email_notifications', 'users.mobile', 'users.country_id')
+                    ->select('users.id', 'users.name', 'users.email', 'users.created_at', 'users.image', 'users.email_notifications', 'users.mobile', 'users.country_id')
                     ->where('roles.name', 'client')
                     ->orderBy('users.name', 'asc')
                     ->get();

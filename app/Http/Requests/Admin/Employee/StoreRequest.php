@@ -38,7 +38,7 @@ class StoreRequest extends CoreRequest
             'last_date' => ['nullable', new CheckDateFormat(null,$setting->date_format), new CheckEqualAfterDate('joining_date',$setting->date_format)],
             'department' => 'required',
             'designation' => 'required',
-            'phone_code' => 'required_with:mobile',
+           // 'phone_code' => 'required_with:mobile',
         ];
 
         if (request()->get('custom_fields_data')) {

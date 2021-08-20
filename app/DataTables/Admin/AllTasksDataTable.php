@@ -214,10 +214,6 @@ class AllTasksDataTable extends BaseDataTable
             });
         }
 
-        if ($projectId != 0 && $projectId !=  null && $projectId !=  'all') {
-            $model->where('tasks.project_id', '=', $projectId);
-        }
-
         if ($request->clientID != '' && $request->clientID !=  null && $request->clientID !=  'all') {
             $model->where('projects.client_id', '=', $request->clientID);
         }
@@ -240,9 +236,6 @@ class AllTasksDataTable extends BaseDataTable
 
         if ($request->category_id != '' && $request->category_id !=  null && $request->category_id !=  'all') {
             $model->where('tasks.task_category_id', '=', $request->category_id);
-        }
-        if ($request->billable != '' && $request->billable !=  null && $request->billable !=  'all') {
-            $model->where('tasks.billable', '=', $request->billable);
         }
 
         if ($hideCompleted == '1') {

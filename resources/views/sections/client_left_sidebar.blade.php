@@ -135,6 +135,8 @@
                     <li><a href="{{ route('client.clients.create') }}">@lang('app.menu.newclient')</a></li>
                 </ul>    
             </li>
+            <li><a href="{{ route('client.company.edit') }}"><i class="ti-layout-column3 fa-fw"></i> <span class="hide-menu">@lang('app.menu.company')</span> </a>   
+            </li>
 
             @if(in_array('invoices',$modules))
                 <li><a href="{{ route('client.invoices.index') }}" class="waves-effect"><i class="ti-receipt fa-fw"></i> <span class="hide-menu">@lang('app.menu.invoices') </span></a> </li>

@@ -1213,7 +1213,10 @@ a.mytooltip {
     border: none;
     border-radius: 4px 4px 4px 0 !important;
 }
-
+.dropdown-menu.mailbox {
+    overflow-y: scroll;
+    max-height: 400px;
+}
 .menu-copy-right {
     padding: 10px 20px;
     background: #212732;

@@ -29,7 +29,6 @@ class UpdateProfile extends CoreRequest
             'name'  => 'required',
             'password'  => 'nullable|min:6',
             'image' => 'image|max:2048',
-            'phone_code' => 'required_with:mobile',
         ];
     }
 

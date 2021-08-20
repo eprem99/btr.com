@@ -28,13 +28,13 @@ class StoreRequest extends CoreRequest
         return [
             "label_name" => 'required',
             "site_address" => 'required',
+            "site_phone" => 'required',
             "site_city" => 'required',
             "site_state" => 'required',
             "site_country" => 'required',
-            "site_zip" => 'required',
             "site_pname" => 'required',
             "site_pphone" => 'required',
-            "site_pemail" => 'required',
+            "site_pemail" => 'required|email',
         ];
     }
 }

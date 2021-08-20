@@ -126,7 +126,7 @@ class LeadsDataTable extends BaseDataTable
     public function query(User $model)
     {
         $currentDate = Carbon::now()->format('Y-m-d');
-        $lead = Lead::select('leads.id', 'leads.client_id', 'leads.next_follow_up', 'client_name', 'company_name', 'lead_status.type as statusName', 'status_id','leads.value', 'leads.created_at', 'lead_sources.type as source', 'users.name as agent_name', 'users.image',
+        $lead = Lead::select('leads.id', 'leads.client_id', 'leads.next_follow_up', 'client_name', 'lead_status.type as statusName', 'status_id','leads.value', 'leads.created_at', 'lead_sources.type as source', 'users.name as agent_name', 'users.image',
             \DB::raw("(select next_follow_up_date from lead_follow_up where lead_id = leads.id and leads.next_follow_up  = 'yes' and DATE(next_follow_up_date) >= '{$currentDate}' ORDER BY next_follow_up_date asc limit 1) as next_follow_up_date"))
             ->leftJoin('lead_status', 'lead_status.id', 'leads.status_id')
             ->leftJoin('lead_agents', 'lead_agents.id', 'leads.agent_id')
