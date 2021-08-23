@@ -86,6 +86,23 @@
                 </div>
             </a>
         </div>
+        <div class="col-md-12">
+            <a href="{{ route('client.all-tasks.index') }}">
+                <div class="white-box">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <div>
+                                <span class="bg-info-gradient"><i class="icon-layers"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <span class="widget-title"> @lang('modules.dashboard.totalAllTasks')</span><br>
+                            <span class="counter">{{ $counts->totalAllTasks }}</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
         @endif
                 
         </div>
@@ -103,18 +120,12 @@
                                         class="pull-right"><strong>@lang('app.dueDate')</strong></span>
                             </li>
                             @forelse($pendingTasks as $key=>$task)
-                                @if((!is_null($task->project_id) && !is_null($task->project) ) || is_null($task->project_id))
                                 <li class="list-group-item row" data-role="task">
                                     <div class="col-xs-8">
                                         {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
-                                        @if(!is_null($task->project_id) && !is_null($task->project))
-                                            <a href="{{ route('member.projects.show', $task->project_id) }}"
-                                                class="text-danger">{{ ucwords($task->project->project_name) }}</a>
-                                        @endif
-                                    </div>
+                                                                            </div>
                                     <label class="label label-danger pull-right col-xs-4">{{ $task->due_date->format($global->date_format) }}</label>
                                 </li>
-                                @endif
                             @empty
                                 <li class="list-group-item" data-role="task">
                                     <div  class="text-center">
@@ -181,32 +192,15 @@
 
 <script src="{{ asset('plugins/bower_components/moment/moment.js') }}"></script>
 <script src="{{ asset('js/moment-timezone.js') }}"></script>
-<script src="{{ asset('plugins/bower_components/calendar/jquery-ui.min.js') }}"></script>
-<script src="{{ asset('js/full-calendar/main.min.js') }}"></script>
-<script src="{{ asset('js/full-calendar/locales-all.min.js') }}"></script>
-<script src="{{ asset('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
-
 <script>
 
     $(function () {
         $('.selectpicker').selectpicker();
     });
 
-    var taskEvents = [
-        @foreach($tasks as $task)
-        {
-            id: '{{ ucfirst($task->id) }}',
-            title: '{{ ucfirst($task->heading) }}',
-            start: '{{ $task->start_date->format("Y-m-d") }}',
-            end:  '{{ $task->due_date->format("Y-m-d") }}',
-            color  : '{{ $task->board_column->label_color }}'
-        },
-        @endforeach
-    ];
-
 
     function showNoticeModal(id) {
-        var url = '{{ route('member.notices.show', ':id') }}';
+        var url = '{{ route('client.notices.show', ':id') }}';
         url = url.replace(':id', id);
         $.ajaxModal('#projectTimerModal', url);
     }
@@ -228,9 +222,73 @@
                 }
             });
         })
-     
-        var initialLocaleCode = '{{ $global->locale }}';
-      document.addEventListener('DOMContentLoaded', function() {
+
+</script>
+
+
+<script>
+    jQuery('#date-range').datepicker({
+        toggleActive: true,
+        format: '{{ $global->date_picker_format }}',
+        language: '{{ $global->locale }}',
+        autoclose: true
+    });
+
+    var taskEvents = [
+        @foreach($tasks as $task)
+        {
+            id: '{{ ucfirst($task->id) }}',
+            title: '{{ ucfirst($task->heading) }}',
+            start: '{{ $task->start_date->format("Y-m-d") }}',
+            end:  '{{ $task->due_date->format("Y-m-d") }}',
+            color: '{{ $task->board_column->label_color }}'
+        },
+        @endforeach
+    ];
+
+    // only use for sidebar call method
+    function loadData(){}
+
+    // Task Detail show in sidebar
+    var getEventDetail = function (id) {
+        $(".right-sidebar").slideDown(50).addClass("shw-rside");
+        var url = "{{ route('member.all-tasks.show',':id') }}";
+        url = url.replace(':id', id);
+
+        $.easyAjax({
+            type: 'GET',
+            url: url,
+            success: function (response) {
+                if (response.status == "success") {
+                    $('#right-sidebar-content').html(response.view);
+                }
+
+                $("body").tooltip({
+                    selector: '[data-toggle="tooltip"]'
+                });
+            }
+        });
+    }
+
+    var calendarLocale = '{{ $global->locale }}';
+</script>
+
+<script src="{{ asset('plugins/bower_components/calendar/jquery-ui.min.js') }}"></script>
+<script src="{{ asset('plugins/bower_components/moment/moment.js') }}"></script>
+<script src="{{ asset('js/full-calendar/main.min.js') }}"></script>
+<script src="{{ asset('js/full-calendar/locales-all.min.js') }}"></script>
+<script src="{{ asset('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+<script>
+    jQuery('#date-range').datepicker({
+        toggleActive: true,
+        format: '{{ $global->date_picker_format }}',
+        language: '{{ $global->locale }}',
+        autoclose: true
+    });
+</script>
+<script>
+    var initialLocaleCode = '{{ $global->locale }}';
+    document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
   
       var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -238,7 +296,7 @@
         headerToolbar: {
           left: 'prev,next today',
           center: 'title',
-          right: 'twentydayGridMonth,dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
         // initialDate: '2020-09-12',
         navLinks: true, // can click day/week names to navigate views
@@ -256,14 +314,6 @@
           }
           calendar.unselect()
         },
-        views: {
-            twentydayGridMonth: {
-                type: 'dayGrid',
-                initialView: 'dayline',
-                duration: { month: 12 },
-                buttonText: '12 Months'
-            }
-        },
         eventClick: function(arg) {
             getEventDetail(arg.event.id);
         },
@@ -274,30 +324,6 @@
   
       calendar.render();
     });
-</script>
-
-@if ($attendanceSettings->radius_check == 'yes')
-<script>
-    var currentLatitude = document.getElementById("current-latitude");
-    var currentLongitude = document.getElementById("current-longitude");
-    var x = document.getElementById("current-latitude");
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-           // x.innerHTML = "Geolocation is not supported by this browser.";
-        }
-    }
-
-    function showPosition(position) {
-        // x.innerHTML = "Latitude: " + position.coords.latitude +
-        // "<br>Longitude: " + position.coords.longitude;
-
-        currentLatitude.value = position.coords.latitude;
-        currentLongitude.value = position.coords.longitude;
-    }
-    getLocation();
-</script>
-@endif
+    </script>   
 
 @endpush

@@ -298,7 +298,7 @@ class HomeController extends Controller
 
     public function taskDetail($id)
     {
-        $this->task = Task::with('board_column', 'subtasks', 'project', 'users', 'files')->findOrFail($id);
+        $this->task = Task::with('board_column', 'users', 'files')->findOrFail($id);
         $view = view('task_detail', [
             'task' => $this->task,
             'global' => $this->global,
@@ -363,9 +363,7 @@ class HomeController extends Controller
             $endDate = Carbon::createFromFormat($this->global->date_format, $request->endDate)->toDateString();
 
             $boardColumns = TaskboardColumn::with(['tasks' => function ($q) use ($startDate, $endDate, $request) {
-                $q->with(['subtasks', 'completedSubtasks', 'comments', 'users', 'project'])
-                    ->leftJoin('projects', 'projects.id', '=', 'tasks.project_id')
-                    ->leftJoin('users as client', 'client.id', '=', 'projects.client_id')
+                $q->with(['comments', 'users'])
                     ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
                     ->join('users', 'task_users.user_id', '=', 'users.id')
                     ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
@@ -378,15 +376,7 @@ class HomeController extends Controller
 
                     $task->orWhereBetween(DB::raw('DATE(tasks.`start_date`)'), [$startDate, $endDate]);
                 });
-                $q->whereNull('projects.deleted_at');
 
-                if ($request->projectID != 0 && $request->projectID != null && $request->projectID != 'all') {
-                    $q->where('tasks.project_id', '=', $request->projectID);
-                }
-
-                if ($request->clientID != '' && $request->clientID != null && $request->clientID != 'all') {
-                    $q->where('projects.client_id', '=', $request->clientID);
-                }
 
                 if ($request->assignedTo != '' && $request->assignedTo != null && $request->assignedTo != 'all') {
                     $q->where('task_users.user_id', '=', $request->assignedTo);
@@ -417,14 +407,15 @@ class HomeController extends Controller
     public function taskShare($id)
     {
         $this->pageTitle = 'app.task';
-
-        $this->task = Task::with('board_column', 'subtasks', 'project', 'users')
+        
+        $this->task = Task::with('board_column', 'users')
             ->where('hash', $id)
             ->firstOrFail();
-
+        $this->clientDetail = User::where('id', '=', $this->task->client_id)->first();
         return view('task-share', [
             'task' => $this->task,
-            'global' => $this->global
+            'global' => $this->global,
+            'clientDetail' => $this->clientDetail
         ]);
     }
 

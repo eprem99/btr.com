@@ -13,16 +13,19 @@
         <div class="col-xs-12 col-md-9 p-t-20 b-r h-scroll">
 
             <div class="col-xs-12">
+                <a href="{{route('front.task-share',[$task->hash])}}" target="_blank" data-toggle="tooltip" data-placement="bottom"
+                    data-original-title="@lang('app.share')" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right m-l-5"> <i class="fa fa-share-alt"></i></a>
+
             <a href="{{route('client.all-tasks.edit',$task->id)}}" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right m-l-5"> <i class="fa fa-edit"></i> @lang('app.edit')</a>
                 <a href="javascript:;" id="reminderButton" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right  m-l-5 @if($task->board_column->slug == 'completed') hidden @endif" title="@lang('messages.remindToAssignedEmployee')"><i class="fa fa-bell"></i> @lang('modules.tasks.reminder')</a>
 
             </div>
             <div class="col-xs-12">
                 <div class="row">
-                <h3>
-                     @lang('modules.tasks.wodetails')
-                </h3>
                     <div class="col-md-6">
+                        <h3>
+                            @lang('modules.tasks.wodetails')
+                       </h3>
                        @if($task->labels->id)<P><strong>Work Order:  </strong>{{ ucwords($task->id) }}</P>@endif
                        @if($task->task_category_id)<p><strong>Project:  </strong>{{ ucwords($task->category->category_name) }}</p>@endif
                        <!-- @if($task->p_order)<p><strong>PO Number:  </strong> {{ ucwords($task->p_order) }}</p>@endif -->
@@ -320,7 +323,8 @@
                 @if($task->create_by)
                     <div class="col-xs-12">
                         <label class="font-12" for="">@lang('modules.tasks.assignBy')</label><br>
-                        <img src="{{ $task->create_by->image_url }}" class="img-circle" width="35" height="35" alt="">
+                        <img src="{{ $task->create_by->image_url }}" data-toggle="tooltip"
+                        data-original-title="{{ ucwords($task->create_by->name) }}" data-placement="right" class="img-circle" width="35" height="35" alt="">
                         {{ ucwords($task->create_by->name) }}
                         <hr>
                     </div>
@@ -364,14 +368,7 @@
 <script>
 
 var myDropzone;
-    $('body').on('click', '.edit-sub-task', function () {
-        var id = $(this).data('sub-task-id');
-        var url = '{{ route('admin.sub-task.edit', ':id')}}';
-        url = url.replace(':id', id);
 
-        $('#subTaskModelHeading').html('Sub Task');
-        $.ajaxModal('#subTaskModal', url);
-    })
 
     Dropzone.autoDiscover = false;
     //Dropzone class
@@ -536,88 +533,6 @@ var myDropzone;
         })
     }
 
-    //    change task status
-    function markComplete(status) {
-
-        var id = '{{ $task->id }}';
-
-        if(status == 'completed'){
-            var checkUrl = '{{route('client.tasks.checkTask', ':id')}}';
-            checkUrl = checkUrl.replace(':id', id);
-            $.easyAjax({
-                url: checkUrl,
-                type: "GET",
-                container: '#task-list-panel',
-                data: {},
-                success: function (data) {
-                    if(data.taskCount > 0){
-                        swal({
-                            title: "Are you sure?",
-                            text: "There is a incomplete sub-task in this task do you want to mark complete!",
-                            dangerMode: true,
-                            icon: 'warning',
-                            buttons: {
-                                cancel: "No, cancel please!",
-                                confirm: {
-                                    text: "Yes, complete it!",
-                                    value: true,
-                                    visible: true,
-                                    className: "danger",
-                                }
-                            }
-                        }).then(function (isConfirm) {
-                            if (isConfirm) {
-                                updateTask(id,status)
-                            }
-                        });
-                    }
-                    else{
-                        updateTask(id,status)
-                    }
-
-                }
-            });
-        }
-        else{
-            updateTask(id,status)
-        }
-
-
-    }
-
-    // Update Task
-    function updateTask(id,status){
-        var url = "{{route('client.tasks.changeStatus')}}";
-        var token = "{{ csrf_token() }}";
-        $.easyAjax({
-            url: url,
-            type: "POST",
-            async: false,
-            data: {'_token': token, taskId: id, status: status, sortBy: 'id'},
-            success: function (data) {
-                $('#columnStatusColor').css('background-color', data.textColor);
-                $('#columnStatus').html(data.column);
-                if(status == 'completed'){
-
-                    $('#inCompletedButton').removeClass('hidden');
-                    $('#completedButton').addClass('hidden');
-                    $('#reminderButton').addClass('hidden');
-                }
-                else{
-                    $('#completedButton').removeClass('hidden');
-                    $('#inCompletedButton').addClass('hidden');
-                    $('#reminderButton').removeClass('hidden');
-                }
-
-                if( typeof table !== 'undefined'){
-                    window.LaravelDataTables["allTasks-table"].draw();
-                }
-                else if (typeof showTable === "function") {
-                    showTable();
-                }
-            }
-        })
-    }
 
     function refreshTask(taskId) {
         var id = taskId;

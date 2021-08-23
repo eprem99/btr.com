@@ -97,7 +97,7 @@
                             <div class="row">
                                 <div class="col-xs-3">
                                     <div>
-                                        <span class="bg-success-gradient"><i class="ti-check-box"></i></span>
+                                        <span class="bg-info-gradient"><i class="icon-layers"></i></span>
                                     </div>
                                 </div>
                                 <div class="col-xs-9 text-right">
@@ -200,146 +200,9 @@
         </div>
         @endif
 
-        @if(in_array('employees',$modules))
-        <div class="col-md-6">
-            <div class="panel panel-inverse">
-                <div class="panel-heading">@lang('modules.dashboard.userActivityTimeline')</div>
-                <div class="panel-wrapper collapse in">
-                    <div class="panel-body">
-                        <div class="steamline">
-                            @forelse($userActivities as $key=>$activity)
-                                <div class="sl-item">
-                                    <div class="sl-left">
-                                        <img src="{{ $activity->user->image_url }}" width="40" height="40" alt="user" class="img-circle">
-                                    </div>
-                                    <div class="sl-right">
-                                        <div class="m-l-40">
-                                            @if($user->can('view_employees'))
-                                                <a href="{{ route('member.employees.show', $activity->user_id) }}" class="text-success">{{ ucwords($activity->user->name) }}</a>
-                                            @else
-                                                {{ ucwords($activity->user->name) }}
-                                            @endif
-                                            <span  class="sl-date">{{ $activity->created_at->timezone($global->timezone)->diffForHumans() }}</span>
-                                            <p>{!! ucfirst($activity->activity) !!}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if(count($userActivities) > ($key+1))
-                                    <hr>
-                                @endif
-                            @empty
-                                <div class="text-center">
-                                    <div class="empty-space" style="height: 200px;">
-                                        <div class="empty-space-inner">
-                                            <div class="icon" style="font-size:20px"><i
-                                                        class="fa fa-history"></i>
-                                            </div>
-                                            <div class="title m-b-15">@lang("messages.noActivityByThisUser")
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            @endforelse
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endif
-
-
-
     </div>
 </div>
 
-{{--Timer Modal--}}
-<div class="modal fade bs-modal-lg in" id="projectTimerModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" id="modal-data-application">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <span class="caption-subject font-red-sunglo bold uppercase" id="modelHeading"></span>
-            </div>
-            <div class="modal-body">
-                Loading...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn blue">Save changes</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-{{--Timer Modal Ends--}}
-
-{{--Ajax Modal--}}
-<div class="modal fade bs-modal-md in"  id="subTaskModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md" id="modal-data-application">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <span class="caption-subject font-red-sunglo bold uppercase" id="subTaskModelHeading">Sub Task e</span>
-            </div>
-            <div class="modal-body">
-                Loading...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn blue">Save changes</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->.
-</div>
-{{--Ajax Modal Ends--}}
-
- {{--Ajax Modal--}}
-    <div class="modal fade bs-modal-md in" id="eventDetailModal" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-md" id="modal-data-application">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <span class="caption-subject font-red-sunglo bold uppercase" id="modelHeading"></span>
-                </div>
-                <div class="modal-body">
-                    Loading...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn blue">Save changes</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    {{--Ajax Modal Ends--}}
-    {{--Ajax Modal--}}
-    <div class="modal fade bs-modal-md in"  id="subTaskModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md" id="modal-data-application">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <span class="caption-subject font-red-sunglo bold uppercase" id="subTaskModelHeading">Sub Task e</span>
-                </div>
-                <div class="modal-body">
-                    Loading...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn blue">Save changes</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->.
-    </div>
-    {{--Ajax Modal Ends--}}
 @endsection
 
 @push('footer-script')
@@ -395,7 +258,7 @@
             title: '{{ ucfirst($task->heading) }}',
             start: '{{ $task->start_date->format("Y-m-d") }}',
             end:  '{{ $task->due_date->format("Y-m-d") }}',
-            color  : '{{ $task->board_column->label_color }}'
+            color: '{{ $task->board_column->label_color }}'
         },
         @endforeach
     ];

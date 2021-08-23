@@ -13,6 +13,8 @@
         <div class="col-xs-12 col-md-9 p-t-20 b-r h-scroll">
 
             <div class="col-xs-12">
+                <a href="{{route('front.task-share',[$task->hash])}}" target="_blank" data-toggle="tooltip" data-placement="bottom"
+                    data-original-title="@lang('app.share')" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right m-l-5"> <i class="fa fa-share-alt"></i></a>
                 <a href="javascript:;" id="reminderButton" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right  m-l-5 @if($task->board_column->slug == 'completed') hidden @endif" title="@lang('messages.remindToAssignedEmployee')"><i class="fa fa-bell"></i> @lang('modules.tasks.reminder')</a>
             </div>
             <div class="col-xs-12">
@@ -103,39 +105,6 @@
                             </div>
                         </div>
                      
-                        {{--Custom fields data--}}
-                        @if(isset($fields) && count($fields) > 0)
-                        <div class="row m-t-10">
-                            @foreach($fields as $field)
-                                <div class="col-md-3">
-                                    <label class="font-12" for="">{{ ucfirst($field->label) }}</label><br>
-                                    <p class="text-muted">
-                                        @if( $field->type == 'text')
-                                            {{$task->custom_fields_data['field_'.$field->id] ?? '-'}}
-                                        @elseif($field->type == 'password')
-                                            {{$task->custom_fields_data['field_'.$field->id] ?? '-'}}
-                                        @elseif($field->type == 'number')
-                                            {{$task->custom_fields_data['field_'.$field->id] ?? '-'}}
-        
-                                        @elseif($field->type == 'textarea')
-                                            {{$task->custom_fields_data['field_'.$field->id] ?? '-'}}
-        
-                                        @elseif($field->type == 'radio')
-                                            {{ !is_null($task->custom_fields_data['field_'.$field->id]) ? $task->custom_fields_data['field_'.$field->id] : '-' }}
-                                        @elseif($field->type == 'select')
-                                            {{ (!is_null($task->custom_fields_data['field_'.$field->id]) && $task->custom_fields_data['field_'.$field->id] != '') ? $field->values[$task->custom_fields_data['field_'.$field->id]] : '-' }}
-                                        @elseif($field->type == 'checkbox')
-                                            {{ !is_null($task->custom_fields_data['field_'.$field->id]) ? $field->values[$task->custom_fields_data['field_'.$field->id]] : '-' }}
-                                        @elseif($field->type == 'date')
-                                            {{ !is_null($task->custom_fields_data['field_'.$field->id]) ? \Carbon\Carbon::parse($task->custom_fields_data['field_'.$field->id])->format($global->date_format) : '--'}}
-                                        @endif
-                                    </p>
-        
-                                </div>
-                            @endforeach
-                        </div>
-                        @endif
-                        {{--custom fields data end--}}
                         
                         <div class="row">
                             <div class="col-xs-12 col-md-12 m-t-10">
@@ -218,11 +187,8 @@
                                     <div class="col-xs-12 m-b-5">
                                         <span class="font-semi-bold">{{ ucwords($comment->user->name) }}</span> <span class="text-muted font-12">{{ ucfirst($comment->created_at->diffForHumans()) }}</span>
                                     </div>
-                                    <div class="col-xs-10">
+                                    <div class="col-xs-12">
                                         {!! ucfirst($comment->comment)  !!}
-                                    </div>
-                                    <div class="col-xs-2 text-right">
-                                        <a href="javascript:;" data-comment-id="{{ $comment->id }}" class="btn btn-xs  btn-outline btn-default" onclick="deleteComment('{{ $comment->id }}');return false;"><i class="fa fa-trash"></i> @lang('app.delete')</a>
                                     </div>
                                 </div>
                             @empty
@@ -252,11 +218,8 @@
                                     <div class="col-xs-12 m-b-5">
                                         <span class="font-semi-bold">{{ ucwords($note->user->name) }}</span> <span class="text-muted font-12">{{ ucfirst($note->created_at->diffForHumans()) }}</span>
                                     </div>
-                                    <div class="col-xs-10">
+                                    <div class="col-xs-12">
                                         {!! ucfirst($note->note)  !!}
-                                    </div>
-                                    <div class="col-xs-2 text-right">
-                                        <a href="javascript:;" data-comment-id="{{ $note->id }}" class="btn btn-xs  btn-outline btn-default" onclick="deleteNote('{{ $note->id }}');return false;"><i class="fa fa-trash"></i> @lang('app.delete')</a>
                                     </div>
                                 </div>
                             @empty
@@ -362,14 +325,6 @@
 <script>
 
 var myDropzone;
-    $('body').on('click', '.edit-sub-task', function () {
-        var id = $(this).data('sub-task-id');
-        var url = '{{ route('admin.sub-task.edit', ':id')}}';
-        url = url.replace(':id', id);
-
-        $('#subTaskModelHeading').html('Sub Task');
-        $.ajaxModal('#subTaskModal', url);
-    })
 
     Dropzone.autoDiscover = false;
     //Dropzone class
@@ -517,71 +472,6 @@ var myDropzone;
       //  $.ajaxModal('#subTaskModal', url);
     });
 
-    function deleteNote (id) {
-
-        var url = '{{ route("member.task-note.destroy", ':id') }}';
-        url = url.replace(':id', id);
-
-        $.easyAjax({
-            url: url,
-            type: "POST",
-            data: {'_token': '{{ csrf_token() }}', '_method': 'DELETE'},
-            success: function (response) {
-                if (response.status == "success") {
-                    $('#note-list').html(response.view);
-                }
-            }
-        })
-    }
-
-    //    change task status
-    function markComplete(status) {
-
-        var id = '{{ $task->id }}';
-
-        if(status == 'completed'){
-            var checkUrl = '{{route('member.tasks.checkTask', ':id')}}';
-            checkUrl = checkUrl.replace(':id', id);
-            $.easyAjax({
-                url: checkUrl,
-                type: "GET",
-                container: '#task-list-panel',
-                data: {},
-                success: function (data) {
-                    if(data.taskCount > 0){
-                        swal({
-                            title: "Are you sure?",
-                            text: "There is a incomplete sub-task in this task do you want to mark complete!",
-                            dangerMode: true,
-                            icon: 'warning',
-                            buttons: {
-                                cancel: "No, cancel please!",
-                                confirm: {
-                                    text: "Yes, complete it!",
-                                    value: true,
-                                    visible: true,
-                                    className: "danger",
-                                }
-                            }
-                        }).then(function (isConfirm) {
-                            if (isConfirm) {
-                                updateTask(id,status)
-                            }
-                        });
-                    }
-                    else{
-                        updateTask(id,status)
-                    }
-
-                }
-            });
-        }
-        else{
-            updateTask(id,status)
-        }
-
-
-    }
 
 
     function refreshTask(taskId) {
@@ -600,46 +490,5 @@ var myDropzone;
         });
     }
 
-</script>
-<script>
-    $('body').on('click', '.file-delete', function () {
-        var id = $(this).data('file-id');
-        swal({
-            title: "Are you sure?",
-            text: "You will not be able to recover the deleted file!",
-            dangerMode: true,
-            icon: 'warning',
-            buttons: {
-                cancel: "No, cancel please!",
-                confirm: {
-                    text: "Yes, delete it!",
-                    value: true,
-                    visible: true,
-                    className: "danger",
-                }
-            }
-        }).then(function (isConfirm) {
-            if (isConfirm) {
-
-                var url = "{{ route('member.task-files.destroy',':id') }}";
-                url = url.replace(':id', id);
-
-                var token = "{{ csrf_token() }}";
-
-                $.easyAjax({
-                    type: 'POST',
-                    url: url,
-                    data: {'_token': token, '_method': 'DELETE'},
-                    success: function (response) {
-                        if (response.status == "success") {
-                            $('#task-file-'+id).remove();
-                            $('#totalUploadedFiles').html(response.totalFiles);
-                            $('#list ul.list-group').html(response.html);
-                        }
-                    }
-                });
-            }
-        });
-    });
 </script>
 

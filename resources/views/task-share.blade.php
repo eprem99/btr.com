@@ -112,34 +112,49 @@
 
                                 <div class="row">
                                     <div class="col-xs-6 col-md-9 p-t-20 b-r h-scroll">
-
+                          
                                         <div class="col-xs-12">
-                                            <h4>
-                                                {{ ucwords($task->heading) }}
-                                            </h4>
-                                            @if(!is_null($task->project_id))
-                                                <p><i class="icon-layers"></i> {{ ucfirst($task->project->project_name) }}</p>
-                                            @endif
-
-                                            <h5>
-                                                @if($task->task_category_id)
-                                                    <label class="label label-default text-dark font-light">{{ ucwords($task->category->category_name) }}</label>
-                                                @endif
-                            
-                                                <label class="font-light label
-                                                @if($task->priority == 'high')
-                                                        label-danger
-                                                @elseif($task->priority == 'medium') label-warning @else label-success @endif
-                                                        ">
-                                                    <span class="text-dark">@lang('modules.tasks.priority') ></span>  {{ ucfirst($task->priority) }}
-                                                </label>
-                                            </h5>
-                            
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h3>
+                                                        @lang('modules.tasks.wodetails')
+                                                   </h3>
+                                                    @if($task->labels->id)<P><strong>Work Order:  </strong>{{ ucwords($task->id) }}</P>@endif
+                                                   @if($task->task_category_id)<p><strong>Project:  </strong>{{ ucwords($task->category->category_name) }}</p>@endif
+                                                   <!-- @if($task->p_order)<p><strong>PO Number:  </strong> {{ ucwords($task->p_order) }}</p>@endif -->
+                                                   @if($task->start_date)<p><strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}</p>@endif
+                                                   @if($task->heading)<p><strong>Summary:  </strong> {{ ucwords($task->heading) }}</p>@endif
+                                                   @if($task->wotype)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
+                                                   @if($task->sporttype)<p><strong>Sport Type:  </strong> {{ ucwords($task->sporttype->name) }}</p>@endif
+                                                   @if($task->qty)<p><strong>Surface Quantity: </strong> {{ ucwords($task->qty) }}</p>@endif
+                                                   @if($task->client_id)<p><strong>Client:  </strong> {{ ucwords($clientDetail->name) }}</p>@endif
+                                                   @if($task->create_by)<p><strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}</p>@endif
+                                                </div>
+                                                <div class="col-md-6">
+                                                <h3>
+                                                     @lang('modules.tasks.siteinfo')
+                                                </h3>
+                                                @php 
+                                                $contacts = json_decode($task->labels->contacts, true);
+                                                @endphp
+                                                    @if($task->labels->id)<P><strong>Site ID: </strong> {{$task->labels->id}}</P>@endif
+                                                    @if($task->labels->label_name)<P><strong>Site Name:  </strong> {{$task->labels->label_name}}</p>@endif
+                                                    @if($task->labels->id)<P><strong>Time Zone:  </strong></p>@endif
+                                                    @if($contacts['site_address'])<P><strong>Address:  </strong>{{$contacts['site_address']}}</p>@endif
+                                                <h3>
+                                                    @lang('modules.tasks.sitecontacts')
+                                                </h3>
+                                                    @if($contacts['site_pname'])<P><strong>Primary:  </strong> {{ $contacts['site_pname'] }}</p>@endif
+                                                    @if($contacts['site_pphone'])<P><strong>Phone:  </strong> {{$contacts['site_pphone']}}</p>@endif
+                                                    @if($contacts['site_pemail'])<P><strong>Email:  </strong> {{$contacts['site_pemail']}}</p>@endif
+                                                </div>
+                                            </div>
+                                
                                         </div>
-                            
+
+
                                         <ul class="nav customtab nav-tabs" role="tablist">
                                             <li role="presentation" class="active"><a href="#home1" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">@lang('app.task')</a></li>
-                                            <li role="presentation" class=""><a href="#profile1" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false">@lang('modules.tasks.subTask')({{ count($task->subtasks) }})</a></li>
                                             <li role="presentation" class=""><a href="#messages1" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false">@lang('app.file') ({{ sizeof($task->files) }})</a></li>
                                             <li role="presentation" class=""><a href="#settings1" aria-controls="settings" role="tab" data-toggle="tab" aria-expanded="false">@lang('modules.tasks.comment') ({{ count($task->comments) }})</a></li>
                             
@@ -159,34 +174,7 @@
                                                 </div>
                                             </div>
                             
-                                            <div role="tabpanel" class="tab-pane" id="profile1">
-                                                <div class="col-xs-12">
-                                                    <h4><i class="ti-check-box"></i> @lang('modules.tasks.subTask')
-                                                        @if (count($task->subtasks) > 0)
-                                                            <span class="pull-right"><span class="donut" data-peity='{ "fill": ["#00c292", "#eeeeee"],    "innerRadius": 5, "radius": 8 }'>{{ count($task->completedSubtasks) }}/{{ count($task->subtasks) }}</span> <span class="text-muted font-12">{{ floor((count($task->completedSubtasks)/count($task->subtasks))*100) }}%</span></span>
-                                                        @endif
-                                                    </h4>
-                                                    <ul class="list-group" id="sub-task-list">
-                                                        @foreach($task->subtasks as $subtask)
-                                                            <li class="list-group-item row">
-                                                                <div class="col-xs-12">
-                                                                    <div>
-                                                                        @if ($subtask->status != 'complete')
-                                                                            {{ ucfirst($subtask->title) }}
-                                                                        @else
-                                                                            <span style="text-decoration: line-through;">{{ ucfirst($subtask->title) }}</span>
-                                                                        @endif
-                                                                    </div>
-                                                                    @if($subtask->due_date)<span class="text-muted m-l-5 font-12"> - @lang('modules.invoices.due'): {{ $subtask->due_date->format($global->date_format) }}</span>@endif
-                                                                </div>
-                            
-                            
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                            </div>
-                            
+                           
                                             <div role="tabpanel" class="tab-pane" id="messages1">
                                                 <div class="col-xs-12">
                                                     <ul class="list-group" id="files-list">
@@ -265,7 +253,6 @@
                             
                                         <div class="row">
                                             <div class="col-xs-12 p-10 p-t-20 ">
-                                                <label class="font-12" for="">@lang('app.status')</label><br>
                                                 <span id="columnStatusColor" style="width: 15px; height: 15px; background-color: {{ $task->board_column->label_color }}" class="btn btn-small btn-circle">&nbsp;</span> <span id="columnStatus">{{ $task->board_column->column_name }}</span>
                                             </div>
                             
@@ -274,17 +261,22 @@
                             
                                                 <label class="font-12" for="">@lang('modules.tasks.assignTo')</label><br>
                                                 @foreach ($task->users as $item)
-                                                    <img src="{{ $item->image_url }}" data-toggle="tooltip"
-                                                         data-original-title="{{ ucwords($item->name) }}" data-placement="right"
-                                                         class="img-circle" width="35" height="35" alt="">
+                                                    
+                                                        <img src="{{ $item->image_url }}" data-toggle="tooltip"
+                                                            data-original-title="{{ ucwords($item->name) }}" data-placement="right"
+                                                            class="img-circle" width="35" height="35" alt="">
+                                                            {{ ucwords($item->name) }}
+                                                            @if($item->mobile)<P><strong>Phone: </strong> {{$item->mobile}}</P>@endif
+                            
+                                                   
                                                 @endforeach
                                                 <hr>
                                             </div>
                                             @if($task->create_by)
                                                 <div class="col-xs-12">
                                                     <label class="font-12" for="">@lang('modules.tasks.assignBy')</label><br>
-                                                    <img src="{{ $task->create_by->image_url }}" class="img-circle" width="35" height="35" alt="">
-                            
+                                                    <img src="{{ $task->create_by->image_url }}" data-toggle="tooltip"
+                                                    data-original-title="{{ ucwords($task->create_by->name) }}" data-placement="right" class="img-circle" width="35" height="35" alt="">
                                                     {{ ucwords($task->create_by->name) }}
                                                     <hr>
                                                 </div>
@@ -305,18 +297,6 @@
                                                 </span>
                                                 <hr>
                                             </div>
-                            
-                                            @if(sizeof($task->label))
-                                                <div class="col-xs-12">
-                                                    <label class="font-12" for="">@lang('app.label')</label><br>
-                                                    <span>
-                                                        @foreach($task->label as $key => $label)
-                                                            <label class="badge text-capitalize font-semi-bold" style="background:{{ $label->label->label_color }}">{{ ucwords($label->label->label_name) }} </label>
-                                                        @endforeach
-                                                    </span>
-                                                    <hr>
-                                                </div>
-                                            @endif
                             
                                         </div>
                             

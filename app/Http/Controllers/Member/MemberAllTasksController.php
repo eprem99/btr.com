@@ -186,13 +186,7 @@ class MemberAllTasksController extends MemberBaseController
             })
             ->editColumn('board_column', function ($row) use ($taskBoardColumns) {
                 $status = '<div class="btn-group dropdown">';
-                $status .= '<button aria-expanded="true" data-toggle="dropdown" class="btn dropdown-toggle waves-effect waves-light btn-xs"  style="border-color: ' . $row->label_color . '; color: ' . $row->label_color . '" type="button">' . $row->board_column . ' <span class="caret"></span></button>';
-                $status .= '<ul role="menu" class="dropdown-menu pull-right">';
-                foreach ($taskBoardColumns as $key => $value) {
-                    $status .= '<li><a href="javascript:;" data-task-id="' . $row->id . '" class="change-status" data-status="' . $value->slug . '">' . $value->column_name . '  <span style="width: 15px; height: 15px; border-color: ' . $value->label_color . '; background: ' . $value->label_color . '"
-                    class="btn btn-warning btn-small btn-circle">&nbsp;</span></a></li>';
-                }
-                $status .= '</ul>';
+                $status .= '<button aria-expanded="true" data-toggle="dropdown" class="btn dropdown-toggle waves-effect waves-light btn-xs"  style="border-color: ' . $row->label_color . '; color: ' . $row->label_color . '" type="button">' . $row->board_column . '</button>';
                 $status .= '</div>';
                 return $status;
             })
