@@ -7,6 +7,14 @@
             <h4 class="page-title"><i class="{{ $pageIcon }}"></i> @lang($pageTitle)</h4>
         </div>
         <!-- /.page title -->
+        <!-- .breadcrumb -->
+        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
+            <ol class="breadcrumb">
+                <li><a href="{{ route('member.dashboard') }}">@lang('app.menu.home')</a></li>
+                <li class="active">@lang($pageTitle)</li>
+            </ol>
+        </div>
+        <!-- /.breadcrumb -->
     </div>
 @endsection
 
@@ -40,36 +48,16 @@
             </div>
         </div>
     </div>
-
     <div class="col-md-12">
-        <h5 class="box-title">@lang('app.selectProject')</h5>
+        <h5 class="box-title">@lang('app.select') @lang('modules.tasks.site')</h5>
 
         <div class="form-group">
             <div class="row">
                 <div class="col-md-12">
-                    <select class="select2 form-control" data-placeholder="@lang('app.selectProject')" id="project_id">
+                    <select class="select2 form-control" data-placeholder="@lang('modules.tasks.site')" id="label">
                         <option value="all">@lang('app.all')</option>
-                        @foreach($projects as $project)
-                            <option
-                                    value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-12">
-        <h5 class="box-title">@lang('app.select') @lang('modules.tasks.assignTo')</h5>
-
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-12">
-                    <select class="select2 form-control" data-placeholder="@lang('modules.tasks.assignTo')" id="assignedTo">
-                        <option value="all">@lang('app.all')</option>
-                        @foreach($employees as $employee)
-                            <option
-                                    value="{{ $employee->id }}">{{ ucwords($employee->name) }}</option>
+                        @foreach($taskLabels as $label)
+                            <option value="{{ $label->id }}">{{ ucwords($label->label_name) }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -84,7 +72,7 @@
                 <div class="col-md-12">
                     <select class="select2 form-control" data-placeholder="@lang('modules.tasks.assignBy')" id="assignedBY">
                         <option value="all">@lang('app.all')</option>
-                        @foreach($employees as $employee)
+                        @foreach($clients as $employee)
                             <option
                                     value="{{ $employee->id }}">{{ ucwords($employee->name) }}</option>
                         @endforeach
@@ -109,16 +97,6 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12">
-                <div class="form-group">
-                    <h5 class="box-title">@lang('app.billableTask')</h5>
-                    <select class="form-control select2" name="billable" id="billable" data-style="form-control">
-                        <option value="all">@lang('modules.client.all')</option>
-                        <option value="1">@lang('app.yes')</option>
-                        <option value="0">@lang('app.no')</option>
-                    </select>
-                </div>
-            </div>
     <div class="col-md-12">
         <div class="checkbox checkbox-info">
             <input type="checkbox" checked id="hide-completed-tasks">
@@ -150,11 +128,13 @@
                         <tr>
                             <th>#</th>
                             <th>@lang('app.task')</th>
+                            <th>@lang('modules.tasks.site')</th>
+                            <th>@lang('modules.tasks.siteid')</th>
                             <th>@lang('modules.tasks.assignTo')</th>
                             {{-- <th>@lang('modules.tasks.assignBy')</th> --}}
                             <th>@lang('app.dueDate')</th>
                             <th>@lang('app.status')</th>
-
+                            
                         </tr>
                         </thead>
                     </table>
@@ -256,15 +236,11 @@
             endDate = null;
         }
 
-        var projectID = $('#project_id').val();
-        if (!projectID) {
-            projectID = 0;
-        }
 
         var assignedBY = $('#assignedBY').val();
-        var assignedTo = $('#assignedTo').val();
         var status = $('#status').val();
-        var billable = $('#billable').val();
+        var label = $('#label').val();
+        var category_id = $('#category_id').val();
 
 
         if ($('#hide-completed-tasks').is(':checked')) {
@@ -273,12 +249,11 @@
             var hideCompleted = '0';
         }
 
-        var url = '{!!  route('member.all-tasks.data') !!}?&assignedBY='+ assignedBY+'&assignedTo='+ assignedTo+'&status='+ status+'&billable='+billable+'&_token={{ csrf_token() }}';
+        var url = '{!!  route('member.all-tasks.data') !!}?&assignedBY='+ assignedBY+'&status='+ status+'&_token={{ csrf_token() }}';
 
         url = url.replace(':startDate', startDate);
         url = url.replace(':endDate', endDate);
         url = url.replace(':hideCompleted', hideCompleted);
-        url = url.replace(':projectId', projectID);
 
         table = $('#tasks-table').dataTable({
             destroy: true,
@@ -292,7 +267,6 @@
                     startDate : startDate,
                     endDate : endDate,
                     hideCompleted  : hideCompleted,
-                    projectId : projectID
                 }
             },
             deferRender: true,
@@ -308,12 +282,12 @@
             columns: [
                 { data: 'id', name: 'id' },
                 {data: 'heading', name: 'heading'},
-               // {data: 'project_name', name: 'projects.project_name'},
+                {data: 'label_name', name: 'site'},
+                {data: 'ids', name: 'siteid'},
                 {data: 'users', name: 'member.name'},
                 // {data: 'created_by', name: 'creator_user.name', width: '15%'},
                 {data: 'due_date', name: 'due_date'},
-                {data: 'board_column', name: 'board_column', searchable: false},
-             //   {data: 'action', name: 'action', "searchable": false}
+                {data: 'board_column', name: 'board_column', searchable: false}
             ]
         });
     }
@@ -427,5 +401,6 @@
 
 
     showTable();
+
 </script>
 @endpush

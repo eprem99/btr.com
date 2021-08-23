@@ -6,7 +6,6 @@ use App\Events\TaskUpdated;
 use App\Helper\Reply;
 use App\Http\Requests\TaskBoard\StoreTaskBoard;
 use App\Http\Requests\TaskBoard\UpdateTaskBoard;
-use App\Project;
 use App\Task;
 use App\TaskboardColumn;
 use App\User;
@@ -39,10 +38,6 @@ class MemberTaskboardController extends MemberBaseController
     {
         $this->startDate = Carbon::now()->timezone($this->global->timezone)->subDays(15)->format($this->global->date_format);
         $this->endDate = Carbon::now()->timezone($this->global->timezone)->addDays(6)->format($this->global->date_format);
-        $this->projects = ($this->user->can('view_projects')) ? Project::orderBy('project_name', 'asc')->get() : Project::select('projects.*')->join('project_members', 'project_members.project_id', '=', 'projects.id')
-            ->where('project_members.user_id', $this->user->id)
-            ->orderBy('project_name', 'asc')
-            ->get();
         $this->employees = ($this->user->can('view_employees')) ? User::allEmployees() : User::where('id', $this->user->id)->get();
 
         $this->clients = User::allClients();
@@ -52,7 +47,7 @@ class MemberTaskboardController extends MemberBaseController
             $endDate = Carbon::createFromFormat($this->global->date_format, $request->endDate)->toDateString();
 
             $boardColumns = TaskboardColumn::with(['tasks' => function ($q) use ($startDate, $endDate, $request) {
-                $q->with(['subtasks', 'completedSubtasks', 'comments', 'users', 'project', 'label'])
+                $q->with(['comments', 'users', 'label'])
                     ->leftJoin('projects', 'projects.id', '=', 'tasks.project_id')
                     ->leftJoin('users as client', 'client.id', '=', 'projects.client_id')
                     ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
@@ -70,14 +65,6 @@ class MemberTaskboardController extends MemberBaseController
                     $task->orWhereBetween(DB::raw('DATE(tasks.`start_date`)'), [$startDate, $endDate]);
                 });
 
-                if ($request->projectID != 0 && $request->projectID !=  null && $request->projectID !=  'all') {
-                    $q = $q->where('tasks.project_id', '=', $request->projectID);
-                }
-
-                if ($request->clientID != '' && $request->clientID !=  null && $request->clientID !=  'all') {
-                    $q = $q->where('projects.client_id', '=', $request->clientID);
-                }
-
                 if ($request->assignedTo != '' && $request->assignedTo !=  null && $request->assignedTo !=  'all') {
                     $q = $q->where('task_users.user_id', '=', $request->assignedTo);
                 }
@@ -94,7 +81,6 @@ class MemberTaskboardController extends MemberBaseController
                                 function ($q1) {
                                     $q1->where(
                                         function ($q3) {
-                                            $q3->where('tasks.is_private', 0);
                                             $q3->where('task_users.user_id', $this->user->id);
                                         }
                                     );
@@ -103,7 +89,6 @@ class MemberTaskboardController extends MemberBaseController
                             );
                             $q->orWhere(
                                 function ($q2) {
-                                    $q2->where('tasks.is_private', 1);
                                     $q2->where('task_users.user_id', $this->user->id);
                                 }
                             );

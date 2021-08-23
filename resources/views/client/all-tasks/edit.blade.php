@@ -97,7 +97,7 @@
                                         <label style="margin-bottom: 9px;" for="client" class="required"> @lang('app.site.client')</label>
                                         <select name="client_id" class="select2 form-control" id="client">
                                             @foreach($clients as $client)
-                                                <option value="{{$client->id}}">{{$client->name}} </option>
+                                                <option @if($task->client_id == $client->id) selected @endif value="{{$client->id}}">{{$client->name}} </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -112,8 +112,14 @@
                                     <div class="form-group">
                                         <label>@lang('app.status')</label>
                                         <select name="status" id="status" class="form-control">
+                                        <option selecte value="{{$task->board_column->id}}">{{ $task->board_column->column_name }}</option>
                                             @foreach($taskBoardColumns as $taskBoardColumn)
-                                                <option @if($task->board_column_id == $taskBoardColumn->id) selected @endif value="{{$taskBoardColumn->id}}">{{ $taskBoardColumn->column_name }}</option>
+                                            @if($task->board_column_id == $taskBoardColumn->id)
+
+                                            @else
+                                            <option value="{{$taskBoardColumn->id}}">{{ $taskBoardColumn->column_name }}</option>
+                                            @endif
+                                                
                                             @endforeach
                                         </select>
                                     </div>

@@ -17,15 +17,8 @@
                                 <div class="p-10 p-b-0 font-12 font-semi-bold">{{ ucfirst($task->heading) }}
                                     <span class="m-l-5 pull-right text-info font-semi-bold">#{{ $task->id }}</span>
 
-                                    @if ($task->is_private)
-                                        <label class="label pull-right" style="background: #ea4c89">@lang('app.private')</label>
-                                    @endif
                                 </div>
-                                @if (!is_null($task->project_id))
-                                    <div class="p-10 p-t-5 text-muted"><small><i class="icon-layers"></i> {{ ucfirst($task->project->project_name) }}</small></div>
-                                @else
                                     <div class="p-10 p-t-5 text-muted" style="visibility: hidden"><small><i class="icon-layers"></i></small></div>
-                                @endif
 
                                 @if (!is_null($task->label))
                                     <div class="p-10">
@@ -54,12 +47,6 @@
                                     <span class="pull-right" data-toggle="tooltip" data-original-title="@lang('modules.tasks.comment')" data-placement="left" >
                                         <i class="ti-comment"></i> {{ count($task->comments) }}
                                     </span>
-
-                                    @if(count($task->subtasks) > 0)
-                                        <span class="pull-right m-r-5" data-toggle="tooltip" data-original-title="@lang('modules.tasks.subTask')" data-placement="left" >
-                                            <i class="ti-check-box"></i> {{ count($task->completedSubtasks) }} / {{ count($task->subtasks) }}
-                                        </span>
-                                    @endif
 
                                 </div>
                             </div>

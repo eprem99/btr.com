@@ -52,18 +52,6 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <h5>@lang('app.selectProject')</h5>
-                        <div class="form-group">
-                            <select class="select2 form-control" data-placeholder="@lang('app.selectProject')" id="project_id">
-                                <option value="all">@lang('app.all')</option>
-                                @foreach($projects as $project)
-                                    <option
-                                            value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
                         <h5>@lang('app.select') @lang('app.client')</h5>
 
                         <div class="form-group">

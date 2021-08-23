@@ -28,11 +28,11 @@
                        <!-- @if($task->p_order)<p><strong>PO Number:  </strong> {{ ucwords($task->p_order) }}</p>@endif -->
                        @if($task->start_date)<p><strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}</p>@endif
                        @if($task->heading)<p><strong>Summary:  </strong> {{ ucwords($task->heading) }}</p>@endif
-                       @if($task->wotype->name)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
-                       @if($task->sporttype->name)<p><strong>Sport Type:  </strong> {{ ucwords($task->sporttype->name) }}</p>@endif
+                       @if($task->wotype)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
+                       @if($task->sporttype)<p><strong>Sport Type:  </strong> {{ ucwords($task->sporttype->name) }}</p>@endif
                        @if($task->qty)<p><strong>Surface Quantity: </strong> {{ ucwords($task->qty) }}</p>@endif
                        @if($task->client_id)<p><strong>Client:  </strong> {{ ucwords($clientDetail->name) }}</p>@endif
-                       @if($task->create_by->name)<p><strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}</p>@endif
+                       @if($task->create_by)<p><strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}</p>@endif
                     </div>
                     <div class="col-md-6">
                     <h3>

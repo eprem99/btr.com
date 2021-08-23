@@ -223,17 +223,12 @@
             endDate = null;
         }
 
-        var projectID = $('#project_id').val();
-        if (!projectID) {
-            projectID = 0;
-        }
         var clientID = $('#clientID').val();
         var assignedBY = $('#assignedBY').val();
         var assignedTo = $('#assignedTo').val();
         var status = $('#status').val();
         var label = $('#label').val();
         var category_id = $('#category_id').val();
-        var billable = $('#billable').val();
 
 
         if ($('#hide-completed-tasks').is(':checked')) {
@@ -248,9 +243,7 @@
         data['status'] = status;
         data['label'] = label;
         data['category_id'] = category_id;
-        data['billable'] = billable;
         data['hideCompleted'] = hideCompleted;
-        data['projectId'] = projectID;
         data['startDate'] = startDate;
         data['endDate'] = endDate;
     });
@@ -383,11 +376,6 @@
     $('#createTaskCategory').click(function(){
         var url = '{{ route('client.taskCategory.create')}}';
         $('#modelHeading').html("@lang('modules.taskCategory.manageTaskCategory')");
-        $.ajaxModal('#taskCategoryModal',url);
-    })
-    $('.pinnedItem').click(function(){
-        var url = '{{ route('client.all-tasks.pinned-task')}}';
-        $('#modelHeading').html('Pinned Task');
         $.ajaxModal('#taskCategoryModal',url);
     })
 

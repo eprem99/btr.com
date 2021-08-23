@@ -6,7 +6,6 @@ use App\DataTables\Admin\AllTasksDataTable;
 use App\Events\TaskReminderEvent;
 use App\Helper\Reply;
 use App\Http\Requests\Tasks\StoreTask;
-use App\Pinned;
 use App\Project;
 use App\ProjectClient;
 use App\Task;
@@ -21,7 +20,6 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\ClientDetails;
-use App\TaskUser;
 
 
 class ClientAllTasksController extends ClientBaseController
@@ -95,30 +93,15 @@ class ClientAllTasksController extends ClientBaseController
         $this->taskBoardColumns = TaskboardColumn::where('role_id', '=', '3')->get();
         $this->wotype = WoType::all();
         $this->sport = SportType::all();
-        $this->task = Task::with('label')->findOrFail($id);
+        $this->task = Task::with('label','board_column')->findOrFail($id);
         $this->labelIds = $this->task->label->pluck('label_id')->toArray();
         $this->taskLabels = TaskLabelList::where('company', '=', $this->clientDetail->category_id)->get();
-        if (!$this->user->can('add_tasks') && $this->global->task_self == 'yes') {
-            $this->projects = Project::join('project_members', 'project_members.project_id', '=', 'projects.id')
-                ->join('users', 'users.id', '=', 'project_members.user_id')
-                ->where('project_members.user_id', $this->user->id)
-                ->select('projects.id', 'projects.project_name')
-                ->get();
-        } else {
-            $this->projects = Project::allProjects();
-        }
-
         $this->employees = User::allClients();
         $this->categories = TaskCategory::all();
         $completedTaskColumn = TaskboardColumn::where('slug', '=', 'completed')->first();
         if ($completedTaskColumn) {
             $this->allTasks = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')->where('board_column_id', '<>', $completedTaskColumn->id)
                 ->where('tasks.id', '!=', $id)->select('tasks.*');
-
-            if ($this->task->project_id != '') {
-                $this->allTasks = $this->allTasks->where('project_id', $this->task->project_id);
-            }
-
             if (!$this->user->can('view_tasks')) {
                 $this->allTasks = $this->allTasks->where('task_users.user_id', '=', $this->user->id);
             }
@@ -148,6 +131,7 @@ class ClientAllTasksController extends ClientBaseController
         $task->task_category_id = $request->category_id;
         $task->wo_id = $request->task_type;
         $task->sport_id = $request->sport_type;
+        $task->client_id = $request->client_id;
         $task->qty = $request->task_qty;
         $task->p_order = $request->task_purchase;
 
@@ -162,27 +146,6 @@ class ClientAllTasksController extends ClientBaseController
         $task->site_id = $request->task_labels;
         $task->save();
 
-        // save labels
-      //  $task->labels()->sync($request->task_labels);
-
-        if ($this->user->can('add_tasks') && $this->global->task_self == 'yes') {
-            $request->user_id = [$this->user->id];
-        }
-
-        TaskUser::where('task_id', $task->id)->delete();
-        foreach ($request->user_id as $key => $value) {
-            TaskUser::create(
-                [
-                    'user_id' => $value,
-                    'task_id' => $task->id
-                ]
-            );
-        }
-
-        // if ($request->project_id) {
-        //     //calculate project progress if enabled
-        //     $this->calculateProjectProgress($request->project_id);
-        // }
         return Reply::dataOnly(['taskID' => $task->id]);
         //        return Reply::redirect(route('client.all-tasks.index'), __('messages.taskUpdatedSuccessfully'));
     }
@@ -224,8 +187,6 @@ class ClientAllTasksController extends ClientBaseController
         $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
         $this->clients = User::allClients()->where('client_details.category_id', '=', $this->clientDetail->category_id);
         $this->employees = User::allEmployees();
-      // $this->employees = User::allClienets();
-    //    dd($this->clients);
         $this->categories = TaskCategory::all();
         $this->taskLabels = TaskLabelList::where('company', '=', $this->clientDetail->category_id)->get();
         $this->wotype = WoType::all();
@@ -285,55 +246,6 @@ class ClientAllTasksController extends ClientBaseController
         }
         $task->project_id = 1;
         $task->save();
-      //  echo 'easdasd';
-        // save labels
-       //  $task->labels()->sync($request->task_labels);
-
-        if (!$this->user->can('add_tasks') && $this->global->task_self == 'yes') {
-            $request->user_id = [$this->user->id];
-        }
-
-        // For gantt chart
-        if ($request->page_name && $request->page_name == 'ganttChart') {
-            $parentGanttId = $request->parent_gantt_id;
-
-            $taskDuration = $task->due_date->diffInDays($task->start_date);
-            $taskDuration = $taskDuration + 1;
-
-            $ganttTaskArray[] = [
-                'id' => 10,
-                'text' => $task->heading,
-                'start_date' => $task->start_date->format('Y-m-d'),
-                'duration' => $taskDuration,
-                'parent' => $parentGanttId,
-                'taskid' => 10
-            ];
-
-            $gantTaskLinkArray[] = [
-                'id' => 'link_' . 10,
-                'source' => $task->dependent_task_id != '' ? $task->dependent_task_id : $parentGanttId,
-                'target' => 10,
-                'type' => $task->dependent_task_id != '' ? 0 : 1
-            ];
-        }
-
-        if ($request->project_id) {
-            $this->calculateProjectProgress($request->project_id);
-        }
-
-        //log search
-      //  $this->logSearchEntry($task->id, 'Task ' . $task->heading, 'admin.all-tasks.edit', 'task');
-
-        if ($request->page_name && $request->page_name == 'ganttChart') {
-
-            return Reply::successWithData(
-                'messages.taskCreatedSuccessfully',
-                [
-                    'tasks' => $ganttTaskArray,
-                    'links' => $gantTaskLinkArray
-                ]
-            );
-        }
 
         if ($request->board_column_id) {
             return Reply::redirect(route('client.taskboard.index'), __('messages.taskCreatedSuccessfully'));
@@ -364,8 +276,10 @@ class ClientAllTasksController extends ClientBaseController
     public function show($id)
     {
         $this->task = Task::with('board_column', 'users', 'files', 'comments', 'notes', 'labels', 'wotype', 'sporttype')->findOrFail($id);
+        
         $this->clientDetail = User::where('id', '=', $this->task->client_id)->first();
-        $this->sport = SportType::all();
+       
+      //  $this->sport = SportType::all();
         $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')
             ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id')
             ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id');

@@ -55,7 +55,7 @@ class Task extends BaseModel
 
     public function sporttype()
     {
-        return $this->belongsTo(sportType::class, 'sport_id');
+        return $this->belongsTo(SportType::class, 'sport_id');
     }
 
     public function labels()

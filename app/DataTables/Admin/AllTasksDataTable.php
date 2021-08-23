@@ -26,9 +26,6 @@ class AllTasksDataTable extends BaseDataTable
             ->eloquent($query)
             ->addColumn('action', function ($row) use ($taskBoardColumns) {
 
-                // $recurringTaskCount = Task::where('recurring_task_id', $row->id)->count();
-                // $recurringTask = $recurringTaskCount > 0 ? 'yes' : 'no';
-               // dd($this->user->can('delete_tasks'));
                 if ($this->user->can('delete_tasks')) {
                 $action = '<div class="btn-group dropdown m-r-10">
                 <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle waves-effect waves-light" type="button"><i class="fa fa-gears "></i></button>
@@ -37,9 +34,11 @@ class AllTasksDataTable extends BaseDataTable
                   <li><a href="javascript:;"  data-task-id="' . $row->id . '" data-recurring="no" class="sa-params"><i class="fa fa-times" aria-hidden="true"></i> ' . trans('app.delete') . '</a></li>';
 
                 $action .= '</ul> </div>';
-                }else{
+                }elseif($this->user->can('edit_tasks')){
                     $action = '<a href="' . route('client.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
                       data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                }else{
+                    $action = '';
                 }
               //  return $this->user->can('delete_projects');
                return $action;
@@ -56,21 +55,8 @@ class AllTasksDataTable extends BaseDataTable
                 $site = '';            
                 if ($row->ids) {
                     $site = $row->ids;
-                    // $contacts = json_decode($row->contacts, true);
-                    // if($contacts['site_id']){
-                    //     $site = $contacts['site_id'];
-                    // }else{
-                    //     $site = '';
-                    // }
                 } 
                 
-               return $site;
-            })
-            ->addColumn('taskpo', function ($row) {
-                $site = '';
-                if ($row->p_order) {
-                    $site = $row->p_order;
-                } 
                return $site;
             })
 
@@ -123,11 +109,7 @@ class AllTasksDataTable extends BaseDataTable
                 $name = '<a href="javascript:;" data-task-id="' . $row->id . '" class="show-task-detail">' . ucfirst($row->heading) . '</a> '.$pin;
 
 
-                if (count($row->activeTimerAll) > 0) {
-                    
-                    $name .= ' <i data-toggle="tooltip" data-original-title="' . __('modules.projects.activeTimers') . '" class="fa fa-clock-o" style="color: #679c0d"></i>';
-                }
-                return $name;
+               return $name;
             })
             ->editColumn('board_column', function ($row) use ($taskBoardColumns) {
                 $status = '<div class="btn-group dropdown">';
@@ -156,14 +138,7 @@ class AllTasksDataTable extends BaseDataTable
             ->addColumn('status', function ($row) {
                 return ucfirst($row->column_name);
             })
-            ->editColumn('project_name', function ($row) {
-                if (is_null($row->project_id)) {
-                    return "-";
-                }
-                return '<a href="' . route('admin.projects.show', $row->project_id) . '">' . ucfirst($row->project_name) . '</a>';
-            })
-            ->rawColumns(['board_column', 'action', 'project_name', 'clientName', 'due_date', 'users', 'created_by', 'heading'])
-            ->removeColumn('project_id')
+            ->rawColumns(['board_column', 'action',  'clientName', 'due_date', 'users', 'created_by', 'heading'])
             ->removeColumn('image')
             ->removeColumn('created_image')
             ->removeColumn('label_color');
@@ -186,25 +161,24 @@ class AllTasksDataTable extends BaseDataTable
         if ($request->endDate !== null && $request->endDate != 'null' && $request->endDate != '') {
             $endDate = Carbon::createFromFormat($this->global->date_format, $request->endDate)->toDateString();
         }
-        $projectId =  $request->projectId;
+
         $hideCompleted = $request->hideCompleted;
         $taskBoardColumn = TaskboardColumn::completeColumn();
 
-        $model = $model->leftJoin('projects', 'projects.id', '=', 'tasks.project_id')
-        ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
+        $model = $model->join('task_users', 'task_users.task_id', '=', 'tasks.id')
             ->join('users as client', 'task_users.user_id', '=', 'client.id')
             ->leftJoin('users as creator_user', 'creator_user.id', '=', 'tasks.created_by')
             ->leftJoin('role_user as role', 'tasks.created_by', '=', 'role.user_id')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
-          //  ->join('task_labels', 'tasks.id', '=', 'task_labels.task_id')
             ->join('task_label_list', 'tasks.site_id', '=', 'task_label_list.id')
-            ->selectRaw('tasks.id, tasks.p_order, projects.project_name, tasks.heading, task_label_list.label_name, task_label_list.id as ids, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
-             tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color, role.role_id,
-              tasks.project_id, ( select count("id") from pinned where pinned.task_id = tasks.id and pinned.user_id = '.user()->id.') as pinned_task')
-            ->whereNull('projects.deleted_at')
-            ->with('users', 'activeTimer')
+            ->selectRaw('tasks.id, tasks.heading, task_label_list.label_name, task_label_list.id as ids, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
+             tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color, role.role_id')
+            ->with('users')
             ->groupBy('tasks.id');
-
+            if(!$this->user->can('edit_tasks')){
+                $model = $model->where('task_users.user_id', '=', user()->id);
+            }
+            
 
         if ($startDate !== null && $endDate !== null) {
             $model->where(function ($q) use ($startDate, $endDate) {
@@ -212,10 +186,6 @@ class AllTasksDataTable extends BaseDataTable
 
                 $q->orWhereBetween(DB::raw('DATE(tasks.`start_date`)'), [$startDate, $endDate]);
             });
-        }
-
-        if ($request->clientID != '' && $request->clientID !=  null && $request->clientID !=  'all') {
-            $model->where('projects.client_id', '=', $request->clientID);
         }
 
         if ($request->assignedTo != '' && $request->assignedTo !=  null && $request->assignedTo !=  'all') {
@@ -293,7 +263,7 @@ class AllTasksDataTable extends BaseDataTable
             __('app.task') => ['data' => 'heading', 'name' => 'heading'],
             __('modules.tasks.site')  => ['data' => 'site', 'name' => 'site'],
             __('modules.tasks.siteid')  => ['data' => 'siteid', 'name' => 'siteid'],
-            __('modules.tasks.po')  => ['data' => 'taskpo', 'name' => 'taskpo'],
+         //   __('modules.tasks.po')  => ['data' => 'taskpo', 'name' => 'taskpo'],
             __('modules.tasks.assigned') => ['data' => 'name', 'name' => 'name', 'visible' => false],
             __('modules.tasks.assignTo') => ['data' => 'users', 'name' => 'member.name', 'exportable' => false],
             __('app.dueDate') => ['data' => 'due_date', 'name' => 'due_date'],
