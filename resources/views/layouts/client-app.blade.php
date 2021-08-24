@@ -697,19 +697,6 @@
 </script>
 
 <script>
-    $('body').on('click', '.timer-modal', function () {
-        var url = '{{ route('member.time-log.create')}}';
-        $('#modelHeading').html('Start Timer For a Project');
-        $.ajaxModal('#projectTimerModal', url);
-    });
-
-    $('body').on('click', '.stop-timer-modal', function () {
-        var url = '{{ route('member.time-log.show', ':id')}}';
-        url = url.replace(':id', $(this).data('timer-id'));
-
-        $('#modelHeading').html('Stop Timer');
-        $.ajaxModal('#projectTimerModal', url);
-    });
 
     $('.show-user-notifications').click(function () {
         if(typeof openStatus == "undefined" || openStatus == "false") {
