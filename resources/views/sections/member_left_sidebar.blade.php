@@ -136,7 +136,6 @@
             <li><a href="{{ route('member.task.index') }}" class="waves-effect"><i class="fa fa-tasks fa-fw"></i> <span class="hide-menu"> @lang('app.menu.tasks') <span class="fa arrow"></span> </span></a>
                 <ul class="nav nav-second-level">
                     <li><a href="{{ route('member.all-tasks.index') }}">@lang('app.menu.tasks')</a></li>
-                    <li class="hidden-sm hidden-xs"><a href="{{ route('member.taskboard.index') }}">@lang('modules.tasks.taskBoard')</a></li>
                     <li><a href="{{ route('member.task-calendar.index') }}">@lang('app.menu.taskCalendar')</a></li>
                 </ul>
             </li>
@@ -220,6 +219,8 @@
             @if(in_array('notices',$modules))
                 <li><a href="{{ route('member.notices.index') }}" class="waves-effect"><i class="ti-layout-media-overlay fa-fw"></i> <span class="hide-menu">@lang("app.menu.noticeBoard") </span></a> </li>
             @endif
+
+            <li><a href="{{ route('member.employee-docs.index') }}" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu">@lang("app.menu.employeeDocs") </span></a> </li>
 
             @foreach ($worksuitePlugins as $item)
                 @if(View::exists(strtolower($item).'::sections.member_left_sidebar'))

@@ -38,7 +38,8 @@ class AllTasksDataTable extends BaseDataTable
                     $action = '<a href="' . route('client.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
                       data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
                 }else{
-                    $action = '';
+                    $action = '<a target="_blank" href="' . route('front.task-share', [$row->hash]) . '" class="btn btn-info btn-circle"
+                    data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-share-alt" aria-hidden="true"></i></a>';
                 }
               //  return $this->user->can('delete_projects');
                return $action;
@@ -120,7 +121,7 @@ class AllTasksDataTable extends BaseDataTable
                         $status .= '<li><a href="javascript:;" data-task-id="' . $row->id . '" class="change-status" data-status="' . $value->slug . '">' . $value->column_name . '  <span style="width: 15px; height: 15px; border-color: ' . $value->label_color . '; background: ' . $value->label_color . '"
                                 class="btn btn-warning btn-small btn-circle">&nbsp;</span></a></li>';
                     }
-                }elseif(!$this->user->can('delete_tasks')){
+                }elseif($this->user->can('edit_tasks')){
                     foreach ($taskBoardColumns as $key => $value) {
                         if($value->role_id == $row->role_id){
                             $status .= '<li><a href="javascript:;" data-task-id="' . $row->id . '" class="change-status" data-status="' . $value->slug . '">' . $value->column_name . '  <span style="width: 15px; height: 15px; border-color: ' . $value->label_color . '; background: ' . $value->label_color . '"
@@ -129,7 +130,9 @@ class AllTasksDataTable extends BaseDataTable
                     }
 
                 }else{
-                     $status = '';
+                    $status = '<div class="btn-group dropdown">';
+                    $status .= '<button aria-expanded="true" data-toggle="dropdown" class="btn dropdown-toggle waves-effect waves-light btn-xs"  style="border-color: ' . $row->label_color . '; color: ' . $row->label_color . '" type="button">' . $row->board_column . '</button>';
+                
                 }
                 $status .= '</ul>';
                 $status .= '</div>';
@@ -171,7 +174,7 @@ class AllTasksDataTable extends BaseDataTable
             ->leftJoin('role_user as role', 'tasks.created_by', '=', 'role.user_id')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
             ->join('task_label_list', 'tasks.site_id', '=', 'task_label_list.id')
-            ->selectRaw('tasks.id, tasks.heading, task_label_list.label_name, task_label_list.id as ids, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
+            ->selectRaw('tasks.id, tasks.heading, tasks.hash, task_label_list.label_name, task_label_list.id as ids, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
              tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color, role.role_id')
             ->with('users')
             ->groupBy('tasks.id');
@@ -265,7 +268,7 @@ class AllTasksDataTable extends BaseDataTable
             __('modules.tasks.siteid')  => ['data' => 'siteid', 'name' => 'siteid'],
          //   __('modules.tasks.po')  => ['data' => 'taskpo', 'name' => 'taskpo'],
             __('modules.tasks.assigned') => ['data' => 'name', 'name' => 'name', 'visible' => false],
-            __('modules.tasks.assignTo') => ['data' => 'users', 'name' => 'member.name', 'exportable' => false],
+          //  __('modules.tasks.assignTo') => ['data' => 'users', 'name' => 'member.name', 'exportable' => false],
             __('app.dueDate') => ['data' => 'due_date', 'name' => 'due_date'],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'visible' => false],
             __('app.columnStatus') => ['data' => 'board_column', 'name' => 'board_column', 'exportable' => false, 'searchable' => false],

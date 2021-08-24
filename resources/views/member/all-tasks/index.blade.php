@@ -49,22 +49,6 @@
         </div>
     </div>
     <div class="col-md-12">
-        <h5 class="box-title">@lang('app.select') @lang('modules.tasks.site')</h5>
-
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-12">
-                    <select class="select2 form-control" data-placeholder="@lang('modules.tasks.site')" id="label">
-                        <option value="all">@lang('app.all')</option>
-                        @foreach($taskLabels as $label)
-                            <option value="{{ $label->id }}">{{ ucwords($label->label_name) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12">
         <h5 class="box-title">@lang('app.select') @lang('modules.tasks.assignBy')</h5>
 
         <div class="form-group">
@@ -116,28 +100,12 @@
 
 @section('content')
 
-
-    <div class="row">
+<div class="row">
         <div class="col-md-12">
             <div class="white-box">
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover toggle-circle default footable-loaded footable"
-                           id="tasks-table">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>@lang('app.task')</th>
-                            <th>@lang('modules.tasks.site')</th>
-                            <th>@lang('modules.tasks.siteid')</th>
-                            <th>@lang('modules.tasks.assignTo')</th>
-                            {{-- <th>@lang('modules.tasks.assignBy')</th> --}}
-                            <th>@lang('app.dueDate')</th>
-                            <th>@lang('app.status')</th>
-                            
-                        </tr>
-                        </thead>
-                    </table>
+                    {!! $dataTable->table(['class' => 'table table-bordered table-hover toggle-circle default footable-loaded footable']) !!}
                 </div>
 
             </div>
@@ -196,7 +164,13 @@
 <script src="{{ asset('plugins/bower_components/custom-select/custom-select.min.js') }}"></script>
 <script src="{{ asset('plugins/bower_components/bootstrap-select/bootstrap-select.min.js') }}"></script>
 <script src="{{ asset('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
-
+@if($global->locale == 'en')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.{{ $global->locale }}-AU.min.js"></script>
+@elseif($global->locale == 'br')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+@else
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.{{ $global->locale }}.min.js"></script>
+@endif
 <script src="{{ asset('plugins/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/datatables/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/datatables/dataTables.responsive.min.js') }}"></script>
@@ -204,7 +178,10 @@
 
 <script src="{{ asset('plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+<script src="{{ asset('js/datatables/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('js/datatables/buttons.server-side.js') }}"></script>
 
+{!! $dataTable->scripts() !!}
 <script>
 
     $(".select2").select2({
@@ -213,17 +190,7 @@
         }
     });
 
-    jQuery('#date-range').datepicker({
-        toggleActive: true,
-        format: '{{ $global->date_picker_format }}',
-        language: '{{ $global->locale }}',
-        autoclose: true
-    });
-
-    table = '';
-
-    function showTable() {
-
+    $('#allTasks-table').on('preXhr.dt', function (e, settings, data) {
         var startDate = $('#start-date').val();
 
         if (startDate == '') {
@@ -236,12 +203,11 @@
             endDate = null;
         }
 
-
+        var clientID = $('#clientID').val();
         var assignedBY = $('#assignedBY').val();
+        var assignedTo = $('#assignedTo').val();
         var status = $('#status').val();
         var label = $('#label').val();
-        var category_id = $('#category_id').val();
-
 
         if ($('#hide-completed-tasks').is(':checked')) {
             var hideCompleted = '1';
@@ -249,47 +215,27 @@
             var hideCompleted = '0';
         }
 
-        var url = '{!!  route('member.all-tasks.data') !!}?&assignedBY='+ assignedBY+'&status='+ status+'&_token={{ csrf_token() }}';
+        data['clientID'] = clientID;
+        data['assignedBY'] = assignedBY;
+        data['assignedTo'] = assignedTo;
+        data['status'] = status;
+        data['label'] = label;
+        data['hideCompleted'] = hideCompleted;
+        data['startDate'] = startDate;
+        data['endDate'] = endDate;
+    });
 
-        url = url.replace(':startDate', startDate);
-        url = url.replace(':endDate', endDate);
-        url = url.replace(':hideCompleted', hideCompleted);
+    jQuery('#date-range').datepicker({
+        toggleActive: true,
+        format: '{{ $global->date_picker_format }}',
+        language: '{{ $global->locale }}',
+        autoclose: true
+    });
 
-        table = $('#tasks-table').dataTable({
-            destroy: true,
-            responsive: true,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                "url": url,
-                "type": "POST",
-                "data" : {
-                    startDate : startDate,
-                    endDate : endDate,
-                    hideCompleted  : hideCompleted,
-                }
-            },
-            deferRender: true,
-            language: {
-                "url": "<?php echo __("app.datatable") ?>"
-            },
-            "fnDrawCallback": function (oSettings) {
-                $("body").tooltip({
-                    selector: '[data-toggle="tooltip"]'
-                });
-            },
-            "order": [[0, "desc"]],
-            columns: [
-                { data: 'id', name: 'id' },
-                {data: 'heading', name: 'heading'},
-                {data: 'label_name', name: 'site'},
-                {data: 'ids', name: 'siteid'},
-                {data: 'users', name: 'member.name'},
-                // {data: 'created_by', name: 'creator_user.name', width: '15%'},
-                {data: 'due_date', name: 'due_date'},
-                {data: 'board_column', name: 'board_column', searchable: false}
-            ]
-        });
+    table = '';
+
+    function showTable() {
+        window.LaravelDataTables["allTasks-table"].draw();
     }
 
     $('#filter-results').click(function () {
@@ -299,9 +245,12 @@
     $('#reset-filters').click(function () {
         $('.select2').val('all');
         $('.select2').trigger('change');
+        
+        $('#start-date').val('');
+        $('#end-date').val('');
 
-        $('#start-date').val('{{ $startDate }}');
-        $('#end-date').val('{{ $endDate }}');
+        $(".selectpicker").val('all');
+        $(".selectpicker").selectpicker("refresh");
 
         showTable();
     })
@@ -311,9 +260,9 @@
         var recurring = $(this).data('recurring');
 
         var buttons = {
-            cancel: "No, cancel please!",
+            cancel: "@lang('messages.confirmNoArchive')",
             confirm: {
-                text: "Yes, delete it!",
+                text: "@lang('messages.confirmDelete')",
                 value: 'confirm',
                 visible: true,
                 className: "danger",
@@ -355,15 +304,17 @@
                     success: function (response) {
                         if (response.status == "success") {
                             $.unblockUI();
-                            table._fnDraw();
+                            window.LaravelDataTables["allTasks-table"].draw();
                         }
                     }
                 });
             }
+
+
         });
     });
 
-    $('#tasks-table').on('click', '.show-task-detail', function () {
+    $('#allTasks-table').on('click', '.show-task-detail', function () {
         $(".right-sidebar").slideDown(50).addClass("shw-rside");
 
         var id = $(this).data('task-id');
@@ -381,26 +332,9 @@
         });
     })
 
-    $('#tasks-table').on('click', '.change-status', function () {
-        var url = "{{route('member.tasks.changeStatus')}}";
-        var token = "{{ csrf_token() }}";
-        var id =  $(this).data('task-id');
-        var status =  $(this).data('status');
-
-        $.easyAjax({
-            url: url,
-            type: "POST",
-            data: {'_token': token, taskId: id, status: status, sortBy: 'id'},
-            success: function (data) {
-                if (data.status == "success") {
-                    table._fnDraw();
-                }
-            }
-        })
-    })
 
 
-    showTable();
 
 </script>
+
 @endpush

@@ -116,7 +116,7 @@ return array (
     'attendanceSettings' => 'Attendance Settings',
     'currencySettings' => 'Currency Settings',
     'emailSettings' => 'Email Settings',
-    'employeeDocs' => 'Tech Documents',
+    'employeeDocs' => 'Documents',
     'financeReport' => 'Finance Report',
     'incomeVsExpenseReport' => 'Income Vs Expense Report',
     'invoiceSettings' => 'Invoice Settings',

@@ -66,7 +66,7 @@ class ClientAllTasksController extends ClientBaseController
             __('app.id') => ['data' => 'id', 'name' => 'id', 'visible' => false, 'exportable' => false],
             '#' => ['data' => 'id', 'name' => 'id', 'visible' => true],
             __('app.task') => ['data' => 'heading', 'name' => 'heading'],
-            __('app.project')  => ['data' => 'project_name', 'name' => 'projects.project_name'],
+           // __('app.project')  => ['data' => 'project_name', 'name' => 'projects.project_name'],
             __('modules.tasks.assigned') => ['data' => 'name', 'name' => 'name', 'visible' => false],
             __('modules.tasks.assignTo') => ['data' => 'users', 'name' => 'member.name', 'exportable' => false],
             __('app.dueDate') => ['data' => 'due_date', 'name' => 'due_date'],
@@ -207,20 +207,6 @@ class ClientAllTasksController extends ClientBaseController
         return view('client.all-tasks.create', $this->data);
     }
 
-
-
-
-    public function membersList($projectId)
-    {
-        if ($projectId != "all") {
-            $this->members = ProjectClient::byProject($projectId);
-        } else {
-            $this->members = ProjectClient::all();
-        }
-        $list = view('client.all-tasks.members-list', $this->data)->render();
-        return Reply::dataOnly(['html' => $list]);
-    }
-
     public function store(StoreTask $request)
     {
 
@@ -313,66 +299,11 @@ class ClientAllTasksController extends ClientBaseController
         return Reply::success('messages.taskUpdatedSuccessfully');
     }
 
-    public function dependentTaskLists($projectId, $taskId = null)
-    {
-        $completedTaskColumn = TaskboardColumn::where('slug', '!=', 'completed')->first();
-        if ($completedTaskColumn) {
-            $this->allTasks = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')->where('board_column_id', $completedTaskColumn->id)
-                ->where('project_id', $projectId);
-
-            if ($taskId != null) {
-                $this->allTasks = $this->allTasks->where('tasks.id', '!=', $taskId);
-            }
-
-            if (!$this->user->can('view_tasks')) {
-                $this->allTasks = $this->allTasks->where('task_users.user_id', '=', $this->user->id);
-            }
-
-            $this->allTasks = $this->allTasks->get();
-        } else {
-            $this->allTasks = [];
-        }
-
-        $list = view('client.tasks.dependent-task-list', $this->data)->render();
-        return Reply::dataOnly(['html' => $list]);
-    }
 
     public function history($id)
     {
         $this->task = Task::with('board_column', 'history', 'history.board_column')->findOrFail($id);
         $view = view('admin.tasks.history', $this->data)->render();
         return Reply::dataOnly(['status' => 'success', 'view' => $view]);
-    }
-
-
-    public function ajaxCreate($columnId)
-    {
-
-        if (!$this->user->can('view_projects') && $this->global->task_self == 'yes') {
-            $this->projects = Project::with('members', 'members.user')
-                ->join('project_members', 'project_members.project_id', '=', 'projects.id')
-                ->where('project_members.user_id', '=', $this->user->id)
-                ->select('projects.*')
-                ->get();
-        } else {
-            $this->projects = Project::allProjects();
-        }
-        $this->columnId = $columnId;
-        $this->categories = TaskCategory::all();
-        $this->employees = User::allEmployees();
-        $completedTaskColumn = TaskboardColumn::where('slug', '!=', 'completed')->first();
-        if ($completedTaskColumn) {
-            $this->allTasks = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')->where('board_column_id', $completedTaskColumn->id);
-
-            if (!$this->user->can('view_tasks')) {
-                $this->allTasks = $this->allTasks->where('task_users.user_id', '=', $this->user->id);
-            }
-
-            $this->allTasks = $this->allTasks->get();
-        } else {
-            $this->allTasks = [];
-        }
-
-        return view('client.all-tasks.ajax_create', $this->data);
     }
 }

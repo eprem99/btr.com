@@ -36,7 +36,7 @@
 
         @media (min-width: 769px) {
             #wrapper .panel-wrapper{
-                height: 350px;
+                max-height: 350px;
                 overflow-y: auto;
             }
         }

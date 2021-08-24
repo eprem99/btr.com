@@ -98,7 +98,15 @@ class MemberEmployeeDocsController extends MemberBaseController
      */
     public function index()
     {
-        //
+        $this->employee = $this->user;
+
+        $this->employeeDocs = EmployeeDocs::where('user_id', $this->user->id)->get();
+
+        // $view = view('member.employees.docs-list', $this->data)->render();
+
+        // return Reply::successWithData(__('messages.fileDeleted'), ['html' => $view]);
+
+        return view('member.employees.docs-list', $this->data);
     }
 
     /**
@@ -120,6 +128,7 @@ class MemberEmployeeDocsController extends MemberBaseController
      */
     public function store(CreateRequest $request)
     {
+        $this->employee = $this->user;
         $fileFormats = ['image/jpeg','image/png','image/gif','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/pdf','text/plain'];
         foreach ($request->file as $index => $fFormat) {
             if (!in_array($fFormat->getClientMimeType(), $fileFormats)){
@@ -132,21 +141,21 @@ class MemberEmployeeDocsController extends MemberBaseController
                 $value = $request->file[$index];
                 if ($value != '' && $name != '' && $value != null && $name != null) {
                     $file = new EmployeeDocs();
-                    $file->user_id = $request->user_id;
+                    $file->user_id = $this->user->id;
 
                     
                     $file->name = $name;
                     $file->filename = $value->getClientOriginalName();
-                    $file->hashname = Files::upload($value, 'employee-docs/'.$request->user_id,null,null,false);
+                    $file->hashname = Files::upload($value, 'employee-docs/'.$this->user->id,null,null,false);
                     $file->save();
                 }
             }
 
         }
 
-        $this->employeeDocs = EmployeeDocs::where('user_id', $request->user_id)->get();
+        $this->employeeDocs = EmployeeDocs::where('user_id', $this->user->id)->get();
 
-        $view = view('member.employees.docs-list', $this->data)->render();
+        $view = view('member.employees.docs-lists', $this->data)->render();
 
         return Reply::successWithData(__('messages.fileUploaded'), ['html' => $view]);
     }
@@ -195,6 +204,8 @@ class MemberEmployeeDocsController extends MemberBaseController
      */
     public function destroy(Request $request, $id)
     {
+        $this->employee = $this->user;
+        
         $file = EmployeeDocs::findOrFail($id);
 
         File::delete('user-uploads/employee-docs/'.$file->user_id.'/'.$file->hashname);
@@ -203,7 +214,7 @@ class MemberEmployeeDocsController extends MemberBaseController
 
         $this->employeeDocs = EmployeeDocs::where('user_id', $file->user_id)->get();
 
-        $view = view('member.employees.docs-list', $this->data)->render();
+        $view = view('member.employees.docs-lists', $this->data)->render();
 
         return Reply::successWithData(__('messages.fileDeleted'), ['html' => $view]);
     }

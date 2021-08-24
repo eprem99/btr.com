@@ -642,124 +642,124 @@ Route::group(['middleware' => 'auth'], function () {
         ['namespace' => 'Member', 'prefix' => 'member', 'as' => 'member.', 'middleware' => ['role:employee']], function () {
 
         //region contracts routes
-        Route::get('contracts/sign/{id}', ['as' => 'contracts.sign-modal', 'uses' => 'MemberContractController@signModal']);
-        Route::get('contracts/download/{id}', ['as' => 'contracts.download', 'uses' => 'MemberContractController@download']);
-        Route::post('contracts/sign/{id}', ['as' => 'contracts.sign', 'uses' => 'MemberContractController@sign']);
-        Route::get('contracts/copy/{id}', ['as' => 'contracts.copy', 'uses' => 'MemberContractController@copy']);
-        Route::post('contracts/copy-submit', ['as' => 'contracts.copy-submit', 'uses' => 'MemberContractController@copySubmit']);
-        Route::post('contracts/add-discussion/{id}', ['as' => 'contracts.add-discussion', 'uses' => 'MemberContractController@addDiscussion']);
-        Route::get('contracts/edit-discussion/{id}', ['as' => 'contracts.edit-discussion', 'uses' => 'MemberContractController@editDiscussion']);
-        Route::post('contracts/update-discussion/{id}', ['as' => 'contracts.update-discussion', 'uses' => 'MemberContractController@updateDiscussion']);
-        Route::post('contracts/remove-discussion/{id}', ['as' => 'contracts.remove-discussion', 'uses' => 'MemberContractController@removeDiscussion']);
-        Route::resource('contracts', 'MemberContractController');
+        // Route::get('contracts/sign/{id}', ['as' => 'contracts.sign-modal', 'uses' => 'MemberContractController@signModal']);
+        // Route::get('contracts/download/{id}', ['as' => 'contracts.download', 'uses' => 'MemberContractController@download']);
+        // Route::post('contracts/sign/{id}', ['as' => 'contracts.sign', 'uses' => 'MemberContractController@sign']);
+        // Route::get('contracts/copy/{id}', ['as' => 'contracts.copy', 'uses' => 'MemberContractController@copy']);
+        // Route::post('contracts/copy-submit', ['as' => 'contracts.copy-submit', 'uses' => 'MemberContractController@copySubmit']);
+        // Route::post('contracts/add-discussion/{id}', ['as' => 'contracts.add-discussion', 'uses' => 'MemberContractController@addDiscussion']);
+        // Route::get('contracts/edit-discussion/{id}', ['as' => 'contracts.edit-discussion', 'uses' => 'MemberContractController@editDiscussion']);
+        // Route::post('contracts/update-discussion/{id}', ['as' => 'contracts.update-discussion', 'uses' => 'MemberContractController@updateDiscussion']);
+        // Route::post('contracts/remove-discussion/{id}', ['as' => 'contracts.remove-discussion', 'uses' => 'MemberContractController@removeDiscussion']);
+        // Route::resource('contracts', 'MemberContractController');
         //endregion
 
         //region contracts type routes
-        Route::get('contract-type/data', ['as' => 'contract-type.data', 'uses' => 'MemberContractTypeController@data']);
-        Route::post('contract-type/type-store', ['as' => 'contract-type.store-contract-type', 'uses' => 'MemberContractTypeController@storeContractType']);
-        Route::get('contract-type/type-create', ['as' => 'contract-type.create-contract-type', 'uses' => 'MemberContractTypeController@createContractType']);
+        // Route::get('contract-type/data', ['as' => 'contract-type.data', 'uses' => 'MemberContractTypeController@data']);
+        // Route::post('contract-type/type-store', ['as' => 'contract-type.store-contract-type', 'uses' => 'MemberContractTypeController@storeContractType']);
+        // Route::get('contract-type/type-create', ['as' => 'contract-type.create-contract-type', 'uses' => 'MemberContractTypeController@createContractType']);
 
-        Route::resource('contract-type', 'MemberContractTypeController')->parameters([
-            'contract-type' => 'type'
-        ]);
+        // Route::resource('contract-type', 'MemberContractTypeController')->parameters([
+        //     'contract-type' => 'type'
+        // ]);
         //endregion
 
         //region contract renew routes
-        Route::get('contract-renew/{id}', ['as' => 'contracts.renew', 'uses' => 'MemberContractRenewController@index']);
-        Route::post('contract-renew-submit/{id}', ['as' => 'contracts.renew-submit', 'uses' => 'MemberContractRenewController@renew']);
-        Route::post('contract-renew-remove/{id}', ['as' => 'contracts.renew-remove', 'uses' => 'MemberContractRenewController@destroy']);
+        // Route::get('contract-renew/{id}', ['as' => 'contracts.renew', 'uses' => 'MemberContractRenewController@index']);
+        // Route::post('contract-renew-submit/{id}', ['as' => 'contracts.renew-submit', 'uses' => 'MemberContractRenewController@renew']);
+        // Route::post('contract-renew-remove/{id}', ['as' => 'contracts.renew-remove', 'uses' => 'MemberContractRenewController@destroy']);
         //endregion
 
         Route::get('dashboard', ['uses' => 'MemberDashboardController@index'])->name('dashboard');
 
-        Route::post('profile/updateOneSignalId', ['uses' => 'MemberProfileController@updateOneSignalId'])->name('profile.updateOneSignalId');
-        Route::resource('profile', 'MemberProfileController');
+        // Route::post('profile/updateOneSignalId', ['uses' => 'MemberProfileController@updateOneSignalId'])->name('profile.updateOneSignalId');
+        // Route::resource('profile', 'MemberProfileController');
 
-        Route::get('projects/ajaxCreate/{columnId?}', ['uses' => 'MemberProjectsController@ajaxCreate'])->name('projects.ajaxCreate');
-        Route::post('projects/gantt-task-update/{id}', ['uses' => 'MemberProjectsController@updateTaskDuration'])->name('projects.gantt-task-update');
-        Route::get('projects/ganttData/{projectId?}', ['uses' => 'MemberProjectsController@ganttData'])->name('projects.ganttData');
-        Route::get('projects/gantt/{projectId?}', ['uses' => 'MemberProjectsController@gantt'])->name('projects.gantt');
-        Route::get('projects/data', ['uses' => 'MemberProjectsController@data'])->name('projects.data');
-        Route::get('projects/discussion-replies/{projectId}/{discussionId}', ['uses' => 'MemberProjectsController@discussionReplies'])->name('projects.discussionReplies');
-        Route::get('projects/discussion/{projectId}', ['uses' => 'MemberProjectsController@discussion'])->name('projects.discussion');
-        Route::get('projects/template-data/{templateId}', ['uses' => 'MemberProjectsController@templateData'])->name('projects.template-data');
-        Route::get('projects/pinned-project', ['uses' => 'MemberProjectsController@pinnedItem'])->name('projects.pinned-project');
-        Route::resource('projects', 'MemberProjectsController');
+        // Route::get('projects/ajaxCreate/{columnId?}', ['uses' => 'MemberProjectsController@ajaxCreate'])->name('projects.ajaxCreate');
+        // Route::post('projects/gantt-task-update/{id}', ['uses' => 'MemberProjectsController@updateTaskDuration'])->name('projects.gantt-task-update');
+        // Route::get('projects/ganttData/{projectId?}', ['uses' => 'MemberProjectsController@ganttData'])->name('projects.ganttData');
+        // Route::get('projects/gantt/{projectId?}', ['uses' => 'MemberProjectsController@gantt'])->name('projects.gantt');
+        // Route::get('projects/data', ['uses' => 'MemberProjectsController@data'])->name('projects.data');
+        // Route::get('projects/discussion-replies/{projectId}/{discussionId}', ['uses' => 'MemberProjectsController@discussionReplies'])->name('projects.discussionReplies');
+        // Route::get('projects/discussion/{projectId}', ['uses' => 'MemberProjectsController@discussion'])->name('projects.discussion');
+        // Route::get('projects/template-data/{templateId}', ['uses' => 'MemberProjectsController@templateData'])->name('projects.template-data');
+        // Route::get('projects/pinned-project', ['uses' => 'MemberProjectsController@pinnedItem'])->name('projects.pinned-project');
+        // Route::resource('projects', 'MemberProjectsController');
 
-        Route::get('project-template/data', ['uses' => 'MemberProjectTemplateController@data'])->name('project-template.data');
-        Route::resource('project-template', 'MemberProjectTemplateController');
+        // Route::get('project-template/data', ['uses' => 'MemberProjectTemplateController@data'])->name('project-template.data');
+        // Route::resource('project-template', 'MemberProjectTemplateController');
 
-        Route::post('project-template-members/save-group', ['uses' => 'ProjectMemberTemplateController@storeGroup'])->name('project-template-members.storeGroup');
-        Route::resource('project-template-member', 'ProjectMemberTemplateController');
+        // Route::post('project-template-members/save-group', ['uses' => 'ProjectMemberTemplateController@storeGroup'])->name('project-template-members.storeGroup');
+        // Route::resource('project-template-member', 'ProjectMemberTemplateController');
 
-        Route::resource('project-template-task', 'ProjectTemplateTaskController');
+        // Route::resource('project-template-task', 'ProjectTemplateTaskController');
 
-        Route::resource('project-ratings', 'MemberProjectRatingController');
+        // Route::resource('project-ratings', 'MemberProjectRatingController');
 
-        Route::get('leads/data', ['uses' => 'MemberLeadController@data'])->name('leads.data');
-        Route::post('leads/change-status', ['uses' => 'MemberLeadController@changeStatus'])->name('leads.change-status');
-        Route::get('leads/follow-up/{leadID}', ['uses' => 'MemberLeadController@followUpCreate'])->name('leads.follow-up');
-        Route::get('leads/followup/{leadID}', ['uses' => 'MemberLeadController@followUpShow'])->name('leads.followup');
-        Route::post('leads/follow-up-store', ['uses' => 'MemberLeadController@followUpStore'])->name('leads.follow-up-store');
-        Route::get('leads/follow-up-edit/{id?}', ['uses' => 'MemberLeadController@editFollow'])->name('leads.follow-up-edit');
-        Route::post('leads/follow-up-update', ['uses' => 'MemberLeadController@UpdateFollow'])->name('leads.follow-up-update');
-        Route::get('leads/follow-up-sort', ['uses' => 'MemberLeadController@followUpSort'])->name('leads.follow-up-sort');
-        Route::resource('leads', 'MemberLeadController');
+        // Route::get('leads/data', ['uses' => 'MemberLeadController@data'])->name('leads.data');
+        // Route::post('leads/change-status', ['uses' => 'MemberLeadController@changeStatus'])->name('leads.change-status');
+        // Route::get('leads/follow-up/{leadID}', ['uses' => 'MemberLeadController@followUpCreate'])->name('leads.follow-up');
+        // Route::get('leads/followup/{leadID}', ['uses' => 'MemberLeadController@followUpShow'])->name('leads.followup');
+        // Route::post('leads/follow-up-store', ['uses' => 'MemberLeadController@followUpStore'])->name('leads.follow-up-store');
+        // Route::get('leads/follow-up-edit/{id?}', ['uses' => 'MemberLeadController@editFollow'])->name('leads.follow-up-edit');
+        // Route::post('leads/follow-up-update', ['uses' => 'MemberLeadController@UpdateFollow'])->name('leads.follow-up-update');
+        // Route::get('leads/follow-up-sort', ['uses' => 'MemberLeadController@followUpSort'])->name('leads.follow-up-sort');
+        // Route::resource('leads', 'MemberLeadController');
 
         // Lead Files
-        Route::get('lead-files/download/{id}', ['uses' => 'LeadFilesController@download'])->name('lead-files.download');
-        Route::get('lead-files/thumbnail', ['uses' => 'LeadFilesController@thumbnailShow'])->name('lead-files.thumbnail');
-        Route::resource('lead-files', 'LeadFilesController');
+        // Route::get('lead-files/download/{id}', ['uses' => 'LeadFilesController@download'])->name('lead-files.download');
+        // Route::get('lead-files/thumbnail', ['uses' => 'LeadFilesController@thumbnailShow'])->name('lead-files.thumbnail');
+        // Route::resource('lead-files', 'LeadFilesController');
 
-        Route::resource('task-label', 'TaskLabelController');
+        // Route::resource('task-label', 'TaskLabelController');
 
-        //Pinned route
-        Route::resource('pinned', 'MemberPinnedController', ['only' => ['store', 'destroy']]);
+        // //Pinned route
+        // Route::resource('pinned', 'MemberPinnedController', ['only' => ['store', 'destroy']]);
 
-        // Proposal routes
-        Route::get('proposals/data/{id?}', ['uses' => 'MemberProposalController@data'])->name('proposals.data');
-        Route::get('proposals/download/{id}', ['uses' => 'MemberProposalController@download'])->name('proposals.download');
-        Route::get('proposals/create/{leadID?}', ['uses' => 'MemberProposalController@create'])->name('proposals.create');
-        Route::resource('proposals', 'MemberProposalController' , ['except' => ['create']]);
+        // // Proposal routes
+        // Route::get('proposals/data/{id?}', ['uses' => 'MemberProposalController@data'])->name('proposals.data');
+        // Route::get('proposals/download/{id}', ['uses' => 'MemberProposalController@download'])->name('proposals.download');
+        // Route::get('proposals/create/{leadID?}', ['uses' => 'MemberProposalController@create'])->name('proposals.create');
+        // Route::resource('proposals', 'MemberProposalController' , ['except' => ['create']]);
 
-        Route::group(
-            ['prefix' => 'projects'], function () {
-            Route::resource('project-members', 'MemberProjectsMemberController');
+        // Route::group(
+        //     ['prefix' => 'projects'], function () {
+        //     Route::resource('project-members', 'MemberProjectsMemberController');
 
-            Route::post('tasks/data/{startDate?}/{endDate?}/{hideCompleted?}/{projectId?}', ['uses' => 'MemberTasksController@data'])->name('tasks.data');
-            Route::post('tasks/sort', ['uses' => 'MemberTasksController@sort'])->name('tasks.sort');
-            Route::post('tasks/change-status', ['uses' => 'MemberTasksController@changeStatus'])->name('tasks.changeStatus');
-            Route::get('tasks/check-task/{taskID}', ['uses' => 'MemberTasksController@checkTask'])->name('tasks.checkTask');
-            Route::resource('tasks', 'MemberTasksController');
+        //     Route::post('tasks/data/{startDate?}/{endDate?}/{hideCompleted?}/{projectId?}', ['uses' => 'MemberTasksController@data'])->name('tasks.data');
+        //     Route::post('tasks/sort', ['uses' => 'MemberTasksController@sort'])->name('tasks.sort');
+        //     Route::post('tasks/change-status', ['uses' => 'MemberTasksController@changeStatus'])->name('tasks.changeStatus');
+        //     Route::get('tasks/check-task/{taskID}', ['uses' => 'MemberTasksController@checkTask'])->name('tasks.checkTask');
+        //     Route::resource('tasks', 'MemberTasksController');
 
-            Route::post('files/store-link', ['uses' => 'MemberProjectFilesController@storeLink'])->name('files.storeLink');
-            Route::get('files/download/{id}', ['uses' => 'MemberProjectFilesController@download'])->name('files.download');
-            Route::get('files/thumbnail', ['uses' => 'MemberProjectFilesController@thumbnailShow'])->name('files.thumbnail');
-            Route::post('files/multiple-upload', ['uses' => 'MemberProjectFilesController@storeMultiple'])->name('files.multiple-upload');
-            Route::resource('files', 'MemberProjectFilesController');
+        //     Route::post('files/store-link', ['uses' => 'MemberProjectFilesController@storeLink'])->name('files.storeLink');
+        //     Route::get('files/download/{id}', ['uses' => 'MemberProjectFilesController@download'])->name('files.download');
+        //     Route::get('files/thumbnail', ['uses' => 'MemberProjectFilesController@thumbnailShow'])->name('files.thumbnail');
+        //     Route::post('files/multiple-upload', ['uses' => 'MemberProjectFilesController@storeMultiple'])->name('files.multiple-upload');
+        //     Route::resource('files', 'MemberProjectFilesController');
 
-            Route::get('time-log/show-log/{id}', ['uses' => 'MemberTimeLogController@showTomeLog'])->name('time-log.show-log');
-            Route::get('time-log/data/{id}', ['uses' => 'MemberTimeLogController@data'])->name('time-log.data');
-            Route::post('time-log/store-time-log', ['uses' => 'MemberTimeLogController@storeTimeLog'])->name('time-log.store-time-log');
-            Route::post('time-log/update-time-log/{id}', ['uses' => 'MemberTimeLogController@updateTimeLog'])->name('time-log.update-time-log');
-            Route::resource('time-log', 'MemberTimeLogController');
+        //     Route::get('time-log/show-log/{id}', ['uses' => 'MemberTimeLogController@showTomeLog'])->name('time-log.show-log');
+        //     Route::get('time-log/data/{id}', ['uses' => 'MemberTimeLogController@data'])->name('time-log.data');
+        //     Route::post('time-log/store-time-log', ['uses' => 'MemberTimeLogController@storeTimeLog'])->name('time-log.store-time-log');
+        //     Route::post('time-log/update-time-log/{id}', ['uses' => 'MemberTimeLogController@updateTimeLog'])->name('time-log.update-time-log');
+        //     Route::resource('time-log', 'MemberTimeLogController');
 
-            Route::get('milestones/detail/{id}', ['uses' => 'MemberProjectMilestonesController@detail'])->name('milestones.detail');
-            Route::get('milestones/data/{id}', ['uses' => 'MemberProjectMilestonesController@data'])->name('milestones.data');
-            Route::resource('milestones', 'MemberProjectMilestonesController');
-        });
+        //     Route::get('milestones/detail/{id}', ['uses' => 'MemberProjectMilestonesController@detail'])->name('milestones.detail');
+        //     Route::get('milestones/data/{id}', ['uses' => 'MemberProjectMilestonesController@data'])->name('milestones.data');
+        //     Route::resource('milestones', 'MemberProjectMilestonesController');
+        // });
 
         //sticky note
         Route::resource('sticky-note', 'MemberStickyNoteController');
 
         // User message
-        Route::post('message-submit', ['as' => 'user-chat.message-submit', 'uses' => 'MemberChatController@postChatMessage']);
-        Route::get('user-search', ['as' => 'user-chat.user-search', 'uses' => 'MemberChatController@getUserSearch']);
-        Route::resource('user-chat', 'MemberChatController');
+        // Route::post('message-submit', ['as' => 'user-chat.message-submit', 'uses' => 'MemberChatController@postChatMessage']);
+        // Route::get('user-search', ['as' => 'user-chat.user-search', 'uses' => 'MemberChatController@getUserSearch']);
+        // Route::resource('user-chat', 'MemberChatController');
 
         //Notice
-        Route::get('notices/data', ['uses' => 'MemberNoticesController@data'])->name('notices.data');
-        Route::resource('notices', 'MemberNoticesController');
+        // Route::get('notices/data', ['uses' => 'MemberNoticesController@data'])->name('notices.data');
+        // Route::resource('notices', 'MemberNoticesController');
 
         // task routes
         Route::resource('task', 'MemberAllTasksController', ['only' => ['edit', 'update', 'index']]); // hack to make left admin menu item active
@@ -793,14 +793,14 @@ Route::group(['middleware' => 'auth'], function () {
             ['prefix' => 'finance'], function () {
 
             // Estimate routes
-            Route::get('estimates/data', ['uses' => 'MemberEstimatesController@data'])->name('estimates.data');
-            Route::get('estimates/download/{id}', ['uses' => 'MemberEstimatesController@download'])->name('estimates.download');
-            Route::post('estimates/send-estimate/{id}', ['uses' => 'MemberEstimatesController@sendEstimate'])->name('estimates.send-estimate');
-            Route::resource('estimates', 'MemberEstimatesController');
+            // Route::get('estimates/data', ['uses' => 'MemberEstimatesController@data'])->name('estimates.data');
+            // Route::get('estimates/download/{id}', ['uses' => 'MemberEstimatesController@download'])->name('estimates.download');
+            // Route::post('estimates/send-estimate/{id}', ['uses' => 'MemberEstimatesController@sendEstimate'])->name('estimates.send-estimate');
+            // Route::resource('estimates', 'MemberEstimatesController');
 
-            //Expenses routes
-            Route::get('expenses/data', ['uses' => 'MemberExpensesController@data'])->name('expenses.data');
-            Route::resource('expenses', 'MemberExpensesController');
+            // //Expenses routes
+            // Route::get('expenses/data', ['uses' => 'MemberExpensesController@data'])->name('expenses.data');
+            // Route::resource('expenses', 'MemberExpensesController');
 
             // All invoices list routes
             Route::post('file/store', ['uses' => 'MemberAllInvoicesController@storeFile'])->name('invoiceFile.store');
@@ -821,71 +821,71 @@ Route::group(['middleware' => 'auth'], function () {
             Route::resource('all-invoices', 'MemberAllInvoicesController');
 
             // All Credit Note routes
-            Route::post('credit-file/store', ['uses' => 'MemberAllCreditNotesController@storeFile'])->name('creditNoteFile.store');
-            Route::delete('credit-file/destroy', ['uses' => 'MemberAllCreditNotesController@destroyFile'])->name('creditNoteFile.destroy');
-            Route::get('all-credit-notes/data', ['uses' => 'MemberAllCreditNotesController@data'])->name('all-credit-notes.data');
-            Route::get('all-credit-notes/download/{id}', ['uses' => 'MemberAllCreditNotesController@download'])->name('all-credit-notes.download');
-            Route::get('all-credit-notes/convert-invoice/{id}', ['uses' => 'MemberAllCreditNotesController@convertInvoice'])->name('all-credit-notes.convert-invoice');
-            Route::get('all-credit-notes/update-item', ['uses' => 'MemberAllCreditNotesController@addItems'])->name('all-credit-notes.update-item');
-            Route::get('all-credit-notes/payment-detail/{creditNoteID}', ['uses' => 'MemberAllCreditNotesController@paymentDetail'])->name('all-credit-notes.payment-detail');
-            Route::resource('all-credit-notes', 'MemberAllCreditNotesController');
+            // Route::post('credit-file/store', ['uses' => 'MemberAllCreditNotesController@storeFile'])->name('creditNoteFile.store');
+            // Route::delete('credit-file/destroy', ['uses' => 'MemberAllCreditNotesController@destroyFile'])->name('creditNoteFile.destroy');
+            // Route::get('all-credit-notes/data', ['uses' => 'MemberAllCreditNotesController@data'])->name('all-credit-notes.data');
+            // Route::get('all-credit-notes/download/{id}', ['uses' => 'MemberAllCreditNotesController@download'])->name('all-credit-notes.download');
+            // Route::get('all-credit-notes/convert-invoice/{id}', ['uses' => 'MemberAllCreditNotesController@convertInvoice'])->name('all-credit-notes.convert-invoice');
+            // Route::get('all-credit-notes/update-item', ['uses' => 'MemberAllCreditNotesController@addItems'])->name('all-credit-notes.update-item');
+            // Route::get('all-credit-notes/payment-detail/{creditNoteID}', ['uses' => 'MemberAllCreditNotesController@paymentDetail'])->name('all-credit-notes.payment-detail');
+            // Route::resource('all-credit-notes', 'MemberAllCreditNotesController');
 
-            //Payments routes
-            Route::get('payments/data', ['uses' => 'MemberPaymentsController@data'])->name('payments.data');
-            Route::get('payments/pay-invoice/{invoiceId}', ['uses' => 'MemberPaymentsController@payInvoice'])->name('payments.payInvoice');
-            Route::resource('payments', 'MemberPaymentsController');
+            // //Payments routes
+            // Route::get('payments/data', ['uses' => 'MemberPaymentsController@data'])->name('payments.data');
+            // Route::get('payments/pay-invoice/{invoiceId}', ['uses' => 'MemberPaymentsController@payInvoice'])->name('payments.payInvoice');
+            // Route::resource('payments', 'MemberPaymentsController');
         });
 
         // Ticket reply template routes
-        Route::post('replyTemplates/fetch-template', ['uses' => 'MemberTicketReplyTemplatesController@fetchTemplate'])->name('replyTemplates.fetchTemplate');
+        // Route::post('replyTemplates/fetch-template', ['uses' => 'MemberTicketReplyTemplatesController@fetchTemplate'])->name('replyTemplates.fetchTemplate');
 
-        //Tickets routes
-        Route::post('tickets/data', ['uses' => 'MemberTicketsController@data'])->name('tickets.data');
-        Route::post('tickets/storeAdmin', ['uses' => 'MemberTicketsController@storeAdmin'])->name('tickets.storeAdmin');
-        Route::post('tickets/updateAdminOtherData/{id}', ['uses' => 'MemberTicketsController@updateAdminOtherData'])->name('tickets.updateAdminOtherData');
-        Route::post('tickets/updateAdmin/{id}', ['uses' => 'MemberTicketsController@updateAdmin'])->name('tickets.updateAdmin');
-        Route::post('tickets/close-ticket/{id}', ['uses' => 'MemberTicketsController@closeTicket'])->name('tickets.closeTicket');
-        Route::post('tickets/open-ticket/{id}', ['uses' => 'MemberTicketsController@reopenTicket'])->name('tickets.reopenTicket');
-        Route::post('tickets/admin-data', ['uses' => 'MemberTicketsController@adminData'])->name('tickets.adminData');
-        Route::post('tickets/refresh-count', ['uses' => 'MemberTicketsController@refreshCount'])->name('tickets.refreshCount');
-        Route::get('tickets/reply-delete/{id?}', ['uses' => 'MemberTicketsController@destroyReply'])->name('tickets.reply-delete');
+        // //Tickets routes
+        // Route::post('tickets/data', ['uses' => 'MemberTicketsController@data'])->name('tickets.data');
+        // Route::post('tickets/storeAdmin', ['uses' => 'MemberTicketsController@storeAdmin'])->name('tickets.storeAdmin');
+        // Route::post('tickets/updateAdminOtherData/{id}', ['uses' => 'MemberTicketsController@updateAdminOtherData'])->name('tickets.updateAdminOtherData');
+        // Route::post('tickets/updateAdmin/{id}', ['uses' => 'MemberTicketsController@updateAdmin'])->name('tickets.updateAdmin');
+        // Route::post('tickets/close-ticket/{id}', ['uses' => 'MemberTicketsController@closeTicket'])->name('tickets.closeTicket');
+        // Route::post('tickets/open-ticket/{id}', ['uses' => 'MemberTicketsController@reopenTicket'])->name('tickets.reopenTicket');
+        // Route::post('tickets/admin-data', ['uses' => 'MemberTicketsController@adminData'])->name('tickets.adminData');
+        // Route::post('tickets/refresh-count', ['uses' => 'MemberTicketsController@refreshCount'])->name('tickets.refreshCount');
+        // Route::get('tickets/reply-delete/{id?}', ['uses' => 'MemberTicketsController@destroyReply'])->name('tickets.reply-delete');
 
-        Route::resource('tickets', 'MemberTicketsController');
+        // Route::resource('tickets', 'MemberTicketsController');
 
-        //Ticket agent routes
-        Route::post('ticket-agent/data', ['uses' => 'MemberTicketsAgentController@data'])->name('ticket-agent.data');
-        Route::post('ticket-agent/refresh-count', ['uses' => 'MemberTicketsAgentController@refreshCount'])->name('ticket-agent.refreshCount');
-        Route::post('ticket-agent/fetch-template', ['uses' => 'MemberTicketsAgentController@fetchTemplate'])->name('ticket-agent.fetchTemplate');
-        Route::post('ticket-agent/updateAgentOtherData/{id}', ['uses' => 'MemberTicketsAgentController@updateAgentOtherData'])->name('ticket-agent.updateAgentOtherData');
-        Route::resource('ticket-agent', 'MemberTicketsAgentController');
+        // //Ticket agent routes
+        // Route::post('ticket-agent/data', ['uses' => 'MemberTicketsAgentController@data'])->name('ticket-agent.data');
+        // Route::post('ticket-agent/refresh-count', ['uses' => 'MemberTicketsAgentController@refreshCount'])->name('ticket-agent.refreshCount');
+        // Route::post('ticket-agent/fetch-template', ['uses' => 'MemberTicketsAgentController@fetchTemplate'])->name('ticket-agent.fetchTemplate');
+        // Route::post('ticket-agent/updateAgentOtherData/{id}', ['uses' => 'MemberTicketsAgentController@updateAgentOtherData'])->name('ticket-agent.updateAgentOtherData');
+        // Route::resource('ticket-agent', 'MemberTicketsAgentController');
 
-        Route::get('ticket-files/download/{id}', ['uses' => 'TicketFilesController@download'])->name('ticket-files.download');
-        Route::resource('ticket-files', 'TicketFilesController');
+        // Route::get('ticket-files/download/{id}', ['uses' => 'TicketFilesController@download'])->name('ticket-files.download');
+        // Route::resource('ticket-files', 'TicketFilesController');
 
-        // attendance
-        Route::get('attendances/detail', ['uses' => 'MemberAttendanceController@attendanceDetail'])->name('attendances.detail');
-        Route::get('attendances/data', ['uses' => 'MemberAttendanceController@data'])->name('attendances.data');
-        Route::get('attendances/check-holiday', ['uses' => 'MemberAttendanceController@checkHoliday'])->name('attendances.check-holiday');
-        Route::post('attendances/storeAttendance', ['uses' => 'MemberAttendanceController@storeAttendance'])->name('attendances.storeAttendance');
-        Route::post('attendances/employeeData/{startDate?}/{endDate?}/{userId?}', ['uses' => 'MemberAttendanceController@employeeData'])->name('attendances.employeeData');
-        Route::post('attendances/refresh-count/{startDate?}/{endDate?}/{userId?}', ['uses' => 'MemberAttendanceController@refreshCount'])->name('attendances.refreshCount');
-        Route::post('attendances/storeMark', ['uses' => 'MemberAttendanceController@storeMark'])->name('attendances.storeMark');
-        Route::get('attendances/mark/{id}/{day}/{month}/{year}', ['uses' => 'MemberAttendanceController@mark'])->name('attendances.mark');
-        Route::get('attendances/summary', ['uses' => 'MemberAttendanceController@summary'])->name('attendances.summary');
-        Route::post('attendances/summaryData', ['uses' => 'MemberAttendanceController@summaryData'])->name('attendances.summaryData');
-        Route::get('attendances/info/{id}', ['uses' => 'MemberAttendanceController@detail'])->name('attendances.info');
-        Route::post('attendances/updateDetails/{id}', ['uses' => 'MemberAttendanceController@updateDetails'])->name('attendances.updateDetails');
+        // // attendance
+        // Route::get('attendances/detail', ['uses' => 'MemberAttendanceController@attendanceDetail'])->name('attendances.detail');
+        // Route::get('attendances/data', ['uses' => 'MemberAttendanceController@data'])->name('attendances.data');
+        // Route::get('attendances/check-holiday', ['uses' => 'MemberAttendanceController@checkHoliday'])->name('attendances.check-holiday');
+        // Route::post('attendances/storeAttendance', ['uses' => 'MemberAttendanceController@storeAttendance'])->name('attendances.storeAttendance');
+        // Route::post('attendances/employeeData/{startDate?}/{endDate?}/{userId?}', ['uses' => 'MemberAttendanceController@employeeData'])->name('attendances.employeeData');
+        // Route::post('attendances/refresh-count/{startDate?}/{endDate?}/{userId?}', ['uses' => 'MemberAttendanceController@refreshCount'])->name('attendances.refreshCount');
+        // Route::post('attendances/storeMark', ['uses' => 'MemberAttendanceController@storeMark'])->name('attendances.storeMark');
+        // Route::get('attendances/mark/{id}/{day}/{month}/{year}', ['uses' => 'MemberAttendanceController@mark'])->name('attendances.mark');
+        // Route::get('attendances/summary', ['uses' => 'MemberAttendanceController@summary'])->name('attendances.summary');
+        // Route::post('attendances/summaryData', ['uses' => 'MemberAttendanceController@summaryData'])->name('attendances.summaryData');
+        // Route::get('attendances/info/{id}', ['uses' => 'MemberAttendanceController@detail'])->name('attendances.info');
+        // Route::post('attendances/updateDetails/{id}', ['uses' => 'MemberAttendanceController@updateDetails'])->name('attendances.updateDetails');
 
-        Route::resource('attendances', 'MemberAttendanceController');
+        // Route::resource('attendances', 'MemberAttendanceController');
 
-        // Holidays
-        Route::get('holidays/view-holiday/{year?}', 'MemberHolidaysController@viewHoliday')->name('holidays.view-holiday');
-        Route::get('holidays/calendar-month', 'MemberHolidaysController@getCalendarMonth')->name('holidays.calendar-month');
-        Route::get('holidays/mark_sunday', 'MemberHolidaysController@Sunday')->name('holidays.mark-sunday');
-        Route::get('holidays/calendar/{year?}', 'MemberHolidaysController@holidayCalendar')->name('holidays.calendar');
-        Route::get('holidays/mark-holiday', 'MemberHolidaysController@markHoliday')->name('holidays.mark-holiday');
-        Route::post('holidays/mark-holiday-store', 'MemberHolidaysController@markDayHoliday')->name('holidays.mark-holiday-store');
-        Route::resource('holidays', 'MemberHolidaysController');
+        // // Holidays
+        // Route::get('holidays/view-holiday/{year?}', 'MemberHolidaysController@viewHoliday')->name('holidays.view-holiday');
+        // Route::get('holidays/calendar-month', 'MemberHolidaysController@getCalendarMonth')->name('holidays.calendar-month');
+        // Route::get('holidays/mark_sunday', 'MemberHolidaysController@Sunday')->name('holidays.mark-sunday');
+        // Route::get('holidays/calendar/{year?}', 'MemberHolidaysController@holidayCalendar')->name('holidays.calendar');
+        // Route::get('holidays/mark-holiday', 'MemberHolidaysController@markHoliday')->name('holidays.mark-holiday');
+        // Route::post('holidays/mark-holiday-store', 'MemberHolidaysController@markDayHoliday')->name('holidays.mark-holiday-store');
+        // Route::resource('holidays', 'MemberHolidaysController');
 
         // events
         Route::post('events/removeAttendee', ['as' => 'events.removeAttendee', 'uses' => 'MemberEventController@removeAttendee']);
@@ -904,38 +904,39 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('clients/data', ['uses' => 'MemberClientsController@data'])->name('clients.data');
         Route::get('clients/create/{clientID?}', ['uses' => 'MemberClientsController@create'])->name('clients.create');
         Route::resource('clients', 'MemberClientsController', ['except' => ['create']]);
-
-        Route::get('employees/docs-create/{id}', ['uses' => 'MemberEmployeesController@docsCreate'])->name('employees.docs-create');
-        Route::get('employees/tasks/{userId}/{hideCompleted}', ['uses' => 'MemberEmployeesController@tasks'])->name('employees.tasks');
-        Route::get('employees/time-logs/{userId}', ['uses' => 'MemberEmployeesController@timeLogs'])->name('employees.time-logs');
-        Route::get('employees/data', ['uses' => 'MemberEmployeesController@data'])->name('employees.data');
-        Route::get('employees/export', ['uses' => 'MemberEmployeesController@export'])->name('employees.export');
-        Route::post('employees/assignRole', ['uses' => 'MemberEmployeesController@assignRole'])->name('employees.assignRole');
-        Route::post('employees/assignProjectAdmin', ['uses' => 'MemberEmployeesController@assignProjectAdmin'])->name('employees.assignProjectAdmin');
-        Route::resource('employees', 'MemberEmployeesController');
+       
+        // Route::get('employees/free-employees', ['uses' => 'ManageEmployeesController@freeEmployees'])->name('employees.freeEmployees');
+        // Route::get('employees/docs-create/{id}', ['uses' => 'MemberEmployeesController@docsCreate'])->name('employees.docs-create');
+        // Route::get('employees/tasks/{userId}/{hideCompleted}', ['uses' => 'MemberEmployeesController@tasks'])->name('employees.tasks');
+        // Route::get('employees/time-logs/{userId}', ['uses' => 'MemberEmployeesController@timeLogs'])->name('employees.time-logs');
+        // Route::get('employees/data', ['uses' => 'MemberEmployeesController@data'])->name('employees.data');
+        // Route::get('employees/export', ['uses' => 'MemberEmployeesController@export'])->name('employees.export');
+        // Route::post('employees/assignRole', ['uses' => 'MemberEmployeesController@assignRole'])->name('employees.assignRole');
+        // Route::post('employees/assignProjectAdmin', ['uses' => 'MemberEmployeesController@assignProjectAdmin'])->name('employees.assignProjectAdmin');
+        // Route::resource('employees', 'MemberEmployeesController');
 
         Route::get('employee-docs/download/{id}', ['uses' => 'MemberEmployeeDocsController@download'])->name('employee-docs.download');
         Route::resource('employee-docs', 'MemberEmployeeDocsController');
 
 
-        Route::get('all-time-logs/show-active-timer', ['uses' => 'MemberAllTimeLogController@showActiveTimer'])->name('all-time-logs.show-active-timer');
-        Route::post('all-time-logs/stop-timer/{id}', ['uses' => 'MemberAllTimeLogController@stopTimer'])->name('all-time-logs.stopTimer');
-        Route::post('all-time-logs/data/{startDate?}/{endDate?}/{projectId?}/{employee?}', ['uses' => 'MemberAllTimeLogController@data'])->name('all-time-logs.data');
-        Route::get('all-time-logs/members/{projectId}', ['uses' => 'MemberAllTimeLogController@membersList'])->name('all-time-logs.members');
-        Route::get('all-time-logs/task-members/{taskId}', ['uses' => 'MemberAllTimeLogController@taskMembersList'])->name('all-time-logs.task-members');
-        Route::post('all-time-logs/approve-timelog', ['uses' => 'MemberAllTimeLogController@approveTimelog'])->name('all-time-logs.approve-timelog');
-        Route::resource('all-time-logs', 'MemberAllTimeLogController');
+        // Route::get('all-time-logs/show-active-timer', ['uses' => 'MemberAllTimeLogController@showActiveTimer'])->name('all-time-logs.show-active-timer');
+        // Route::post('all-time-logs/stop-timer/{id}', ['uses' => 'MemberAllTimeLogController@stopTimer'])->name('all-time-logs.stopTimer');
+        // Route::post('all-time-logs/data/{startDate?}/{endDate?}/{projectId?}/{employee?}', ['uses' => 'MemberAllTimeLogController@data'])->name('all-time-logs.data');
+        // Route::get('all-time-logs/members/{projectId}', ['uses' => 'MemberAllTimeLogController@membersList'])->name('all-time-logs.members');
+        // Route::get('all-time-logs/task-members/{taskId}', ['uses' => 'MemberAllTimeLogController@taskMembersList'])->name('all-time-logs.task-members');
+        // Route::post('all-time-logs/approve-timelog', ['uses' => 'MemberAllTimeLogController@approveTimelog'])->name('all-time-logs.approve-timelog');
+        // Route::resource('all-time-logs', 'MemberAllTimeLogController');
 
-        Route::post('leaves/leaveAction', ['as' => 'leaves.leaveAction', 'uses' => 'MemberLeavesController@leaveAction']);
-        Route::get('leaves/data', ['as' => 'leaves.data', 'uses' => 'MemberLeavesController@data']);
-        Route::resource('leaves', 'MemberLeavesController');
+        // Route::post('leaves/leaveAction', ['as' => 'leaves.leaveAction', 'uses' => 'MemberLeavesController@leaveAction']);
+        // Route::get('leaves/data', ['as' => 'leaves.data', 'uses' => 'MemberLeavesController@data']);
+        // Route::resource('leaves', 'MemberLeavesController');
 
-        Route::post('leaves-dashboard/leaveAction', ['as' => 'leaves-dashboard.leaveAction', 'uses' => 'MemberLeaveDashboardController@leaveAction']);
-        Route::resource('leaves-dashboard', 'MemberLeaveDashboardController');
+        // Route::post('leaves-dashboard/leaveAction', ['as' => 'leaves-dashboard.leaveAction', 'uses' => 'MemberLeaveDashboardController@leaveAction']);
+        // Route::resource('leaves-dashboard', 'MemberLeaveDashboardController');
 
-        //sub task routes
-        Route::post('sub-task/changeStatus', ['as' => 'sub-task.changeStatus', 'uses' => 'MemberSubTaskController@changeStatus']);
-        Route::resource('sub-task', 'MemberSubTaskController');
+        // //sub task routes
+        // Route::post('sub-task/changeStatus', ['as' => 'sub-task.changeStatus', 'uses' => 'MemberSubTaskController@changeStatus']);
+        // Route::resource('sub-task', 'MemberSubTaskController');
 
         //task comments
         Route::resource('task-comment', 'MemberTaskCommentController');
@@ -944,21 +945,21 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('task-note', 'MemberTaskNoteController');
 
 
-        //region Products Routes
-        Route::get('products/data', ['uses' => 'MemberProductController@data'])->name('products.data');
-        Route::resource('products', 'MemberProductController');
+        // //region Products Routes
+        // Route::get('products/data', ['uses' => 'MemberProductController@data'])->name('products.data');
+        // Route::resource('products', 'MemberProductController');
         //endregion
 
         // change language
-        Route::get('language/change-language', ['uses' => 'MemberProfileController@changeLanguage'])->name('language.change-language');
+        // Route::get('language/change-language', ['uses' => 'MemberProfileController@changeLanguage'])->name('language.change-language');
 
-        //region discussion routes
-        Route::post('discussion/setBestAnswer', ['as' => 'discussion.setBestAnswer', 'uses' => 'MemberDiscussionController@setBestAnswer']);
-        Route::resource('discussion', 'MemberDiscussionController');
-        //endregion
+        // //region discussion routes
+        // Route::post('discussion/setBestAnswer', ['as' => 'discussion.setBestAnswer', 'uses' => 'MemberDiscussionController@setBestAnswer']);
+        // Route::resource('discussion', 'MemberDiscussionController');
+        // //endregion
 
-        //region discussion routes
-        Route::resource('discussion-reply', 'MemberDiscussionReplyController');
+        // //region discussion routes
+        // Route::resource('discussion-reply', 'MemberDiscussionReplyController');
         //endregion
 
     });

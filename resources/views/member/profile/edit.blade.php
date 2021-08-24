@@ -35,84 +35,7 @@
                         {!! Form::open(['id'=>'updateProfile','class'=>'ajax-form','method'=>'PUT']) !!}
                         <div class="form-body">
                             <div class="row">
-                                <div class="col-md-6 ">
-                                    <div class="form-group">
-                                        <label class="required">@lang('modules.profile.yourName')</label>
-                                        <input type="text" name="name" id="name" class="form-control" value="{{ $userDetail->name }}">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="required">@lang('modules.profile.yourEmail')</label>
-                                        <input type="email" name="email" id="email" class="form-control" value="{{ $userDetail->email }}">
-                                    </div>
-                                </div>
-                                <!--/span-->
-                            </div>
-                            <div class="row">
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>@lang('modules.profile.yourPassword')</label>
-                                        <input type="password" name="password" id="password" readonly="readonly" onfocus="this.removeAttribute('readonly');" class="form-control auto-complete-off">
-                                        <span class="help-block"> @lang('modules.profile.passwordNote')</span>
-                                    </div>
-                                </div>
-                                <!--/span-->
-
-                                <div class="col-md-6">
-                                    <label>@lang('app.mobile')</label>
-                                    <div class="form-group">
-                                        <select class="select2 phone_country_code form-control" name="phone_code">
-                                            <option value="">--</option>
-                                            @foreach ($countries as $item)
-                                                <option
-                                                @if ($item->id == $userDetail->country_id)
-                                                    selected
-                                                @endif
-                                                value="{{ $item->id }}">+{{ $item->phonecode.' ('.$item->iso.')' }}</option>
-                                            @endforeach
-                                        </select>
-                                        <input type="tel" name="mobile" id="mobile" class="mobile" autocomplete="nope" value="{{ $userDetail->mobile }}">
-                                    </div>
-                                   
-                                </div>
-                                <!--/span-->
-                            </div>
-                            <!--/row-->
-
-                            <div class="row">
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <div class="m-b-10">
-                                            <label class="control-label">@lang('modules.emailSettings.emailNotifications')</label>
-                                        </div>
-                                        <div class="radio radio-inline">
-                                            <input type="radio" 
-                                            @if ($userDetail->email_notifications)
-                                                checked
-                                            @endif
-                                            name="email_notifications" id="email_notifications1" value="1">
-                                            <label for="email_notifications1" class="">
-                                                @lang('app.enable') </label>
-
-                                        </div>
-                                        <div class="radio radio-inline ">
-                                            <input type="radio" name="email_notifications"
-                                            @if (!$userDetail->email_notifications)
-                                                checked
-                                            @endif
-
-                                                   id="email_notifications2" value="0">
-                                            <label for="email_notifications2" class="">
-                                                @lang('app.disable') </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
+                            <div class="col-md-6">
                                     <div class="form-group">
                                         <label>@lang('modules.employees.gender')</label>
                                         <select name="gender" id="gender" class="form-control">
@@ -122,7 +45,46 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="required">@lang('modules.profile.yourName')</label>
+                                        <input type="text" name="name" id="name" class="form-control" value="{{ $userDetail->name }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>@lang('app.mobile')</label>
+                                    <div class="form-group">
+                                        <input type="tel" name="mobile" id="mobile"  class="form-control auto-complete-off" autocomplete="nope" value="{{ $userDetail->mobile }}">
+                                    </div>
 
+                                </div>
+                                <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>@lang('modules.employees.ephone')</label>
+                                            <input type="text" name="office" id="office"  value="" class="form-control">
+                                        </div>
+                                    </div>
+                                <!--/span-->
+                                <!--/span-->
+                            </div>
+
+                            <!--/row-->
+
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="required">@lang('modules.profile.yourEmail')</label>
+                                        <input type="email" name="email" id="email" class="form-control" value="{{ $userDetail->email }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>@lang('modules.profile.yourPassword')</label>
+                                        <input type="password" name="password" id="password" readonly="readonly" onfocus="this.removeAttribute('readonly');" class="form-control auto-complete-off">
+                                        <span class="help-block"> @lang('modules.profile.passwordNote')</span>
+                                    </div>
+                                </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -161,7 +123,33 @@
                                     </div>
 
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="m-b-10">
+                                            <label class="control-label">@lang('modules.emailSettings.emailNotifications')</label>
+                                        </div>
+                                        <div class="radio radio-inline">
+                                            <input type="radio" 
+                                            @if ($userDetail->email_notifications)
+                                                checked
+                                            @endif
+                                            name="email_notifications" id="email_notifications1" value="1">
+                                            <label for="email_notifications1" class="">
+                                                @lang('app.enable') </label>
 
+                                        </div>
+                                        <div class="radio radio-inline ">
+                                            <input type="radio" name="email_notifications"
+                                            @if (!$userDetail->email_notifications)
+                                                checked
+                                            @endif
+
+                                                   id="email_notifications2" value="0">
+                                            <label for="email_notifications2" class="">
+                                                @lang('app.disable') </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!--/span-->
 

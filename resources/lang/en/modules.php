@@ -212,6 +212,7 @@ return array(
     'slackUsername' => 'Slack Username',
     'joiningDate' => 'Joining Date',
     'gender' => 'Gender',
+    'ephone' => 'Emergency Contact Phone',
     'title' => 'Select Tech',
     'role' => 'Role',
     'lastDate' => 'Exit Date',
