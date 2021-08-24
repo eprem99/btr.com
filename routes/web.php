@@ -672,8 +672,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('dashboard', ['uses' => 'MemberDashboardController@index'])->name('dashboard');
 
-        // Route::post('profile/updateOneSignalId', ['uses' => 'MemberProfileController@updateOneSignalId'])->name('profile.updateOneSignalId');
-        // Route::resource('profile', 'MemberProfileController');
+        Route::post('profile/updateOneSignalId', ['uses' => 'MemberProfileController@updateOneSignalId'])->name('profile.updateOneSignalId');
+        Route::resource('profile', 'MemberProfileController');
 
         // Route::get('projects/ajaxCreate/{columnId?}', ['uses' => 'MemberProjectsController@ajaxCreate'])->name('projects.ajaxCreate');
         // Route::post('projects/gantt-task-update/{id}', ['uses' => 'MemberProjectsController@updateTaskDuration'])->name('projects.gantt-task-update');
