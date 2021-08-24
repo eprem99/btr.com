@@ -87,7 +87,7 @@
             </a>
         </div>
         <div class="col-md-12">
-            <a href="{{ route('client.all-tasks.index') }}">
+            <a href="{{ route('member.all-tasks.index') }}">
                 <div class="white-box">
                     <div class="row">
                         <div class="col-xs-3">
