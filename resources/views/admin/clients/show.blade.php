@@ -57,77 +57,43 @@
                                                 <p class="text-muted">{{ $client->email }}</p>
                                             </div>
                                             <div class="col-md-4 col-xs-6"> <strong>@lang('app.mobile')</strong> <br>
-                                                <p class="text-muted">{{ (!is_null($client->country_id)) ? '+'.$client->country->phonecode.'-' : ''}}{{ $client->mobile ?? 'NA'}}</p>
+                                                <p class="text-muted">{{ ucwords($client->mobile) }}</p>
                                             </div>
                                         </div>
                                         <hr>
                                         <div class="row">
-                                            <div class="col-md-4 col-xs-6 b-r"> <strong>@lang('modules.client.companyName')</strong> <br>
-                                                <p class="text-muted">{{ (!empty($clientDetail) ) ? ucwords($clientDetail->company_name) : 'NA'}}</p>
+                                            <div class="col-md-6 col-xs-6 b-r"> <strong>@lang('modules.client.officePhoneNumber')</strong> <br>
+                                                <p class="text-muted">{{ ucwords($clientDetail->office) }}</p>
+                        
                                             </div>
-                                            <div class="col-md-4 col-xs-6 b-r"> <strong>@lang('modules.client.website')</strong> <br>
-                                                <p class="text-muted">{{ $clientDetail->website ?? 'NA' }}</p>
-                                            </div>
-                                            <div class="col-md-4 col-xs-6"> <strong>@lang('app.gstNumber')</strong> <br>
-                                                <p class="text-muted">{{ $clientDetail->gst_number ?? 'NA' }}</p>
+                                            <div class="col-md-6 col-xs-6 b-r"> <strong>@lang('modules.client.companyName')</strong> <br>
+                                                <p class="text-muted">{{ (!empty($clientDetail) && !empty($clientDetail->clientCategory))  ? $clientDetail->clientCategory->category_name : '--' }}</p>
                                             </div>
                                         </div>
                                         <hr>
                                         <div class="row">
-                                            <div class="col-xs-6 b-r"> <strong>@lang('app.address')</strong> <br>
-                                                <p class="text-muted">{!!  (!empty($clientDetail)) ? ucwords($clientDetail->address) : 'NA' !!}</p>
+                                            <div class="col-md-3 col-xs-6 b-r"> <strong>@lang('modules.stripeCustomerAddress.country')</strong> <br>
+                                                <p class="text-muted">{{ ucwords($clientDetail->country) }}</p>
                                             </div>
-                                            <div class="col-xs-6"> <strong>@lang('app.shippingAddress')</strong> <br>
-                                                <p class="text-muted">{{ $clientDetail->shipping_address ?? 'NA' }}</p>
+                                            <div class="col-md-3 col-xs-6 b-r"> <strong>@lang('modules.stripeCustomerAddress.state')</strong> <br>
+                                                <p class="text-muted">{{ $clientDetail->state }}</p>
+                                            </div>
+                                            <div class="col-md-3 col-xs-6"> <strong>@lang('modules.stripeCustomerAddress.city')</strong> <br>
+                                                <p class="text-muted">{{ ucwords($clientDetail->city) }}</p>
+                                            </div>
+                                            <div class="col-md-3 col-xs-6"> <strong>@lang('modules.stripeCustomerAddress.postalCode')</strong> <br>
+                                                <p class="text-muted">{{ ucwords($clientDetail->postal_code)  ?? ''}}</p>
                                             </div>
                                         </div>
                                         <hr>
                                         <div class="row">
                                           
-                                                <div class="col-xs-6 b-r"> <strong>@lang('modules.clients.clientCategory')</strong> <br>
-                                                 <p class="text-muted">{{ (!empty($clientDetail) && !empty($clientDetail->clientCategory))  ? $clientDetail->clientCategory->category_name : '--' }}</p>
-                                                </div>
-                                                <div class="col-xs-6"> <strong>@lang('modules.clients.clientSubcategory')</strong> <br>
-                                                      <p class="text-muted">{{  (!empty($clientDetail) && !empty($clientDetail->clientSubcategory))  ? $clientDetail->clientSubcategory->category_name : '--' }}</p>
-                                                </div>
+                                            <div class="col-xs-6 b-r"> <strong>@lang('app.address')</strong> <br>
+                                                <p class="text-muted">{!!  (!empty($clientDetail)) ? ucwords($clientDetail->address) : 'NA' !!}</p>
+                                            </div>
                                             
                                         </div>
-                                        {{--Custom fields data--}}
-                                        @if(isset($fields))
-                                            <div class="row">
-                                                <hr>
-                                                @foreach($fields as $field)
-                                                    <div class="col-md-4">
-                                                        <strong>{{ ucfirst($field->label) }}</strong> <br>
-                                                        <p class="text-muted">
-                                                            @if( $field->type == 'text')
-                                                                {{$clientDetail->custom_fields_data['field_'.$field->id] ?? '-'}}
-                                                            @elseif($field->type == 'password')
-                                                                {{$clientDetail->custom_fields_data['field_'.$field->id] ?? '-'}}
-                                                            @elseif($field->type == 'number')
-                                                                {{$clientDetail->custom_fields_data['field_'.$field->id] ?? '-'}}
-                        
-                                                            @elseif($field->type == 'textarea')
-                                                                {{$clientDetail->custom_fields_data['field_'.$field->id] ?? '-'}}
-                        
-                                                            @elseif($field->type == 'radio')
-                                                                {{ !is_null($clientDetail->custom_fields_data['field_'.$field->id]) ? $clientDetail->custom_fields_data['field_'.$field->id] : '-' }}
-                                                            @elseif($field->type == 'select')
-                                                                {{ (!is_null($clientDetail->custom_fields_data['field_'.$field->id]) && $clientDetail->custom_fields_data['field_'.$field->id] != '') ? $field->values[$clientDetail->custom_fields_data['field_'.$field->id]] : '-' }}
-                                                            @elseif($field->type == 'checkbox')
-                                                                {{ !is_null($clientDetail->custom_fields_data['field_'.$field->id]) ? $field->values[$clientDetail->custom_fields_data['field_'.$field->id]] : '-' }}
-                                                            @elseif($field->type == 'date')
-                                                                {{ \Carbon\Carbon::parse($clientDetail->custom_fields_data['field_'.$field->id])->format($global->date_format)}}
-                                                            @endif
-                                                        </p>
-                        
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @endif
-                        
-                                        {{--custom fields data end--}}
-
+                                        <hr>
                                         <div class="row">
                                             <div class="col-xs-12"> <strong>@lang('app.note')</strong> <br>
                                                 <p class="text-muted">{!!  $clientDetail->note ?? 'NA' !!}</p>

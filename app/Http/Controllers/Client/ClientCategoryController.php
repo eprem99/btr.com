@@ -34,7 +34,7 @@ class ClientCategoryController extends ClientBaseController
      */
     public function index()
     {
-        //
+
     }
 
     /**

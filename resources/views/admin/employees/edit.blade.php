@@ -42,7 +42,7 @@
                         {!! Form::open(['id'=>'updateEmployee','class'=>'ajax-form','method'=>'PUT']) !!}
                         <div class="form-body">
                             <div class="row">
-                                <div class="col-md-2 ">
+                                <div class="col-md-1">
                                     <div class="form-group">
                                         <label class="required">@lang('modules.employees.employeeId')</label>
                                         <a class="mytooltip" href="javascript:void(0)">
@@ -52,8 +52,20 @@
                                                value="{{ $employeeDetail->employee_id }}" autocomplete="nope">
                                     </div>
                                 </div>
-
-                                <div class="col-md-5">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>@lang('modules.employees.gender')</label>
+                                        <select name="gender" id="gender" class="form-control">
+                                            <option @if($userDetail->gender == 'male') selected
+                                                    @endif value="male">@lang('app.male')</option>
+                                            <option @if($userDetail->gender == 'female') selected
+                                                    @endif value="female">@lang('app.female')</option>
+                                            <option @if($userDetail->gender == 'others') selected
+                                                    @endif value="others">@lang('app.others')</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="required">@lang('modules.employees.employeeName')</label>
                                         <input type="text" name="name" id="name" class="form-control"
@@ -72,7 +84,7 @@
                                 <!--/span-->
                             </div>
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="required">@lang('modules.employees.employeePassword')</label>
                                         <input type="password" name="password" id="password"  readonly="readonly" onfocus="this.removeAttribute('readonly');" class="form-control auto-complete-off" >
@@ -80,33 +92,21 @@
                                         <span class="help-block"> @lang('modules.employees.updatePasswordNote')</span>
                                     </div>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <label>@lang('app.mobile')</label>
                                     <div class="form-group">
-                                        <select class="select2 phone_country_code form-control" name="phone_code">
-                                            <option value="">--</option>
-                                            @foreach ($countries as $item)
-                                                <option
-                                                @if ($item->id == $userDetail->country_id)
-                                                    selected
-                                                @endif
-                                                value="{{ $item->id }}">+{{ $item->phonecode.' ('.$item->iso.')' }}</option>
-                                            @endforeach
-                                        </select>
-                                        <input type="tel" name="mobile" id="mobile" class="mobile" autocomplete="nope" value="{{ $userDetail->mobile }}">
+                                        <input type="tel" name="mobile" id="mobile" class="form-control auto-complete-off" value="{{ $userDetail->mobile }}">
                                     </div>
                                    
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>@lang('modules.employees.gender')</label>
-                                        <select name="gender" id="gender" class="form-control">
-                                            <option @if($userDetail->gender == 'male') selected
-                                                    @endif value="male">@lang('app.male')</option>
-                                            <option @if($userDetail->gender == 'female') selected
-                                                    @endif value="female">@lang('app.female')</option>
-                                            <option @if($userDetail->gender == 'others') selected
-                                                    @endif value="others">@lang('app.others')</option>
+                                        <label class="required">@lang('app.department') <button  id="department-setting" type="button" class="btn btn-xs btn-outline btn-info"><i class="ti-settings"></i> @lang('messages.manageDepartment')</button></label>
+                                        <select name="department" id="department" class="form-control">
+                                            <option value="">--</option>
+                                            @foreach($teams as $team)
+                                                <option @if($employeeDetail && $employeeDetail->department_id == $team->id) selected @endif value="{{ $team->id }}">{{ $team->team_name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -260,83 +260,6 @@
 
                             </div>
                             <!--/span-->
-
-                            <div class="row">
-                                @if(isset($fields))
-                                    @foreach($fields as $field)
-                                        <div class="col-md-6">
-                                            <label>{{ ucfirst($field->label) }}</label>
-                                            <div class="form-group">
-                                                @if( $field->type == 'text')
-                                                    <input type="text"
-                                                           name="custom_fields_data[{{$field->name.'_'.$field->id}}]"
-                                                           class="form-control" placeholder="{{$field->label}}"
-                                                           value="{{$employeeDetail->custom_fields_data['field_'.$field->id] ?? ''}}">
-                                                @elseif($field->type == 'password')
-                                                    <input type="password"
-                                                           name="custom_fields_data[{{$field->name.'_'.$field->id}}]"
-                                                           class="form-control" placeholder="{{$field->label}}"
-                                                           value="{{$employeeDetail->custom_fields_data['field_'.$field->id] ?? ''}}">
-                                                @elseif($field->type == 'number')
-                                                    <input type="number"
-                                                           name="custom_fields_data[{{$field->name.'_'.$field->id}}]"
-                                                           class="form-control" placeholder="{{$field->label}}"
-                                                           value="{{$employeeDetail->custom_fields_data['field_'.$field->id] ?? ''}}">
-
-                                                @elseif($field->type == 'textarea')
-                                                    <textarea name="custom_fields_data[{{$field->name.'_'.$field->id}}]"
-                                                              class="form-control" id="{{$field->name}}"
-                                                              cols="3">{{$employeeDetail->custom_fields_data['field_'.$field->id] ?? ''}}</textarea>
-
-                                                @elseif($field->type == 'radio')
-                                                    <div class="radio-list">
-                                                        @foreach($field->values as $key=>$value)
-                                                            <label class="radio-inline @if($key == 0) p-0 @endif">
-                                                                <div class="radio radio-info">
-                                                                    <input type="radio"
-                                                                           name="custom_fields_data[{{$field->name.'_'.$field->id}}]"
-                                                                           id="optionsRadios{{$key.$field->id}}"
-                                                                           value="{{$value}}"
-                                                                           @if(isset($employeeDetail) && $employeeDetail->custom_fields_data['field_'.$field->id] == $value) checked
-                                                                           @elseif($key==0) checked @endif>>
-                                                                    <label for="optionsRadios{{$key.$field->id}}">{{$value}}</label>
-                                                                </div>
-                                                            </label>
-                                                        @endforeach
-                                                    </div>
-                                                @elseif($field->type == 'select')
-                                                    {!! Form::select('custom_fields_data['.$field->name.'_'.$field->id.']',
-                                                            $field->values,
-                                                             isset($employeeDetail)?$employeeDetail->custom_fields_data['field_'.$field->id]:'',['class' => 'form-control gender'])
-                                                     !!}
-
-                                                @elseif($field->type == 'checkbox')
-                                                    <div class="mt-checkbox-inline">
-                                                        @foreach($field->values as $key => $value)
-                                                            <label class="mt-checkbox mt-checkbox-outline">
-                                                                <input name="custom_fields_data[{{$field->name.'_'.$field->id}}][]"
-                                                                       type="checkbox" value="{{$key}}"> {{$value}}
-                                                                <span></span>
-                                                            </label>
-                                                        @endforeach
-                                                    </div>
-                                                @elseif($field->type == 'date')
-                                                    <input type="text" class="form-control date-picker" size="16"
-                                                           name="custom_fields_data[{{$field->name.'_'.$field->id}}]"
-                                                           value="{{ ($employeeDetail->custom_fields_data['field_'.$field->id] != '') ? \Carbon\Carbon::createFromFormat('m/d/Y', $employeeDetail->custom_fields_data['field_'.$field->id])->format('m/d/Y') : \Carbon\Carbon::now()->format('m/d/Y')}}">
-                                                @endif
-                                                <div class="form-control-focus"></div>
-                                                <span class="help-block"></span>
-
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                @endif
-
-                            </div>
-
-
-
                         </div>
                         <div class="form-actions">
                             <button type="submit" id="save-form" class="btn btn-success"><i
@@ -386,52 +309,13 @@
                     return "{{ __('messages.noRecordFound') }}";
                 }
             });
-            $("#designation").select2({
-                formatNoMatches: function () {
-                    return "{{ __('messages.noRecordFound') }}";
-                }
-            });
             $(".select2").select2({
                 formatNoMatches: function () {
                     return "{{ __('messages.noRecordFound') }}";
                 }
             });
 
-            var input = document.querySelector('input[name=tags]'),
-                // init Tagify script on the above inputs
-                tagify = new Tagify(input, {
-                    whitelist : {!! json_encode($skills) !!},
-                    //  blacklist : [".NET", "PHP"] // <-- passed as an attribute in this demo
-                });
-
-// Chainable event listeners
-            tagify.on('add', onAddTag)
-                .on('remove', onRemoveTag)
-                .on('input', onInput)
-                .on('invalid', onInvalidTag)
-                .on('click', onTagClick);
-
-// tag added callback
-            function onAddTag(e){
-                tagify.off('add', onAddTag) // exmaple of removing a custom Tagify event
-            }
-
-// tag remvoed callback
-            function onRemoveTag(e){
-            }
-
-// on character(s) added/removed (user is typing/deleting)
-            function onInput(e){
-            }
-
-// invalid tag added callback
-            function onInvalidTag(e){
-            }
-
-// invalid tag added callback
-            function onTagClick(e){
-            }
-
+    
         })()
     </script>
     <script>
@@ -469,6 +353,23 @@
             $('#modelHeading').html("@lang('messages.manageDepartment')");
             $.ajaxModal('#departmentModel', url);
         });
+        $('#country').select2({
+        }).on("change", function (e) {
+        console.log(e.val);
+        if(e.val == 1){
+            $('#state').html(
+                '<option value="1">Alabama</option><option value="2">Alaska</option><option value="60">American Samoa</option><option value="4">Arizona</option><option value="5">Arkansas</option><option value="6">California</option><option value="8">Colorado</option><option value="9">Connecticut</option><option value="10">Delaware</option><option value="11">District of Columbia</option><option value="12">Florida</option><option value="13">Georgia</option><option value="66">Guam</option><option value="15">Hawaii</option><option value="16">Idaho</option><option value="17">Illinois</option><option value="18">Indiana</option><option value="19">Iowa</option><option value="20">Kansas</option><option value="21">Kentucky</option><option value="22">Louisiana</option><option value="23">Maine</option><option value="24">Maryland</option><option value="25">Massachusetts</option><option value="26">Michigan</option><option value="27">Minnesota</option><option value="28">Mississippi</option><option value="29">Missouri</option><option value="30">Montana</option><option value="31">Nebraska</option><option value="32">Nevada</option><option value="33">New Hampshire</option><option value="34">New Jersey</option><option value="35">New Mexico</option><option value="36">New York</option><option value="37">North Carolina</option><option value="38">North Dakota</option><option value="69">Northern Mariana Islands</option><option value="39">Ohio</option><option value="40">Oklahoma</option><option value="41">Oregon</option><option value="42">Pennsylvania</option><option value="72">Puerto Rico</option><option value="44">Rhode Island</option><option value="45">South Carolina</option><option value="46">South Dakota</option><option value="47">Tennessee</option><option value="48">Texas</option><option value="78">U.S. Virgin Islands</option><option value="49">Utah</option><option value="50">Vermont</option><option value="51">Virginia</option><option value="53">Washington</option><option value="54">West Virginia</option><option value="55">Wisconsin</option><option value="56">Wyoming</option>'
+            )
+        }else if(e.val == 2){
+            $('#state').html(
+                '<option value="87">Alberta</option><option value="84">British Columbia</option><option value="83">Manitoba</option><option value="82">New Brunswick</option><option value="88">Newfoundland and Labrado</option><option value="89">Northwest Territories</option><option value="81">Nova Scotia</option><option value="91">Nunavut</option><option value="79">Ontario</option><option value="85">Prince Edward Island</option><option value="80">Quebec</option><option value="86">Saskatchewan</option><option value="90">Yukon</option>'
+            ) 
+        }else if(e.val == null || e.val == '') {
+            $('#state').html(
+                '<option value="0"> -- Select -- </option>'
+            )    
+        }
+    });  
     </script>
 @endpush
 

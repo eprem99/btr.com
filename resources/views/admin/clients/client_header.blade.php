@@ -18,8 +18,8 @@
                                                 <span class="font-medium text-info font-semi-bold">{{ ucwords($client->name) }}</span>
                                                 <br>
 
-                                                @if (!empty($client->client_details) && $client->client_details->company_name != '')
-                                                   <span class="text-muted">{{ $client->client_details->company_name }}</span>  
+                                                @if (!empty($client->client_details) && $clientDetail->clientCategory->category_name != '')
+                                                   <span class="text-muted">{{ $clientDetail->clientCategory->category_name }}</span>  
                                                 @endif
                                             </p>
                                             
@@ -38,36 +38,29 @@
                                 </div>
 
                                 <div class="col-md-7 b-l">
-                                    <div class="row project-top-stats">
+                                    <div class="row task-top-stats">
 
                                         <div class="col-md-6 m-b-20 m-t-10 text-center">
                                             <span class="text-primary">
-                                                {{ $clientStats[0]->totalProjects}}
-                                            </span> <span class="font-12 text-muted m-l-5"> @lang('modules.dashboard.totalProjects')</span>
+                                                {{ $clientStats[0]->totalAllTasks}}
+                                            </span> <span class="font-12 text-muted m-l-5"> @lang('modules.dashboard.totalAllTasks')</span>
                                         </div>
         
                                         <div class="col-md-4 m-b-20 m-t-10 text-center">
                                             <span class="text-danger">
-                                                {{ $clientStats[0]->totalUnpaidInvoices}}
-                                            </span> <span class="font-12 text-muted m-l-5"> @lang('modules.dashboard.totalUnpaidInvoices')</span>
+                                                {{ $clientStats[0]->totalPendingTasks}}
+                                            </span> <span class="font-12 text-muted m-l-5"> @lang('modules.dashboard.totalPendingTasks')</span>
                                         </div>
         
                                     </div>
                                     
-                                    <div class="row project-top-stats">
-
-                                        <div class="col-md-6 m-b-20 m-t-10 text-center">
+                                    <div class="row task-top-stats">
+                                        <div class="col-md-12 m-b-20 m-t-10 text-center">
                                             <span class="text-success">
-                                                {{ $clientStats[1] }}
-                                            </span> <span class="font-12 text-muted m-l-5"> @lang('app.earnings')</span>
+                                                {{ $clientStats[0]->totalCompletedTasks }}
+                                            </span> <span class="font-12 text-muted m-l-5"> @lang('modules.dashboard.totalCompletedTasks')</span>
                                         </div>
-        
-                                        <div class="col-md-4 m-b-20 m-t-10 text-center">
-                                            <span class="text-primary">
-                                                {{ $clientStats[0]->totalContracts}}
-                                            </span> <span class="font-12 text-muted m-l-5"> @lang('modules.contracts.totalContracts')</span>
-                                        </div>
-                        
+                               
                                     </div>
 
                                 </div>

@@ -48,11 +48,11 @@
                             <h3 class="box-title">@lang('modules.client.clientBasicDetails')</h3>
                                 <hr>
                                 <div class="row">
-                                <div class="col-md-1 ">
-                                <label class="required">@lang('app.gender')</label>
+                                    <div class="col-md-1 ">
+                                        <label class="required">@lang('app.gender')</label>
                                         <select name="salutation" id="salutation" class="form-control">
                                             <option value="">--</option>
-                                             <option value="mr">@lang('app.mr')</option>
+                                                <option value="mr">@lang('app.mr')</option>
                                             <option value="mrs">@lang('app.mrs')</option>
                                         </select>
                                     </div>
@@ -91,8 +91,20 @@
                                             </div>
                                         </div>
                                     </div>
-                                <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>@lang('app.mobile')</label>
+                                            <div class="form-group">
+                                                <input type="tel" name="mobile" id="mobile" class="form-control" value="{{ $leadDetail->mobile ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>@lang('modules.client.officePhoneNumber')</label>
+                                                <input type="text" name="office" id="office"  value="{{ $leadDetail->office ?? '' }}" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="">@lang('modules.client.clientCategory')
                                                         <a href="javascript:;" id="addClientCategory" class="text-info"><i
@@ -109,71 +121,52 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    
-                                </div>
-                                <!--/row-->
-
-                                <div class="row">
-                                <div class="col-md-4">
-                                        <label>@lang('app.mobile')</label>
-                                        <div class="form-group">
-                                        <select class="select2 phone_country_code form-control" name="phone_code">
-                                                @foreach ($countries as $item)
-                                                    <option value="{{ $item->id }}">+{{ $item->phonecode.' ('.$item->iso.')' }}</option>
-                                                @endforeach
-                                            </select>
-                                            <input type="tel" name="mobile" id="mobile" class="mobile" autocomplete="nope" value="{{ $leadDetail->mobile ?? '' }}">
+                                    </div>
+                                    <!--/row-->
+                                    <h3 class="box-title">@lang('modules.client.clientAddressDetails')</h3>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>@lang('modules.stripeCustomerAddress.country')</label>
+                                                <select name="country" class="form-control" id="country">
+                                                    <option value>@lang('app.site.country')</option>
+                                                    <option value="1">UNITED STATES</option>
+                                                    <option value="2">CANADA</option>
+                                                </select>
+                                            </div>
+                                        </div>   
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>@lang('modules.stripeCustomerAddress.state')</label>
+                                                <select name="state" class="select2 form-control" id="state">
+                                                    <option value="0"> -- Select -- </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>@lang('modules.stripeCustomerAddress.city')</label>
+                                                <input type="text" name="city" id="city"  value="{{ $leadDetail->city ?? '' }}"   class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>@lang('modules.stripeCustomerAddress.postalCode')</label>
+                                                <input type="text" name="postal_code" id="postalCode"  value="{{ $leadDetail->postal_code ?? '' }}" class="form-control">
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>@lang('modules.client.officePhoneNumber')</label>
-                                            <input type="text" name="office" id="office"  value="{{ $leadDetail->office ?? '' }}" class="form-control">
+                                    <div class="row">
+                                        <div class="col-md-12 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="control-label">@lang('app.address')</label>
+                                                <textarea name="address"  id="address"  rows="3" value="{{ $leadDetail->address ?? '' }}" class="form-control"></textarea>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>@lang('modules.stripeCustomerAddress.postalCode')</label>
-                                            <input type="text" name="postal_code" id="postalCode"  value="{{ $leadDetail->postal_code ?? '' }}"   class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>@lang('modules.stripeCustomerAddress.country')</label>
-                                        <select name="country" class="form-control" id="country">
-                                            <option value>@lang('app.site.country')</option>
-                                            <option value="1">UNITED STATES</option>
-                                            <option value="2">CANADA</option>
-                                        </select>
-                                    </div>
-                                </div>   
-                                <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>@lang('modules.stripeCustomerAddress.state')</label>
-                                            <select name="state" class="select2 form-control" id="state">
-                                                <option value="0"> -- Select -- </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>@lang('modules.stripeCustomerAddress.city')</label>
-                                            <input type="text" name="city" id="city"  value="{{ $leadDetail->city ?? '' }}"   class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 col-xs-12">
-                                        <div class="form-group">
-                                            <label class="control-label">@lang('app.address')</label>
-                                            <textarea name="address"  id="address"  rows="3" value="{{ $leadDetail->address ?? '' }}" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h3 class="box-title">@lang('modules.client.clientOtherDetails')</h3>
-                                <hr>
+                                    <h3 class="box-title">@lang('modules.client.clientOtherDetails')</h3>
+                                    <hr>
 
                                 <div class="row">
                                     <div class="col-md-4">

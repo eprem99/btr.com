@@ -62,19 +62,6 @@
         </div>
         <div class="col-md-12">
             <div class="form-group">
-                <label class="control-label">@lang('app.skills')</label>
-                <select class="select2 m-b-10 select2-multiple " multiple="multiple"
-                        data-placeholder="Choose Skills" name="skill[]" id="skill" data-style="form-control">
-                    <option value="all">@lang('modules.client.all')</option>
-                    @forelse($skills as $skill)
-                        <option value="{{$skill->id}}">{{ ucfirst($skill->name) }}</option>
-                    @empty
-                    @endforelse
-                </select>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="form-group">
                 <label class="control-label">@lang('modules.employees.role')</label>
                 <select class="form-control select2" name="role" id="role" data-style="form-control">
                     <option value="all">@lang('modules.client.all')</option>
@@ -84,30 +71,6 @@
                         @else
                             <option value="{{$role->id}}">{{ ucfirst($role->name )}}</option>
                         @endif
-                    @empty
-                    @endforelse
-                </select>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="form-group">
-                <label class="control-label">@lang('app.designation')</label>
-                <select class="form-control select2" name="designation" id="designation" data-style="form-control">
-                    <option value="all">@lang('modules.client.all')</option>
-                    @forelse($designations as $designation)
-                        <option value="{{$designation->id}}">{{ ucfirst($designation->name) }}</option>
-                    @empty
-                    @endforelse
-                </select>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="form-group">
-                <label class="control-label">@lang('app.department')</label>
-                <select class="form-control select2" name="department" id="department" data-style="form-control">
-                    <option value="all">@lang('modules.client.all')</option>
-                    @forelse($departments as $department)
-                        <option value="{{$department->id}}">{{ ucfirst($department->team_name) }}</option>
                     @empty
                     @endforelse
                 </select>
@@ -127,24 +90,7 @@
 
 @section('content')
 
-    <div class="row dashboard-stats">
-        <div class="col-md-12 m-b-30">
-            <div class="white-box">
-                <div class="col-sm-6 text-center">
-                    <h4><span class="text-info">{{ $totalEmployees }}</span> <span class="font-12 text-muted m-l-5"> @lang('modules.dashboard.totalEmployees')</span></h4>
-                </div>
-                <div class="col-sm-6 text-center b-l">
-                    <h4><span class="text-danger">{{ $freeEmployees }}</span> <span class="font-12 text-muted m-l-5"><a href="{{ route('admin.employees.freeEmployees') }}" > @lang('modules.dashboard.freeEmployees')</a></span></h4>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
     <div class="row">
-
-
         <div class="col-md-12">
             <div class="white-box">
 
@@ -264,9 +210,6 @@
             data['employee'] = employee;
             data['status'] = status;
             data['role'] = role;
-            data['skill'] = skill;
-            data['designation'] = designation;
-            data['department'] = department;
         });
 
         $.easyBlockUI('#employees-table');
@@ -278,7 +221,6 @@
         $('#filter-form')[0].reset();
         // $('#status').val('all');
         $('.select2').val('all');
-        $('#skill').val('');
         $('#filter-form').find('select').select2();
         loadTable();
     })

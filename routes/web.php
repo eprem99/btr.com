@@ -69,23 +69,28 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('clients/export/{status?}/{client?}', ['uses' => 'ManageClientsController@export'])->name('clients.export');
         Route::get('clients/create/{clientID?}', ['uses' => 'ManageClientsController@create'])->name('clients.create');
+        Route::get('clients/tasks/{clientID?}/{hideCompleted}', ['uses' => 'ManageClientsController@tasks'])->name('clients.tasks');
         Route::resource('clients', 'ManageClientsController', ['except' => ['create']]);
 
 
-        Route::resource('leadCategory', 'LeadCategoyController');
+      //  Route::resource('leadCategory', 'LeadCategoyController');
         Route::resource('clientCategory', 'ClientCategoryController');
-        Route::resource('clientSubCategory', 'ClientSubCategoryController');
+        Route::get('company', ['uses' => 'ClientCategoryController@index'])->name('company.index');
+        Route::get('company/{id}/edit', ['uses' => 'ClientCategoryController@edit'])->name('company.edit');
+        Route::post('company/{id}update', ['uses' => 'ClientCategoryController@update'])->name('company.update');
 
-        Route::post('leads/updateIndex', ['as' => 'leads.updateIndex', 'uses' => 'LeadController@updateIndex']);
-        Route::resource('leads', 'LeadController');
+  //        Route::resource('clientSubCategory', 'ClientSubCategoryController');
 
-        Route::post('lead-form/sortFields', ['as' => 'lead-form.sortFields', 'uses' => 'LeadCustomFormController@sortFields']);
-        Route::resource('lead-form', 'LeadCustomFormController');
+        // Route::post('leads/updateIndex', ['as' => 'leads.updateIndex', 'uses' => 'LeadController@updateIndex']);
+        // Route::resource('leads', 'LeadController');
 
-        // Lead Files
-        Route::get('lead-files/download/{id}', ['uses' => 'LeadFilesController@download'])->name('lead-files.download');
-        Route::get('lead-files/thumbnail', ['uses' => 'LeadFilesController@thumbnailShow'])->name('lead-files.thumbnail');
-        Route::resource('lead-files', 'LeadFilesController');
+        // Route::post('lead-form/sortFields', ['as' => 'lead-form.sortFields', 'uses' => 'LeadCustomFormController@sortFields']);
+        // Route::resource('lead-form', 'LeadCustomFormController');
+
+        // // Lead Files
+        // Route::get('lead-files/download/{id}', ['uses' => 'LeadFilesController@download'])->name('lead-files.download');
+        // Route::get('lead-files/thumbnail', ['uses' => 'LeadFilesController@thumbnailShow'])->name('lead-files.thumbnail');
+        // Route::resource('lead-files', 'LeadFilesController');
 
 
 
@@ -706,7 +711,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('leads/follow-up-sort', ['uses' => 'MemberLeadController@followUpSort'])->name('leads.follow-up-sort');
         Route::resource('leads', 'MemberLeadController');
 
-        Lead Files
+      //  Lead Files
         Route::get('lead-files/download/{id}', ['uses' => 'LeadFilesController@download'])->name('lead-files.download');
         Route::get('lead-files/thumbnail', ['uses' => 'LeadFilesController@thumbnailShow'])->name('lead-files.thumbnail');
         Route::resource('lead-files', 'LeadFilesController');
@@ -757,7 +762,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('user-search', ['as' => 'user-chat.user-search', 'uses' => 'MemberChatController@getUserSearch']);
         Route::resource('user-chat', 'MemberChatController');
 
-        Notice
+     //   Notice
         Route::get('notices/data', ['uses' => 'MemberNoticesController@data'])->name('notices.data');
         Route::resource('notices', 'MemberNoticesController');
 

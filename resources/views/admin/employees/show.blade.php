@@ -100,7 +100,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-xs-6 col-md-4 b-r"> <strong>@lang('app.mobile')</strong> <br>
-                            <p class="text-muted">{{ (!is_null($employee->country_id)) ? '+'.$employee->country->phonecode.'-' : ''}}{{ $employee->mobile ?? 'NA'}}</p>
+                            <p class="text-muted">{{ $employee->mobile ?? 'NA'}}</p>
                         </div>
                         <div class="col-md-4 col-xs-6 b-r"> <strong>@lang('modules.employees.gender')</strong> <br>
                             <p class="text-muted">{{ $employee->gender }}</p>
@@ -110,42 +110,6 @@
                         </div>
                     </div>
                     <hr>
-
-                    {{--Custom fields data--}}
-                        @if(isset($fields))
-                        <div class="row">
-                            <hr>
-                            @foreach($fields as $field)
-                                <div class="col-md-6">
-                                    <strong>{{ ucfirst($field->label) }}</strong> <br>
-                                    <p class="text-muted">
-                                        @if( $field->type == 'text')
-                                            {{$employeeDetail->custom_fields_data['field_'.$field->id] ?? '-'}}
-                                        @elseif($field->type == 'password')
-                                            {{$employeeDetail->custom_fields_data['field_'.$field->id] ?? '-'}}
-                                        @elseif($field->type == 'number')
-                                            {{$employeeDetail->custom_fields_data['field_'.$field->id] ?? '-'}}
-
-                                        @elseif($field->type == 'textarea')
-                                            {{$employeeDetail->custom_fields_data['field_'.$field->id] ?? '-'}}
-
-                                        @elseif($field->type == 'radio')
-                                            {{ !is_null($employeeDetail->custom_fields_data['field_'.$field->id]) ? $employeeDetail->custom_fields_data['field_'.$field->id] : '-' }}
-                                        @elseif($field->type == 'select')
-                                            {{ (!is_null($employeeDetail->custom_fields_data['field_'.$field->id]) && $employeeDetail->custom_fields_data['field_'.$field->id] != '') ? $field->values[$employeeDetail->custom_fields_data['field_'.$field->id]] : '-' }}
-                                        @elseif($field->type == 'checkbox')
-                                            {{ !is_null($employeeDetail->custom_fields_data['field_'.$field->id]) ? $field->values[$employeeDetail->custom_fields_data['field_'.$field->id]] : '-' }}
-                                        @elseif($field->type == 'date')
-                                            {{ isset($employeeDetail->custom_fields_data['field_'.$field->id])? Carbon\Carbon::parse($employeeDetail->custom_fields_data['field_'.$field->id])->format($global->date_format): ''}}
-                                        @endif
-                                    </p>
-
-                                </div>
-                            @endforeach
-                        </div>
-                        @endif
-
-                    {{--custom fields data end--}}
 
                 </div>
                  <div class="tab-pane" id="tasks">
@@ -164,7 +128,6 @@
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>@lang('app.project')</th>
                                 <th>@lang('app.task')</th>
                                 <th>@lang('app.dueDate')</th>
                                 <th>@lang('app.status')</th>
@@ -436,7 +399,6 @@
             "order": [[0, "desc"]],
             columns: [
                 { data: 'id', name: 'id' },
-                {data: 'project_name', name: 'projects.project_name', width: '20%'},
                 {data: 'heading', name: 'heading', width: '20%'},
                 {data: 'due_date', name: 'due_date'},
                 {data: 'column_name', name: 'taskboard_columns.column_name'},

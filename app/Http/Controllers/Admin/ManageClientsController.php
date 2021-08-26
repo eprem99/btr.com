@@ -9,6 +9,8 @@ use App\Helper\Reply;
 use App\Http\Requests\Admin\Client\StoreClientRequest;
 use App\Http\Requests\Admin\Client\UpdateClientRequest;
 use App\Http\Requests\Gdpr\SaveConsentUserDataRequest;
+use App\TaskboardColumn;
+use App\ClientCategory;
 use App\Invoice;
 use App\Lead;
 use App\Payment;
@@ -17,9 +19,8 @@ use App\PurposeConsentUser;
 use App\Traits\CurrencyExchange;
 use App\UniversalSearch;
 use App\User;
-use App\ClientCategory;
+use App\Task;
 use App\ContractType;
-use App\Project;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
@@ -52,7 +53,7 @@ class ManageClientsController extends AdminBaseController
         if (!request()->ajax()) {
             $this->categories = ClientCategory::all();
             $this->clients = User::allClients();
-            $this->projects = Project::all();
+            $this->tasks = Task::all();
             $this->contracts = ContractType::all();
             $this->countries = Country::all();
 
@@ -154,13 +155,10 @@ class ManageClientsController extends AdminBaseController
     {
         $this->categories = ClientCategory::all();
         $this->client = User::withoutGlobalScope('active')->findOrFail($id);
-        $this->clientDetail = ClientDetails::where('user_id', '=', $this->client->id)->first();
+        $this->clientDetail = ClientDetails::where('user_id', '=', $id)->first();
+      
         $this->clientStats = $this->clientStats($id);
 
-        if (!is_null($this->clientDetail)) {
-            $this->clientDetail = $this->clientDetail->withCustomFields();
-            $this->fields = $this->clientDetail->getCustomFieldGroupsWithFields()->fields;
-        }
         return view('admin.clients.show', $this->data);
     }
 
@@ -240,17 +238,52 @@ class ManageClientsController extends AdminBaseController
 
     public function showProjects($id)
     {
-        $this->client = User::with('projects')->withoutGlobalScope('active')->findOrFail($id);
+        $this->client = User::withoutGlobalScope('active')->findOrFail($id);
         $this->clientDetail = ClientDetails::where('user_id', '=', $this->client->id)->first();
         $this->clientStats = $this->clientStats($id);
+       
+        $taskBoardColumn = TaskboardColumn::completeColumn();
 
-        if (!is_null($this->clientDetail)) {
-            $this->clientDetail = $this->clientDetail->withCustomFields();
-            $this->fields = $this->clientDetail->getCustomFieldGroupsWithFields()->fields;
-        }
-
+        $this->taskCompleted = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')
+            ->where('task_users.user_id', $id)
+            ->where('tasks.board_column_id', $taskBoardColumn->id)
+            ->count();
+         // return $dataTable->render('admin.clients.projects', $this->data);
         return view('admin.clients.projects', $this->data);
     }
+
+    public function tasks($userId, $hideCompleted)
+    {
+        $tasks = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')
+            ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
+            ->select('tasks.id', 'tasks.heading', 'tasks.due_date', 'taskboard_columns.column_name', 'taskboard_columns.label_color')
+            ->where('task_users.user_id', $userId);
+
+        if ($hideCompleted == '1') {
+            $tasks->where('tasks.status', '=', 'incomplete');
+        }
+
+        $tasks->get();
+
+        return DataTables::of($tasks)
+            ->editColumn('due_date', function ($row) {
+                if ($row->due_date->isPast()) {
+                    return '<span class="text-danger">' . $row->due_date->format($this->global->date_format) . '</span>';
+                }
+                return '<span class="text-success">' . $row->due_date->format($this->global->date_format) . '</span>';
+            })
+            ->editColumn('heading', function ($row) {
+                $name = '<a href="javascript:;" data-task-id="' . $row->id . '" class="show-task-detail">' . ucfirst($row->heading) . '</a>';
+
+                return $name;
+            })
+            ->editColumn('column_name', function ($row) {
+                return '<label class="label" style="background-color: ' . $row->label_color . '">' . $row->column_name . '</label>';
+            })
+
+            ->rawColumns(['column_name', 'due_date', 'heading'])
+            ->make(true);
+        }
 
     public function showInvoices($id)
     {
@@ -276,44 +309,7 @@ class ManageClientsController extends AdminBaseController
         return view('admin.clients.invoices', $this->data);
     }
 
-    public function showPayments($id)
-    {
-        $this->client = User::withoutGlobalScope('active')->findOrFail($id);
-        $this->clientDetail = ClientDetails::where('user_id', '=', $this->client->id)->first();
-        $this->clientStats = $this->clientStats($id);
 
-        if (!is_null($this->clientDetail)) {
-            $this->clientDetail = $this->clientDetail->withCustomFields();
-            $this->fields = $this->clientDetail->getCustomFieldGroupsWithFields()->fields;
-        }
-
-        $this->payments = Payment::with(['project:id,project_name', 'currency:id,currency_symbol,currency_code', 'invoice'])
-            ->leftJoin('invoices', 'invoices.id', '=', 'payments.invoice_id')
-            ->leftJoin('projects', 'projects.id', '=', 'payments.project_id')
-            ->select('payments.id', 'payments.project_id', 'payments.currency_id', 'payments.invoice_id', 'payments.amount', 'payments.status', 'payments.paid_on', 'payments.remarks')
-            ->where('payments.status', '=', 'complete')
-            ->where(function ($query) use ($id) {
-                $query->where('projects.client_id', $id)
-                    ->orWhere('invoices.client_id', $id);
-            })
-            ->orderBy('payments.id', 'desc')
-            ->get();
-        return view('admin.clients.payments', $this->data);
-    }
-    
-    public function gdpr($id)
-    {
-        $this->client = User::withoutGlobalScope('active')->findOrFail($id);
-        $this->clientStats = $this->clientStats($id);
-        $this->clientDetail = ClientDetails::where('user_id', '=', $this->client->id)->first();
-        $this->allConsents = PurposeConsent::with(['user' => function ($query) use ($id) {
-            $query->where('client_id', $id)
-            ->orderBy('created_at', 'desc');
-        }])->get();
-        
-        // dd('test');
-        return view('admin.clients.gdpr', $this->data);
-    }
 
     public function consentPurposeData($id)
     {
@@ -369,14 +365,12 @@ class ManageClientsController extends AdminBaseController
 
     public function clientStats($id)
     {
+        $completedTaskColumn = TaskboardColumn::completeColumn();
         $clientData = DB::table('users')
             ->select(
-                DB::raw('(select count(projects.id) from `projects` WHERE projects.client_id = '.$id.') as totalProjects'),
-                DB::raw('(select count(invoices.id) from `invoices` left join projects on projects.id=invoices.project_id WHERE invoices.status != "paid" and invoices.status != "canceled" and (projects.client_id = '.$id.' or invoices.client_id = '.$id.')) as totalUnpaidInvoices'),
-//                DB::raw('(select sum(payments.amount) from `payments` left join projects on projects.id=payments.project_id WHERE payments.status = "complete" and projects.client_id = '.$id.') as projectPayments'),
-                DB::raw('(select sum(payments.amount) from `payments` left join projects on projects.id=payments.project_id left join invoices on invoices.id= payments.invoice_id
-                WHERE payments.status = "complete" and (projects.client_id = ' . $id . ' or  invoices.client_id = ' . $id. ' )) as projectPayments'),
-                DB::raw('(select count(contracts.id) from `contracts` WHERE contracts.client_id = '.$id.') as totalContracts')
+                DB::raw('(select count(tasks.id) from `tasks` inner join task_users on task_users.task_id=tasks.id where tasks.board_column_id=' . $completedTaskColumn->id . ' and task_users.user_id = ' . $id . ') as totalCompletedTasks'),
+                DB::raw('(select count(tasks.id) from `tasks` inner join task_users on task_users.task_id=tasks.id where task_users.user_id = ' . $id . ') as totalAllTasks'),
+                DB::raw('(select count(tasks.id) from `tasks` inner join task_users on task_users.task_id=tasks.id where tasks.board_column_id!=' . $completedTaskColumn->id . ' and task_users.user_id = ' . $id . ') as totalPendingTasks')
             )
             ->first();
         $projectData = Payment::join('currencies', 'currencies.id', '=', 'payments.currency_id')

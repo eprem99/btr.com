@@ -452,7 +452,7 @@ return array (
   'setForInfinite' => 'Set -1 for infinite cycles',
   'noProductCategory' => 'No product category added.',
   'noProductSubCategoryAdded' => 'No product sub category added.',
-  'pleaseSelectCategory' => 'Select Category...',
+  'pleaseSelectCategory' => 'Select Company...',
   'selectSubCategory' => 'Select Sub Category...',
   'pinnedSuccess' => 'Pinned successfully',
   'pinnedRemovedSuccess' => 'Pinned removed successfully',

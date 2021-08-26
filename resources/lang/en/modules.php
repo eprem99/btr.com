@@ -109,6 +109,7 @@ return array(
     'website' => 'Website',
     'address' => 'Address',
     'clientDetails' => 'Client Details',
+    'clientAddressDetails' => 'Client Address Details',
     'clientBasicDetails' => 'Client Basic Details',
     'clientOtherDetails' => 'Client Other Details',
     'clientName' => 'Client Name',
@@ -646,7 +647,7 @@ return array(
   'projectCategory' =>
   array(
     'addProjectCategory' => 'Add Project Category',
-    'categoryName' => 'Category Name',
+    'categoryName' => 'Company Name',
     'subcategoryName' => 'Subcategory Name',
 
   ),
