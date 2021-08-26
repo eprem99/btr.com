@@ -45,7 +45,7 @@
 
         @media (min-width: 769px) {
             #wrapper .panel-wrapper {
-                height: 530px;
+                max-height: 350px;
                 overflow-y: auto;
             }
         }
@@ -111,7 +111,7 @@
                             <div class="row">
                                 <div class="col-xs-3">
                                     <div>
-                                        <span class="bg-success-gradient"><i class="icon-user"></i></span>
+                                        <span class="bg-warning-gradient"><i class="icon-user"></i></span>
                                     </div>
                                 </div>
                                 <div class="col-xs-9 text-right">
@@ -131,7 +131,7 @@
                             <div class="row">
                                 <div class="col-xs-3">
                                     <div>
-                                        <span class="bg-warning-gradient"><i class="icon-people"></i></span>
+                                        <span class="bg-info-gradient"><i class="icon-people"></i></span>
                                     </div>
                                 </div>
                                 <div class="col-xs-9 text-right">
@@ -211,7 +211,7 @@
                             <div class="row">
                                 <div class="col-xs-3">
                                     <div>
-                                        <span class="bg-warning-gradient"><i class="ti-alert"></i></span>
+                                        <span class="bg-danger-gradient"><i class="ti-alert"></i></span>
                                     </div>
                                 </div>
                                 <div class="col-xs-9 text-right">
@@ -224,6 +224,25 @@
                 </div>
             @endif
 
+            @if(in_array('tasks',$modules) && in_array('total_pending_tasks',$activeWidgets))
+                <div class="col-md-3 col-sm-6">
+                    <a href="{{ route('admin.all-tasks.index') }}">
+                        <div class="white-box">
+                            <div class="row">
+                            <div class="col-xs-3">
+                                    <div>
+                                        <span class="bg-success-gradient"><i class="ti-check-box"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <span class="widget-title"> @lang('modules.dashboard.totalCompletedTasks')</span><br>
+                                    <span class="counter">{{ $counts->totalCompletedTasks }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            @endif
             @if(in_array('attendance',$modules) && in_array('total_today_attendance',$activeWidgets))
                 <div class="col-md-3 col-sm-6">
                     <a href="{{ route('admin.attendances.index') }}">

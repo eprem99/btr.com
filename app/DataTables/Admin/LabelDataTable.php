@@ -34,15 +34,15 @@ class LabelDataTable extends BaseDataTable
                 return ucwords($row->id);
             })
 
-            ->editColumn('site_id', function ($row) {
-                if($row->contacts){
-                    $siteid = json_decode($row->contacts, true);
+            // ->editColumn('site_id', function ($row) {
+            //     if($row->contacts){
+            //         $siteid = json_decode($row->contacts, true);
  
-                        return ucwords($siteid['site_id']);
-                }
-                return '--';
+            //             return ucwords($siteid['site_id']);
+            //     }
+            //     return '--';
 
-            })
+            // })
 
             ->editColumn('label_name', function ($row) {
                 return ucwords($row->label_name);
@@ -144,7 +144,7 @@ class LabelDataTable extends BaseDataTable
     protected function getColumns()
     {
         return [
-            __('app.site.id')  => ['data' => 'site_id', 'name' => 'contacts'],
+            __('app.site.id')  => ['data' => 'id', 'name' => 'id'],
             __('app.site.name') => ['data' => 'label_name', 'name' => 'label_name'],
             __('app.site.city')  => ['data' => 'site_city', 'name' => 'contacts'],
             __('app.site.state')  => ['data' => 'site_state', 'name' => 'contacts'],

@@ -8,6 +8,8 @@ use App\Http\Requests\Admin\TaskLabel\StoreRequest;
 use App\Http\Requests\Admin\TaskLabel\UpdateRequest;
 use App\TaskLabel;
 use App\TaskLabelList;
+use App\User;
+use App\ClientDetails;
 
 class ManageTaskLabelController extends AdminBaseController
 {
@@ -31,6 +33,7 @@ class ManageTaskLabelController extends AdminBaseController
 
     public function create()
     {
+        $this->clients = User::allClients();
         return view('admin.task-label.create', $this->data);
     }
 
@@ -44,6 +47,7 @@ class ManageTaskLabelController extends AdminBaseController
     public function edit($id)
     {
         $this->taskLabel = TaskLabelList::find($id);
+        $this->clients = User::allClients();
         return view('admin.task-label.edit', $this->data);
     }
 
@@ -62,8 +66,12 @@ class ManageTaskLabelController extends AdminBaseController
 
     private function storeUpdate($request, $taskLabel)
     {
+        $this->clientDetail = ClientDetails::where('user_id', '=', $request->user_id)->first();
         $json = json_encode($request->input());
         $taskLabel->label_name  = $request->label_name;
+        $taskLabel->company     = $this->clientDetail->category_id;
+        $taskLabel->user_id     = $request->user_id;
+        $taskLabel->notification  = $request->site_notification;
         $taskLabel->contacts     = $json;
         $taskLabel->description = $request->description;
         $taskLabel->save();

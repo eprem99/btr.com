@@ -57,8 +57,12 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="site_id"> @lang('app.site.id')</label>
-                            <input type="text" class="form-control" name="site_id" value="" />
+                            <label style="margin-bottom: 9px;" for="client" class="required"> @lang('app.site.client')</label>
+                            <select name="user_id" class="select2 form-control" id="client">
+                                @foreach($clients as $client)
+                                    <option value="{{$client->id}}">{{$client->name}} </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>

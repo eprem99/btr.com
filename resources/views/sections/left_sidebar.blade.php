@@ -126,15 +126,21 @@
                             @endforeach
                         </ul>
                     </li>
+
                 @else
                     {{-- Check menu on root and check permissions of that module --}}
                     @if(in_array($menu['module'], $modules) || $menu['module'] == 'visibleToAll')
                         <li><a href="{{ is_null($menu['route']) ? 'javascript:;' : route(trim($menu['route'])) }}" class="waves-effect"><i class="{{ $menu['icon'] }} fa-fw"></i> <span class="hide-menu">{{ __($menu['translate_name']) }} </span></a> </li>
                     @endif
-
                 @endif
             @endforeach
-
+            <li><a href="{{ route('admin.task-label.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> 
+                <span class="hide-menu">@lang('app.menu.taskLabel') <span class="fa arrow"></span> </span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="{{ route('admin.task-label.index') }}">@lang('app.menu.browsetaskLabel')</a></li>
+                    <li><a href="{{ route('admin.task-label.create') }}">@lang('app.menu.newtaskLabel')</a></li>
+                </ul>    
+            </li>
             @foreach ($worksuitePlugins as $item)
                 @if(View::exists(strtolower($item).'::sections.left_sidebar'))
                     @include(strtolower($item).'::sections.left_sidebar')

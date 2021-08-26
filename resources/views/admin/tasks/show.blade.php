@@ -13,14 +13,15 @@
         <div class="col-xs-12 col-md-9 p-t-20 b-r h-scroll">
 
             <div class="col-xs-12">
+                 <a href="{{route('front.task-share',[$task->hash])}}" target="_blank" data-toggle="tooltip" data-placement="bottom" data-original-title="@lang('app.share')" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right m-l-5"> <i class="fa fa-share-alt"></i></a>
+    
                 <a href="{{route('admin.all-tasks.edit',$task->id)}}" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right m-l-5"> <i class="fa fa-edit"></i> @lang('app.edit')</a>
-
+   
+                <a href="javascript:;" id="completedButton" class="btn btn-success btn-sm m-b-10 btn-rounded @if($task->board_column->slug == 'completed') hidden @endif "  onclick="markComplete('completed')" ><i class="fa fa-check"></i> @lang('modules.tasks.markComplete')</a>
     
-                <a href="javascript:;" id="completedButton" class="btn btn-success btn-sm m-b-10 btn-rounded @if($task->board_column->slug == 'closed') hidden @endif "  onclick="markComplete('closed')" ><i class="fa fa-check"></i> @lang('modules.tasks.markComplete')</a>
-    
-                <a href="javascript:;" id="inCompletedButton" class="btn btn-default btn-outline btn-sm m-b-10 btn-rounded @if($task->board_column->slug != 'closed') hidden @endif"  onclick="markComplete('created')"><i class="fa fa-times"></i> @lang('modules.tasks.markIncomplete')</a>
+                <a href="javascript:;" id="inCompletedButton" class="btn btn-default btn-outline btn-sm m-b-10 btn-rounded @if($task->board_column->slug != 'completed') hidden @endif"  onclick="markComplete('incomplete')"><i class="fa fa-times"></i> @lang('modules.tasks.markIncomplete')</a>
      
-                <a href="javascript:;" id="reminderButton" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right  m-l-5 @if($task->board_column->slug == 'closed') hidden @endif" title="@lang('messages.remindToAssignedEmployee')"><i class="fa fa-bell"></i> @lang('modules.tasks.reminder')</a>
+                <a href="javascript:;" id="reminderButton" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right  m-l-5 @if($task->board_column->slug == 'completed') hidden @endif" title="@lang('messages.remindToAssignedEmployee')"><i class="fa fa-bell"></i> @lang('modules.tasks.reminder')</a>
 
 
                 @if ($task->board_column->slug != 'completed')
@@ -35,19 +36,19 @@
     
             </div>
             <div class="col-xs-12">
-                <h2>
-                     @lang('modules.tasks.wodetails')
-                </h2>
                 <div class="row">
                     <div class="col-md-6">
+                    <h3>
+                        @lang('modules.tasks.wodetails')
+                    </h3>
                        @if($task->labels->id)<P><strong>Work Order:  </strong>{{ ucwords($task->id) }}</P>@endif
                        @if($task->task_category_id)<p><strong>Project:  </strong>{{ ucwords($task->category->category_name) }}</p>@endif
                        @if($task->p_order)<p><strong>PO Number:  </strong> {{ ucwords($task->p_order) }}</p>@endif
                        @if($task->start_date)<p><strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}</p>@endif
                        @if($task->heading)<p><strong>Summary:  </strong> {{ ucwords($task->heading) }}</p>@endif
-                       @if($task->wotype->name)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
-                       @if($task->users[0]->name)<p><strong>Client:  </strong> {{ ucwords($task->users[0]->name) }}</p>@endif
-                       @if($task->create_by->name)<p><strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}</p>@endif
+                       @if($task->wotype)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
+                       @if($task->users[0])<p><strong>Client:  </strong> {{ ucwords($task->users[0]->name) }}</p>@endif
+                       @if($task->create_by)<p><strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}</p>@endif
                     </div>
                     <div class="col-md-6">
                     <h3>
@@ -124,40 +125,7 @@
                             </div>
                         </div>
                      
-                        {{--Custom fields data--}}
-                        @if(isset($fields) && count($fields) > 0)
-                        <div class="row m-t-10">
-                            @foreach($fields as $field)
-                                <div class="col-md-3">
-                                    <label class="font-12" for="">{{ ucfirst($field->label) }}</label><br>
-                                    <p class="text-muted">
-                                        @if( $field->type == 'text')
-                                            {{$task->custom_fields_data['field_'.$field->id] ?? '-'}}
-                                        @elseif($field->type == 'password')
-                                            {{$task->custom_fields_data['field_'.$field->id] ?? '-'}}
-                                        @elseif($field->type == 'number')
-                                            {{$task->custom_fields_data['field_'.$field->id] ?? '-'}}
-        
-                                        @elseif($field->type == 'textarea')
-                                            {{$task->custom_fields_data['field_'.$field->id] ?? '-'}}
-        
-                                        @elseif($field->type == 'radio')
-                                            {{ !is_null($task->custom_fields_data['field_'.$field->id]) ? $task->custom_fields_data['field_'.$field->id] : '-' }}
-                                        @elseif($field->type == 'select')
-                                            {{ (!is_null($task->custom_fields_data['field_'.$field->id]) && $task->custom_fields_data['field_'.$field->id] != '') ? $field->values[$task->custom_fields_data['field_'.$field->id]] : '-' }}
-                                        @elseif($field->type == 'checkbox')
-                                            {{ !is_null($task->custom_fields_data['field_'.$field->id]) ? $field->values[$task->custom_fields_data['field_'.$field->id]] : '-' }}
-                                        @elseif($field->type == 'date')
-                                            {{ !is_null($task->custom_fields_data['field_'.$field->id]) ? \Carbon\Carbon::parse($task->custom_fields_data['field_'.$field->id])->format($global->date_format) : '--'}}
-                                        @endif
-                                    </p>
-        
-                                </div>
-                            @endforeach
-                        </div>
-                        @endif
-                        {{--custom fields data end--}}
-                        
+                      
                         <div class="row">
                             <div class="col-xs-12 col-md-12 m-t-10">
                                 <label class="font-bold">@lang('app.description')</label><br>
@@ -336,7 +304,7 @@
                     <label class="font-12" for="">@lang('modules.tasks.assignTo')</label><br>
                     @foreach ($task->users as $item)
                         <img src="{{ $item->image_url }}" data-toggle="tooltip"
-                             data-original-title="" data-placement="right"
+                             data-original-title="{{ ucwords($item->name) }}" data-placement="right"
                              class="img-circle" width="35" height="35" alt="">
                              {{ ucwords($item->name) }}
                              @if($item->mobile)<P><strong>Phone: </strong> {{$item->mobile}}</P>@endif
@@ -346,7 +314,8 @@
                 @if($task->create_by)
                     <div class="col-xs-12">
                         <label class="font-12" for="">@lang('modules.tasks.assignBy')</label><br>
-                        <img src="{{ $task->create_by->image_url }}" class="img-circle" width="35" height="35" alt="">
+                        <img src="{{ $task->create_by->image_url }}" data-toggle="tooltip"
+                             data-original-title="{{ ucwords($task->create_by->name) }}" data-placement="right" class="img-circle" width="35" height="35" alt="">
 
                         {{ ucwords($task->create_by->name) }}
                         <hr>
@@ -580,7 +549,7 @@ var myDropzone;
 
         var id = '{{ $task->id }}';
 
-        if(status == 'closed'){
+        if(status == 'completed'){
             var checkUrl = '{{route('admin.tasks.checkTask', ':id')}}';
             checkUrl = checkUrl.replace(':id', id);
             $.easyAjax({
@@ -636,7 +605,7 @@ var myDropzone;
             success: function (data) {
                 $('#columnStatusColor').css('background-color', data.textColor);
                 $('#columnStatus').html(data.column);
-                if(status == 'closed'){
+                if(status == 'completed'){
 
                     $('#inCompletedButton').removeClass('hidden');
                     $('#completedButton').addClass('hidden');

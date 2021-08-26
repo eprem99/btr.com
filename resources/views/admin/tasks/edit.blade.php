@@ -49,7 +49,7 @@
 
                         <div class="form-body">
                             <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">@lang('modules.tasks.taskCategory')
                                         <a href="javascript:;"
@@ -72,7 +72,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label required mb-2"><span>@lang('modules.tasks.site')</span>
                                         <a href="{{ route('admin.task-label.create') }}" class="btn btn-xs btn-outline btn-success" style="float:right; margin-left:15px;">
@@ -92,7 +92,16 @@
                                         </select>
                                     </div>
                                 </div>
-
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 9px;" for="client" class="required"> @lang('app.site.client')</label>
+                                        <select name="client_id" class="select2 form-control" id="client">
+                                            @foreach($clients as $client)
+                                                <option @if($task->client_id == $client->id) selected @endif value="{{$client->id}}">{{$client->name}} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.title')</label>
@@ -184,72 +193,42 @@
                                     </div>
                                 </div>
                                 <!--/span-->
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.type')</label>
                                         <select name="task_type" class="select2 form-control">
-                                            <option value="0">Site Survey</option>
-                                            <option value="1">Installation</option>
-                                            <option value="2">Retrofit</option>
-                                            <option value="3">Service Call</option>
+                                            @foreach($wotype as $type)
+                                                @if($type->id == $task->wo_id)
+                                                    <option selected value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @else
+                                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @endif
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="control-label">@lang('app.purchaseorder')</label>
-                                        <input type="text" name="task_purchase" class="form-control" >
+                                        <label class="control-label">@lang('app.sporttype')</label>
+                                        <select name="sport_type" class="select2 form-control">
+                                            @foreach($sport as $type)
+                                                @if($type->id == $task->sport_id)
+                                                    <option selected value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @else
+                                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.qty')</label>
+                                        <input type="text" name="task_qty" class="form-control" value="@if($task->qty){{ $task->qty}}@endif" >
                                     </div>
                                 </div>
                             </div>
 
-                            @if(count($fields) > 0)
-                            <h3 class="box-title">@lang('modules.projects.otherInfo')</h3>
-                                <div class="row">
-                                    @foreach($fields as $field)
-                                        <div class="col-md-3">
-                                            <label>{{ ucfirst($field->label) }}</label>
-                                            <div class="form-group">
-                                                @if( $field->type == 'text')
-                                                <input type="text" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}"
-                                                    value="{{$task->custom_fields_data['field_'.$field->id] ?? ''}}">                                    @elseif($field->type == 'password')
-                                                <input type="password" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}"
-                                                    value="{{$task->custom_fields_data['field_'.$field->id] ?? ''}}">                                    @elseif($field->type == 'number')
-                                                <input type="number" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}"
-                                                    value="{{$task->custom_fields_data['field_'.$field->id] ?? ''}}">                                    @elseif($field->type == 'textarea')
-                                                <textarea name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" id="{{$field->name}}" cols="3">{{$task->custom_fields_data['field_'.$field->id] ?? ''}}</textarea>                                    @elseif($field->type == 'radio')
-                                                <div class="radio-list">
-                                                    @foreach($field->values as $key=>$value)
-                                                    <label class="radio-inline @if($key == 0) p-0 @endif">
-                                                                        <div class="radio radio-info">
-                                                                            <input type="radio" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" id="optionsRadios{{$key.$field->id}}" value="{{$value}}" @if(isset($task) && $task->custom_fields_data['field_'.$field->id] == $value) checked @elseif($key==0) checked @endif>>
-                                                                            <label for="optionsRadios{{$key.$field->id}}">{{$value}}</label>
-                                                </div>
-                                                </label>
-                                                @endforeach
-                                            </div>
-                                            @elseif($field->type == 'select') {!! Form::select('custom_fields_data['.$field->name.'_'.$field->id.']', $field->values,
-                                            isset($task)?$task->custom_fields_data['field_'.$field->id]:'',['class' => 'form-control
-                                            gender']) !!} @elseif($field->type == 'checkbox')
-                                            <div class="mt-checkbox-inline">
-                                                @foreach($field->values as $key => $value)
-                                                <label class="mt-checkbox mt-checkbox-outline">
-                                                                        <input name="custom_fields_data[{{$field->name.'_'.$field->id}}][]" type="checkbox" value="{{$key}}"> {{$value}}
-                                                                        <span></span>
-                                                                    </label> @endforeach
-                                            </div>
-                                            @elseif($field->type == 'date')
-                                            <input type="text" class="form-control date-picker" size="16" name="custom_fields_data[{{$field->name.'_'.$field->id}}]"
-                                                   value="{{ ($task->custom_fields_data['field_'.$field->id] != '') ? \Carbon\Carbon::parse($task->custom_fields_data['field_'.$field->id])->format($global->date_format) : \Carbon\Carbon::now()->format($global->date_format)}}">
-                                            @endif
-                                            <div class="form-control-focus"> </div>
-                                            <span class="help-block"></span>
-    
-                                        </div>
-                                    </div>
-                                    @endforeach
-                            </div>
-                            @endif
 
                             <div class="row">
                                <div class="row m-b-20">
@@ -270,8 +249,6 @@
                                             </div>
                                         </div>
                                         <input type="hidden" name="taskID" id="taskID">
-                                        <input type="hidden" name="estimate_hours" value="1">
-                                        <input type="hidden" name="estimate_minutes" value="1">
                                     </div>
                                 </div>
                                 <div class="row" id="list">
@@ -355,27 +332,7 @@
         <!-- /.modal-dialog -->.
     </div>
     {{--Ajax Modal Ends--}}
-    {{--Ajax Modal--}}
-    <div class="modal fade bs-modal-lg in" id="taskLabelModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" id="modal-data-application">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <span class="caption-subject font-red-sunglo bold uppercase" id="modelHeading"></span>
-                </div>
-                <div class="modal-body">
-                    Loading...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn blue">Save changes</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->.
-    </div>
-    {{--Ajax Modal Ends--}}
+
 @endsection
 @push('footer-script')
 <script src="{{ asset('plugins/bower_components/custom-select/custom-select.min.js') }}"></script>
@@ -427,12 +384,6 @@
 
     //    update task
     $('#update-task').click(function () {
-
-        var status = '{{ $task->board_column->slug }}';
-        var currentStatus =  $('#status').val();
-
-        if(status == 'incomplete' && currentStatus == 'completed'){
-
             $.easyAjax({
                 url: '{{route('admin.tasks.checkTask', [$task->id])}}',
                 type: "GET",
@@ -462,10 +413,7 @@
 
                 }
             });
-        }
-        else{
-            updateTask();
-        }
+
 
     });
 
@@ -489,15 +437,6 @@
             }
         })
     }
-
-    $('#set-time-estimate').change(function () {
-        if($(this).is(':checked')){
-            $('#set-time-estimate-fields').show();
-        }
-        else{
-            $('#set-time-estimate-fields').hide();
-        }
-    })
 
     $('#due_date2').datepicker({
         format: '{{ $global->date_picker_format }}',
@@ -580,55 +519,12 @@
         });
     });
 
-    $('#project_id').change(function () {
-        var id = $(this).val();
-        var url = '{{route('admin.all-tasks.members', ':id')}}';
-        url = url.replace(':id', id);
-
-        $.easyAjax({
-            url: url,
-            type: "GET",
-            redirect: true,
-            success: function (data) {
-                $('#user_id').html(data.html);
-                $('#user_id').val(null).trigger('change.select2');
-
-            }
-        });
-
-        // For getting dependent task
-        var dependentTaskUrl = '{{route('admin.all-tasks.dependent-tasks', [':id', ':taskId'])}}';
-        dependentTaskUrl = dependentTaskUrl.replace(':id', id);
-        dependentTaskUrl = dependentTaskUrl.replace(':taskId', '{{ $task->id }}');
-        $.easyAjax({
-            url: dependentTaskUrl,
-            type: "GET",
-            success: function (data) {
-                $('#dependent_task_id').html(data.html);
-            }
-        })
-    });
-
-    $('#dependent-task').change(function () {
-        if($(this).is(':checked')){
-            $('#dependent-fields').show();
-        }
-        else{
-            $('#dependent-fields').hide();
-        }
-    })
 </script>
 <script>
     $('#createTaskCategory').click(function(){
         var url = '{{ route('admin.taskCategory.create-cat')}}';
         $('#modelHeading').html("@lang('modules.taskCategory.manageTaskCategory')");
         $.ajaxModal('#taskCategoryModal', url);
-    })
-
-    $('#createTaskLabel').click(function(){
-        var url = '{{ route('admin.task-label.create-label')}}';
-        $('#modelHeading').html("");
-        $.ajaxModal('#taskLabelModal', url);
     })
 
     $('#add-employee').click(function () {

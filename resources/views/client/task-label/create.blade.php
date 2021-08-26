@@ -55,6 +55,7 @@
                             <input type="text" class="form-control" name="label_name" value="" />
                         </div>
                     </div>
+                    
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="site_phone" class="required"> @lang('app.site.phone')</label>
@@ -126,7 +127,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="site_notification"> @lang('app.site.notification') 
-                                <input type="checkbox" class="form-control" name="site_notification" value="false"/></label>
+                                <input type="checkbox" class="form-control" name="site_notification" value="1" checked/></label>
                         </div>
                     </div>
                 </div>

@@ -50,7 +50,7 @@
                         <div class="form-body">
                             <div class="row">
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">@lang('modules.tasks.taskCategory')
                                             <a href="javascript:;"
@@ -70,7 +70,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label required mb-2"><span>@lang('modules.tasks.site')</span>
                                         <a href="{{ route('admin.task-label.create') }}" class="btn btn-xs btn-outline btn-success" style="float:right; margin-left:15px;">
@@ -85,7 +85,16 @@
                                         </select>
                                     </div>
                                 </div>
-
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 9px;" for="client" class="required"> @lang('app.site.client')</label>
+                                        <select name="client_id" class="select2 form-control" id="client">
+                                            @foreach($clients as $client)
+                                                <option value="{{$client->id}}">{{$client->name}} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.title')</label>
@@ -126,7 +135,7 @@
                                         <!--/span-->
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label class="control-label required">@lang('app.dueDate')</label>
+                                                <label class="control-label">@lang('app.dueDate')</label>
                                                 <input type="text" name="due_date" id="due_date2" class="form-control"
                                                        autocomplete="off">
                                             </div>
@@ -138,6 +147,7 @@
                                             <div class="form-group">
                                                 <label class="control-label required">@lang('modules.tasks.assignTo')</label>
                                                 <a href="javascript:;" id="add-employee" class="btn btn-xs btn-success btn-outline"><i class="fa fa-plus"></i></a>
+                                                <a href="javascript:;" style="color:#1b69b6" class="text-info" id="assign-self">@lang('modules.tasks.assignMe')</a>
                                                 <select class="select2 select2-multiple " multiple="multiple"
                                                         data-placeholder="@lang('modules.tasks.chooseAssignee')"
                                                         name="user_id[]" id="user_id">
@@ -149,92 +159,7 @@
     
                                             </div>
                                         </div>
-                                        <div class="col-md-3 m-t-25" id="assign-self-block">
-                                            <div class="form-group">
-                                                <a href="javascript:;" style="color:#1b69b6" class="text-info" id="assign-self">@lang('modules.tasks.assignMe')</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('app.type')</label>
-                                        <select name="task_type" class="select2 form-control">
-                                            <option value="0">Site Survey</option>
-                                            <option value="1">Installation</option>
-                                            <option value="2">Retrofit</option>
-                                            <option value="3">Service Call</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('app.purchaseorder')</label>
-                                        <input type="text" name="task_purchase" class="form-control" >
-                                    </div>
-                                </div>
-                                    
-    
-                                  
-    
-                                    @if(count($fields) > 0)
-                                    <h3 class="box-title">@lang('modules.projects.otherInfo')</h3>
-                                        <div class="row">
-                                            @foreach($fields as $field)
-                                                <div class="col-md-3">
-                                                    <label>{{ ucfirst($field->label) }}</label>
-                                                    <div class="form-group">
-                                                        @if( $field->type == 'text')
-                                                            <input type="text" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}" value="{{$editUser->custom_fields_data['field_'.$field->id] ?? ''}}">
-                                                        @elseif($field->type == 'password')
-                                                            <input type="password" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}" value="{{$editUser->custom_fields_data['field_'.$field->id] ?? ''}}">
-                                                        @elseif($field->type == 'number')
-                                                            <input type="number" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}" value="{{$editUser->custom_fields_data['field_'.$field->id] ?? ''}}">
-    
-                                                        @elseif($field->type == 'textarea')
-                                                            <textarea name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" id="{{$field->name}}" cols="3">{{$editUser->custom_fields_data['field_'.$field->id] ?? ''}}</textarea>
-    
-                                                        @elseif($field->type == 'radio')
-                                                            <div class="radio-list">
-                                                                @foreach($field->values as $key=>$value)
-                                                                    <label class="radio-inline @if($key == 0) p-0 @endif">
-                                                                        <div class="radio radio-info">
-                                                                            <input type="radio" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" id="optionsRadios{{$key.$field->id}}" value="{{$value}}" @if(isset($editUser) && $editUser->custom_fields_data['field_'.$field->id] == $value) checked @elseif($key==0) checked @endif>>
-                                                                            <label for="optionsRadios{{$key.$field->id}}">{{$value}}</label>
-                                                                        </div>
-                                                                    </label>
-                                                                @endforeach
-                                                            </div>
-                                                        @elseif($field->type == 'select')
-                                                            {!! Form::select('custom_fields_data['.$field->name.'_'.$field->id.']',
-                                                                    $field->values,
-                                                                    isset($editUser)?$editUser->custom_fields_data['field_'.$field->id]:'',['class' => 'form-control gender'])
-                                                            !!}
-    
-                                                        @elseif($field->type == 'checkbox')
-                                                            <div class="mt-checkbox-inline">
-                                                                @foreach($field->values as $key => $value)
-                                                                    <label class="mt-checkbox mt-checkbox-outline">
-                                                                        <input name="custom_fields_data[{{$field->name.'_'.$field->id}}][]" type="checkbox" value="{{$key}}"> {{$value}}
-                                                                        <span></span>
-                                                                    </label>
-                                                                @endforeach
-                                                            </div>
-                                                        @elseif($field->type == 'date')
-                                                            <input type="text" class="form-control date-picker" size="16" name="custom_fields_data[{{$field->name.'_'.$field->id}}]"
-                                                                value="{{ isset($editUser->dob)?Carbon\Carbon::parse($editUser->dob)->format('Y-m-d'):Carbon\Carbon::now()->format($global->date_format)}}">
-                                                        @endif
-                                                        <div class="form-control-focus"> </div>
-                                                        <span class="help-block"></span>
-    
-                                                    </div>
-                                                </div>
-                                            @endforeach
-    
-                                        </div>
-                                    @endif
-    
-                                    <!--/span-->
-                                    <div class="row">
+
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="" class="control-label">@lang('app.status')</label>
@@ -245,10 +170,36 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <input type="hidden" name="estimate_hours" value="1">
-                                        <input type="hidden" name="estimate_minutes" value="1">
-                                        <input type="hidden" name="priority" value="medium">
                                     </div>
+                                    <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.type')</label>
+                                        <select name="task_type" class="select2 form-control">
+                                            @foreach($wotype as $type)
+                                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.sporttype')</label>
+                                        <select name="sport_type" class="select2 form-control">
+                                            @foreach($sport as $type)
+                                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.qty')</label>
+                                        <input type="text" name="task_qty" class="form-control" value="">
+                                    </div>
+                                </div>
+ 
+                                    <!--/span-->
+
                                     <!--/span-->
                                     <div class="row m-b-20">
                                         <div class="col-md-12">

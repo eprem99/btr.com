@@ -48,7 +48,6 @@ class ClientTaskLabelController extends ClientBaseController
     {
 
         $this->taskLabel = TaskLabelList::find($id);
-        $this->clients = User::allClients();
         return view('client.task-label.edit', $this->data);
     }
 
@@ -73,6 +72,7 @@ class ClientTaskLabelController extends ClientBaseController
         $taskLabel->description = $request->description;
         $taskLabel->company     = $this->clientDetail->category_id;
         $taskLabel->user_id     = $this->user->id;
+        $taskLabel->notification  = $request->site_notification;
         $taskLabel->contacts     = $json;
         $taskLabel->save();
 

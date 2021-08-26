@@ -62,11 +62,15 @@ $contacts = json_decode($taskLabel->contacts, true);
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="site_id"> @lang('app.site.id')</label>
-                            <input type="text" class="form-control" name="site_id" value="{{ $contacts['site_id'] }}" />
+                            <label style="margin-bottom: 9px;" for="client" class="required"> @lang('app.site.client')</label>
+                            <select name="user_id" class="select2 form-control" id="client">
+                                @foreach($clients as $client)
+                                    <option @if($taskLabel->user_id == $client->id) selected @endif value="{{$client->id}}">{{$client->name}} </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
-                </div>
+                </div>   
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -139,8 +143,8 @@ $contacts = json_decode($taskLabel->contacts, true);
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="site_notification"> @lang('app.site.notification') 
-                                <input type="checkbox" class="form-control" name="site_notification" value="true"  @if($contacts['site_notification']
-                                        == "true") checked @endif/></label>
+                                <input type="checkbox" class="form-control" name="site_notification" value="true"  @if($taskLabel->notification
+                                        == "1") checked @endif/></label>
                         </div>
                     </div>
                 </div>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Helper\Reply;
-use App\Http\Requests\Tasks\StoreTaskCategory;
+use App\Http\Requests\Tasks\StoreTaskProject;
 use App\TaskCategory;
 use Illuminate\Http\Request;
 
@@ -32,6 +32,7 @@ class ClientTaskCategoryController extends ClientBaseController
     public function create()
     {
         $this->categories = TaskCategory::all();
+
         return view('client.task-category.create', $this->data);
     }
 
@@ -52,7 +53,7 @@ class ClientTaskCategoryController extends ClientBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTaskCategory $request)
+    public function store(StoreTaskProject $request)
     {
         $category = new TaskCategory();
         $category->category_name = $request->category_name;
@@ -69,7 +70,7 @@ class ClientTaskCategoryController extends ClientBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeCat(StoreTaskCategory $request)
+    public function storeCat(StoreTaskProject $request)
     {
         $category = new TaskCategory();
         $category->category_name = $request->category_name;

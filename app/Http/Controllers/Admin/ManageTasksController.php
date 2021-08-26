@@ -226,30 +226,25 @@ class ManageTasksController extends AdminBaseController
         $taskId = $request->taskId;
         $status = $request->status;
         $taskBoardColumn = TaskboardColumn::where('slug', $status)->first();
-        $task = Task::with('project')->findOrFail($taskId);
+        $task = Task::with('board_column')->findOrFail($taskId);
+
         $task->board_column_id = $taskBoardColumn->id;
         //        $task->status = $status;
 
         if ($taskBoardColumn->slug == 'completed') {
             $task->completed_on = Carbon::now()->format('Y-m-d');
-            $task->save();
+            $task->status = $status;
+            $task->board_column_id = $taskBoardColumn->id;
+           // $task->save();
         } else {
             $task->completed_on = null;
+            $task->status = $status;
+            $task->board_column_id = $taskBoardColumn->id;
+            $task->save();
         }
 
 
         $task->save();
-
-        $this->logTaskActivity($task->id, $this->user->id, "statusActivity", $task->board_column_id);
-
-        if ($task->project_id != null) {
-            if ($task->project->calculate_task_progress == "true") {
-                //calculate project progress if enabled
-                $this->calculateProjectProgress($task->project_id);
-            }
-            $this->project = Project::find($task->project_id);
-            $this->project->tasks = Task::whereProjectId($this->project->id)->orderBy($request->sortBy, 'desc')->get();
-        }
 
         $this->task = $task;
 

@@ -121,8 +121,8 @@ $contacts = json_decode($taskLabel->contacts, true);
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="site_notification"> @lang('app.site.notification') 
-                                <input type="checkbox" class="form-control" name="site_notification" value="true"  @if($contacts['site_notification']
-                                        == "true") checked @endif/></label>
+                                <input id="notification" type="checkbox" class="form-control" name="site_notification" value="1" @if($taskLabel->notification
+                                        == "1") checked @endif /></label>
                         </div>
                     </div>
                 </div>
@@ -212,7 +212,9 @@ $contacts = json_decode($taskLabel->contacts, true);
 <script src="{{ asset('plugins/bower_components/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js') }}"></script>
 
 <script>
-
+$('#notification').change(function(){
+     $(this).val($(this).attr('checked') ? '1' : '0');
+});
     $('#save-form').click(function () {
         $.easyAjax({
             url: '{{route('client.task-label.update', $taskLabel->id)}}',

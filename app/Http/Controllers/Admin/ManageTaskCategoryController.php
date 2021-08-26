@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helper\Reply;
-use App\Http\Requests\Tasks\StoreTaskCategory;
+use App\Http\Requests\Tasks\StoreTaskProject;
 use App\TaskCategory;
 use Illuminate\Http\Request;
 
@@ -52,10 +52,11 @@ class ManageTaskCategoryController extends AdminBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTaskCategory $request)
+    public function store(StoreTaskProject $request)
     {
         $category = new TaskCategory();
         $category->category_name = $request->category_name;
+        $category->category_visibility = $request->category_visibility;
         $category->save();
 
         return Reply::success(__('messages.categoryAdded'));
@@ -68,10 +69,11 @@ class ManageTaskCategoryController extends AdminBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeCat(StoreTaskCategory $request)
+    public function storeCat(StoreTaskProject $request)
     {
         $category = new TaskCategory();
         $category->category_name = $request->category_name;
+        $category->category_visibility = $request->category_visibility;
         $category->save();
         $categoryData = TaskCategory::all();
         return Reply::successWithData(__('messages.categoryAdded'), ['data' => $categoryData]);

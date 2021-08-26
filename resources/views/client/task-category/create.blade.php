@@ -4,6 +4,7 @@
 </div>
 <div class="modal-body">
     <div class="portlet-body">
+    @dd($categories);
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -16,6 +17,7 @@
                 </thead>
                 <tbody>
                 @forelse($categories as $key=>$category)
+  
                     <tr id="cat-{{ $category->id }}">
                         <td>{{ $key+1 }}</td>
                         <td>{{ ucwords($category->category_name) }}</td>
@@ -44,8 +46,7 @@
                 <div class="col-xs-6 ">
                     <div class="form-group">
                         <label>@lang('app.add') @lang('modules.taskCategory.projectvisibility')</label>
-                        <select class="select2 form-control" name="category_visibility" id="category_visibility"
-                                                data-style="form-control">
+                        <select class="select2 form-control" name="category_visibility" id="category_visibility" data-style="form-control">
                                 <option value="0">Normal</option>
                                 <option value="1">Pilot</option>
                                 <option value="2">High</option>

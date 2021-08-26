@@ -133,7 +133,6 @@ class ClientAllTasksController extends ClientBaseController
         $task->sport_id = $request->sport_type;
         $task->client_id = $request->client_id;
         $task->qty = $request->task_qty;
-        $task->p_order = $request->task_purchase;
 
         $taskBoardColumn = TaskboardColumn::findOrFail($request->status);
         if ($taskBoardColumn->slug == 'completed') {

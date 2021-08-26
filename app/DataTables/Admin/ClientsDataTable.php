@@ -48,7 +48,7 @@ class ClientsDataTable extends BaseDataTable
             ->editColumn(
                 'name',
                 function ($row) {
-                    if($this->user->can('delete-client')){
+                    if(in_array('clients',$this->user->modules)){
                         return '<a href="' . route('admin.clients.show', $row->id) . '">' . ucfirst($row->name) . '</a>';
                     }else{
                         return '<a href="' . route('client.clients.edit', $row->id) . '">' . ucfirst($row->name) . '</a>';

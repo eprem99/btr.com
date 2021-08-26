@@ -107,41 +107,7 @@
 
                             </div>
                         </div>
-                     
-                        {{--Custom fields data--}}
-                        @if(isset($fields) && count($fields) > 0)
-                        <div class="row m-t-10">
-                            @foreach($fields as $field)
-                                <div class="col-md-3">
-                                    <label class="font-12" for="">{{ ucfirst($field->label) }}</label><br>
-                                    <p class="text-muted">
-                                        @if( $field->type == 'text')
-                                            {{$task->custom_fields_data['field_'.$field->id] ?? '-'}}
-                                        @elseif($field->type == 'password')
-                                            {{$task->custom_fields_data['field_'.$field->id] ?? '-'}}
-                                        @elseif($field->type == 'number')
-                                            {{$task->custom_fields_data['field_'.$field->id] ?? '-'}}
-        
-                                        @elseif($field->type == 'textarea')
-                                            {{$task->custom_fields_data['field_'.$field->id] ?? '-'}}
-        
-                                        @elseif($field->type == 'radio')
-                                            {{ !is_null($task->custom_fields_data['field_'.$field->id]) ? $task->custom_fields_data['field_'.$field->id] : '-' }}
-                                        @elseif($field->type == 'select')
-                                            {{ (!is_null($task->custom_fields_data['field_'.$field->id]) && $task->custom_fields_data['field_'.$field->id] != '') ? $field->values[$task->custom_fields_data['field_'.$field->id]] : '-' }}
-                                        @elseif($field->type == 'checkbox')
-                                            {{ !is_null($task->custom_fields_data['field_'.$field->id]) ? $field->values[$task->custom_fields_data['field_'.$field->id]] : '-' }}
-                                        @elseif($field->type == 'date')
-                                            {{ !is_null($task->custom_fields_data['field_'.$field->id]) ? \Carbon\Carbon::parse($task->custom_fields_data['field_'.$field->id])->format($global->date_format) : '--'}}
-                                        @endif
-                                    </p>
-        
-                                </div>
-                            @endforeach
-                        </div>
-                        @endif
-                        {{--custom fields data end--}}
-                        
+                                       
                         <div class="row">
                             <div class="col-xs-12 col-md-12 m-t-10">
                                 <div class="task-description m-t-10">
