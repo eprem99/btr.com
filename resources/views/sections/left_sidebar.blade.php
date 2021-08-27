@@ -143,14 +143,14 @@
                     <li><a href="{{ route('admin.task-label.create') }}">@lang('app.menu.newtaskLabel')</a></li>
                 </ul>    
             </li>
-            <li><a href="{{ route('admin.company.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> 
+            <li><a href="{{ route('admin.company.index') }}" class="waves-effect"><i class="ti-receipt"></i> 
                 <span class="hide-menu">@lang('app.menu.company') <span class="fa arrow"></span> </span> </a>
                 <ul class="nav nav-second-level">
                     <li><a href="{{ route('admin.company.index') }}">@lang('app.menu.browsecompany')</a></li>
                     <li><a href="{{ route('admin.company.creates') }}">@lang('app.menu.newcompany')</a></li>
                 </ul>    
             </li>
-            <li><a href="{{ route('admin.country.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> 
+            <li><a href="{{ route('admin.country.index') }}" class="waves-effect"><i class="ti-check-box"></i> 
                 <span class="hide-menu">@lang('app.menu.country') <span class="fa arrow"></span> </span> </a>
                 <ul class="nav nav-second-level">
                     <li><a href="{{ route('admin.country.index') }}">@lang('app.menu.browsecountry')</a></li>
