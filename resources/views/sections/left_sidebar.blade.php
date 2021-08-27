@@ -112,28 +112,30 @@
                 </ul>
             </li>
 
-
-            @foreach($mainMenuSettings as $menu)
-                {{-- Check menu have childrens --}}
-                @if(isset($menu['children']))
-                    <li><a href="javascript:;" class="waves-effect"><i class="{{ $menu['icon'] }} fa-fw"></i> <span class="hide-menu"> {{ __($menu['translate_name']) }} <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level sub-menu-ul">
-                            @foreach($menu['children'] as $subMenu)
-                                {{-- Check module permissions --}}
-                                @if(in_array($subMenu['module'], $modules) && $subMenu['hidden'] != 1 || $subMenu['module'] == 'visibleToAll' && $subMenu['hidden'] != 1)
-                                    <li><a href="{{ is_null($subMenu['route']) ? 'javascript:;' : route(trim($subMenu['route'])) }}" class="waves-effect"> <span class="hide-menu">{{ __($subMenu['translate_name']) }} </span></a> </li>
-                                @endif
-                            @endforeach
-                        </ul>
-                    </li>
-
-                @else
-                    {{-- Check menu on root and check permissions of that module --}}
-                    @if(in_array($menu['module'], $modules) || $menu['module'] == 'visibleToAll')
-                        <li><a href="{{ is_null($menu['route']) ? 'javascript:;' : route(trim($menu['route'])) }}" class="waves-effect"><i class="{{ $menu['icon'] }} fa-fw"></i> <span class="hide-menu">{{ __($menu['translate_name']) }} </span></a> </li>
-                    @endif
+                   
+                <li><a href="{{ route('admin.dashboard') }}" class="waves-effect"><i class="icon-speedometer fa-fw"></i> <span class="hide-menu">@lang('app.menu.dashboard') </span></a> </li>
+   
+                @if(in_array('tasks',$modules))
+                <li><a href="{{ route('admin.task.index') }}" class="waves-effect"><i class="fa fa-tasks fa-fw"></i> <span class="hide-menu"> @lang('app.menu.work') <span class="fa arrow"></span> </span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="{{ route('admin.all-tasks.index') }}">@lang('app.menu.work')</a></li>
+                        <li><a href="{{ route('admin.all-tasks.create') }}">@lang('app.menu.newwork')</a></li>
+                        <li><a href="{{ route('admin.task-calendar.index') }}">@lang('app.menu.taskCalendar')</a></li>
+                    </ul>
+                </li>
                 @endif
-            @endforeach
+                
+                @if(in_array('tasks',$modules))
+                <li><a href="#" class="waves-effect"><i class="icon-people fa-fw"></i> <span class="hide-menu"> @lang('app.menu.Customers') <span class="fa arrow"></span> </span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="{{ route('admin.clients.index') }}">@lang('app.menu.clients')</a></li>
+                        <li><a href="{{ route('admin.employees.index') }}">@lang('app.menu.employees')</a></li>
+                    </ul>
+                </li>
+                @endif
+
+
+            @if(in_array('tasks',$modules))
             <li><a href="{{ route('admin.task-label.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> 
                 <span class="hide-menu">@lang('app.menu.taskLabel') <span class="fa arrow"></span> </span> </a>
                 <ul class="nav nav-second-level">
@@ -141,6 +143,21 @@
                     <li><a href="{{ route('admin.task-label.create') }}">@lang('app.menu.newtaskLabel')</a></li>
                 </ul>    
             </li>
+            <li><a href="{{ route('admin.company.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> 
+                <span class="hide-menu">@lang('app.menu.company') <span class="fa arrow"></span> </span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="{{ route('admin.company.index') }}">@lang('app.menu.browsecompany')</a></li>
+                    <li><a href="{{ route('admin.company.creates') }}">@lang('app.menu.newcompany')</a></li>
+                </ul>    
+            </li>
+            <li><a href="{{ route('admin.country.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> 
+                <span class="hide-menu">@lang('app.menu.country') <span class="fa arrow"></span> </span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="{{ route('admin.country.index') }}">@lang('app.menu.browsecountry')</a></li>
+                    <li><a href="{{ route('admin.country.create') }}">@lang('app.menu.newcountry')</a></li>
+                </ul>    
+            </li>
+            @endif
             @foreach ($worksuitePlugins as $item)
                 @if(View::exists(strtolower($item).'::sections.left_sidebar'))
                     @include(strtolower($item).'::sections.left_sidebar')

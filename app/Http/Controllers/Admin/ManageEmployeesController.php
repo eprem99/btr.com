@@ -59,9 +59,7 @@ class ManageEmployeesController extends AdminBaseController
     {
         if (!request()->ajax()) {
             $this->employees = User::allEmployees();
-            $this->skills = Skill::all();
             $this->departments = Team::all();
-            $this->designations = Designation::all();
             $this->totalEmployees = count($this->employees);
             $this->roles = cache()->remember(
                 'non-client-roles',
@@ -71,24 +69,6 @@ class ManageEmployeesController extends AdminBaseController
                         ->orderBy('id', 'asc')->get();
                 }
             );
-            $whoseProjectCompleted = ProjectMember::join('projects', 'projects.id', '=', 'project_members.project_id')
-                ->join('users', 'users.id', '=', 'project_members.user_id')
-                ->select('users.*')
-                ->groupBy('project_members.user_id')
-                ->havingRaw("min(projects.completion_percent) = 100 and max(projects.completion_percent) = 100")
-                ->orderBy('users.id')
-                ->get();
-
-            $notAssignedProject = User::join('role_user', 'role_user.user_id', '=', 'users.id')
-                ->join('roles', 'roles.id', '=', 'role_user.role_id')
-                ->select('users.id', 'users.name')->whereNotIn('users.id', function ($query) {
-
-                    $query->select('user_id as id')->from('project_members');
-                })
-                ->where('roles.name', '<>', 'client')
-                ->get();
-
-            $this->freeEmployees = $whoseProjectCompleted->merge($notAssignedProject)->count();
         }
 
         return $dataTable->render('admin.employees.index', $this->data);
@@ -105,9 +85,7 @@ class ManageEmployeesController extends AdminBaseController
         $this->fields = $employee->getCustomFieldGroupsWithFields()->fields;
 
         $this->teams = Team::all();
-        $this->designations = Designation::all();
 
-        $this->skills = Skill::all()->pluck('name')->toArray();
         $this->countries = Country::all();
         $this->lastEmployeeID = EmployeeDetails::max('id');
 
@@ -149,21 +127,6 @@ class ManageEmployeesController extends AdminBaseController
 
             $user->save();
 
-
-            $tags = json_decode($request->tags);
-            if (!empty($tags)) {
-                foreach ($tags as $tag) {
-                    // check or store skills
-                    $skillData = Skill::firstOrCreate(['name' => strtolower($tag->value)]);
-
-                    // Store user skills
-                    $skill = new EmployeeSkill();
-                    $skill->user_id = $user->id;
-                    $skill->skill_id = $skillData->id;
-                    $skill->save();
-                }
-            }
-
             if ($user->id) {
                 $employee = new EmployeeDetails();
                 $employee->user_id = $user->id;
@@ -172,7 +135,6 @@ class ManageEmployeesController extends AdminBaseController
                 $employee->hourly_rate = $request->hourly_rate;
                 $employee->slack_username = $request->slack_username;
                 $employee->department_id = $request->department;
-                $employee->designation_id = $request->designation;
 
                 $employee->joining_date = Carbon::createFromFormat($this->global->date_format, $request->joining_date)->format('Y-m-d');
                 if ($request->last_date != '') {
@@ -227,42 +189,21 @@ class ManageEmployeesController extends AdminBaseController
      */
     public function show($id)
     {
-        $this->employee = User::with(['employeeDetail', 'employeeDetail.designation', 'employeeDetail.department', 'leaveTypes'])->withoutGlobalScope('active')->with('employee')->findOrFail($id);
+        $this->employee = User::with(['employeeDetail', 'employeeDetail.department'])->withoutGlobalScope('active')->with('employee')->findOrFail($id);
         $this->employeeDetail = EmployeeDetails::where('user_id', '=', $this->employee->id)->first();
         $this->employeeDocs = EmployeeDocs::where('user_id', '=', $this->employee->id)->get();
 
-        if (!is_null($this->employeeDetail)) {
-            $this->employeeDetail = $this->employeeDetail->withCustomFields();
-            $this->fields = $this->employeeDetail->getCustomFieldGroupsWithFields()->fields;
-        }
         $taskBoardColumn = TaskboardColumn::completeColumn();
 
-        $this->taskCompleted = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')
-            ->where('task_users.user_id', $id)
-            ->where('tasks.board_column_id', $taskBoardColumn->id)
-            ->count();
-        $hoursLogged = ProjectTimeLog::where('user_id', $id)->sum('total_minutes');
-
-        $timeLog = intdiv($hoursLogged, 60) . ' hrs ';
-
-        if (($hoursLogged % 60) > 0) {
-            $timeLog .= ($hoursLogged % 60) . ' mins';
-        }
-
-        $this->hoursLogged = $timeLog;
+        $this->count = DB::table('users')
+            ->select(
+                DB::raw('(select count(tasks.id) from `tasks` inner join task_users on task_users.task_id=tasks.id where tasks.board_column_id=' . $taskBoardColumn->id . ' and task_users.user_id = ' . $id . ') as totalCompletedTasks'),
+                DB::raw('(select count(tasks.id) from `tasks` inner join task_users on task_users.task_id=tasks.id where tasks.board_column_id!=' . $taskBoardColumn->id . ' and task_users.user_id = ' . $id . ') as totalPendingTasks')
+            )
+            ->first();
 
         $this->activities = UserActivity::where('user_id', $id)->orderBy('id', 'desc')->get();
-        $this->projects = Project::select('projects.id', 'projects.project_name', 'projects.deadline', 'projects.completion_percent')
-            ->join('project_members', 'project_members.project_id', '=', 'projects.id')
-            ->where('project_members.user_id', '=', $id)
-            ->get();
-        $this->leaves = Leave::byUser($id);
-        $this->leavesCount = Leave::byUserCount($id);
-
-        $this->leaveTypes = LeaveType::byUser($id);
-        $this->allowedLeaves = $this->employee->leaveTypes->sum('no_of_leaves');
-        $this->employeeLeavesQuota = $this->employee->leaveTypes;
-
+      
         return view('admin.employees.show', $this->data);
     }
 

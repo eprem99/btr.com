@@ -76,8 +76,12 @@ Route::group(['middleware' => 'auth'], function () {
       //  Route::resource('leadCategory', 'LeadCategoyController');
         Route::resource('clientCategory', 'ClientCategoryController');
         Route::get('company', ['uses' => 'ClientCategoryController@index'])->name('company.index');
+        Route::get('company/data', ['uses' => 'ClientCategoryController@data'])->name('company.data');
+        Route::get('company/creates', ['uses' => 'ClientCategoryController@creates'])->name('company.creates');
         Route::get('company/{id}/edit', ['uses' => 'ClientCategoryController@edit'])->name('company.edit');
-        Route::post('company/{id}update', ['uses' => 'ClientCategoryController@update'])->name('company.update');
+        Route::post('company/update/{id}', ['uses' => 'ClientCategoryController@update'])->name('company.update');
+        Route::post('company/stores', ['uses' => 'ClientCategoryController@stores'])->name('company.stores');
+        Route::delete('company/destroy/{id}', ['uses' => 'ClientCategoryController@destroy'])->name('company.destroy');
 
   //        Route::resource('clientSubCategory', 'ClientSubCategoryController');
 
@@ -91,7 +95,17 @@ Route::group(['middleware' => 'auth'], function () {
         // Route::get('lead-files/download/{id}', ['uses' => 'LeadFilesController@download'])->name('lead-files.download');
         // Route::get('lead-files/thumbnail', ['uses' => 'LeadFilesController@thumbnailShow'])->name('lead-files.thumbnail');
         // Route::resource('lead-files', 'LeadFilesController');
-
+        Route::group(
+            ['prefix' => 'country'], function () {
+                Route::resource('CountryCategory', 'CountryController');
+                Route::get('index', ['uses' => 'CountryController@index'])->name('country.index');
+                Route::get('data', ['uses' => 'CountryController@data'])->name('country.data');
+                Route::get('create', ['uses' => 'CountryController@create'])->name('country.create');
+                Route::get('{id}/edit', ['uses' => 'CountryController@edit'])->name('country.edit');
+                Route::post('country/store', ['uses' => 'CountryController@store'])->name('country.store');
+                Route::post('update/{id}', ['uses' => 'CountryController@update'])->name('country.update');
+                Route::delete('destroy/{id}', ['uses' => 'CountryController@destroy'])->name('country.destroy');
+            });
 
 
         Route::group(

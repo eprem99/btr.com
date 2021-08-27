@@ -70,7 +70,14 @@
                     <div class="col-in row">
                             <h3 class="box-title">@lang('modules.employees.tasksDone')</h3>
                             <div class="col-xs-4"><i class="ti-check-box text-success"></i></div>
-                            <div class="col-xs-8 text-right counter">{{ $taskCompleted }}</div>
+                            <div class="col-xs-8 text-right counter">{{ $count->totalCompletedTasks}}</div>
+                    </div>
+                </div>
+                <div class="col-md-6 row-in-br">
+                    <div class="col-in row">
+                            <h3 class="box-title">@lang('modules.employees.tasksPending')</h3>
+                            <div class="col-xs-4"><i class="ti-check-box text-warning"></i></div>
+                            <div class="col-xs-8 text-right counter">{{ $count->totalPendingTasks }}</div>
                     </div>
                 </div>
             </div>
@@ -137,81 +144,7 @@
                     </div>
 
                 </div>
-                <div class="tab-pane" id="leaves">
-                    <div class="row">
-
-                        <div class="col-md-4">
-                            <p><strong>@lang('modules.leaves.leavesTaken')</strong>
-                            <a href="javascript:;" id="edit-leave-type" class="btn btn-info btn-xs"><i class="fa fa-gear"></i> @lang('app.manage')</a>
-                            </p>
-                            <ul class="basic-list">
-                                @forelse($leaveTypes as $key=>$leaveType)
-                                    <li>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                {{ ucfirst($leaveType->type_name) }}
-                                            </div>
-                                            <div class="col-sm-6 text-right">
-                                                    <span class="label-{{ $leaveType->color }} label">{{ (isset($leaveType->leavesCount[0])) ? $leaveType->leavesCount[0]->count : '0' }} / {{  isset($employeeLeavesQuota[$key]) ? $employeeLeavesQuota[$key]->no_of_leaves : 0 }}</span>
-                                                    
-                                            </div>
-                                        </div>
-
-                                    </li>
-                                @empty
-                                    <li>@lang('messages.noRecordFound')</li>
-                                @endforelse
-                            </ul>
-                        </div>
-
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="table-responsive">
-                            <table class="table" id="leave-table">
-                                <thead>
-                                <tr>
-                                    <th>@lang('modules.leaves.leaveType')</th>
-                                    <th>@lang('app.date')</th>
-                                    <th>@lang('modules.leaves.reason')</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @forelse($leaves as $key=>$leave)
-                                    <tr>
-                                        <td>
-                                            <label class="label label-{{ $leave->type->color }}">{{ ucwords($leave->type->type_name) }}</label>
-                                        </td>
-                                        <td>
-                                            {{ $leave->leave_date->format($global->date_format) }}
-                                        </td>
-                                        <td>
-                                            {{ $leave->reason }}
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="3" class="text-center">
-                                            <div class="empty-space" style="height: 200px;">
-                                                <div class="empty-space-inner">
-                                                    <div class="icon" style="font-size:30px"><i
-                                                                class="icon-logout"></i>
-                                                    </div>
-                                                    <div class="title m-b-15">@lang('messages.noRecordFound')
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                </div>
+  
                 <div class="tab-pane" id="docs">
 
                     <button class="btn btn-sm btn-info addDocs" onclick="showAdd()"><i

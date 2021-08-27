@@ -48,7 +48,7 @@
                 <div class="col-xs-12">
                     <div class="form-group">
                         <label class="required">@lang('modules.client.categoryName')</label>
-                        <input type="text" name="category_name" id="category_name" class="form-control" value="{{$category->category_name}}">
+                        <input type="text" name="category_name" id="category_name" class="form-control" value="">
                     </div>
                 </div>
             </div>
@@ -58,13 +58,13 @@
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label for="category_address" class="required">@lang('modules.client.categoryAddress')</label>
-                        <input type="text" name="category_address" id="category_address" class="form-control" value="{{$category->category_address}}">
+                        <input type="text" name="category_address" id="category_address" class="form-control" value="">
                     </div>
                 </div>
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label for="category_suite">@lang('modules.client.categorySuite')</label>
-                        <input type="text" name="category_suite" id="category_suite" class="form-control" value="{{$category->category_suite}}">
+                        <input type="text" name="category_suite" id="category_suite" class="form-control" value="">
                     </div>
                 </div>
                 <div class="col-xs-6">
@@ -89,13 +89,13 @@
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label for="category_city">@lang('modules.client.categoryCity')</label>
-                        <input type="text" name="category_city" id="category_city" class="form-control" value="{{$category->category_city}}">
+                        <input type="text" name="category_city" id="category_city" class="form-control" value="">
                     </div>
                 </div>
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label for="category_zip">@lang('modules.client.categoryZip')</label>
-                        <input type="text" name="category_zip" id="category_zip" class="form-control" value="{{$category->category_zip}}">
+                        <input type="text" name="category_zip" id="category_zip" class="form-control" value="">
                     </div>
                 </div>
             </div>
@@ -106,25 +106,25 @@
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label for="category_email" class="required">@lang('modules.client.categoryemail')</label>
-                        <input type="text" name="category_email" id="category_email" class="form-control" value="{{$category->category_email}}">
+                        <input type="text" name="category_email" id="category_email" class="form-control" value="">
                     </div>
                 </div>
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label for="category_phone" class="required">@lang('modules.client.categoryphone')</label>
-                        <input type="text" name="category_phone" id="category_phone" class="form-control" value="{{$category->category_phone}}">
+                        <input type="text" name="category_phone" id="category_phone" class="form-control" value="">
                     </div>
                 </div>
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label for="category_altphone">@lang('modules.client.categoryaltphone')</label>
-                        <input type="text" name="category_altphone" id="category_altphone" class="form-control" value="{{$category->category_altphone}}">
+                        <input type="text" name="category_altphone" id="category_altphone" class="form-control" value="">
                     </div>
                 </div>
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label for="category_fax">@lang('modules.client.categoryfax')</label>
-                        <input type="text" name="category_fax" id="category_fax" class="form-control" value="{{$category->category_fax}}">
+                        <input type="text" name="category_fax" id="category_fax" class="form-control" value="">
                     </div>
                 </div>
             </div>
@@ -173,7 +173,7 @@ $('#country').select2({
 
     $('#save-category').click(function () {
         $.easyAjax({
-            url: '{{route('admin.company.update', [$category->id])}}',
+            url: '{{route('admin.company.stores')}}',
             type: "POST",
             data: $('#createClientCategory').serialize(),
             success: function (response) {

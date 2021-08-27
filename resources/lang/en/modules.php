@@ -4,7 +4,7 @@ return array(
   'dashboard' =>
   array(
     'totalClients' => 'Total Clients',
-    'totalEmployees' => 'Total Techs',
+    'totalEmployees' => 'Total Tech',
     'totalProjects' => 'Total Projects',
     'totalPaidInvoices' => 'Paid Invoices',
     'totalHoursLogged' => 'Hours Logged',
@@ -202,6 +202,7 @@ return array(
     'updateTitle' => 'update Tech Info',
     'updatePasswordNote' => 'Tech will login using this password. (Leave blank to keep current password)',
     'tasksDone' => ' Work Order Done',
+    'tasksPending' => ' Work Order Pending',
     'hoursLogged' => 'Hours Logged',
     'activity' => 'Activity',
     'profile' => 'Profile',
@@ -484,7 +485,7 @@ return array(
     'noticeHeading' => 'Notice Heading',
     'noticeDetails' => 'Notice Details',
     'updateNotice' => 'Update Notice',
-    'toTech' => 'To Techs',
+    'toTech' => 'To Tech',
     'toClients' => 'To Clients',
   ),
   'sticky' =>
@@ -929,7 +930,7 @@ return array(
     'startOn' => 'Starts On',
     'endOn' => 'Ends On',
     'addAttendees' => 'Add Attendees',
-    'allTechs' => 'All Techs',
+    'allTechs' => 'All Tech',
     'where' => 'Where',
     'repeat' => 'Repeat',
     'repeatEvery' => 'Repeat every',
@@ -938,6 +939,14 @@ return array(
     'viewAttendees' => 'View Attendees',
     'attendees' => 'Attendees',
     'remindBefore' => 'Remind before',
+  ),
+  'company' => 
+  array(
+    'newcompany' => 'New Company',
+    'deleteRecurringCompany' => 'Delete With Recurring Company',
+    'updatePayroll' => 'Update Payroll',
+    'projectPayrollReport' => 'Project Payroll Report',
+    'totalEarning' => 'Total Earning',
   ),
   'payroll' =>
   array(
@@ -1199,7 +1208,7 @@ return array(
   'module' =>
   array(
     'clients' => 'Clients',
-    'employees' => 'Techs',
+    'employees' => 'Tech',
     'projects' => 'Projects',
     'attendance' => 'Attendance',
     'tasks' => 'Work Orders',
@@ -1317,6 +1326,18 @@ return array(
     'city' => 'City',
     'state' => 'State',
     'country' => 'Country',
+  ),
+  'country' => 
+  array(
+    'country' => 'Country',
+    'countryName' => 'Name',
+    'iso' => 'Iso',
+    'iso3' => 'Iso 3',
+    'pcode' => 'Phone code',
+    'ncode' => 'Num code',
+    'newcountry' => 'Add Country',
+    'nicename' => 'Nicename',
+    'updateTitle' => 'Update',
   ),
   'taskLabel' =>
   array(

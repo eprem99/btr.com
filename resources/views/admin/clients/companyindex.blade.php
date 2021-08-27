@@ -3,12 +3,13 @@
 @section('page-title')
     <div class="row bg-title">
         <!-- .page title -->
-        <div class="col-lg-6 col-md-4 col-sm-4 col-xs-12">
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
             <h4 class="page-title"><i class="{{ $pageIcon }}"></i> @lang($pageTitle)</h4>
         </div>
         <!-- /.page title -->
         <!-- .breadcrumb -->
-        <div class="col-lg-6 col-sm-8 col-md-8 col-xs-12">
+        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
+            <a href="{{ route('admin.company.creates') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.company.newcompany') <i class="fa fa-plus" aria-hidden="true"></i></a>
             <ol class="breadcrumb">
                 <li><a href="{{ route('admin.dashboard') }}">@lang('app.menu.home')</a></li>
                 <li><a href="{{ route('admin.clients.index') }}">@lang($pageTitle)</a></li>
@@ -16,9 +17,19 @@
             </ol>
         </div>
         <!-- /.breadcrumb -->
+
     </div>
 @endsection
-
+@push('head-script')
+<link rel="stylesheet" href="{{ asset('css/datatables/dataTables.bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/datatables/responsive.bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/datatables/buttons.dataTables.min.css') }}">
+<style>
+    .swal-footer {
+        text-align: center !important;
+    }
+</style>
+@endpush
 
 @section('content')
 
@@ -33,9 +44,11 @@
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>@lang('app.task')</th>
-                                <th>@lang('app.dueDate')</th>
-                                <th>@lang('app.status')</th>
+                                <th>@lang('app.menu.company')</th>
+                                <th>@lang('app.site.country')</th>
+                                <th>@lang('app.site.state')</th>
+                                <th>@lang('app.phone')</th>
+                                <th>@lang('app.action')</th>
                             </tr>
                             </thead>
                         </table>
@@ -53,6 +66,7 @@
 <script src="{{ asset('js/datatables/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/datatables/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('js/datatables/responsive.bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/sweetalert.min.js') }}"></script>
 <script>
     showTable();
 
@@ -71,14 +85,8 @@
     var table;
 
     function showTable() {
-        if ($('#hide-completed-tasks').is(':checked')) {
-            var hideCompleted = '1';
-        } else {
-            var hideCompleted = '0';
-        }
 
-        var url = '{{ route('admin.clientCategory.index') }}';
-        url = url.replace(':hideCompleted', hideCompleted);
+        var url = '{{ route('admin.company.data') }}';
 
         table = $('#tasks-table').dataTable({
             destroy: true,
@@ -101,31 +109,67 @@
                 {data: 'category_name', name: 'category_name', width: '20%'},
                 {data: 'category_country', name: 'category_country'},
                 {data: 'category_state', name: 'category_state'},
+                {data: 'category_phone', name: 'category_phone'},
+                {data: 'action', name: 'action', "searchable": false}
             ]
         });
     }
-
-    $('#hide-completed-tasks').click(function () {
-        showTable();
-    });
-
-    $('#tasks-table').on('click', '.show-task-detail', function () {
-        $(".right-sidebar").slideDown(50).addClass("shw-rside");
-
+    $('body').on('click', '.sa-params', function () {
         var id = $(this).data('task-id');
-        var url = "{{ route('admin.all-tasks.show',':id') }}";
-        url = url.replace(':id', id);
+        var recurring = $(this).data('recurring');
 
-        $.easyAjax({
-            type: 'GET',
-            url: url,
-            success: function (response) {
-                if (response.status == "success") {
-                    $('#right-sidebar-content').html(response.view);
+        var buttons = {
+            cancel: "No, cancel please!",
+            confirm: {
+                text: "Yes, delete it!",
+                value: 'confirm',
+                visible: true,
+                className: "danger",
+            }
+        };
+
+        if(recurring == 'yes')
+        {
+            buttons.recurring = {
+                text: "{{ trans('modules.tasks.deleteRecurringCompany') }}",
+                value: 'recurring'
+            }
+        }
+
+        swal({
+            title: "@lang('messages.sweetAlertTitle')",
+            text: "@lang('messages.deleteCompany')",
+            dangerMode: true,
+            icon: 'warning',
+            buttons: buttons,
+        }).then(function (isConfirm) {
+            if (isConfirm == 'confirm' || isConfirm == 'recurring') {
+
+                var url = "{{ route('admin.company.destroy',':id') }}";
+                url = url.replace(':id', id);
+
+                var token = "{{ csrf_token() }}";
+                var dataObject = {'_token': token, '_method': 'DELETE'};
+
+                if(isConfirm == 'recurring')
+                {
+                    dataObject.recurring = 'yes';
                 }
+
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    data: dataObject,
+                    success: function (response) {
+                        if (response.status == "success") {
+                            $.unblockUI();
+                            table._fnDraw();
+                        }
+                    }
+                });
             }
         });
-    })
+    });
     $('ul.showClientTabs .clientProjects').addClass('tab-current');
    
    </script>

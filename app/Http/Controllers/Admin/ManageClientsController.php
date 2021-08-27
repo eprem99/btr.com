@@ -70,9 +70,6 @@ class ManageClientsController extends AdminBaseController
      */
     public function create($leadID = null)
     {
-        if ($leadID) {
-            $this->leadDetail = Lead::findOrFail($leadID);
-        }
         $this->countries = Country::all();
 
         $client = new ClientDetails();
@@ -105,30 +102,10 @@ class ManageClientsController extends AdminBaseController
         $user = User::create($data);
         $user->client_details()->create($data);
 
-        // To add custom fields data
-        if ($request->get('custom_fields_data')) {
-            $client = $user->client_details;
-            $client->updateCustomFieldData($request->get('custom_fields_data'));
-        }
-
         $user->attachRole(3);
 
         cache()->forget('all-clients');
 
-        //log search
-        // $this->logSearchEntry($user->id, $user->name, 'admin.clients.edit', 'client');
-        // $this->logSearchEntry($user->id, $user->email, 'admin.clients.edit', 'client');
-        // if (!is_null($user->client_details->company_name)) {
-        //     $this->logSearchEntry($user->id, $user->client_details->company_name, 'admin.clients.edit', 'client');
-        // }
-
-        // if ($request->has('lead')) {
-        //     $lead = Lead::findOrFail($request->lead);
-        //     $lead->client_id = $user->id;
-        //     $lead->save();
-
-        //     return Reply::redirect(route('admin.leads.index'), __('messages.leadClientChangeSuccess'));
-        // }
 
         if ($request->has('ajax_create')) {
             $teams = User::allClients();
@@ -174,10 +151,7 @@ class ManageClientsController extends AdminBaseController
         $this->clientDetail = ClientDetails::where('user_id', '=', $this->userDetail->id)->first();
         $this->countries = Country::all();
         $this->categories = ClientCategory::all();
-        if (!is_null($this->clientDetail)) {
-            $this->clientDetail = $this->clientDetail->withCustomFields();
-            $this->fields = $this->clientDetail->getCustomFieldGroupsWithFields()->fields;
-        }
+
         return view('admin.clients.edit', $this->data);
     }
 
