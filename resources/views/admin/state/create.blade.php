@@ -47,12 +47,12 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="country_id" class="required">@lang("modules.state.country")</label>
-                                            <select class="select2 form-control" data-placeholder="@lang('modules.client.clientCategory')"  id="country_id" name="country_id">
-                                                <option value="">@lang('messages.pleaseSelectCountries')</option>
+                                            <select class="select2 form-control" data-placeholder="@lang('modules.state.pleaseSelectCountries')"  id="country_id" name="country_id">
+                                                <option value="">@lang('modules.state.pleaseSelectCountries')</option>
                                                 @forelse($countries as $country)
                                                      <option value="{{ $country->id }}">{{ ucwords($country->name) }}</option>
                                                   @empty
-                                                      <option value="">@lang('messages.noCountryAdded')</option>
+                                                      <option value="">@lang('modules.state.pleaseSelectCountries')</option>
                                                  @endforelse
                                                     
                                                 </select>
