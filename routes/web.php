@@ -83,7 +83,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('company/stores', ['uses' => 'ClientCategoryController@stores'])->name('company.stores');
         Route::delete('company/destroy/{id}', ['uses' => 'ClientCategoryController@destroy'])->name('company.destroy');
 
-  //        Route::resource('clientSubCategory', 'ClientSubCategoryController');
+        // Route::resource('clientSubCategory', 'ClientSubCategoryController');
 
         // Route::post('leads/updateIndex', ['as' => 'leads.updateIndex', 'uses' => 'LeadController@updateIndex']);
         // Route::resource('leads', 'LeadController');
@@ -107,6 +107,16 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::delete('destroy/{id}', ['uses' => 'CountryController@destroy'])->name('country.destroy');
             });
 
+            Route::group(
+                ['prefix' => 'state'], function () {
+                    Route::get('index', ['uses' => 'StatesController@index'])->name('state.index');
+                    Route::get('data', ['uses' => 'StatesController@data'])->name('state.data');
+                    Route::get('create', ['uses' => 'StatesController@create'])->name('state.create');
+                    Route::get('{id}/edit', ['uses' => 'StatesController@edit'])->name('state.edit');
+                    Route::post('country/store', ['uses' => 'StatesController@store'])->name('state.store');
+                    Route::post('update/{id}', ['uses' => 'StatesController@update'])->name('state.update');
+                    Route::delete('destroy/{id}', ['uses' => 'StatesController@destroy'])->name('state.destroy');
+                });
 
         Route::group(
             ['prefix' => 'employees'], function () {

@@ -155,9 +155,14 @@
                 <ul class="nav nav-second-level">
                     <li><a href="{{ route('admin.country.index') }}">@lang('app.menu.browsecountry')</a></li>
                     <li><a href="{{ route('admin.country.create') }}">@lang('app.menu.newcountry')</a></li>
+                    <li><a href="{{ route('admin.state.index') }}">@lang('app.menu.browsestate')</a></li>
+                    <li><a href="{{ route('admin.state.create') }}">@lang('app.menu.newstate')</a></li>
                 </ul>    
             </li>
             @endif
+            <li><a href="{{ route('admin.settings.index') }}" class="waves-effect"><i class="fa fa-cog"></i> 
+                <span class="hide-menu">@lang('app.menu.settings') </span> </a>
+            </li>
             @foreach ($worksuitePlugins as $item)
                 @if(View::exists(strtolower($item).'::sections.left_sidebar'))
                     @include(strtolower($item).'::sections.left_sidebar')
@@ -167,10 +172,6 @@
         </ul>
 
         <div class="clearfix"></div>
-
-
-
-
 
     </div>
 

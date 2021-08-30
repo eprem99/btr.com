@@ -1338,6 +1338,19 @@ return array(
     'newcountry' => 'Add Country',
     'nicename' => 'Nicename',
     'updateTitle' => 'Update',
+    
+  ),
+  'state' => 
+  array(
+    'updateTitle' => 'Update State',
+    'state' => 'state',
+    'stateName' => 'Name',
+    'stateSlug' => 'Slug',
+    'country' => 'Country',
+    'timezone' => 'Time zone',
+    'newstate' => 'Add State',
+    'selectTimezone' => 'Select time zone',
+    'pleaseSelectCountries' => 'Select Country'
   ),
   'taskLabel' =>
   array(
