@@ -62,7 +62,7 @@ class ManageAllTasksController extends AdminBaseController
     {
         $this->task = Task::with('users', 'label')->findOrFail($id);
         $this->clientDetail = ClientDetails::where('user_id', '=', $this->task->client_id)->first();
-        $this->clients = User::allClients()->where('client_details.category_id', '=', $this->clientDetail->category_id);
+        $this->clients = User::allClients();
         $this->labelIds = $this->task->label->pluck('label_id')->toArray();
 
         $this->employees  = User::allEmployees();
