@@ -106,9 +106,8 @@ class ManageTasksController extends AdminBaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function shows($id)
     {
-        $this->project = Project::findOrFail($id);
         $this->categories = TaskCategory::all();
         $completedTaskColumn = TaskboardColumn::where('slug', '=', 'completed')->first();
         if ($completedTaskColumn) {
@@ -291,12 +290,12 @@ class ManageTasksController extends AdminBaseController
     {
 
         $tasks = Task::leftJoin('projects', 'projects.id', '=', 'tasks.project_id')
-            ->leftJoin('users as client', 'client.id', '=', 'projects.client_id')
+            ->leftJoin('users as client', 'client.id', '=', 'tasks.client_id')
             ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
             ->join('users as member', 'task_users.user_id', '=', 'member.id')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
             ->leftJoin('users as creator_user', 'creator_user.id', '=', 'tasks.created_by')
-            ->select('tasks.id', 'projects.project_name', 'tasks.heading', 'client.name as clientName', 'creator_user.name as created_by', 'creator_user.image as created_image', 'tasks.due_date', 'taskboard_columns.column_name as board_column', 'taskboard_columns.label_color', 'tasks.project_id')
+            ->select('tasks.id', 'tasks.heading', 'client.name as clientName', 'creator_user.name as created_by', 'creator_user.image as created_image', 'tasks.due_date', 'taskboard_columns.column_name as board_column', 'taskboard_columns.label_color', 'tasks.project_id')
             ->where('projects.id', $projectId)
             ->with('users')
             ->groupBy('tasks.id');

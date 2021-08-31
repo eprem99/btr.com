@@ -9,6 +9,8 @@ use App\Http\Requests\Admin\TaskLabel\UpdateRequest;
 use App\TaskLabel;
 use App\TaskLabelList;
 use App\User;
+use App\Country;
+use App\state;
 use App\ClientDetails;
 
 class ManageTaskLabelController extends AdminBaseController
@@ -34,6 +36,8 @@ class ManageTaskLabelController extends AdminBaseController
     public function create()
     {
         $this->clients = User::allClients();
+        $this->countries = Country::all();
+        $this->states = State::all();
         return view('admin.task-label.create', $this->data);
     }
 
@@ -48,6 +52,8 @@ class ManageTaskLabelController extends AdminBaseController
     {
         $this->taskLabel = TaskLabelList::find($id);
         $this->clients = User::allClients();
+        $this->countries = Country::all();
+        $this->states = State::all();
         return view('admin.task-label.edit', $this->data);
     }
 

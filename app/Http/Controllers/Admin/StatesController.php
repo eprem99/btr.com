@@ -34,7 +34,7 @@ class StatesController extends AdminBaseController
     {
       //  $this->states = State::inerjoin('countries as ca', 'country_id', '=', 'ca.id')->get();
 
-        $this->states = State::all();
+        $this->states = State::with('Country')->get();
 
         return view('admin.state.index', $this->data);
     }
@@ -121,6 +121,7 @@ class StatesController extends AdminBaseController
      */
     public function edit($id)
     {
+        
         $this->state = State::findOrFail($id);
         $this->countries = Country::all();
       //  $this->state = State::where('id', '=', $id)->first();
@@ -142,6 +143,19 @@ class StatesController extends AdminBaseController
         $state->update($data);
 
         return Reply::redirect(route('admin.state.index'));
+    }
+
+    public function country($id)
+    {
+        // dd($id);
+        $states = State::where('country_id', '=', $id)->get();
+        $option = '';
+            foreach($states as $state){
+                $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+            }
+       //     dd($option);
+       return Reply::successWithData(__('messages.categoryDeleted'),['data'=> $option]);
+       // return $option;
     }
 
     /**

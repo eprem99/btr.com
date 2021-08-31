@@ -287,29 +287,13 @@ class ManageAllTasksController extends AdminBaseController
     {
         $this->task = Task::with('board_column', 'users', 'files', 'comments', 'notes', 'labels', 'wotype', 'sporttype')->findOrFail($id);
         
-        $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')
-            ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id')
-            ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id');
-
-        $where = 'and project_time_logs.task_id="' . $id . '" ';
+        // $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')
+        //     ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id')
+        //     ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id');
         
-        $this->employees = $this->employees->select(
-            'users.name',
-            'users.image',
-            'users.id',
-            'designations.name as designation_name',
-            DB::raw(
-                "(SELECT SUM(project_time_logs.total_minutes) FROM project_time_logs WHERE project_time_logs.user_id = users.id $where GROUP BY project_time_logs.user_id) as total_minutes"
-            )
-        );
+        $this->user = User::where('id', '=', $this->task->client_id)->first();
+      
 
-        $this->employees = $this->employees->where('project_time_logs.task_id', '=', $id);
-
-        $this->employees = $this->employees->groupBy('project_time_logs.user_id')
-            ->orderBy('users.name')
-            ->get();
-
-        $this->fields = $this->task->getCustomFieldGroupsWithFields()->fields;
         $view = view('admin.tasks.show', $this->data)->render();
         return Reply::dataOnly(['status' => 'success', 'view' => $view]);
     }

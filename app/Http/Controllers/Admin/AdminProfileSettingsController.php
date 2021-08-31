@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Country;
+use App\State;
 
 class AdminProfileSettingsController extends AdminBaseController
 {
@@ -18,7 +19,10 @@ class AdminProfileSettingsController extends AdminBaseController
         $this->userDetail = $this->user;
         $this->employeeDetail = $this->user->employee_details;
         $this->countries = Country::all();
+        $this->states = State::all();
 
         return view('admin.profile.index', $this->data);
     }
+
+
 }

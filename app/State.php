@@ -11,6 +11,6 @@ class State extends Model
 
     public function Country()
     {
-        return $this->hasMany(Country::class, 'coutntry_id');
+        return $this->belongsTo(Country::class, 'country_id');
     }
 }

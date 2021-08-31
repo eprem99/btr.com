@@ -47,7 +47,7 @@
                        @if($task->start_date)<p><strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}</p>@endif
                        @if($task->heading)<p><strong>Summary:  </strong> {{ ucwords($task->heading) }}</p>@endif
                        @if($task->wotype)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
-                       @if($task->users[0])<p><strong>Client:  </strong> {{ ucwords($task->users[0]->name) }}</p>@endif
+                       @if($task->client_id)<p><strong>Client:  </strong> {{ ucwords($user->name) }}</p>@endif
                        @if($task->create_by)<p><strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}</p>@endif
                     </div>
                     <div class="col-md-6">
@@ -300,14 +300,24 @@
 
                 <div class="col-xs-12">
                     <hr>
+                    @if($task->client_id)
+                    <div class="col-xs-12">
+                        <label class="font-12" for="">@lang('modules.tasks.assignTo')</label><br>
+                        <img src="{{ $user->image_url }}" data-toggle="tooltip"
+                             data-original-title="{{ ucwords($user->name) }}" data-placement="right" class="img-circle" width="35" height="35" alt="">
 
-                    <label class="font-12" for="">@lang('modules.tasks.assignTo')</label><br>
+                        {{ ucwords($user->name) }}
+                        <hr>
+                    </div>
+                @endif
+                <div class="col-xs-12">
+                    <label class="font-12" for="">@lang('modules.tasks.planned')</label><br>
                     @foreach ($task->users as $item)
                         <img src="{{ $item->image_url }}" data-toggle="tooltip"
                              data-original-title="{{ ucwords($item->name) }}" data-placement="right"
                              class="img-circle" width="35" height="35" alt="">
                              {{ ucwords($item->name) }}
-                             @if($item->mobile)<P><strong>Phone: </strong> {{$item->mobile}}</P>@endif
+                             @if($item->mobile)<P><strong>Planned Tech Phone: </strong> {{$item->mobile}}</P>@endif
                     @endforeach
                     <hr>
                 </div>

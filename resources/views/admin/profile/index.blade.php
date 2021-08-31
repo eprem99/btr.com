@@ -38,7 +38,7 @@
                         <div id="vhome3" class="tab-pane active">
                             <div class="row">
                                 <div class="col-sm-12 col-xs-12">
-                                    {!! Form::open(['id'=>'updateProfile','class'=>'ajax-form','method'=>'PUT']) !!}
+                                    {!! Form::open(['id'=>'updateProfile','class'=>'ajax-form']) !!}
                                     <div class="form-body">
                                         <div class="row">
                                             <div class="col-md-12 ">
@@ -69,8 +69,25 @@
                                                 </div>
                                             </div>
                                             <!--/span-->
+                                            
+                                            <div class="col-md-4">
+                                                <label>@lang('app.mobile')</label>
+                                                <div class="form-group">
+                                                    <input type="tel" name="mobile" id="mobile" class="form-control" value="{{ $userDetail->mobile }}"> 
+                                                </div>
+                                            </div>
 
-                                            <div class="col-md-12">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>@lang('modules.employees.gender')</label>
+                                                    <select name="gender" id="gender" class="form-control">
+                                                        <option @if($userDetail->gender == 'male') selected @endif value="male">@lang('app.male')</option>
+                                                        <option @if($userDetail->gender == 'female') selected @endif value="female">@lang('app.female')</option>
+                                                        <option @if($userDetail->gender == 'others') selected @endif value="others">@lang('app.others')</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <div class="m-b-10">
                                                         <label class="control-label">@lang('modules.emailSettings.emailNotifications')</label>
@@ -97,41 +114,42 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-                                          
-                                            <div class="col-md-6">
-                                                <label>@lang('app.mobile')</label>
-                                                <div class="form-group">
-                                                    <select class="select2 phone_country_code form-control" name="phone_code">
-                                                        <option value="">--</option>
-                                                        @foreach ($countries as $item)
-                                                            <option
-                                                            @if ($item->id == $userDetail->country_id)
-                                                                selected
-                                                            @endif
-                                                            value="{{ $item->id }}">+{{ $item->phonecode.' ('.$item->iso.')' }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <input type="tel" name="mobile" id="mobile" class="mobile" autocomplete="nope" value="{{ $userDetail->mobile }}">
-                                                </div>
-                                               
-                                            </div>
-                                            <!--/span-->
-
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label>@lang('modules.employees.gender')</label>
-                                                    <select name="gender" id="gender" class="form-control">
-                                                        <option @if($userDetail->gender == 'male') selected @endif value="male">@lang('app.male')</option>
-                                                        <option @if($userDetail->gender == 'female') selected @endif value="female">@lang('app.female')</option>
-                                                        <option @if($userDetail->gender == 'others') selected @endif value="others">@lang('app.others')</option>
-                                                    </select>
-                                                </div>
-                                            </div>
                                             <!--/span-->
                                         </div>
                                         <!--/row-->
-
+                                        <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>@lang('modules.stripeCustomerAddress.country')</label>
+                                                <select name="country" class="form-control" id="country">
+                                                    <option value>@lang('app.site.country')</option>
+                                                    @foreach($countries as $country)
+                                                    <option value="{{$country->id}}">{{$country->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>   
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>@lang('modules.stripeCustomerAddress.state')</label>
+                                                <select name="state" class="select2 form-control" id="state">
+                                                    <option value="0"> -- Select -- </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>@lang('modules.stripeCustomerAddress.city')</label>
+                                                <input type="text" name="city" id="city"  value="{{ $leadDetail->city ?? '' }}"   class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>@lang('modules.stripeCustomerAddress.postalCode')</label>
+                                                <input type="text" name="postal_code" id="postalCode"  value="{{ $leadDetail->postal_code ?? '' }}" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -202,10 +220,23 @@
 <script src="{{ asset('plugins/bower_components/bootstrap-select/bootstrap-select.min.js') }}"></script>
 <script src="{{ asset('plugins/bower_components/custom-select/custom-select.min.js') }}"></script>
 <script>
+    var ids = "";
     $(".select2").select2({
         formatNoMatches: function () {
             return "{{ __('messages.noRecordFound') }}";
         }
+    });
+    $( "#country" ).change(function() {
+        var ids = $(this).val();
+        $.easyAjax({
+            url: '{{route('admin.state.country', [2])}}',
+            type: "POST",
+            data: $('#updateProfile').serialize(),
+            success: function (data) {
+            //   alert(data.data)
+                $('#state').html(data.data);
+            }
+        })
     });
     $('#save-form-2').click(function () {
         $.easyAjax({

@@ -28,7 +28,6 @@
                        </h3>
                        @if($task->labels->id)<P><strong>Work Order:  </strong>{{ ucwords($task->id) }}</P>@endif
                        @if($task->task_category_id)<p><strong>Project:  </strong>{{ ucwords($task->category->category_name) }}</p>@endif
-                       <!-- @if($task->p_order)<p><strong>PO Number:  </strong> {{ ucwords($task->p_order) }}</p>@endif -->
                        @if($task->start_date)<p><strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}</p>@endif
                        @if($task->heading)<p><strong>Summary:  </strong> {{ ucwords($task->heading) }}</p>@endif
                        @if($task->wotype)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
@@ -273,16 +272,24 @@
                 <div class="col-xs-12">
                     <hr>
 
-                    <label class="font-12" for="">@lang('modules.tasks.assignTo')</label><br>
-                    @foreach ($task->users as $item)
-                        
-                            <img src="{{ $item->image_url }}" data-toggle="tooltip"
-                                data-original-title="{{ ucwords($item->name) }}" data-placement="right"
-                                class="img-circle" width="35" height="35" alt="">
-                                {{ ucwords($item->name) }}
-                                @if($item->mobile)<P><strong>Phone: </strong> {{$item->mobile}}</P>@endif
+                    @if($task->client_id)
+                    <div class="col-xs-12">
+                        <label class="font-12" for="">@lang('modules.tasks.assignTo')</label><br>
+                        <img src="{{ $clientDetail->image_url }}" data-toggle="tooltip"
+                             data-original-title="{{ ucwords($clientDetail->name) }}" data-placement="right" class="img-circle" width="35" height="35" alt="">
 
-                       
+                        {{ ucwords($clientDetail->name) }}
+                        <hr>
+                    </div>
+                @endif
+                <div class="col-xs-12">
+                    <label class="font-12" for="">@lang('modules.tasks.planned')</label><br>
+                    @foreach ($task->users as $item)
+                        <img src="{{ $item->image_url }}" data-toggle="tooltip"
+                             data-original-title="{{ ucwords($item->name) }}" data-placement="right"
+                             class="img-circle" width="35" height="35" alt="">
+                             {{ ucwords($item->name) }}
+                             @if($item->mobile)<P><strong>Planned Tech Phone: </strong> {{$item->mobile}}</P>@endif
                     @endforeach
                     <hr>
                 </div>
@@ -290,7 +297,8 @@
                     <div class="col-xs-12">
                         <label class="font-12" for="">@lang('modules.tasks.assignBy')</label><br>
                         <img src="{{ $task->create_by->image_url }}" data-toggle="tooltip"
-                        data-original-title="{{ ucwords($task->create_by->name) }}" data-placement="right" class="img-circle" width="35" height="35" alt="">
+                             data-original-title="{{ ucwords($task->create_by->name) }}" data-placement="right" class="img-circle" width="35" height="35" alt="">
+
                         {{ ucwords($task->create_by->name) }}
                         <hr>
                     </div>

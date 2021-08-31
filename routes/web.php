@@ -114,6 +114,7 @@ Route::group(['middleware' => 'auth'], function () {
                     Route::get('create', ['uses' => 'StatesController@create'])->name('state.create');
                     Route::get('{id}/edit', ['uses' => 'StatesController@edit'])->name('state.edit');
                     Route::post('country/store', ['uses' => 'StatesController@store'])->name('state.store');
+                    Route::post('country/{id}', ['uses' => 'StatesController@country'])->name('state.country');
                     Route::post('update/{id}', ['uses' => 'StatesController@update'])->name('state.update');
                     Route::delete('destroy/{id}', ['uses' => 'StatesController@destroy'])->name('state.destroy');
                 });

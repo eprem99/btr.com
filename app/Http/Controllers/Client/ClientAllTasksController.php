@@ -263,26 +263,6 @@ class ClientAllTasksController extends ClientBaseController
         $this->task = Task::with('board_column', 'users', 'files', 'comments', 'notes', 'labels', 'wotype', 'sporttype')->findOrFail($id);
         
         $this->clientDetail = User::where('id', '=', $this->task->client_id)->first();
-       
-      //  $this->sport = SportType::all();
-        $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')
-            ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id')
-            ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id');
-
-        
-        $this->employees = $this->employees->select(
-            'users.name',
-            'users.image',
-            'users.id'
-        );
-
-        $this->employees = $this->employees->where('project_time_logs.task_id', '=', $id);
-
-        $this->employees = $this->employees->groupBy('project_time_logs.user_id')
-            ->orderBy('users.name')
-            ->get();
-            
-        
 
         $view = view('client.all-tasks.show', $this->data)->render();
         return Reply::dataOnly(['status' => 'success', 'view' => $view]);

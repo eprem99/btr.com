@@ -32,7 +32,6 @@
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>@lang('modules.state.state')</th>
                                     <th>@lang('modules.state.country')</th>
                                     <th>@lang('modules.state.timezone')</th>
                                     <th class="text-nowrap">@lang('app.action')</th>
@@ -43,7 +42,7 @@
                                     <tr>
                                         <td>{{ $key+1 }}</td>
                                         <td>{{ ucwords($state->names) }}</td>
-                                        <td>{{ ucwords($state->name) }} </td>
+                                        <td>{{ ucwords($state->Country->name) }}</td>
                                         <td>{{ ucwords($state->timezone) }}</td>
                                         <td class="text-nowrap">
 

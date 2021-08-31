@@ -98,11 +98,12 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="site_country" class="required"> @lang('app.site.country')</label>
-                            <select name="site_country" class="form-control" id="country">
-                                <option value>@lang('app.site.country')</option>
-                                <option value="1">UNITED STATES</option>
-                                <option value="2">CANADA</option>
-                            </select>
+                        <select name="site_country" class="form-control" id="country">
+                            <option value>@lang('app.site.country')</option>
+                            @foreach($countries as $country)
+                            <option value="{{$country->id}}">{{$country->name}}</option>
+                            @endforeach
+                        </select>
                         </div>
                     </div>
                     <div class="col-md-6">
