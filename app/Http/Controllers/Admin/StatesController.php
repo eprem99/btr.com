@@ -145,16 +145,16 @@ class StatesController extends AdminBaseController
         return Reply::redirect(route('admin.state.index'));
     }
 
-    public function country($id)
+    public function country(Request $request, $id)
     {
-        // dd($id);
+         dd($id);
         $states = State::where('country_id', '=', $id)->get();
         $option = '';
             foreach($states as $state){
                 $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
             }
        //     dd($option);
-       return Reply::successWithData(__('messages.categoryDeleted'),['data'=> $option]);
+       return $option;
        // return $option;
     }
 

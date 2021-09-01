@@ -1002,11 +1002,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('profile', 'ClientProfileController');
        
         // Project section
-        Route::get('projects/data', ['uses' => 'ClientProjectsController@data'])->name('projects.data');
-        
+      //  Route::get('projects/data', ['uses' => 'ClientProjectsController@data'])->name('projects.data');
+        Route::get('country/{id}', ['uses' => 'StatesClientController@country'])->name('state.country');
+       
         Route::resource('projects', 'ClientProjectsController');
 
         Route::get('clients/create/{clientID?}', ['uses' => 'ClientClientsController@create'])->name('clients.create');
+        Route::get('clients/state/{id}', ['uses' => 'ClientClientsController@state'])->name('clients.state');
        // Route::get('clients/store', ['uses' => 'ClientClientsController@store'])->name('clients.store');
         Route::resource('clients', 'ClientClientsController', ['except' => ['create']]);
         
@@ -1056,7 +1058,7 @@ Route::group(['middleware' => 'auth'], function () {
             
             Route::get('all-tasks/dependent-tasks/{projectId}/{taskId?}', ['uses' => 'ClientAllTasksController@dependentTaskLists'])->name('all-tasks.dependent-tasks');
             Route::post('all-tasks/data/{startDate?}/{endDate?}/{hideCompleted?}/{projectId?}', ['uses' => 'ClientAllTasksController@data'])->name('all-tasks.data');
-            Route::get('all-tasks/clients/{projectId}', ['uses' => 'ClientAllTasksController@clienwtsList'])->name('all-tasks.clients');
+          //  Route::get('all-tasks/clients/{projectId}', ['uses' => 'ClientAllTasksController@clienwtsList'])->name('all-tasks.clients');
             Route::get('all-tasks/ajaxCreate/{columnId?}', ['uses' => 'ClientAllTasksController@ajaxCreate'])->name('all-tasks.ajaxCreate');
             Route::get('all-tasks/reminder/{taskid}', ['uses' => 'ClientAllTasksController@remindForTask'])->name('all-tasks.reminder');
             Route::get('all-tasks/history/{taskid}', ['uses' => 'ClientAllTasksController@history'])->name('all-tasks.history');
@@ -1068,9 +1070,6 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('taskCategory/create-cat', ['uses' => 'ClientTaskCategoryController@createCat'])->name('taskCategory.create-cat');
             Route::resource('taskCategory', 'ClientTaskCategoryController');
 
-            Route::post('task-label/store-label', ['uses' => 'ClientTaskLabelController@storeLabel'])->name('task-label.store-label');
-            Route::get('task-label/create-label', ['uses' => 'ClientTaskLabelController@createLabel'])->name('task-label.create-label');
-            Route::resource('task-label', 'ClientTaskLabelController');
             // taskboard resource
             Route::post('taskboard/updateIndex', ['as' => 'taskboard.updateIndex', 'uses' => 'ClientAllTaskboardController@updateIndex']);
             Route::resource('taskboard', 'ClientTaskboardController');
@@ -1083,6 +1082,13 @@ Route::group(['middleware' => 'auth'], function () {
 
         });
 
+        Route::group(
+            ['prefix' => 'sites'], function () {
+        Route::post('task-label/store-label', ['uses' => 'ClientTaskLabelController@storeLabel'])->name('task-label.store-label');
+        Route::get('task-label/create-label', ['uses' => 'ClientTaskLabelController@createLabel'])->name('task-label.create-label');
+        Route::resource('task-label', 'ClientTaskLabelController');
+        });
+
         Route::resource('reports', 'ClientTaskReportController', ['only' => ['edit', 'update', 'index']]); // hack to make left admin menu item active
         Route::group(
             ['prefix' => 'reports'], function () {
@@ -1092,11 +1098,11 @@ Route::group(['middleware' => 'auth'], function () {
             //endregion
         });
         //region Products Routes
-        Route::get('products/data', ['uses' => 'ClientProductController@data'])->name('products.data');
-        Route::get('products/update-item', ['uses' => 'ClientProductController@addItems'])->name('products.update-item');
-        Route::get('products/add-cart-item', ['uses' => 'ClientProductController@addCartItem'])->name('products.add-cart-item');
-        Route::get('products/remove-cart-item/{productid}', ['uses' => 'ClientProductController@removeCartItem'])->name('products.remove-cart-item');
-        Route::resource('products', 'ClientProductController');
+        // Route::get('products/data', ['uses' => 'ClientProductController@data'])->name('products.data');
+        // Route::get('products/update-item', ['uses' => 'ClientProductController@addItems'])->name('products.update-item');
+        // Route::get('products/add-cart-item', ['uses' => 'ClientProductController@addCartItem'])->name('products.add-cart-item');
+        // Route::get('products/remove-cart-item/{productid}', ['uses' => 'ClientProductController@removeCartItem'])->name('products.remove-cart-item');
+        // Route::resource('products', 'ClientProductController');
 
         //sticky note
         Route::resource('sticky-note', 'ClientStickyNoteController');

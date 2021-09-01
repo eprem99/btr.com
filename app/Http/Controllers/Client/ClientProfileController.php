@@ -124,7 +124,6 @@ class ClientProfileController extends ClientBaseController
             $client->user_id = $user->id;
         }
         $client->address = $request->address;
-        $client->gst_number = $request->gst_number;
         $client->save();
         session()->forget('user');
 

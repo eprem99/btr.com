@@ -113,7 +113,7 @@
             <li><a href="{{ route('client.dashboard.index') }}" class="waves-effect"><i class="icon-speedometer fa-fw"></i> <span class="hide-menu">@lang('app.menu.dashboard') </span></a> </li>
 
             @if(in_array('tasks',$modules))
-            <li><a href="{{ route('client.task.index') }}" class="waves-effect"><i class="fa fa-tasks fa-fw"></i> <span class="hide-menu"> @lang('app.menu.work') <span class="fa arrow"></span> </span></a>
+            <li><a href="{{ route('client.task.index') }}" class="waves-effect"><i class="fa fa-tasks fa-fw"></i> <span class="hide-menu"> @lang('app.menu.tasks') <span class="fa arrow"></span> </span></a>
                 <ul class="nav nav-second-level">
                     <li><a href="{{ route('client.all-tasks.index') }}">@lang('app.menu.work')</a></li>
                     <li><a href="{{ route('client.all-tasks.create') }}">@lang('app.menu.newwork')</a></li>

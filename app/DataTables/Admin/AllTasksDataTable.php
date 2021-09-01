@@ -6,6 +6,7 @@ use App\DataTables\BaseDataTable;
 use App\Task;
 use App\TaskboardColumn;
 use Carbon\Carbon;
+use App\State;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -60,7 +61,30 @@ class AllTasksDataTable extends BaseDataTable
                 
                return $site;
             })
-
+            ->addColumn('state', function ($row) {
+                $site = '';            
+                if ($row->contacts) {
+                   $state = json_decode($row->contacts, true);
+                    $site = $state['site_state'];
+                    $site = State::where('id', '=', $site)->first();
+                    if($site != '' || empty($site)){
+                        $state = $site->names;
+                    }else{
+                        $state = '';
+                    }
+                } 
+                
+               return $state;
+            })
+            ->addColumn('city', function ($row) {
+                $site = '';            
+                if ($row->contacts) {
+                   $state = json_decode($row->contacts, true);
+                    $site = $state['site_city'];
+                } 
+                
+               return $site;
+            })
             ->editColumn('due_date', function ($row) {
 
                 if ($row->due_date->endOfDay()->isPast()) {
@@ -102,12 +126,8 @@ class AllTasksDataTable extends BaseDataTable
                 return '--';
             })
             ->editColumn('heading', function ($row) {
-                $pin = '';
-                if(($row->pinned_task) ){
-                    $pin = '<br><span class="font-12"  data-toggle="tooltip" data-original-title="'.__('app.pinned').'"><i class="icon-pin icon-2"></i></span>';
-                }
 
-                $name = '<a href="javascript:;" data-task-id="' . $row->id . '" class="show-task-detail">' . ucfirst($row->heading) . '</a> '.$pin;
+                $name = '<a href="javascript:;" data-task-id="' . $row->id . '" class="show-task-detail">' . ucfirst($row->heading) . '</a> ';
 
 
                return $name;
@@ -141,10 +161,7 @@ class AllTasksDataTable extends BaseDataTable
             ->addColumn('status', function ($row) {
                 return ucfirst($row->column_name);
             })
-            ->rawColumns(['board_column', 'action',  'clientName', 'due_date', 'users', 'created_by', 'heading'])
-            ->removeColumn('image')
-            ->removeColumn('created_image')
-            ->removeColumn('label_color');
+            ->rawColumns(['board_column', 'action',  'clientName', 'due_date', 'users', 'created_by', 'heading']);
     }
 
     /**
@@ -174,7 +191,8 @@ class AllTasksDataTable extends BaseDataTable
             ->leftJoin('role_user as role', 'tasks.created_by', '=', 'role.user_id')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
             ->join('task_label_list', 'tasks.site_id', '=', 'task_label_list.id')
-            ->selectRaw('tasks.id, tasks.heading, tasks.hash, task_label_list.label_name, task_label_list.id as ids, creator_user.name as created_by, creator_user.id as created_by_id, creator_user.image as created_image,
+            ->selectRaw('tasks.id, tasks.heading, tasks.hash, task_label_list.contacts, task_label_list.label_name, task_label_list.id as ids, creator_user.name as created_by, 
+            creator_user.id as created_by_id, creator_user.image as created_image,
              tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color, role.role_id')
             ->with('users')
             ->groupBy('tasks.id');
@@ -265,10 +283,11 @@ class AllTasksDataTable extends BaseDataTable
             '#' => ['data' => 'id', 'name' => 'id', 'visible' => true],
             __('app.task') => ['data' => 'heading', 'name' => 'heading'],
             __('modules.tasks.site')  => ['data' => 'site', 'name' => 'site'],
-            __('modules.tasks.siteid')  => ['data' => 'siteid', 'name' => 'siteid'],
-         //   __('modules.tasks.po')  => ['data' => 'taskpo', 'name' => 'taskpo'],
+          //  __('modules.tasks.siteid')  => ['data' => 'siteid', 'name' => 'siteid'],
+            __('modules.tasks.state')  => ['data' => 'state', 'name' => 'state'],
+            __('modules.tasks.city')  => ['data' => 'city', 'name' => 'city'],
             __('modules.tasks.assigned') => ['data' => 'name', 'name' => 'name', 'visible' => false],
-          //  __('modules.tasks.assignTo') => ['data' => 'users', 'name' => 'member.name', 'exportable' => false],
+            __('modules.tasks.assignTo') => ['data' => 'users', 'name' => 'member.name', 'exportable' => false],
             __('app.dueDate') => ['data' => 'due_date', 'name' => 'due_date'],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'visible' => false],
             __('app.columnStatus') => ['data' => 'board_column', 'name' => 'board_column', 'exportable' => false, 'searchable' => false],
@@ -277,7 +296,7 @@ class AllTasksDataTable extends BaseDataTable
                 ->printable(false)
                 ->orderable(false)
                 ->searchable(false)
-                ->width(50)
+                ->width(40)
                 ->addClass('text-center')
         ];
     }

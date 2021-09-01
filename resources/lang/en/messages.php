@@ -297,6 +297,7 @@ return array (
   'pinTask'=>'You want to pin this work order!',
   'recoverDeletedContact'=>'You will not be able to recover the deleted contact!',
   'noCategoryAdded' => 'No category added',
+  'SelectState' => 'Select state',
   'welcome' =>
   array (
     'message' => 'Welcome to the setup wizard',
@@ -420,14 +421,13 @@ return array (
   'leaveTypeValueError' => 'No of leaves should be grater than or equal to Zero',
   'maxClockIn' => 'Maximum check-ins reached.',
   'recoverRenewal' => 'You will not be able to recover the deleted renewal!',
-  'work orderLabel' =>
+  'workorderLabel' =>
   array (
     'deletedSuccess' => 'Site deleted successfully.',
     'addedSuccess' => 'Site added successfully.',
     'updatedSuccess' => 'Site updated successfully.',
-    'noTaskLabel' => 'No work order site found.',
-    'labelColorSuggestion' => ' Choose any color.
-                            Or you can choose one of the suggested colors below.',
+    'noTaskLabel' => 'No Site found.',
+
   ),
   'amountIsZero' => 'Amount should be more than ZERO for the payment',
   'noTimeLogsFound' => 'No timelogs data found.',

@@ -26,7 +26,6 @@ class ClientDetails extends BaseModel
         'id',
         'address',
         'note',
-        'gst_number',
         'name',
         'email',
         'category_id'

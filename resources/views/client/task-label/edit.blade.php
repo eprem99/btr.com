@@ -41,7 +41,7 @@ $contacts = json_decode($taskLabel->contacts, true);
 
                 <div class="panel-wrapper collapse in" aria-expanded="true">
                     <div class="panel-body">
-                        {!! Form::open(['id'=>'createContract','class'=>'ajax-form','method'=>'PUT']) !!}
+                        {!! Form::open(['id'=>'createContract','class'=>'ajax-form', 'method'=>'PUT']) !!}
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -83,8 +83,9 @@ $contacts = json_decode($taskLabel->contacts, true);
                         <label for="site_country" class="required"> @lang('app.site.country')</label>
                             <select name="site_country" class="form-control" id="country">
                                 <option value>@lang('app.site.country')</option>
-                                <option @if($contacts['site_country'] == 1) selected @endif value="1">UNITED STATES</option>
-                                <option @if($contacts['site_country'] == 2) selected @endif value="2">CANADA</option>
+                                @foreach($countries as $country)
+                                <option @if($contacts['site_country'] == $country->id) selected @endif value="{{$country->id}}">{{$country->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -226,27 +227,41 @@ $('#notification').change(function(){
     });
     $('#country').select2({
         }).on("change", function (e) {
-        console.log(e.val);
-        if(e.val == 1){
-            $('#state').html(
-                '<option value="1">Alabama</option><option value="2">Alaska</option><option value="60">American Samoa</option><option value="4">Arizona</option><option value="5">Arkansas</option><option value="6">California</option><option value="8">Colorado</option><option value="9">Connecticut</option><option value="10">Delaware</option><option value="11">District of Columbia</option><option value="12">Florida</option><option value="13">Georgia</option><option value="66">Guam</option><option value="15">Hawaii</option><option value="16">Idaho</option><option value="17">Illinois</option><option value="18">Indiana</option><option value="19">Iowa</option><option value="20">Kansas</option><option value="21">Kentucky</option><option value="22">Louisiana</option><option value="23">Maine</option><option value="24">Maryland</option><option value="25">Massachusetts</option><option value="26">Michigan</option><option value="27">Minnesota</option><option value="28">Mississippi</option><option value="29">Missouri</option><option value="30">Montana</option><option value="31">Nebraska</option><option value="32">Nevada</option><option value="33">New Hampshire</option><option value="34">New Jersey</option><option value="35">New Mexico</option><option value="36">New York</option><option value="37">North Carolina</option><option value="38">North Dakota</option><option value="69">Northern Mariana Islands</option><option value="39">Ohio</option><option value="40">Oklahoma</option><option value="41">Oregon</option><option value="42">Pennsylvania</option><option value="72">Puerto Rico</option><option value="44">Rhode Island</option><option value="45">South Carolina</option><option value="46">South Dakota</option><option value="47">Tennessee</option><option value="48">Texas</option><option value="78">U.S. Virgin Islands</option><option value="49">Utah</option><option value="50">Vermont</option><option value="51">Virginia</option><option value="53">Washington</option><option value="54">West Virginia</option><option value="55">Wisconsin</option><option value="56">Wyoming</option>'
-            )
-        }else if(e.val == 2){
-            $('#state').html(
-                '<option value="87">Alberta</option><option value="84">British Columbia</option><option value="83">Manitoba</option><option value="82">New Brunswick</option><option value="88">Newfoundland and Labrado</option><option value="89">Northwest Territories</option><option value="81">Nova Scotia</option><option value="91">Nunavut</option><option value="79">Ontario</option><option value="85">Prince Edward Island</option><option value="80">Quebec</option><option value="86">Saskatchewan</option><option value="90">Yukon</option>'
-            ) 
-        }else if(e.val == null || e.val == '') {
-            $('#state').html(
-                '<option value="0"> -- Select -- </option>'
-            )    
-        }
+        var id = $(this).val();
+        var url = "{{ route('client.state.country', $taskLabel->id) }}";
+        url = url.replace(':id', id);
+       // console.log(url);
+        $.easyAjax({
+            url: url,
+            type: "GET",
+            redirect: true,
+            data: $('#createContract').serialize(),
+            success: function (data) {
+            //  alert(data.data)
+                $('#state').html(data.data);
+            }
+        })
     });
+
     jQuery(document).ready(function($) {
         $.each($('#country option:selected'), function(){            
-            console.log($(this).val())
+       // var id = $(this).val();
+        var url = "{{ route('client.state.country', $taskLabel->id) }}";
+      //  url = url.replace(':id', id);
+       // console.log(url);
+        $.easyAjax({
+            url: url,
+            type: "GET",
+            redirect: true,
+            data: $('#createContract').serialize(),
+            success: function (data) {
+            //  alert(data.data)
+                $('#state').html(data.data);
+                
+            }
+        })
         });
 	});
-
 </script>
 @endpush
 

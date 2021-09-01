@@ -8,6 +8,8 @@ use App\Http\Requests\Admin\TaskLabel\StoreRequest;
 use App\Http\Requests\Admin\TaskLabel\UpdateRequest;
 use App\TaskLabel;
 use App\TaskLabelList;
+use App\Country;
+use App\state;
 use App\User;
 use App\ClientDetails;
 
@@ -34,6 +36,7 @@ class ClientTaskLabelController extends ClientBaseController
     public function create()
     {
         $this->clients = User::allClients();
+        $this->countries = Country::all();
         return view('client.task-label.create', $this->data);
     }
 
@@ -41,13 +44,14 @@ class ClientTaskLabelController extends ClientBaseController
     {
         $taskLabel = new TaskLabelList();
         $this->storeUpdate($request, $taskLabel);
-        return Reply::redirect(route('client.task-label.index'), __('messages.taskLabel.addedSuccess'));
+        return Reply::redirect(route('client.task-label.index'), __('messages.workorderLabel.addedSuccess'));
     }
 
     public function edit($id)
     {
 
         $this->taskLabel = TaskLabelList::find($id);
+        $this->countries = Country::all();
         return view('client.task-label.edit', $this->data);
     }
 
@@ -56,7 +60,7 @@ class ClientTaskLabelController extends ClientBaseController
         $taskLabel = TaskLabelList::findOrFail($id);
         $this->storeUpdate($request, $taskLabel);
 
-        return Reply::redirect(route('client.task-label.index'), __('messages.taskLabel.updatedSuccess'));
+        return Reply::redirect(route('client.task-label.index'), __('messages.workorderLabel.updatedSuccess'));
     }
 
     public function show($id)
@@ -84,7 +88,7 @@ class ClientTaskLabelController extends ClientBaseController
         TaskLabel::where('site_id', $id)->delete();
         TaskLabelList::destroy($id);
 
-        return Reply::success(__('messages.taskLabel.deletedSuccess'));
+        return Reply::success(__('messages.workorderLabel.deletedSuccess'));
     }
     /**
      * Show the form for creating a new resource.
@@ -106,6 +110,6 @@ class ClientTaskLabelController extends ClientBaseController
         foreach ($allTaskLabels as $key => $value) {
             $labels.= '<option>' . $value->site_name . '</label> " value="' . $value->id . '">' . $value->site_name . '</option>';
         }
-        return Reply::successWithData(__('messages.taskLabel.addedSuccess'), ['labels' => $labels]);
+        return Reply::successWithData(__('messages.workorderLabel.addedSuccess'), ['labels' => $labels]);
     }
 }

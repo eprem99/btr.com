@@ -26,41 +26,11 @@ class UpdateClientRequest extends CoreRequest
     {
         $rules = [
             'email' => 'required|unique:users,email,'.$this->route('client'),
-            'slack_username' => 'nullable|unique:employee_details,slack_username,'.$this->route('client'),
             'name'  => 'required',
-            'website' => 'nullable|url',
          //   'phone_code' => 'required_with:mobile',
         ];
-
-        if (request()->get('custom_fields_data')) {
-            $fields = request()->get('custom_fields_data');
-            foreach ($fields as $key => $value) {
-                $idarray = explode('_', $key);
-                $id = end($idarray);
-                $customField = \App\CustomField::findOrFail($id);
-                if ($customField->required == "yes" && (is_null($value) || $value == "")) {
-                    $rules["custom_fields_data[$key]"] = 'required';
-                }
-            }
-        }
 
         return $rules;
     }
 
-    public function attributes()
-    {
-        $attributes = [];
-        if (request()->get('custom_fields_data')) {
-            $fields = request()->get('custom_fields_data');
-            foreach ($fields as $key => $value) {
-                $idarray = explode('_', $key);
-                $id = end($idarray);
-                $customField = \App\CustomField::findOrFail($id);
-                if ($customField->required == "yes") {
-                    $attributes["custom_fields_data[$key]"] = $customField->label;
-                }
-            }
-        }
-        return $attributes;
-    }
 }

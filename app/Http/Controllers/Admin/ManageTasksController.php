@@ -106,8 +106,9 @@ class ManageTasksController extends AdminBaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function shows($id)
+    public function show($id)
     {
+
         $this->categories = TaskCategory::all();
         $completedTaskColumn = TaskboardColumn::where('slug', '=', 'completed')->first();
         if ($completedTaskColumn) {

@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Client;
 
 use App\ClientDetails;
-use App\Country;
 use App\Helper\Reply;
+use Illuminate\Http\Request;
 use App\DataTables\Admin\ClientsDataTable;
 use App\Http\Requests\Admin\Client\StoreClientRequest;
 use App\Http\Requests\Admin\Client\UpdateClientRequest;
 use App\Http\Requests\Gdpr\SaveConsentUserDataRequest;
 use App\User;
 use App\ClientCategory;
-use Illuminate\Support\Facades\DB;
+use App\Country;
+use App\State;
 use Illuminate\Support\Facades\Hash;
-use Yajra\DataTables\Facades\DataTables;
 
 class ClientClientsController extends ClientBaseController
 {
@@ -139,7 +139,33 @@ class ClientClientsController extends ClientBaseController
         }
         return view('client.clients.edit', $this->data);
     }
+   /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function state(Request $request, $id)
+    {
+        if($request->state_id != 0 || $request->state_id != ''){
+            $states = State::all();
+            $option = '' ;
+            $option .= '<option selected value=""> -- Select -- </option>';
+                 foreach($states as $state){
+                     if($request->state_id == $state->id){
+                         $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
+                     }else{
+                         $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                     }
+                 }
+        }else{
+            $this->clientDetail = ClientDetails::where('user_id', '=', $id)->first();
+            dd($this->clientDetail);
+        }
+            return Reply::successWithData(__('messages.SelectState'),['data'=> $option]);
 
+
+    }
     /**
      * Update the specified resource in storage.
      *

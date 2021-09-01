@@ -116,7 +116,7 @@
                 <li><a href="{{ route('admin.dashboard') }}" class="waves-effect"><i class="icon-speedometer fa-fw"></i> <span class="hide-menu">@lang('app.menu.dashboard') </span></a> </li>
    
                 @if(in_array('tasks',$modules))
-                <li><a href="{{ route('admin.task.index') }}" class="waves-effect"><i class="fa fa-tasks fa-fw"></i> <span class="hide-menu"> @lang('app.menu.work') <span class="fa arrow"></span> </span></a>
+                <li><a href="{{ route('admin.task.index') }}" class="waves-effect"><i class="fa fa-tasks fa-fw"></i> <span class="hide-menu"> @lang('app.menu.tasks') <span class="fa arrow"></span> </span></a>
                     <ul class="nav nav-second-level">
                         <li><a href="{{ route('admin.all-tasks.index') }}">@lang('app.menu.work')</a></li>
                         <li><a href="{{ route('admin.all-tasks.create') }}">@lang('app.menu.newwork')</a></li>
@@ -126,7 +126,7 @@
                 @endif
                 
                 @if(in_array('tasks',$modules))
-                <li><a href="#" class="waves-effect"><i class="icon-people fa-fw"></i> <span class="hide-menu"> @lang('app.menu.Customers') <span class="fa arrow"></span> </span></a>
+                <li><a href="#" class="waves-effect"><i class="icon-people fa-fw"></i> <span class="hide-menu"> @lang('app.menu.customers') <span class="fa arrow"></span> </span></a>
                     <ul class="nav nav-second-level">
                         <li><a href="{{ route('admin.clients.index') }}">@lang('app.menu.clients')</a></li>
                         <li><a href="{{ route('admin.employees.index') }}">@lang('app.menu.employees')</a></li>

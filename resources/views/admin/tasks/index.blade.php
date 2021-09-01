@@ -54,14 +54,13 @@
             </div>
         </div>
     </div>
-
     <div class="col-md-12">
-        <h5 class="box-title">@lang('app.select') @lang('app.client')</h5>
+        <h5 class="box-title">@lang('app.select') @lang('modules.tasks.assignBy')</h5>
 
         <div class="form-group">
             <div class="row">
                 <div class="col-md-12">
-                    <select class="select2 form-control" data-placeholder="@lang('app.client')" id="clientID">
+                <select class="select2 form-control" data-placeholder="@lang('app.client')" id="clientID">
                         <option value="all">@lang('app.all')</option>
                     @foreach($clients as $client)
                             <option
@@ -89,23 +88,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12">
-        <h5 class="box-title">@lang('app.select') @lang('modules.tasks.assignBy')</h5>
 
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-12">
-                    <select class="select2 form-control" data-placeholder="@lang('modules.tasks.assignBy')" id="assignedBY">
-                        <option value="all">@lang('app.all')</option>
-                    @foreach($employees as $employee)
-                            <option
-                                    value="{{ $employee->id }}">{{ ucwords($employee->name) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="col-md-12">
         <h5 class="box-title">@lang('app.select') @lang('app.status')</h5>
 
@@ -133,7 +116,7 @@
                     <select class="selectpicker form-control" data-placeholder="@lang('app.label')" id="label">
                         <option value="all">@lang('app.all')</option>
                         @foreach($taskLabels as $label)
-                            <option data-content="<span class='badge b-all' style='background:{{ $label->label_color }};'>{{ $label->label_name }}</span> " value="{{ $label->id }}">{{ $label->label_name }}</option>
+                            <option value="{{ $label->id }}">{{ $label->label_name }}</option>
                         @endforeach
                     </select>
                 </div>
