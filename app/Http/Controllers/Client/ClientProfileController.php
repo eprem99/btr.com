@@ -80,7 +80,39 @@ class ClientProfileController extends ClientBaseController
     {
         //
     }
+   /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function state(Request $request, $id)
+    {
+        $this->clientDetail = ClientDetails::where('user_id', '=', $id)->first();
+      //  dd($this->clientDetail->state);
+        if($request->country != 0 || $request->country != ''){
+            $states = State::where('country_id', '=', $request->country)->get();
+            $option = '' ;
+             $option .= '<option value=""> -- Select -- </option>';
+                 foreach($states as $state){
+                     if($this->clientDetail->state == $state->id){
+                         $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
+                     }else{
+                         $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                     }
+                 }
+        }else{
+            $states = State::where('country_id', '=', $id)->get();
+            $option = '' ;
+             $option .= '<option value=""> -- Select -- </option>';
+                 foreach($states as $state){
+                    $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                 }
+        }
+        return Reply::dataOnly(['data'=> $option]);
 
+
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -99,7 +131,6 @@ class ClientProfileController extends ClientBaseController
             $user->password = Hash::make($request->input('password'));
         }
         $user->mobile = $request->input('mobile');
-        $user->country_id = $request->input('phone_code');
 
         if ($request->hasFile('image')) {
 
@@ -124,6 +155,9 @@ class ClientProfileController extends ClientBaseController
             $client->user_id = $user->id;
         }
         $client->address = $request->address;
+        $client->country = $request->input('country_id');
+        $client->state = $request->input('state');
+        $client->city = $request->input('city');
         $client->save();
         session()->forget('user');
 
