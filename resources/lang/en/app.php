@@ -104,7 +104,7 @@ return array (
     'clients' => 'Clients',
     'browseclient' => 'Browse Clients',
     'newclient' => 'New Client',
-    'employees' => 'Tech',
+    'employees' => 'Techs',
     'projects' => 'Projects',
     'taskCalendar' => 'Work Calendar',
     'calendar' => 'Calendar',

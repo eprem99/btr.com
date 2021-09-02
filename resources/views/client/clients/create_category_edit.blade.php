@@ -42,7 +42,7 @@
                 <div class="panel-heading"> @lang('modules.client.editCompany')</div>
                 <div class="panel-wrapper collapse in" aria-expanded="true">
                     <div class="panel-body">
-{!! Form::open(['id'=>'createClientCategory','class'=>'ajax-form','method'=>'POST']) !!}
+       {!! Form::open(['id'=>'createClientCategory','class'=>'ajax-form','method'=>'POST']) !!}
         <div class="form-body">
             <div class="row">
                 <div class="col-xs-12">
@@ -70,10 +70,15 @@
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label for="country" class="required">@lang('modules.stripeCustomerAddress.country')</label>
+
                         <select name="category_country" class="form-control" id="country">
                             <option value>@lang('app.site.country')</option>
                             @foreach ($countries as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                <option
+                                @if ($item->id == $category->category_country)
+                                    selected
+                                @endif
+                                value="{{ $item->id }}">{{ $item->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -81,7 +86,7 @@
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label>@lang('modules.stripeCustomerAddress.state')</label>
-                        <select name="category_state" class="select2 form-control" id="state">
+                        <select name="category_state" class="form-control" id="state">
                             <option value="0"> -- Select -- </option>
                         </select>
                     </div>
@@ -153,46 +158,58 @@ $(document).ready(function() {
     }
   });
 });
+$('#save-category').click(function () {
+    $.easyAjax({
+        url: '{{route('client.company.update')}}',
+        container: '#createClientCategory',
+        type: "POST",
+        data: $('#createClientCategory').serialize(),
+        success: function (response) {
+            if(response.status == 'success'){
+                if(response.status == 'success'){
+                    console.log(response.data);
+                    var options = [];
+                    var rData = [];
+                    rData = response.data;
+                    $.each(rData, function( index, value ) {
+                        var selectData = '';
+                        selectData = '<option value="'+value.id+'">'+value.category_name+'</option>';
+                        options.push(selectData);
+                    });
+                }
+            }
+        }
+    })
+});
 $('#country').select2({
         }).on("change", function (e) {
-        console.log(e.val);
-        if(e.val == 1){
-            $('#state').html(
-                '<option value="1">Alabama</option><option value="2">Alaska</option><option value="60">American Samoa</option><option value="4">Arizona</option><option value="5">Arkansas</option><option value="6">California</option><option value="8">Colorado</option><option value="9">Connecticut</option><option value="10">Delaware</option><option value="11">District of Columbia</option><option value="12">Florida</option><option value="13">Georgia</option><option value="66">Guam</option><option value="15">Hawaii</option><option value="16">Idaho</option><option value="17">Illinois</option><option value="18">Indiana</option><option value="19">Iowa</option><option value="20">Kansas</option><option value="21">Kentucky</option><option value="22">Louisiana</option><option value="23">Maine</option><option value="24">Maryland</option><option value="25">Massachusetts</option><option value="26">Michigan</option><option value="27">Minnesota</option><option value="28">Mississippi</option><option value="29">Missouri</option><option value="30">Montana</option><option value="31">Nebraska</option><option value="32">Nevada</option><option value="33">New Hampshire</option><option value="34">New Jersey</option><option value="35">New Mexico</option><option value="36">New York</option><option value="37">North Carolina</option><option value="38">North Dakota</option><option value="69">Northern Mariana Islands</option><option value="39">Ohio</option><option value="40">Oklahoma</option><option value="41">Oregon</option><option value="42">Pennsylvania</option><option value="72">Puerto Rico</option><option value="44">Rhode Island</option><option value="45">South Carolina</option><option value="46">South Dakota</option><option value="47">Tennessee</option><option value="48">Texas</option><option value="78">U.S. Virgin Islands</option><option value="49">Utah</option><option value="50">Vermont</option><option value="51">Virginia</option><option value="53">Washington</option><option value="54">West Virginia</option><option value="55">Wisconsin</option><option value="56">Wyoming</option>'
-            )
-        }else if(e.val == 2){
-            $('#state').html(
-                '<option value="87">Alberta</option><option value="84">British Columbia</option><option value="83">Manitoba</option><option value="82">New Brunswick</option><option value="88">Newfoundland and Labrado</option><option value="89">Northwest Territories</option><option value="81">Nova Scotia</option><option value="91">Nunavut</option><option value="79">Ontario</option><option value="85">Prince Edward Island</option><option value="80">Quebec</option><option value="86">Saskatchewan</option><option value="90">Yukon</option>'
-            ) 
-        }else if(e.val == null || e.val == '') {
-            $('#state').html(
-                '<option value="0"> -- Select -- </option>'
-            )    
-        }
-    });  
-
-    $('#save-category').click(function () {
+        var url = "{{ route('client.company.state', [$category->id]) }}";
         $.easyAjax({
-            url: '{{route('client.company.update')}}',
-            container: '#createClientCategory',
-            type: "POST",
+            url: url,
+            type: "GET",
+            redirect: true,
             data: $('#createClientCategory').serialize(),
-            success: function (response) {
-                if(response.status == 'success'){
-                    if(response.status == 'success'){
-                        console.log(response.data);
-                        var options = [];
-                        var rData = [];
-                        rData = response.data;
-                        $.each(rData, function( index, value ) {
-                            var selectData = '';
-                            selectData = '<option value="'+value.id+'">'+value.category_name+'</option>';
-                            options.push(selectData);
-                        });
-                    }
-                }
+            success: function (data) {
+                $('#state').html(data.data);
             }
         })
     });
+    jQuery(document).ready(function($) {
+        $.each($('#country option:selected'), function(){            
+
+        var url = "{{ route('client.company.state', [$category->id]) }}";
+        $.easyAjax({
+            url: url,
+            type: "GET",
+            redirect: true,
+            data: $('#createClientCategory').serialize(),
+            success: function (data) {
+            //  alert(data.data)
+                $('#state').html(data.data);
+                
+            }
+        })
+        });
+	});
 </script>
 @endpush

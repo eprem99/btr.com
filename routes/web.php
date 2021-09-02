@@ -375,9 +375,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('save-consent-purpose-data/{client}', ['uses' => 'ManageClientsController@saveConsentLeadData'])->name('clients.save-consent-purpose-data');
             Route::get('consent-purpose-data/{client}', ['uses' => 'ManageClientsController@consentPurposeData'])->name('clients.consent-purpose-data');
             Route::get('gdpr/{id}', ['uses' => 'ManageClientsController@gdpr'])->name('clients.gdpr');
-            Route::get('projects/{id}', ['uses' => 'ManageClientsController@showProjects'])->name('clients.projects');
+          //  Route::get('projects/{id}', ['uses' => 'ManageClientsController@showProjects'])->name('clients.projects');
             Route::get('invoices/{id}', ['uses' => 'ManageClientsController@showInvoices'])->name('clients.invoices');
-            Route::get('payments/{id}', ['uses' => 'ManageClientsController@showPayments'])->name('clients.payments');
+           // Route::get('payments/{id}', ['uses' => 'ManageClientsController@showPayments'])->name('clients.payments');
 
            Route::get('contacts/data/{id}', ['uses' => 'ClientContactController@data'])->name('contacts.data');
             Route::resource('contacts', 'ClientContactController');
@@ -924,7 +924,7 @@ Route::group(['middleware' => 'auth'], function () {
         // clients
         Route::group(
             ['prefix' => 'clients'], function() {
-            Route::get('projects/{id}', ['uses' => 'MemberClientsController@showProjects'])->name('clients.projects');
+          //  Route::get('projects/{id}', ['uses' => 'MemberClientsController@showProjects'])->name('clients.projects');
             Route::get('invoices/{id}', ['uses' => 'MemberClientsController@showInvoices'])->name('clients.invoices');
 
             Route::get('contacts/data/{id}', ['uses' => 'MemberClientContactController@data'])->name('contacts.data');
@@ -1015,40 +1015,40 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('company/edit', ['uses' => 'ClientCategoryController@edit'])->name('company.edit');
 
         Route::post('company/update', ['uses' => 'ClientCategoryController@update'])->name('company.update');
-
+        Route::get('company/state/{id}', ['uses' => 'ClientCategoryController@state'])->name('company.state');
         Route::resource('clientCategory', 'ClientCategoryController');
 
-        Route::group(
-            ['prefix' => 'projects'], function () {
+         Route::group(
+             ['prefix' => 'projects'], function () {
 
-            Route::resource('project-members', 'ClientProjectMembersController');
+        //     Route::resource('project-members', 'ClientProjectMembersController');
 
-            Route::post('tasks/change-status', ['uses' => 'ClientTasksController@changeStatus'])->name('tasks.changeStatus');
-            Route::post('tasks/data/{projectId?}', ['uses' => 'ClientTasksController@data'])->name('tasks.data');
-            Route::get('tasks/ajax-edit/{taskId?}', ['uses' => 'ClientTasksController@ajaxEdit'])->name('tasks.ajax-edit');
-            Route::get('tasks/check-task/{taskID}', ['uses' => 'ClientTasksController@checkTask'])->name('tasks.checkTask');
-            Route::resource('tasks', 'ClientTasksController');
+             Route::post('tasks/change-status', ['uses' => 'ClientTasksController@changeStatus'])->name('tasks.changeStatus');
+        //     Route::post('tasks/data/{projectId?}', ['uses' => 'ClientTasksController@data'])->name('tasks.data');
+        //     Route::get('tasks/ajax-edit/{taskId?}', ['uses' => 'ClientTasksController@ajaxEdit'])->name('tasks.ajax-edit');
+             Route::get('tasks/check-task/{taskID}', ['uses' => 'ClientTasksController@checkTask'])->name('tasks.checkTask');
+             Route::resource('tasks', 'ClientTasksController');
 
-            Route::post('files/store-link', ['uses' => 'ClientFilesController@storeLink'])->name('files.storeLink');
-            Route::get('files/download/{id}', ['uses' => 'ClientFilesController@download'])->name('files.download');
-            Route::get('files/thumbnail', ['uses' => 'ClientFilesController@thumbnailShow'])->name('files.thumbnail');
-            Route::resource('files', 'ClientFilesController');
+        //     Route::post('files/store-link', ['uses' => 'ClientFilesController@storeLink'])->name('files.storeLink');
+        //     Route::get('files/download/{id}', ['uses' => 'ClientFilesController@download'])->name('files.download');
+        //     Route::get('files/thumbnail', ['uses' => 'ClientFilesController@thumbnailShow'])->name('files.thumbnail');
+        //     Route::resource('files', 'ClientFilesController');
 
-            Route::get('time-log/data/{id}', ['uses' => 'ClientTimeLogController@data'])->name('time-log.data');
-            Route::resource('time-log', 'ClientTimeLogController');
+        //     Route::get('time-log/data/{id}', ['uses' => 'ClientTimeLogController@data'])->name('time-log.data');
+        //     Route::resource('time-log', 'ClientTimeLogController');
 
-            Route::get('project-invoice/download/{id}', ['uses' => 'ClientProjectInvoicesController@download'])->name('project-invoice.download');
-            Route::resource('project-invoice', 'ClientProjectInvoicesController');
+        //     Route::get('project-invoice/download/{id}', ['uses' => 'ClientProjectInvoicesController@download'])->name('project-invoice.download');
+        //     Route::resource('project-invoice', 'ClientProjectInvoicesController');
             
-            Route::resource('project-expenses', 'ClientProjectExpensesController');
-            Route::resource('project-payments', 'ClientProjectPaymentsController');
+        //     Route::resource('project-expenses', 'ClientProjectExpensesController');
+        //     Route::resource('project-payments', 'ClientProjectPaymentsController');
 
-            Route::get('milestones/data/{id}', ['uses' => 'ClientProjectMilestonesController@data'])->name('milestones.data');
-            Route::resource('milestones', 'ClientProjectMilestonesController');
+        //     Route::get('milestones/data/{id}', ['uses' => 'ClientProjectMilestonesController@data'])->name('milestones.data');
+        //     Route::resource('milestones', 'ClientProjectMilestonesController');
 
-            // Project Ratings
-            Route::resource('project-ratings', 'ClientProjectRatingController');
-        });
+        //     // Project Ratings
+        //     Route::resource('project-ratings', 'ClientProjectRatingController');
+         });
 
 
         Route::resource('task', 'ClientAllTasksController', ['only' => ['edit', 'update', 'index', 'add_tasks']]);
@@ -1086,6 +1086,7 @@ Route::group(['middleware' => 'auth'], function () {
             ['prefix' => 'sites'], function () {
         Route::post('task-label/store-label', ['uses' => 'ClientTaskLabelController@storeLabel'])->name('task-label.store-label');
         Route::get('task-label/create-label', ['uses' => 'ClientTaskLabelController@createLabel'])->name('task-label.create-label');
+        Route::get('show/{id}', ['uses' => 'ClientTaskLabelController@show'])->name('site.show');
         Route::resource('task-label', 'ClientTaskLabelController');
         });
 
@@ -1116,11 +1117,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('credit-notes/download/{id}', ['uses' => 'ClientCreditNoteController@download'])->name('credit-notes.download');
         Route::resource('credit-notes', 'ClientCreditNoteController');
 
-        Route::post('contract-files/store-link', ['uses' => 'ClientContractFilesController@storeLink'])->name('contract-files.storeLink');
-        Route::get('contract-files/download/{id}', ['uses' => 'ClientContractFilesController@download'])->name('contract-files.download');
-        Route::get('contract-files/thumbnail', ['uses' => 'ClientContractFilesController@thumbnailShow'])->name('contract-files.thumbnail');
-        Route::post('contract-files/multiple-upload', ['uses' => 'ClientContractFilesController@storeMultiple'])->name('contract-files.multiple-upload');
-        Route::resource('contract-files', 'ClientContractFilesController');
+        // Route::post('contract-files/store-link', ['uses' => 'ClientContractFilesController@storeLink'])->name('contract-files.storeLink');
+        // Route::get('contract-files/download/{id}', ['uses' => 'ClientContractFilesController@download'])->name('contract-files.download');
+        // Route::get('contract-files/thumbnail', ['uses' => 'ClientContractFilesController@thumbnailShow'])->name('contract-files.thumbnail');
+        // Route::post('contract-files/multiple-upload', ['uses' => 'ClientContractFilesController@storeMultiple'])->name('contract-files.multiple-upload');
+        // Route::resource('contract-files', 'ClientContractFilesController');
 
         //Invoice recurring
         Route::post('invoice-recurring/change-status', ['uses' => 'ClientInvoiceRecurringController@changeStatus'])->name('invoice-recurring.changeStatus');
@@ -1130,20 +1131,20 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('invoice-recurring', 'ClientInvoiceRecurringController');
 
         // Estimate Section
-        Route::get('estimates/download/{id}', ['uses' => 'ClientEstimateController@download'])->name('estimates.download');
-        Route::resource('estimates', 'ClientEstimateController');
+        // Route::get('estimates/download/{id}', ['uses' => 'ClientEstimateController@download'])->name('estimates.download');
+        // Route::resource('estimates', 'ClientEstimateController');
 
-        //Payments section
-        Route::get('payments/data', ['uses' => 'ClientPaymentsController@data'])->name('payments.data');
-        Route::resource('payments', 'ClientPaymentsController');
+        // //Payments section
+        // Route::get('payments/data', ['uses' => 'ClientPaymentsController@data'])->name('payments.data');
+        // Route::resource('payments', 'ClientPaymentsController');
 
 
-        // Issues section
-        Route::get('my-issues/data', ['uses' => 'ClientMyIssuesController@data'])->name('my-issues.data');
-        Route::resource('my-issues', 'ClientMyIssuesController');
+        // // Issues section
+        // Route::get('my-issues/data', ['uses' => 'ClientMyIssuesController@data'])->name('my-issues.data');
+        // Route::resource('my-issues', 'ClientMyIssuesController');
 
-        // route for view/blade file
-        Route::get('paywithpaypal', array('as' => 'paywithpaypal','uses' => 'PaypalController@payWithPaypal',));
+        // // route for view/blade file
+        // Route::get('paywithpaypal', array('as' => 'paywithpaypal','uses' => 'PaypalController@payWithPaypal'));
 
 
         // change language
@@ -1158,13 +1159,13 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::resource('events', 'ClientEventController');
 
-        Route::post('gdpr/update-consent', ['uses' => 'ClientGdprController@updateConsent'])->name('gdpr.update-consent');
-        Route::get('gdpr/consent', ['uses' => 'ClientGdprController@consent'])->name('gdpr.consent');
-        Route::get('gdpr/download', ['uses' => 'ClientGdprController@downloadJSON'])->name('gdpr.download-json');
-        Route::post('gdpr/remove-request', ['uses' => 'ClientGdprController@removeRequest'])->name('gdpr.remove-request');
-        Route::get('privacy-policy', ['uses' => 'ClientGdprController@privacy'])->name('gdpr.privacy');
-        Route::get('terms-and-condition', ['uses' => 'ClientGdprController@terms'])->name('gdpr.terms');
-        Route::resource('gdpr', 'ClientGdprController');
+        // Route::post('gdpr/update-consent', ['uses' => 'ClientGdprController@updateConsent'])->name('gdpr.update-consent');
+        // Route::get('gdpr/consent', ['uses' => 'ClientGdprController@consent'])->name('gdpr.consent');
+        // Route::get('gdpr/download', ['uses' => 'ClientGdprController@downloadJSON'])->name('gdpr.download-json');
+        // Route::post('gdpr/remove-request', ['uses' => 'ClientGdprController@removeRequest'])->name('gdpr.remove-request');
+        // Route::get('privacy-policy', ['uses' => 'ClientGdprController@privacy'])->name('gdpr.privacy');
+        // Route::get('terms-and-condition', ['uses' => 'ClientGdprController@terms'])->name('gdpr.terms');
+        // Route::resource('gdpr', 'ClientGdprController');
 
         // User message
         Route::post('message-submit', ['as' => 'user-chat.message-submit', 'uses' => 'ClientChatController@postChatMessage']);
@@ -1177,15 +1178,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('task-note', 'ClientTaskNoteController');
 
         //region contracts routes
-        Route::get('contracts/data', ['as' => 'contracts.data', 'uses' => 'ClientContractController@data']);
-        Route::get('contracts/download/{id}', ['as' => 'contracts.download', 'uses' => 'ClientContractController@download']);
-        Route::get('contracts/sign/{id}', ['as' => 'contracts.sign-modal', 'uses' => 'ClientContractController@signModal']);
-        Route::post('contracts/sign/{id}', ['as' => 'contracts.sign', 'uses' => 'ClientContractController@sign']);
-        Route::post('contracts/add-discussion/{id}', ['as' => 'contracts.add-discussion', 'uses' => 'ClientContractController@addDiscussion']);
-        Route::get('contracts/edit-discussion/{id}', ['as' => 'contracts.edit-discussion', 'uses' => 'ClientContractController@editDiscussion']);
-        Route::post('contracts/update-discussion/{id}', ['as' => 'contracts.update-discussion', 'uses' => 'ClientContractController@updateDiscussion']);
-        Route::post('contracts/remove-discussion/{id}', ['as' => 'contracts.remove-discussion', 'uses' => 'ClientContractController@removeDiscussion']);
-        Route::resource('contracts', 'ClientContractController');
+        // Route::get('contracts/data', ['as' => 'contracts.data', 'uses' => 'ClientContractController@data']);
+        // Route::get('contracts/download/{id}', ['as' => 'contracts.download', 'uses' => 'ClientContractController@download']);
+        // Route::get('contracts/sign/{id}', ['as' => 'contracts.sign-modal', 'uses' => 'ClientContractController@signModal']);
+        // Route::post('contracts/sign/{id}', ['as' => 'contracts.sign', 'uses' => 'ClientContractController@sign']);
+        // Route::post('contracts/add-discussion/{id}', ['as' => 'contracts.add-discussion', 'uses' => 'ClientContractController@addDiscussion']);
+        // Route::get('contracts/edit-discussion/{id}', ['as' => 'contracts.edit-discussion', 'uses' => 'ClientContractController@editDiscussion']);
+        // Route::post('contracts/update-discussion/{id}', ['as' => 'contracts.update-discussion', 'uses' => 'ClientContractController@updateDiscussion']);
+        // Route::post('contracts/remove-discussion/{id}', ['as' => 'contracts.remove-discussion', 'uses' => 'ClientContractController@removeDiscussion']);
+        // Route::resource('contracts', 'ClientContractController');
         //endregion
 
         //Notice

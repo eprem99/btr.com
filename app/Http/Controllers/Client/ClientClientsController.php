@@ -81,8 +81,8 @@ class ClientClientsController extends ClientBaseController
         $data['password'] = Hash::make($request->input('password'));
 
         unset($data['phone_code']);
-        $data['country_id'] = $request->input('phone_code');
-        $data['state_id'] = $request->input('state_id');
+        $data['country'] = $request->input('country');
+        $data['state'] = $request->input('state');
         $data['name'] = $request->input('salutation')." ".$request->input('name');
         $data['category_id'] = $request->input('category_id');
         $user = User::create($data);
@@ -131,6 +131,7 @@ class ClientClientsController extends ClientBaseController
     {
         $this->userDetail = User::withoutGlobalScope('active')->findOrFail($id);
         $this->clientDetail = ClientDetails::where('user_id', '=', $id)->first();
+       // dd($this->clientDetail);
         $this->countries = Country::all();
         $this->categories = ClientCategory::all();
         if (!is_null($this->clientDetail)) {
@@ -147,22 +148,28 @@ class ClientClientsController extends ClientBaseController
      */
     public function state(Request $request, $id)
     {
-        if($request->state_id != 0 || $request->state_id != ''){
-            $states = State::all();
+        $this->clientDetail = ClientDetails::where('user_id', '=', $id)->first();
+      //  dd($this->clientDetail->state);
+        if($request->country != 0 || $request->country != ''){
+            $states = State::where('country_id', '=', $request->country)->get();
             $option = '' ;
-            $option .= '<option selected value=""> -- Select -- </option>';
+             $option .= '<option value=""> -- Select -- </option>';
                  foreach($states as $state){
-                     if($request->state_id == $state->id){
+                     if($this->clientDetail->state == $state->id){
                          $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
                      }else{
                          $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
                      }
                  }
         }else{
-            $this->clientDetail = ClientDetails::where('user_id', '=', $id)->first();
-            dd($this->clientDetail);
+            $states = State::where('country_id', '=', $id)->get();
+            $option = '' ;
+             $option .= '<option value=""> -- Select -- </option>';
+                 foreach($states as $state){
+                    $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                 }
         }
-            return Reply::successWithData(__('messages.SelectState'),['data'=> $option]);
+        return Reply::dataOnly(['data'=> $option]);
 
 
     }
@@ -183,11 +190,13 @@ class ClientClientsController extends ClientBaseController
         if ($request->password != '') {
             $data['password'] = Hash::make($request->input('password'));
         }
-        $data['country_id'] = $request->input('country_id');
+
         $user->update($data);
 
         if ($user->client_details) {
             $data['category_id'] = $request->input('category_id');
+            $data['country'] = $request->input('country');
+            $data['state'] = $request->input('state');
             $fields = $request->only($user->client_details->getFillable());
             $user->client_details->fill($fields);
             $user->client_details->save();
@@ -221,19 +230,6 @@ class ClientClientsController extends ClientBaseController
         return Reply::success(__('messages.clientDeleted'));
     }
 
-    public function showProjects($id)
-    {
-        $this->client = User::with('projects')->withoutGlobalScope('active')->findOrFail($id);
-        $this->clientDetail = ClientDetails::where('user_id', '=', $this->client->id)->first();
-        $this->clientStats = $this->clientStats($id);
-
-        if (!is_null($this->clientDetail)) {
-            $this->clientDetail = $this->clientDetail->withCustomFields();
-            $this->fields = $this->clientDetail->getCustomFieldGroupsWithFields()->fields;
-        }
-
-        return view('client.clients.projects', $this->data);
-    }
 
     public function showInvoices($id)
     {

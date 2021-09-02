@@ -51,7 +51,28 @@
         </div>
     </div>
     <!-- .row -->
+    {{--Ajax Modal--}}
+    <div class="modal fade bs-modal-md in" id="siteshowModal" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" id="modal-data-application">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <span class="caption-subject font-red-sunglo bold uppercase" id="modelHeading"></span>
+                </div>
+                <div class="modal-body">
+                    Loading...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn default" data-dismiss="modal">Close</button>
 
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    {{--Ajax Modal Ends--}}
 @endsection
 
 @push('footer-script')
@@ -62,6 +83,7 @@
 <script src="{{ asset('plugins/bower_components/bootstrap-select/bootstrap-select.min.js') }}"></script>
 <script src="{{ asset('js/datatables/dataTables.buttons.min.js') }}"></script>
 <script src="{{ asset('js/datatables/buttons.server-side.js') }}"></script>
+
 
 {!! $dataTable->scripts() !!}
 <script>
@@ -109,6 +131,14 @@
 
     function loadTable(){
         window.LaravelDataTables["taskLabelList-table"].draw();
+    }
+    function siteshow(id){
+      //  console.log(id);
+        // var id = $(this).data('id');
+        var url = "{{ route('client.site.show',':id') }}";
+        url = url.replace(':id', id);
+        $('#modelHeading').html("@lang('modules.tasks.site')");
+        $.ajaxModal('#siteshowModal',url);
     }
 </script>
 @endpush

@@ -64,11 +64,11 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>@lang('modules.stripeCustomerAddress.country')</label>
-                                        <select name="country_id" class="form-control" id="country">
+                                        <select name="country" class="form-control" id="country">
                                             <option value>@lang('app.site.country')</option>
                                             @foreach ($countries as $item)
                                                 <option
-                                                @if ($item->id == $userDetail->country_id)
+                                                @if ($item->id == $clientDetail->country)
                                                     selected
                                                 @endif
                                                 value="{{ $item->id }}">{{ $item->name }}</option>
@@ -79,8 +79,8 @@
                                 <div class="col-md-4">
                                         <div class="form-group">
                                             <label>@lang('modules.stripeCustomerAddress.state')</label>
-                                            <select name="state_id" class="select2 form-control" id="state">
-                                                <option value="0"> -- Select -- </option>
+                                            <select name="state" class="form-control" id="state">
+                                                <option value=""> -- Select -- </option>
                                             </select>
                                         </div>
                                     </div>
@@ -207,7 +207,7 @@
 
     $('#save-form').click(function () {
         $.easyAjax({
-            url: '{{route('client.profile.update', [$userDetail->id])}}',
+            url: '{{route('client.clients.update', [$userDetail->id])}}',
             container: '#updateProfile',
             type: "POST",
             redirect: true,
@@ -217,24 +217,20 @@
     $('#country').select2({
         }).on("change", function (e) {
         var url = "{{ route('client.clients.state', [$userDetail->id]) }}";
-       // console.log(url);
         $.easyAjax({
             url: url,
             type: "GET",
             redirect: true,
             data: $('#updateProfile').serialize(),
             success: function (data) {
-            //  alert(data.data)
                 $('#state').html(data.data);
             }
         })
     });
     jQuery(document).ready(function($) {
         $.each($('#country option:selected'), function(){            
-       // var id = $(this).val();
+
         var url = "{{ route('client.clients.state', [$userDetail->id]) }}";
-      //  url = url.replace(':id', id);
-       // console.log(url);
         $.easyAjax({
             url: url,
             type: "GET",

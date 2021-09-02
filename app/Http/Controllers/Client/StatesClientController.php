@@ -100,7 +100,8 @@ class StatesClientController extends ClientBaseController
                 }
             }
        //     dd($option);
-       return Reply::successWithData(__('messages.SelectState'),['data'=> $option]);
+       return Reply::dataOnly(['data'=> $option]);
+     //  return Reply::successWithData(__(''),['data'=> $option]);
        // return $option;
     }
 

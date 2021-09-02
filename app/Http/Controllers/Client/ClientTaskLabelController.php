@@ -9,7 +9,7 @@ use App\Http\Requests\Admin\TaskLabel\UpdateRequest;
 use App\TaskLabel;
 use App\TaskLabelList;
 use App\Country;
-use App\state;
+use App\State;
 use App\User;
 use App\ClientDetails;
 
@@ -65,7 +65,11 @@ class ClientTaskLabelController extends ClientBaseController
 
     public function show($id)
     {
-        //
+        $this->taskLabel = TaskLabelList::find($id);
+        $contact = json_decode($this->taskLabel->contacts, true);
+        $this->countries = Country::where('id', '=', $contact['site_country'])->first();
+        $this->state = State::where('id', '=', $contact['site_state'])->first();
+        return view('client.task-label.show', $this->data);
     }
 
     private function storeUpdate($request, $taskLabel)
@@ -85,7 +89,7 @@ class ClientTaskLabelController extends ClientBaseController
 
     public function destroy($id)
     {
-        TaskLabel::where('site_id', $id)->delete();
+        TaskLabel::where('id', $id)->delete();
         TaskLabelList::destroy($id);
 
         return Reply::success(__('messages.workorderLabel.deletedSuccess'));

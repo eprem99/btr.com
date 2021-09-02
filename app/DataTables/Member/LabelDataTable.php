@@ -49,7 +49,7 @@ class LabelDataTable extends BaseDataTable
             })
 
             ->editColumn('label_name', function ($row) {
-                return ucwords($row->label_name);
+                return '<a onclick="siteshow('.$row->id.')" data-id="' .$row->id. '" href="#">'.ucwords($row->label_name).'</a>';
             })
 
             ->editColumn('site_city', function ($row) {

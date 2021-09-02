@@ -92,7 +92,7 @@ $contacts = json_decode($taskLabel->contacts, true);
                     <div class="col-md-6">
                         <div class="form-group">
                         <label for="site_state" class="required"> @lang('app.site.state')</label>
-                        <select name="site_state" class="select2 form-control" id="state">
+                        <select name="site_state" class="form-control" id="state">
                         <option value="0"> -- Select -- </option>
                         </select>
                         </div>
