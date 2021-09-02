@@ -40,7 +40,7 @@ class AllTasksDataTable extends BaseDataTable
                       data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
                 }else{
                     $action = '<a target="_blank" href="' . route('front.task-share', [$row->hash]) . '" class="btn btn-info btn-circle"
-                    data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-share-alt" aria-hidden="true"></i></a>';
+                    data-toggle="tooltip" data-original-title="View"><i class="fa fa-share-alt" aria-hidden="true"></i></a>';
                 }
               //  return $this->user->can('delete_projects');
                return $action;

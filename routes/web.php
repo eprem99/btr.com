@@ -1058,7 +1058,7 @@ Route::group(['middleware' => 'auth'], function () {
             
             Route::get('all-tasks/dependent-tasks/{projectId}/{taskId?}', ['uses' => 'ClientAllTasksController@dependentTaskLists'])->name('all-tasks.dependent-tasks');
             Route::post('all-tasks/data/{startDate?}/{endDate?}/{hideCompleted?}/{projectId?}', ['uses' => 'ClientAllTasksController@data'])->name('all-tasks.data');
-          //  Route::get('all-tasks/clients/{projectId}', ['uses' => 'ClientAllTasksController@clienwtsList'])->name('all-tasks.clients');
+            Route::get('all-tasks/clients/{projectId}', ['uses' => 'ClientAllTasksController@clienwtsList'])->name('all-tasks.clients');
             Route::get('all-tasks/ajaxCreate/{columnId?}', ['uses' => 'ClientAllTasksController@ajaxCreate'])->name('all-tasks.ajaxCreate');
             Route::get('all-tasks/reminder/{taskid}', ['uses' => 'ClientAllTasksController@remindForTask'])->name('all-tasks.reminder');
             Route::get('all-tasks/history/{taskid}', ['uses' => 'ClientAllTasksController@history'])->name('all-tasks.history');

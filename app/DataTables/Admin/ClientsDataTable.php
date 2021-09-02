@@ -36,12 +36,7 @@ class ClientsDataTable extends BaseDataTable
     
                     $action .= '</ul> </div>';
                 }else{
-                    $action = '<div class="btn-group dropdown m-r-10">
-                    <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle waves-effect waves-light" type="button"><i class="fa fa-gears "></i></button>
-                    <ul role="menu" class="dropdown-menu pull-right">
-                      <li><a href="' . route('client.clients.edit', [$row->id]) . '"><i class="fa fa-pencil" aria-hidden="true"></i> ' . trans('app.edit') . '</a></li>';
-    
-                    $action .= '</ul> </div>';
+                    $action = '<a href="' . route('client.clients.edit', [$row->id]) . '" class="btn btn-info btn-circle" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
                 }
                 return $action;
             })
