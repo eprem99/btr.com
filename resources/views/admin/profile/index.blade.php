@@ -38,7 +38,7 @@
                         <div id="vhome3" class="tab-pane active">
                             <div class="row">
                                 <div class="col-sm-12 col-xs-12">
-                                    {!! Form::open(['id'=>'updateProfile','class'=>'ajax-form']) !!}
+                                    {!! Form::open(['id'=>'updateProfile','class'=>'ajax-form', 'method' => 'PUT' ]) !!}
                                     <div class="form-body">
                                         <div class="row">
                                             <div class="col-md-12 ">
