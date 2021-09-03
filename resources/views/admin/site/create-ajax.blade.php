@@ -86,7 +86,7 @@
 
     $('#save-label').click(function () {
         $.easyAjax({
-            url: '{{route('admin.task-label.store-label')}}',
+            url: '{{route('admin.site.store-label')}}',
             container: '#createTaskLabelForm',
             type: "POST",
             data: $('#createTaskLabelForm').serialize(),

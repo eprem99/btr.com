@@ -28,7 +28,7 @@
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
             <ol class="breadcrumb">
                 <li><a href="{{ route('admin.dashboard') }}">@lang('app.menu.home')</a></li>
-                <li><a href="{{ route('admin.task-label.index') }}">{{ __($pageTitle) }}</a></li>
+                <li><a href="{{ route('admin.site.index') }}">{{ __($pageTitle) }}</a></li>
                 <li class="active">@lang('app.addNew')</li>
             </ol>
         </div>
@@ -132,8 +132,39 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="site_timezone"> @lang('app.site.timezone')</label>
-                            <input type="text" class="form-control" name="site_timezone" value="" />
+                            <label for="timezone" class="required">@lang("modules.state.timezone")</label>
+                            <select class="select2 form-control" data-placeholder="@lang('modules.state.selectTimezone')"  id="timezone" name="site_timezone">
+                                <option value="">@lang('modules.state.selectTimezone')</option>
+                                <option value="GMT-12:00">GMT-12:00</option>
+                                <option value="GMT-11:00">GMT-11:00</option>
+                                <option value="GMT-10:00">GMT-10:00</option>
+                                <option value="GMT-09:00">GMT-09:00</option>
+                                <option value="GMT-08:00">GMT-08:00</option>
+                                <option value="GMT-07:00">GMT-07:00</option>
+                                <option value="GMT-06:00">GMT-06:00</option>
+                                <option value="GMT-05:00">GMT-05:00</option>
+                                <option value="GMT-04:00">GMT-04:00</option>
+                                <option value="GMT-03:30">GMT-03:30</option>
+                                <option value="GMT-02:00">GMT-02:00</option>
+                                <option value="GMT-01:00">GMT-01:00</option>
+                                <option value="GMT+00:00">GMT+00:00</option>
+                                <option value="GMT+01:00">GMT+01:00</option>
+                                <option value="GMT+02:00">GMT+02:00</option>
+                                <option value="GMT+03:00">GMT+03:00</option>
+                                <option value="GMT+04:00">GMT+04:00</option>
+                                <option value="GMT+04:30">GMT+04:30</option>
+                                <option value="GMT+05:00">GMT+05:00</option>
+                                <option value="GMT+05:30">GMT+05:30</option>
+                                <option value="GMT+05:45">GMT+05:45</option>
+                                <option value="GMT+06:00">GMT+06:00</option>
+                                <option value="GMT+07:00">GMT+07:00</option>
+                                <option value="GMT+08:00">GMT+08:00</option>
+                                <option value="GMT+09:00">GMT+09:00</option>
+                                <option value="GMT+10:00">GMT+10:00</option>
+                                <option value="GMT+11:00">GMT+11:00</option>
+                                <option value="GMT+12:00">GMT+12:00</option>
+                                <option value="GMT+13:00">GMT+13:00</option>                                                 
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -239,7 +270,7 @@
 
         $('#save-form').click(function () {
             $.easyAjax({
-                url: '{{route('admin.task-label.store')}}',
+                url: '{{route('admin.site.store')}}',
                 container: '#createContract',
                 type: "POST",
                 redirect: true,

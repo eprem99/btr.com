@@ -115,8 +115,39 @@ $contacts = json_decode($taskLabel->contacts, true);
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="site_timezone"> @lang('app.site.timezone')</label>
-                            <input type="text" class="form-control" name="site_timezone" value="{{ $contacts['site_timezone'] }}" />
+                            <label for="timezone" class="required">@lang("modules.state.timezone")</label>
+                            <select class="select2 form-control" data-placeholder="@lang('modules.state.selectTimezone')"  id="timezone" name="site_timezone">
+                                <option value="">@lang('modules.state.selectTimezone')</option>
+                                <option @if($contacts['site_timezone'] == 'GMT-12:00') selected @endif value="GMT-12:00">GMT-12:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT-11:00') selected @endif value="GMT-11:00">GMT-11:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT-10:00') selected @endif value="GMT-10:00">GMT-10:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT-09:00') selected @endif value="GMT-09:00">GMT-09:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT-08:00') selected @endif value="GMT-08:00">GMT-08:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT-07:00') selected @endif value="GMT-07:00">GMT-07:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT-06:00') selected @endif value="GMT-06:00">GMT-06:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT-05:00') selected @endif value="GMT-05:00">GMT-05:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT-04:00') selected @endif value="GMT-04:00">GMT-04:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT-03:30') selected @endif value="GMT-03:30">GMT-03:30</option>
+                                <option @if($contacts['site_timezone'] == 'GMT-02:00') selected @endif value="GMT-02:00">GMT-02:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT-01:00') selected @endif value="GMT-01:00">GMT-01:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+00:00') selected @endif value="GMT+00:00">GMT+00:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+01:00') selected @endif value="GMT+01:00">GMT+01:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+02:00') selected @endif value="GMT+02:00">GMT+02:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+03:00') selected @endif value="GMT+03:00">GMT+03:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+04:00') selected @endif value="GMT+04:00">GMT+04:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+04:30') selected @endif value="GMT+04:30">GMT+04:30</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+05:00') selected @endif value="GMT+05:00">GMT+05:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+05:30') selected @endif value="GMT+05:30">GMT+05:30</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+05:45') selected @endif value="GMT+05:45">GMT+05:45</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+06:00') selected @endif value="GMT+06:00">GMT+06:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+07:00') selected @endif value="GMT+07:00">GMT+07:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+08:00') selected @endif value="GMT+08:00">GMT+08:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+09:00') selected @endif value="GMT+09:00">GMT+09:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+10:00') selected @endif value="GMT+10:00">GMT+10:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+11:00') selected @endif value="GMT+11:00">GMT+11:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+12:00') selected @endif value="GMT+12:00">GMT+12:00</option>
+                                <option @if($contacts['site_timezone'] == 'GMT+13:00') selected @endif value="GMT+13:00">GMT+13:00</option>                                                 
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -218,7 +249,7 @@ $('#notification').change(function(){
 });
     $('#save-form').click(function () {
         $.easyAjax({
-            url: '{{route('client.task-label.update', $taskLabel->id)}}',
+            url: '{{route('client.site.update', $taskLabel->id)}}',
             container: '#createContract',
             type: "POST",
             redirect: true,

@@ -73,7 +73,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label required mb-2"><span>@lang('modules.tasks.site')</span>
-                                        <a href="{{ route('admin.task-label.create') }}" class="btn btn-xs btn-outline btn-success" style="float:right; margin-left:15px;">
+                                        <a href="{{ route('admin.site.create') }}" class="btn btn-xs btn-outline btn-success" style="float:right; margin-left:15px;">
                                                 <i class="fa fa-plus"></i>@lang('modules.tasks.addsite') 
                                             </a>
                                         </label>
@@ -465,7 +465,7 @@
     })
 
     $('#createTaskLabel').click(function(){
-        var url = '{{ route('admin.task-label.create-label')}}';
+        var url = '{{ route('admin.site.create-label')}}';
         $('#modelHeading').html("");
         $.ajaxModal('#taskLabelModal', url);
     })

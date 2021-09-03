@@ -24,18 +24,9 @@ class LabelDataTable extends BaseDataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($row) {
-               
-                if ($this->user->can('delete_tasks')) {
-                $action = '<div class="btn-group dropdown m-r-10">
-                <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle waves-effect waves-light" type="button"><i class="fa fa-gears "></i></button>
-                <ul role="menu" class="dropdown-menu pull-right">
-                  <li><a href="' . route('client.task-label.edit', [$row->id]) . '"><i class="fa fa-pencil" aria-hidden="true"></i> ' . trans('app.edit') . '</a></li>
-                  <li><a href="javascript:;"   data-contract-id="' . $row->id . '"  class="sa-params"><i class="fa fa-times" aria-hidden="true"></i> ' . trans('app.delete') . '</a></li>';
-                
-                $action .= '</ul> </div>';
-            }else{
-                $action = '<a href="' . route('client.task-label.edit', [$row->id]) . '" class="btn btn-info btn-circle" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';        
-            }
+
+                $action = '<a href="' . route('client.site.edit', [$row->id]) . '" class="btn btn-info btn-circle" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';        
+
                 return $action;
             })
             ->editColumn('id', function ($row) {

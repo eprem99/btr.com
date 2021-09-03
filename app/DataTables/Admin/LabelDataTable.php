@@ -23,7 +23,7 @@ class LabelDataTable extends BaseDataTable
                 $action = '<div class="btn-group dropdown m-r-10">
                 <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle waves-effect waves-light" type="button"><i class="fa fa-gears "></i></button>
                 <ul role="menu" class="dropdown-menu pull-right">
-                  <li><a href="' . route('admin.task-label.edit', [$row->id]) . '"><i class="fa fa-pencil" aria-hidden="true"></i> ' . trans('app.edit') . '</a></li>
+                  <li><a href="' . route('admin.site.edit', [$row->id]) . '"><i class="fa fa-pencil" aria-hidden="true"></i> ' . trans('app.edit') . '</a></li>
                   <li><a href="javascript:;"   data-contract-id="' . $row->id . '"  class="sa-params"><i class="fa fa-times" aria-hidden="true"></i> ' . trans('app.delete') . '</a></li>';
 
                 $action .= '</ul> </div>';
@@ -34,18 +34,8 @@ class LabelDataTable extends BaseDataTable
                 return ucwords($row->id);
             })
 
-            // ->editColumn('site_id', function ($row) {
-            //     if($row->contacts){
-            //         $siteid = json_decode($row->contacts, true);
- 
-            //             return ucwords($siteid['site_id']);
-            //     }
-            //     return '--';
-
-            // })
-
             ->editColumn('label_name', function ($row) {
-                return ucwords($row->label_name);
+                return '<a onclick="siteshow('.$row->id.')" data-id="' .$row->id. '" href="#">'.ucwords($row->label_name).'</a>';
             })
 
             ->editColumn('site_city', function ($row) {

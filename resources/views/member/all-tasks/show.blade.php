@@ -23,7 +23,7 @@
                     <h2>
                         @lang('modules.tasks.wodetails')
                     </h2>
-                       @if($task->labels->id)<P><strong>Work Order:  </strong>{{ ucwords($task->id) }}</P>@endif
+                       @if($task->labels)<P><strong>Work Order:  </strong>{{ ucwords($task->id) }}</P>@endif
                        @if($task->task_category_id)<p><strong>Project:  </strong>{{ ucwords($task->category->category_name) }}</p>@endif
                        <!-- @if($task->p_order)<p><strong>PO Number:  </strong> {{ ucwords($task->p_order) }}</p>@endif -->
                        @if($task->start_date)<p><strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}</p>@endif

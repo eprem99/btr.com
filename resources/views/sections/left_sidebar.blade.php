@@ -136,11 +136,11 @@
 
 
             @if(in_array('tasks',$modules))
-            <li><a href="{{ route('admin.task-label.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> 
+            <li><a href="{{ route('admin.site.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> 
                 <span class="hide-menu">@lang('app.menu.taskLabel') <span class="fa arrow"></span> </span> </a>
                 <ul class="nav nav-second-level">
-                    <li><a href="{{ route('admin.task-label.index') }}">@lang('app.menu.browsetaskLabel')</a></li>
-                    <li><a href="{{ route('admin.task-label.create') }}">@lang('app.menu.newtaskLabel')</a></li>
+                    <li><a href="{{ route('admin.site.index') }}">@lang('app.menu.browsetaskLabel')</a></li>
+                    <li><a href="{{ route('admin.site.create') }}">@lang('app.menu.newtaskLabel')</a></li>
                 </ul>    
             </li>
             <li><a href="{{ route('admin.company.index') }}" class="waves-effect"><i class="ti-receipt"></i> 

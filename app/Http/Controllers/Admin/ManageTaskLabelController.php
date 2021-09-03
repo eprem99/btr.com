@@ -30,7 +30,7 @@ class ManageTaskLabelController extends AdminBaseController
 
     public function index(LabelDataTable $dataTable)
     {
-        return $dataTable->render('admin.task-label.index', $this->data);
+        return $dataTable->render('admin.site.index', $this->data);
     }
 
     public function create()
@@ -38,14 +38,14 @@ class ManageTaskLabelController extends AdminBaseController
         $this->clients = User::allClients();
         $this->countries = Country::all();
         $this->states = State::all();
-        return view('admin.task-label.create', $this->data);
+        return view('admin.site.create', $this->data);
     }
 
     public function store(StoreRequest $request)
     {
         $taskLabel = new TaskLabelList();
         $this->storeUpdate($request, $taskLabel);
-        return Reply::redirect(route('admin.task-label.index'), __('messages.taskLabel.addedSuccess'));
+        return Reply::redirect(route('admin.site.index'), __('messages.taskLabel.addedSuccess'));
     }
 
     public function edit($id)
@@ -54,7 +54,7 @@ class ManageTaskLabelController extends AdminBaseController
         $this->clients = User::allClients();
         $this->countries = Country::all();
         $this->states = State::all();
-        return view('admin.task-label.edit', $this->data);
+        return view('admin.site.edit', $this->data);
     }
 
     public function update(UpdateRequest $request, $id)
@@ -62,12 +62,16 @@ class ManageTaskLabelController extends AdminBaseController
         $taskLabel = TaskLabelList::findOrFail($id);
         $this->storeUpdate($request, $taskLabel);
 
-        return Reply::redirect(route('admin.task-label.index'), __('messages.taskLabel.updatedSuccess'));
+        return Reply::redirect(route('admin.site.index'), __('messages.taskLabel.updatedSuccess'));
     }
 
     public function show($id)
     {
-        //
+        $this->taskLabel = TaskLabelList::find($id);
+        $contact = json_decode($this->taskLabel->contacts, true);
+        $this->countries = Country::where('id', '=', $contact['site_country'])->first();
+        $this->state = State::where('id', '=', $contact['site_state'])->first();
+        return view('admin.site.show', $this->data);
     }
 
     private function storeUpdate($request, $taskLabel)
@@ -99,7 +103,7 @@ class ManageTaskLabelController extends AdminBaseController
      */
     public function createLabel()
     {
-        return view('admin.task-label.create-ajax', $this->data);
+        return view('admin.site.create-ajax', $this->data);
     }
 
     public function storeLabel(StoreRequest $request)

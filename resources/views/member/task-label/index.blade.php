@@ -9,7 +9,7 @@
         <!-- /.page title -->
         <!-- .breadcrumb -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-            <a href="{{ route('member.task-label.create') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.taskLabel.createLabel') <i class="fa fa-plus" aria-hidden="true"></i></a>
+            <a href="{{ route('member.site.create') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.taskLabel.createLabel') <i class="fa fa-plus" aria-hidden="true"></i></a>
 
             <ol class="breadcrumb">
                 <li><a href="{{ route('member.dashboard') }}">@lang('app.menu.home')</a></li>
@@ -87,7 +87,7 @@
             }, function(isConfirm){
                 if (isConfirm) {
 
-                    var url = "{{ route('member.task-label.destroy',':id') }}";
+                    var url = "{{ route('member.site.destroy',':id') }}";
                     url = url.replace(':id', id);
 
                     var token = "{{ csrf_token() }}";

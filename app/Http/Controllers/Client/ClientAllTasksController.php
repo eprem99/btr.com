@@ -6,8 +6,8 @@ use App\DataTables\Admin\AllTasksDataTable;
 use App\Events\TaskReminderEvent;
 use App\Helper\Reply;
 use App\Http\Requests\Tasks\StoreTask;
-use App\Project;
-use App\ProjectClient;
+// use App\Project;
+// use App\ProjectClient;
 use App\Task;
 use App\TaskboardColumn;
 use App\TaskCategory;
@@ -169,19 +169,19 @@ class ClientAllTasksController extends ClientBaseController
 
     public function create()
     {
-        if (!$this->user->can('add_tasks') && $this->global->task_self == 'no') {
-            abort(403);
-        }
+        // if (!$this->user->can('add_tasks') && $this->global->task_self == 'no') {
+        //     abort(403);
+        // }
 
-        if (!$this->user->can('view_projects') && $this->global->task_self == 'yes') {
-            $this->projects = Project::join('project_members', 'project_members.project_id', '=', 'projects.id')
-                ->join('users', 'users.id', '=', 'project_members.user_id')
-                ->where('project_members.user_id', $this->user->id)
-                ->select('projects.id', 'projects.project_name')
-                ->get();
-        } else {
-            $this->projects = Project::allProjects();
-        }
+        // if (!$this->user->can('view_projects') && $this->global->task_self == 'yes') {
+        //     $this->projects = Project::join('project_members', 'project_members.project_id', '=', 'projects.id')
+        //         ->join('users', 'users.id', '=', 'project_members.user_id')
+        //         ->where('project_members.user_id', $this->user->id)
+        //         ->select('projects.id', 'projects.project_name')
+        //         ->get();
+        // } else {
+        //     $this->projects = Project::allProjects();
+        // }
 
         $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
         $this->clients = User::allClients()->where('client_details.category_id', '=', $this->clientDetail->category_id);

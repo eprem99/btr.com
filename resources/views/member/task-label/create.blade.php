@@ -28,7 +28,7 @@
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
             <ol class="breadcrumb">
                 <li><a href="{{ route('member.dashboard') }}">@lang('app.menu.home')</a></li>
-                <li><a href="{{ route('member.task-label.index') }}">{{ __($pageTitle) }}</a></li>
+                <li><a href="{{ route('member.site.index') }}">{{ __($pageTitle) }}</a></li>
                 <li class="active">@lang('app.addNew')</li>
             </ol>
         </div>
@@ -140,7 +140,7 @@
 
         $('#save-form').click(function () {
             $.easyAjax({
-                url: '{{route('member.task-label.store')}}',
+                url: '{{route('member.site.store')}}',
                 container: '#createContract',
                 type: "POST",
                 redirect: true,

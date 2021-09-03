@@ -9,7 +9,7 @@
         <!-- /.page title -->
         <!-- .breadcrumb -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-            <a href="{{ route('admin.task-label.create') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.taskLabel.createLabel') <i class="fa fa-plus" aria-hidden="true"></i></a>
+            <a href="{{ route('admin.site.create') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.taskLabel.createLabel') <i class="fa fa-plus" aria-hidden="true"></i></a>
             <a href="{{ route('admin.all-tasks.index') }}" class="btn btn-outline btn-primary btn-sm">@lang('app.view') @lang('app.menu.tasks') </a>
 
             <ol class="breadcrumb">
@@ -54,7 +54,28 @@
         </div>
     </div>
     <!-- .row -->
+    {{--Ajax Modal--}}
+    <div class="modal fade bs-modal-md in" id="siteshowModal" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" id="modal-data-application">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <span class="caption-subject font-red-sunglo bold uppercase" id="modelHeading"></span>
+                </div>
+                <div class="modal-body">
+                    Loading...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn default" data-dismiss="modal">Close</button>
 
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    {{--Ajax Modal Ends--}}
 @endsection
 
 @push('footer-script')
@@ -88,7 +109,7 @@
             }, function(isConfirm){
                 if (isConfirm) {
 
-                    var url = "{{ route('admin.task-label.destroy',':id') }}";
+                    var url = "{{ route('admin.site.destroy',':id') }}";
                     url = url.replace(':id', id);
 
                     var token = "{{ csrf_token() }}";
@@ -142,5 +163,13 @@
         {{--window.location.href = url;--}}
     {{--}--}}
 
+    function siteshow(id){
+      //  console.log(id);
+        // var id = $(this).data('id');
+        var url = "{{ route('admin.site.show',':id') }}";
+        url = url.replace(':id', id);
+        $('#modelHeading').html("@lang('modules.tasks.site')");
+        $.ajaxModal('#siteshowModal',url);
+    }
 </script>
 @endpush

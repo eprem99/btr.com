@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 
-class AllTasksDataTable extends BaseDataTable
+class AllMemberTasksDataTable extends BaseDataTable
 {
     /**
      * Build DataTable class.
@@ -198,12 +198,9 @@ class AllTasksDataTable extends BaseDataTable
             creator_user.id as created_by_id, creator_user.image as created_image,
              tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color, role.role_id')
             ->with('users')
+            ->where('task_users.user_id', '=', user()->id)
             ->groupBy('tasks.id');
-            if($this->user->can('delete_tasks')){
-                
-            }else{
-                $model = $model->where('task_users.user_id', '=', user()->id);
-            }
+ 
           //  dd(user()->id);
 
         if ($startDate !== null && $endDate !== null) {
@@ -226,7 +223,7 @@ class AllTasksDataTable extends BaseDataTable
             $model->where('tasks.board_column_id', '!=', '11');
         }elseif(isset($_GET['stat']) && $_GET['stat'] != ''){
             $model->where('tasks.board_column_id', '=', $_GET['stat']);
-        }elseif($request->status != '' && $request->status !=  null && $request->status !=  'all'){
+        }else{
             $model->where('tasks.board_column_id', '=', $request->status);
         }
         if ($request->label != '' && $request->label !=  null && $request->label !=  'all') {

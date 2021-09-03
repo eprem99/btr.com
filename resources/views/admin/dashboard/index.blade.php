@@ -144,26 +144,6 @@
                 </div>
             @endif
 
-            @if(in_array('projects',$modules) && in_array('total_projects',$activeWidgets))
-                <div class="col-md-3 col-sm-6">
-                    <a href="{{ route('admin.projects.index') }}">
-                        <div class="white-box">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <div>
-                                        <span class="bg-danger-gradient"><i class="icon-layers"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <span class="widget-title"> @lang('modules.dashboard.totalProjects')</span><br>
-                                    <span class="counter">{{ $counts->totalProjects }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            @endif
-
             @if(in_array('invoices',$modules) && in_array('total_unpaid_invoices',$activeWidgets))
                 <div class="col-md-3 col-sm-6">
                     <a href="{{ route('admin.all-invoices.index') }}">
@@ -184,29 +164,10 @@
                 </div>
             @endif
 
-            @if(in_array('timelogs',$modules) && in_array('total_hours_logged',$activeWidgets))
-                <div class="col-md-3 col-sm-6">
-                    <a href="{{ route('admin.all-time-logs.index') }}">
-                        <div class="white-box">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <div>
-                                        <span class="bg-info-gradient"><i class="icon-clock"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <span class="widget-title"> @lang('modules.dashboard.totalHoursLogged')</span><br>
-                                    <span class="counter">{{ $counts->totalHoursLogged }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            @endif
 
             @if(in_array('tasks',$modules) && in_array('total_pending_tasks',$activeWidgets))
                 <div class="col-md-3 col-sm-6">
-                    <a href="{{ route('admin.all-tasks.index') }}">
+                    <a href="{{ route('admin.all-tasks.index','stat=0&hideComplet=0') }}">
                         <div class="white-box">
                             <div class="row">
                                 <div class="col-xs-3">
@@ -226,7 +187,7 @@
 
             @if(in_array('tasks',$modules) && in_array('total_pending_tasks',$activeWidgets))
                 <div class="col-md-3 col-sm-6">
-                    <a href="{{ route('admin.all-tasks.index') }}">
+                    <a href="{{ route('admin.all-tasks.index','stat=11&hideComplet=0') }}">
                         <div class="white-box">
                             <div class="row">
                             <div class="col-xs-3">

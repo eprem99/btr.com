@@ -122,11 +122,11 @@
             </li>
             @endif
 
-            <li><a href="{{ route('client.task-label.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> 
+            <li><a href="{{ route('client.site.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> 
                 <span class="hide-menu">@lang('app.menu.taskLabel') <span class="fa arrow"></span> </span> </a>
                 <ul class="nav nav-second-level">
-                    <li><a href="{{ route('client.task-label.index') }}">@lang('app.menu.browsetaskLabel')</a></li>
-                    <li><a href="{{ route('client.task-label.create') }}">@lang('app.menu.newtaskLabel')</a></li>
+                    <li><a href="{{ route('client.site.index') }}">@lang('app.menu.browsetaskLabel')</a></li>
+                    <li><a href="{{ route('client.site.create') }}">@lang('app.menu.newtaskLabel')</a></li>
                 </ul>    
             </li>
 

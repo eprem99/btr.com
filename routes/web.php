@@ -83,6 +83,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('company/stores', ['uses' => 'ClientCategoryController@stores'])->name('company.stores');
         Route::delete('company/destroy/{id}', ['uses' => 'ClientCategoryController@destroy'])->name('company.destroy');
 
+        Route::group(
+            ['prefix' => 'sites'], function () {
+            Route::get('show/{id}', ['uses' => 'ManageTaskLabelController@show'])->name('sites.show');
+            Route::post('site/store-label', ['uses' => 'ManageTaskLabelController@storeLabel'])->name('site.store-label');
+            Route::get('site/create-label', ['uses' => 'ManageTaskLabelController@createLabel'])->name('site.create-label');
+            Route::resource('site', 'ManageTaskLabelController');
+
+        });
         // Route::resource('clientSubCategory', 'ClientSubCategoryController');
 
         // Route::post('leads/updateIndex', ['as' => 'leads.updateIndex', 'uses' => 'LeadController@updateIndex']);
@@ -399,16 +407,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('all-time-logs/calendar', ['uses' => 'ManageAllTimeLogController@calendar'])->name('all-time-logs.calendar');
         Route::resource('all-time-logs', 'ManageAllTimeLogController');
 
-
-        // task routes
+    
+         // task routes
         Route::resource('task', 'ManageAllTasksController', ['only' => ['edit', 'update', 'index']]); // hack to make left admin menu item active
         Route::group(
-            ['prefix' => 'task'], function () {
-
-            Route::post('task-label/store-label', ['uses' => 'ManageTaskLabelController@storeLabel'])->name('task-label.store-label');
-            Route::get('task-label/create-label', ['uses' => 'ManageTaskLabelController@createLabel'])->name('task-label.create-label');
-            Route::resource('task-label', 'ManageTaskLabelController');
-        
+            ['prefix' => 'task'], function () {      
 
             Route::get('all-tasks/export/{startDate?}/{endDate?}/{projectId?}/{hideCompleted?}', ['uses' => 'ManageAllTasksController@export'])->name('all-tasks.export');
             Route::get('all-tasks/dependent-tasks/{projectId}/{taskId?}', ['uses' => 'ManageAllTasksController@dependentTaskLists'])->name('all-tasks.dependent-tasks');
@@ -741,7 +744,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('lead-files/thumbnail', ['uses' => 'LeadFilesController@thumbnailShow'])->name('lead-files.thumbnail');
         Route::resource('lead-files', 'LeadFilesController');
 
-        Route::resource('task-label', 'TaskLabelController');
+        Route::resource('site', 'TaskLabelController');
 
         //Pinned route
         Route::resource('pinned', 'MemberPinnedController', ['only' => ['store', 'destroy']]);
@@ -1084,10 +1087,10 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::group(
             ['prefix' => 'sites'], function () {
-        Route::post('task-label/store-label', ['uses' => 'ClientTaskLabelController@storeLabel'])->name('task-label.store-label');
-        Route::get('task-label/create-label', ['uses' => 'ClientTaskLabelController@createLabel'])->name('task-label.create-label');
-        Route::get('show/{id}', ['uses' => 'ClientTaskLabelController@show'])->name('site.show');
-        Route::resource('task-label', 'ClientTaskLabelController');
+        Route::post('site/store-label', ['uses' => 'ClientTaskLabelController@storeLabel'])->name('site.store-label');
+        Route::get('site/create-label', ['uses' => 'ClientTaskLabelController@createLabel'])->name('site.create-label');
+        Route::get('show/{id}', ['uses' => 'ClientTaskLabelController@show'])->name('sites.show');
+        Route::resource('site', 'ClientTaskLabelController');
         });
 
         Route::resource('reports', 'ClientTaskReportController', ['only' => ['edit', 'update', 'index']]); // hack to make left admin menu item active

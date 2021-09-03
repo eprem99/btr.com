@@ -316,7 +316,7 @@ return array (
   'day' => 'Day(s)',
   'week' => 'Week(s)',
   'filterBy' => 'Filter by',
-  'others' => 'Others',
+  'others' => 'Other',
   'value' => 'Value',
   'monday' => 'Monday',
   'tuesday' => 'Tuesday',

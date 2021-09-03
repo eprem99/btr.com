@@ -9,7 +9,7 @@
         <!-- /.page title -->
         <!-- .breadcrumb -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-            <a href="{{ route('admin.task-label.index') }}" class="btn btn-outline btn-primary btn-sm"> @lang('app.menu.taskLabel') </a>
+            <a href="{{ route('admin.site.index') }}" class="btn btn-outline btn-primary btn-sm"> @lang('app.menu.taskLabel') </a>
             <a href="{{ route('admin.all-tasks.create') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.tasks.newTask') <i class="fa fa-plus" aria-hidden="true"></i></a>
             <ol class="breadcrumb">
                 <li><a href="{{ route('admin.dashboard') }}">@lang('app.menu.home')</a></li>

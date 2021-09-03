@@ -8,7 +8,7 @@
         </div>
         <!-- /.page title -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-            <a href="{{ route('client.task-label.create') }}" class="btn btn-outline btn-success btn-sm">Create Site <i class="fa fa-plus" aria-hidden="true"></i></a>
+            <a href="{{ route('client.site.create') }}" class="btn btn-outline btn-success btn-sm">Create Site <i class="fa fa-plus" aria-hidden="true"></i></a>
 
             <ol class="breadcrumb">
 
@@ -107,7 +107,7 @@
             }, function(isConfirm){
                 if (isConfirm) {
 
-                    var url = "{{ route('client.task-label.destroy',':id') }}";
+                    var url = "{{ route('client.site.destroy',':id') }}";
                     url = url.replace(':id', id);
 
                     var token = "{{ csrf_token() }}";
