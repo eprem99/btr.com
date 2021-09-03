@@ -44,6 +44,7 @@ class ClientAllTasksController extends ClientBaseController
         if (!request()->ajax()) {
           //  $this->projects = Project::allProjects();
             $this->clients = User::allClients();
+            $this->wotype = WoType::all();
             $this->employees = User::allEmployees();
             $this->taskBoardStatus = TaskboardColumn::all();
             $this->taskCategories = TaskCategory::all();

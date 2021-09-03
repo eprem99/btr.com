@@ -10,6 +10,7 @@ use App\Task;
 use App\TaskboardColumn;
 use App\TaskFile;
 use App\User;
+use App\WoType;
 use App\TaskLabelList;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -39,6 +40,7 @@ class MemberAllTasksController extends MemberBaseController
             $this->employees = User::allEmployees();
             $this->taskBoardStatus = TaskboardColumn::all();
             $this->taskLabels = TaskLabelList::all();
+            $this->wotype = WoType::all();
             $this->startDate = Carbon::today()->subDays(15)->format($this->global->date_format);
             $this->endDate = Carbon::today()->addDays(15)->format($this->global->date_format);
         }

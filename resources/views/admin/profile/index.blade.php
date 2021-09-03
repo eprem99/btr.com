@@ -132,7 +132,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>@lang('modules.stripeCustomerAddress.state')</label>
-                                                <select name="state" class="select2 form-control" id="state">
+                                                <select name="state" class="form-control" id="state">
                                                     <option value="0"> -- Select -- </option>
                                                 </select>
                                             </div>

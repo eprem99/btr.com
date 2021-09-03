@@ -106,6 +106,22 @@
         </div>
     </div>
     
+    <div class="col-md-12">
+        <h5 class="box-title">@lang('modules.taskCategory.wo_id')</h5>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <select class="select2 form-control" data-placeholder="@lang('modules.taskCategory.wo_id')" id="wo_id">
+                        <option value="all">@lang('app.all')</option>
+                        @foreach($wotype as $categ)
+                            <option value="{{ $categ->id }}">{{ ucwords($categ->name) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="col-md-12">
         <h5 class="box-title">@lang('app.select') @lang('app.menu.taskLabel')</h5>
@@ -272,6 +288,7 @@
         var status = $('#status').val();
         var label = $('#label').val();
         var category_id = $('#category_id').val();
+        var wo_id = $('#wo_id').val();
         var billable = $('#billable').val();
 
 
@@ -287,9 +304,8 @@
         data['status'] = status;
         data['label'] = label;
         data['category_id'] = category_id;
-        data['billable'] = billable;
         data['hideCompleted'] = hideCompleted;
-        data['projectId'] = projectID;
+        data['wo_id'] = wo_id;
         data['startDate'] = startDate;
         data['endDate'] = endDate;
     });

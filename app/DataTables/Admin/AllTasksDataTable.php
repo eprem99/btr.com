@@ -103,17 +103,19 @@ class AllTasksDataTable extends BaseDataTable
             ->editColumn('users', function ($row) {
                 $members = '';
                 foreach ($row->users as $member) {
-                    $members .= '<a href="' . route('admin.employees.show', [$member->id]) . '">';
-                    $members .= '<img data-toggle="tooltip" data-original-title="' . ucwords($member->name) . '" src="' . $member->image_url . '"
-                    alt="user" class="img-circle" width="25" height="25"> ';
-                    $members .= '</a>';
+                    if($row->created_by_id != $member->id){
+                        $members .= '<img data-toggle="tooltip" data-original-title="' . ucwords($member->name) . '" src="' . $member->image_url . '"
+                        alt="user" class="img-circle" width="25" height="25"> ';
+                    }
                 }
                 return $members;
             })
             ->addColumn('name', function ($row) {
                 $members = [];
                 foreach ($row->users as $member) {
+                    if($row->created_by != $member->name){
                     $members[] = $member->name;
+                    }
                 }
                 return implode(',', $members);
             })
@@ -122,6 +124,7 @@ class AllTasksDataTable extends BaseDataTable
             })
             ->editColumn('created_by', function ($row) {
                 if (!is_null($row->created_by)) {
+                    
                     return ($row->created_image) ? '<img src="' . asset_url('avatar/' . $row->created_image) . '"
                                                             alt="user" class="img-circle" width="30" height="30"> ' . ucwords($row->created_by) : '<img src="' . asset('img/default-profile-3.png') . '"
                                                             alt="user" class="img-circle" width="30" height="30"> ' . ucwords($row->created_by);
@@ -232,7 +235,9 @@ class AllTasksDataTable extends BaseDataTable
         if ($request->label != '' && $request->label !=  null && $request->label !=  'all') {
             $model->where('tasks.site_id', '=', $request->label);
         }
-
+        if ($request->wo_id != '' && $request->wo_id !=  null && $request->wo_id !=  'all') {
+            $model->where('tasks.wo_id', '=', $request->wo_id);
+        }
         if ($request->category_id != '' && $request->category_id !=  null && $request->category_id !=  'all') {
             $model->where('tasks.task_category_id', '=', $request->category_id);
         }
@@ -302,7 +307,7 @@ class AllTasksDataTable extends BaseDataTable
             __('modules.tasks.state')  => ['data' => 'state', 'name' => 'state'],
             __('modules.tasks.city')  => ['data' => 'city', 'name' => 'city'],
             __('modules.tasks.assigned') => ['data' => 'name', 'name' => 'name', 'visible' => false],
-            __('modules.tasks.assignTo') => ['data' => 'users', 'name' => 'name', 'exportable' => false],
+            __('modules.tasks.techsite') => ['data' => 'users', 'name' => 'name', 'exportable' => false],
             __('app.dueDate') => ['data' => 'due_date', 'name' => 'due_date'],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'visible' => false],
             __('app.columnStatus') => ['data' => 'board_column', 'name' => 'board_column', 'exportable' => false, 'searchable' => false],

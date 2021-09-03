@@ -101,6 +101,22 @@
         </div>
     </div>
     <div class="col-md-12">
+        <h5 class="box-title">@lang('modules.taskCategory.wo_id')</h5>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <select class="select2 form-control" data-placeholder="@lang('modules.taskCategory.wo_id')" id="wo_id">
+                        <option value="all">@lang('app.all')</option>
+                        @foreach($wotype as $categ)
+                            <option value="{{ $categ->id }}">{{ ucwords($categ->name) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
         <div class="checkbox checkbox-info">
             <input type="checkbox" checked id="hide-completed-tasks">
             <label for="hide-completed-tasks">@lang('app.hideCompletedTasks')</label>
@@ -227,6 +243,7 @@
         var assignedBY = $('#assignedBY').val();
         var assignedTo = $('#assignedTo').val();
         var status = $('#status').val();
+        var wo_id = $('#wo_id').val();
         var label = $('#label').val();
         var category_id = $('#category_id').val();
 
@@ -242,6 +259,7 @@
         data['assignedTo'] = assignedTo;
         data['status'] = status;
         data['label'] = label;
+        data['wo_id'] = wo_id;
         data['category_id'] = category_id;
         data['hideCompleted'] = hideCompleted;
         data['startDate'] = startDate;

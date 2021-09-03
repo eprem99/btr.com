@@ -51,6 +51,7 @@ class ManageAllTasksController extends AdminBaseController
             $this->taskBoardStatus = TaskboardColumn::all();
             $this->taskCategories = TaskCategory::all();
             $this->taskLabels = TaskLabelList::all();
+            $this->wotype = WoType::all();
             $this->startDate = Carbon::today()->subDays(15)->format($this->global->date_format);
             $this->endDate = Carbon::today()->addDays(15)->format($this->global->date_format);
         }

@@ -363,6 +363,7 @@ return array(
     'billable' => 'Billable',
     'billableInfo' => 'Invoice can be generated for this task\'s time log.',
     'assigned' => 'Assigned',
+    'techsite' => 'Tech On Site',
     'taskLabel' => 'Work Order Label',
     'assignMe' => 'Assign to me',
     'setTimeEstimate' => 'Set time estimate',
@@ -1201,6 +1202,7 @@ return array(
     'projectvisibility' => 'Project Visibility',
     'manageTaskCategory' => 'Manage Project',
     'taskCategory' => 'Project',
+    'wo_id' => 'Work order type',
   ),
   'pushSettings' =>
   array(
