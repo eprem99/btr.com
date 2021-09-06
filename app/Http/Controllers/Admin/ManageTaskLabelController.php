@@ -10,7 +10,7 @@ use App\TaskLabel;
 use App\TaskLabelList;
 use App\User;
 use App\Country;
-use App\state;
+use App\State;
 use App\ClientDetails;
 use Illuminate\Http\Request;
 
