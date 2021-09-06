@@ -265,7 +265,7 @@
                 <div class="col-xs-12">
                     <hr>
                     @if($task->client_id)
-                        <label class="font-12" for="">@lang('modules.tasks.assignTo')</label><br>
+                        <label class="font-12" for="">@lang('modules.tasks.client')</label><br>
                         <img src="{{ $clientDetail->image_url }}" data-toggle="tooltip"
                              data-original-title="{{ ucwords($clientDetail->name) }}" data-placement="right" class="img-circle" width="35" height="35" alt="">
 

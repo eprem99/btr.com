@@ -8,6 +8,7 @@ use App\Helper\Files;
 use App\Helper\Reply;
 use App\Http\Requests\User\UpdateProfile;
 use App\User;
+use App\State;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -89,9 +90,9 @@ class ClientProfileController extends ClientBaseController
     public function state(Request $request, $id)
     {
         $this->clientDetail = ClientDetails::where('user_id', '=', $id)->first();
-      //  dd($this->clientDetail->state);
-        if($request->country != 0 || $request->country != ''){
-            $states = State::where('country_id', '=', $request->country)->get();
+      //  dd($request->country_id);
+        if($request->country_id != 0 || $request->country_id != ''){
+            $states = State::where('country_id', '=', $request->country_id)->get();
             $option = '' ;
              $option .= '<option value=""> -- Select -- </option>';
                  foreach($states as $state){
@@ -101,14 +102,8 @@ class ClientProfileController extends ClientBaseController
                          $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
                      }
                  }
-        }else{
-            $states = State::where('country_id', '=', $id)->get();
-            $option = '' ;
-             $option .= '<option value=""> -- Select -- </option>';
-                 foreach($states as $state){
-                    $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
-                 }
         }
+
         return Reply::dataOnly(['data'=> $option]);
 
 

@@ -386,7 +386,8 @@ return array(
     'addsite' => '  Add site',
     'summary' => 'Summary',
     'status' => 'Status',
-    'planned' => 'Planned Tech On Site'
+    'planned' => 'Tech On Site',
+    'client' => 'Client',
   ),
   'invoices' =>
   array(

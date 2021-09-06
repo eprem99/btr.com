@@ -55,7 +55,7 @@
         </div>
     </div>
     <div class="col-md-12">
-        <h5 class="box-title">@lang('app.select') @lang('modules.tasks.assignBy')</h5>
+        <h5 class="box-title">@lang('app.select') @lang('modules.tasks.client')</h5>
 
         <div class="form-group">
             <div class="row">

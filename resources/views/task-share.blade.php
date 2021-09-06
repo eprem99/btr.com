@@ -258,17 +258,28 @@
                             
                                             <div class="col-xs-12">
                                                 <hr>
-                            
-                                                <label class="font-12" for="">@lang('modules.tasks.assignTo')</label><br>
+                                                @if($task->client_id)
+                                                    <div class="col-xs-12">
+                                                        <label class="font-12" for="">@lang('modules.tasks.client')</label><br>
+                                                        <img src="{{ $clientDetail->image_url }}" data-toggle="tooltip"
+                                                            data-original-title="{{ ucwords($clientDetail->name) }}" data-placement="right" class="img-circle" width="35" height="35" alt="">
+
+                                                        {{ ucwords($clientDetail->name) }}
+                                                        <hr>
+                                                    </div>
+                                                @endif
+                                                <hr>
+                                            </div>
+                                            <div class="col-xs-12">
                                                 @foreach ($task->users as $item)
-                                                    
+                                                    @if($task->create_by->id != $item->id)
+                                                        <label class="font-12" for="">@lang('modules.tasks.techsite')</label><br>
                                                         <img src="{{ $item->image_url }}" data-toggle="tooltip"
-                                                            data-original-title="{{ ucwords($item->name) }}" data-placement="right"
-                                                            class="img-circle" width="35" height="35" alt="">
-                                                            {{ ucwords($item->name) }}
-                                                            @if($item->mobile)<P><strong>Phone: </strong> {{$item->mobile}}</P>@endif
-                            
-                                                   
+                                                        data-original-title="{{ ucwords($item->name) }}" data-placement="right"
+                                                        class="img-circle" width="35" height="35" alt="">
+                                                        {{ ucwords($item->name) }}
+                                                        @if($item->mobile)<P><strong>Tech Phone: </strong> {{$item->mobile}}</P>@endif
+                                                    @endif
                                                 @endforeach
                                                 <hr>
                                             </div>

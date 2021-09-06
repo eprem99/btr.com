@@ -1003,6 +1003,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('dashboard', 'ClientDashboardController');
 
         Route::resource('profile', 'ClientProfileController');
+        Route::get('profile/state/{id}', ['uses' => 'ClientProfileController@state'])->name('profile.state');
        
         // Project section
       //  Route::get('projects/data', ['uses' => 'ClientProjectsController@data'])->name('projects.data');

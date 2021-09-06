@@ -219,14 +219,14 @@
     $('#country').select2({
         }).on("change", function (e) {
         var id = $(this).val();
-        var url = "{{ route('client.state.country', $userDetail->id) }}";
+        var url = "{{ route('client.profile.state', [$userDetail->id]) }}";
         url = url.replace(':id', id);
        // console.log(url);
         $.easyAjax({
             url: url,
             type: "GET",
             redirect: true,
-            data: $('#createContract').serialize(),
+            data: $('#updateProfile').serialize(),
             success: function (data) {
             //  alert(data.data)
                 $('#state').html(data.data);
@@ -237,14 +237,14 @@
     jQuery(document).ready(function($) {
         $.each($('#country option:selected'), function(){            
        // var id = $(this).val();
-        var url = "{{ route('client.state.country', $userDetail->id) }}";
+        var url = "{{ route('client.profile.state', [$userDetail->id]) }}";
       //  url = url.replace(':id', id);
        // console.log(url);
         $.easyAjax({
             url: url,
             type: "GET",
             redirect: true,
-            data: $('#createContract').serialize(),
+            data: $('#updateProfile').serialize(),
             success: function (data) {
             //  alert(data.data)
                 $('#state').html(data.data);

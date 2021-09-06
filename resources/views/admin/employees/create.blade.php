@@ -102,19 +102,9 @@
                                     </div>
                                    
                                 </div>
-                                <!-- <div class="col-md-6 ">
-                                    <div class="form-group">
-                                        <label class="required">@lang('app.designation') <button  id="designation-setting" type="button" class="btn btn-xs btn-outline btn-info"><i class="ti-settings"></i> @lang('messages.manageDesignation')</button></label>
-                                        <select name="designation" id="designation" class="form-control">
-                                            <option value="">--</option>
-                                            @forelse($designations as $designation)
-                                                <option value="{{ $designation->id }}">{{ $designation->name }}</option>
-                                            @empty
-                                                <option value="">@lang('messages.noRecordFound')</option>
-                                            @endforelse
-                                        </select>
-                                    </div>
-                                </div> -->
+
+                                
+                                
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="required">@lang('app.department') <button  id="department-setting" type="button" class="btn btn-xs btn-outline btn-info"><i class="ti-settings"></i> @lang('messages.manageDepartment')</button></label>
@@ -333,11 +323,7 @@
             $.ajaxModal('#departmentModel', url);
         });
 
-        $('#designation-setting').on('click', function (event) {
-            var url = '{{ route('admin.designations.quick-create')}}';
-            $('#modelHeading').html("@lang('messages.manageDepartment')");
-            $.ajaxModal('#departmentModel', url);
-        });
+
 
         $('#country').select2({
         }).on("change", function (e) {
