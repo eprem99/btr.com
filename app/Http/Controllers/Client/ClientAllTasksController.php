@@ -6,8 +6,6 @@ use App\DataTables\Admin\AllTasksDataTable;
 use App\Events\TaskReminderEvent;
 use App\Helper\Reply;
 use App\Http\Requests\Tasks\StoreTask;
-// use App\Project;
-// use App\ProjectClient;
 use App\Task;
 use App\TaskboardColumn;
 use App\TaskCategory;

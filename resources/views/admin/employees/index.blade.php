@@ -205,7 +205,6 @@
             var status   = $('#status').val();
             var role     = $('#role').val();
             var skill     = $('#skill').val();
-            var designation     = $('#designation').val();
             var department     = $('#department').val();
             data['employee'] = employee;
             data['status'] = status;

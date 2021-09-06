@@ -241,6 +241,11 @@ class AllTasksDataTable extends BaseDataTable
         if ($request->category_id != '' && $request->category_id !=  null && $request->category_id !=  'all') {
             $model->where('tasks.task_category_id', '=', $request->category_id);
         }
+
+        if ($request->client != '' && $request->client !=  null && $request->client !=  'all') {
+            $model->where('tasks.client_id', '=', $request->client);
+        }
+
         if(isset($_GET['hideComplet'])){
             if (isset($_GET['hideComplet']) &&  $_GET['hideComplet'] == '1') {
                 $model->where('tasks.board_column_id', '<>', $taskBoardColumn->id);

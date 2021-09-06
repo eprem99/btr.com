@@ -5,6 +5,7 @@ namespace App\DataTables\Admin;
 
 use App\DataTables\BaseDataTable;
 use App\TaskLabelList;
+use App\State;
 use Yajra\DataTables\Html\Column;
 
 class LabelDataTable extends BaseDataTable
@@ -55,7 +56,12 @@ class LabelDataTable extends BaseDataTable
             ->editColumn('site_state', function ($row) {
                 if($row->contacts){
                     $siteid = json_decode($row->contacts, true);
-                        return ucwords($siteid['site_state']);
+                    if($siteid['site_state'] != ''){
+                        $states = State::where('id', '=', $siteid['site_state'])->first();
+                        return $states->names;
+                    }else{
+                        return '--';
+                    }
                 }
                 return '--';
 

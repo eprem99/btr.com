@@ -265,13 +265,6 @@ $contacts = json_decode($taskLabel->contacts, true);
 <script src="{{ asset('plugins/bower_components/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js') }}"></script>
 
 <script>
-    $(".colorpicker").asColorPicker();
-    $(".complex-colorpicker").asColorPicker({
-        mode: 'complex'
-    });
-    $(".gradient-colorpicker").asColorPicker({
-        mode: 'gradient'
-    });
 
     $('#save-form').click(function () {
         $.easyAjax({
@@ -282,11 +275,43 @@ $contacts = json_decode($taskLabel->contacts, true);
             data: $('#createContract').serialize()
         })
     });
-    $('.suggest-colors a').click(function () {
-        var color = $(this).data('color');
-        $('#color').val(color);
-        $('.asColorPicker-trigger span').css('background', color);
+    $('#country').select2({
+        }).on("change", function (e) {
+        var id = $(this).val();
+        var url = "{{ route('admin.site.country',':id') }}";
+        url = url.replace(':id', id);
+       // console.log(url);
+        $.easyAjax({
+            url: url,
+            type: "GET",
+            redirect: true,
+            data: $('#createContract').serialize(),
+            success: function (data) {
+            //  alert(data.data)
+                $('#state').html(data.data);
+            }
+        })
     });
+    jQuery(document).ready(function($) {
+        $.each($('#country option:selected'), function(){            
+       // var id = $(this).val();
+        var url = '{{route('admin.site.country', [$taskLabel->id])}}';
+      //  url = url.replace(':id', id);
+       // console.log(url);
+        $.easyAjax({
+            url: url,
+            type: "GET",
+            redirect: true,
+            data: $('').serialize(),
+            success: function (data) {
+            //  alert(data.data)
+                $('#state').html(data.data);
+                
+            }
+        })
+        });
+	}); 
+
 </script>
 @endpush
 

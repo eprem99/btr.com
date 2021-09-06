@@ -34,10 +34,8 @@ class StoreRequest extends CoreRequest
             "password" => "required|min:6",
             'slack_username' => 'nullable|unique:employee_details,slack_username',
             'hourly_rate' => 'nullable|numeric',
-            'joining_date' => 'required',
             'last_date' => ['nullable', new CheckDateFormat(null,$setting->date_format), new CheckEqualAfterDate('joining_date',$setting->date_format)],
             'department' => 'required',
-            'designation' => 'required',
            // 'phone_code' => 'required_with:mobile',
         ];
 

@@ -3,8 +3,6 @@
 namespace App\DataTables\Admin;
 
 use App\DataTables\BaseDataTable;
-use App\Lead;
-use App\LeadStatus;
 use App\Role;
 use App\User;
 use Carbon\Carbon;
@@ -93,9 +91,7 @@ class EmployeesDataTable extends BaseDataTable
 
                 $image = '<img src="' . $row->image_url . '"alt="user" class="img-circle" width="30" height="30"> ';
 
-                $designation = ($row->designation_name) ? ucwords($row->designation_name) : ' ';
-
-                return  '<div class="row truncate"><div class="col-sm-3 col-xs-4">' . $image . '</div><div class="col-sm-9 col-xs-8"><a href="' . route('admin.employees.show', $row->id) . '">' . ucwords($row->name) . '</a><br><span class="text-muted font-12">' . $designation . '</span></div></div>';
+                return  '<div class="row truncate"><div class="col-sm-3 col-xs-4">' . $image . '</div><div class="col-sm-9 col-xs-8"><a href="' . route('admin.employees.show', $row->id) . '">' . ucwords($row->name) . '</a></div></div>';
             })
             ->addIndexColumn()
             ->rawColumns(['name', 'action', 'role', 'status'])
@@ -121,9 +117,8 @@ class EmployeesDataTable extends BaseDataTable
             ->withoutGlobalScope('active')
             ->join('role_user', 'role_user.user_id', '=', 'users.id')
             ->leftJoin('employee_details', 'employee_details.user_id', '=', 'users.id')
-            ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id')
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
-            ->select('users.id', 'users.name','employee_details.employee_id', 'users.email', 'users.created_at', 'roles.name as roleName', 'roles.id as roleId', 'users.image', 'users.status', \DB::raw("(select user_roles.role_id from role_user as user_roles where user_roles.user_id = users.id ORDER BY user_roles.role_id DESC limit 1) as `current_role`"), \DB::raw("(select roles.name from roles as roles where roles.id = current_role limit 1) as `current_role_name`"), 'designations.name as designation_name')
+            ->select('users.id', 'users.name','employee_details.employee_id', 'users.email', 'users.created_at', 'roles.name as roleName', 'roles.id as roleId', 'users.image', 'users.status', \DB::raw("(select user_roles.role_id from role_user as user_roles where user_roles.user_id = users.id ORDER BY user_roles.role_id DESC limit 1) as `current_role`"), \DB::raw("(select roles.name from roles as roles where roles.id = current_role limit 1) as `current_role_name`"))
             ->where('roles.name', '<>', 'client');
 
         if ($request->status != 'all' && $request->status != '') {
@@ -132,10 +127,6 @@ class EmployeesDataTable extends BaseDataTable
 
         if ($request->employee != 'all' && $request->employee != '') {
             $users = $users->where('users.id', $request->employee);
-        }
-
-        if ($request->designation != 'all' && $request->designation != '') {
-            $users = $users->where('employee_details.designation_id', $request->designation);
         }
 
         if ($request->department != 'all' && $request->department != '') {

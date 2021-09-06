@@ -115,7 +115,6 @@ class MemberEmployeesController extends MemberBaseController
             $employee->hourly_rate = $request->hourly_rate;
             $employee->slack_username = $request->slack_username;
             $employee->department_id = $request->department;
-            $employee->designation_id = $request->designation;
             $employee->save();
         }
 
@@ -231,7 +230,6 @@ class MemberEmployeesController extends MemberBaseController
         $employee->hourly_rate = $request->hourly_rate;
         $employee->slack_username = $request->slack_username;
         $employee->department_id = $request->department;
-        $employee->designation_id = $request->designation;
         $employee->save();
 
         // To add custom fields data
@@ -393,7 +391,6 @@ class MemberEmployeesController extends MemberBaseController
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
             ->where('roles.name', '<>', 'client')
             ->leftJoin('employee_details', 'users.id', '=', 'employee_details.user_id')
-            ->leftJoin('designations', 'designations.id', '=', 'employee_details.designation_id')
             ->select(
                 'users.id',
                 'users.name',

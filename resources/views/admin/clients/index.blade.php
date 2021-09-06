@@ -109,18 +109,6 @@
         </div>
         <div class="col-md-12">
             <div class="form-group">
-                <h5>@lang('modules.contracts.contractType')</h5>
-                <select class="form-control select2" name="contract_type_id" id="contract_type_id"
-                        data-style="form-control">
-                    <option value="all">@lang('modules.client.all')</option>
-                    @foreach($contracts as $contract)
-                        <option value="{{$contract->id}}">{{ $contract->name}}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="form-group">
                 <h5>@lang('modules.stripeCustomerAddress.country')</h5>
                 <select class="form-control select2" name="country_id" id="country_id"
                         data-style="form-control">

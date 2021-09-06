@@ -35,8 +35,6 @@ class UpdateRequest extends CoreRequest
             'name'  => 'required',
             'hourly_rate' => 'nullable|numeric',
             'department' => 'required',
-            'designation' => 'required',
-            'joining_date' => 'required',
             'last_date' => ['nullable', new CheckDateFormat(null,$setting->date_format), new CheckEqualAfterDate('joining_date',$setting->date_format)],
             'phone_code' => 'required_with:mobile',
         ];

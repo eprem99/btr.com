@@ -3,27 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\ClientDetails;
-use App\Country;
 use App\DataTables\Admin\ClientsDataTable;
 use App\Helper\Reply;
+use Illuminate\Http\Request;
 use App\Http\Requests\Admin\Client\StoreClientRequest;
 use App\Http\Requests\Admin\Client\UpdateClientRequest;
 use App\Http\Requests\Gdpr\SaveConsentUserDataRequest;
 use App\TaskboardColumn;
 use App\ClientCategory;
 use App\Invoice;
-use App\Lead;
 use App\Payment;
-use App\PurposeConsent;
-use App\PurposeConsentUser;
 use App\Traits\CurrencyExchange;
 use App\UniversalSearch;
 use App\User;
 use App\Task;
+use App\State;
+use App\Country;
 use App\ContractType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class ManageClientsController extends AdminBaseController
@@ -283,58 +281,38 @@ class ManageClientsController extends AdminBaseController
         return view('admin.clients.invoices', $this->data);
     }
 
-
-
-    public function consentPurposeData($id)
+    public function country(Request $request, $id)
     {
-        $purpose = PurposeConsentUser::select('purpose_consent.name', 'purpose_consent_users.created_at', 'purpose_consent_users.status', 'purpose_consent_users.ip', 'users.name as username', 'purpose_consent_users.additional_description')
-            ->join('purpose_consent', 'purpose_consent.id', '=', 'purpose_consent_users.purpose_consent_id')
-            ->leftJoin('users', 'purpose_consent_users.updated_by_id', '=', 'users.id')
-            ->where('purpose_consent_users.client_id', $id);
+       
+        //  dd($request->country_id);
+          if($request->country != 0 || $request->country != ''){
+              $states = State::where('country_id', '=', $request->country)->get();
+              $option = '' ;
+               $option .= '<option value=""> -- Select -- </option>';
+                   foreach($states as $state){
+                       if($request->state == $state->id){
+                           $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
+                       }else{
+                           $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                       }
+                   }
+          }else{
+            $this->clientDetail = ClientDetails::where('user_id', '=', $id)->first();
+            $states = State::where('country_id', '=', $this->clientDetail->country)->get();
 
-        // dd($purpose->first()->created_at);
-
-        return DataTables::of($purpose)
-            ->editColumn('status', function ($row) {
-                if ($row->status == 'agree') {
-                    $status = __('modules.gdpr.optIn');
-                } else if ($row->status == 'disagree') {
-                    $status = __('modules.gdpr.optOut');
-                } else {
-                    $status = '';
-                }
-
-                return $status;
-            })
-            ->editColumn('created_at', function ($row) {
-                return $row->created_at ? $row->created_at->format($this->global->date_format) : '-';
-            })
-            ->make(true);
-    }
-
-    public function saveConsentLeadData(SaveConsentUserDataRequest $request, $id)
-    {
-        $user = User::findOrFail($id);
-        $consent = PurposeConsent::findOrFail($request->consent_id);
-
-        if ($request->consent_description && $request->consent_description != '') {
-            $consent->description = $request->consent_description;
-            $consent->save();
-        }
-
-        // Saving Consent Data
-        $newConsentLead = new PurposeConsentUser();
-        $newConsentLead->client_id = $user->id;
-        $newConsentLead->purpose_consent_id = $consent->id;
-        $newConsentLead->status = trim($request->status);
-        $newConsentLead->ip = $request->ip();
-        $newConsentLead->updated_by_id = $this->user->id;
-        $newConsentLead->additional_description = $request->additional_description;
-        $newConsentLead->save();
-
-        $url = route('admin.clients.gdpr', $user->id);
-
-        return Reply::redirect($url);
+            $option = '' ;
+             $option .= '<option value=""> -- Select -- </option>';
+            // dd($this->clientDetail);
+                 foreach($states as $state){
+                     if($this->clientDetail->state == $state->id){
+                         $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
+                     }else{
+                         $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                     }
+                 }
+          }
+  
+          return Reply::dataOnly(['data'=> $option]);
     }
 
     public function clientStats($id)

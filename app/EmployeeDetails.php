@@ -26,11 +26,6 @@ class EmployeeDetails extends BaseModel
         return $this->belongsTo(User::class, 'user_id')->withoutGlobalScopes(['active']);
     }
 
-    public function designation()
-    {
-        return $this->belongsTo(Designation::class, 'designation_id');
-    }
-
     public function department()
     {
         return $this->belongsTo(Team::class, 'department_id');

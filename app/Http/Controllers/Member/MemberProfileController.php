@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Member;
 
-use App\Country;
 use App\EmployeeDetails;
 use App\Helper\Files;
 use App\Helper\Reply;
 use App\Http\Requests\User\UpdateProfile;
 use App\User;
+use App\State;
+use App\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -39,7 +40,7 @@ class MemberProfileController extends MemberBaseController
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->gender = $request->input('gender');
-        $user->country_id = $request->input('phone_code');
+        
         if ($request->password != '') {
             $user->password = Hash::make($request->input('password'));
         }
@@ -67,6 +68,11 @@ class MemberProfileController extends MemberBaseController
             $employee->user_id = $user->id;
         }
         $employee->address = $request->address;
+        $employee->country = $request->country;
+        $employee->state = $request->state;
+        $employee->city = $request->city;
+        $employee->postal_code = $request->zip;
+
         $employee->save();
         session()->forget('user');
         $this->logUserActivity($user->id, __('messages.updatedProfile'));
@@ -79,6 +85,34 @@ class MemberProfileController extends MemberBaseController
         $user->onesignal_player_id = $request->userId;
         $user->save();
         session()->forget('user');
+    }
+
+    public function country(Request $request, $id)
+    {
+        $this->clientDetail = EmployeeDetails::where('user_id', '=', $id)->first();
+          // dd($id);
+          if($request->country != 0 || $request->country != ''){
+              $states = State::where('country_id', '=', $request->country)->get();
+              $option = '' ;
+               $option .= '<option value=""> -- Select -- </option>';
+                   foreach($states as $state){
+                           $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                   }
+          }else{
+            $states = State::where('country_id', '=', $this->clientDetail->country)->get();
+            $option = '' ;
+             $option .= '<option value=""> -- Select -- </option>';
+            // dd($this->clientDetail);
+                 foreach($states as $state){
+                     if($this->clientDetail->state == $state->id){
+                         $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
+                     }else{
+                         $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                     }
+                 }
+          }
+  
+          return Reply::dataOnly(['data'=> $option]);
     }
 
     public function changeLanguage(Request $request)

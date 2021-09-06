@@ -12,6 +12,7 @@ use App\User;
 use App\Country;
 use App\state;
 use App\ClientDetails;
+use Illuminate\Http\Request;
 
 class ManageTaskLabelController extends AdminBaseController
 {
@@ -118,4 +119,44 @@ class ManageTaskLabelController extends AdminBaseController
         }
         return Reply::successWithData(__('messages.taskLabel.addedSuccess'), ['labels' => $labels]);
     }
+
+    public function country(Request $request, $id)
+    {
+       
+        //  dd($request->country_id);
+          if($request->site_country != 0 || $request->site_country != ''){
+              $states = State::where('country_id', '=', $request->site_country)->get();
+              $option = '' ;
+               $option .= '<option value=""> -- Select -- </option>';
+                   foreach($states as $state){
+                       if($request->site_state == $state->id){
+                           $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
+                       }else{
+                           $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                       }
+                   }
+          }else{
+            $contacts = TaskLabelList::where('id', '=', $id)->first();
+
+            $js = json_decode($contacts->contacts, true);
+            $thiscountry = $js['site_country'];
+            $thisstate = $js['site_state'];
+            $states = State::where('country_id', '=', $thiscountry)->get();
+
+            $option = '' ;
+             $option .= '<option value=""> -- Select -- </option>';
+            // dd($this->clientDetail);
+                 foreach($states as $state){
+                     if($thisstate == $state->id){
+                         $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
+                     }else{
+                         $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                     }
+                 }
+          }
+  
+          return Reply::dataOnly(['data'=> $option]);
+    }
+
+
 }

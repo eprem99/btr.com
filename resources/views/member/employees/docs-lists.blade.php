@@ -11,8 +11,6 @@
                                 data-toggle="tooltip" data-original-title="View"
                                 class="btn btn-info btn-circle"><i
                                             class="fa fa-search"></i></a>
-                                <a href="javascript:;" data-toggle="tooltip" data-original-title="Delete" data-file-id="{{ $employeeDoc->id }}"
-                                data-pk="list" class="btn btn-danger btn-circle sa-params"><i class="fa fa-times"></i></a>
                             </td>
                         </tr>
                     @empty

@@ -140,8 +140,7 @@ class MemberAllTasksController extends MemberBaseController
        
       //  $this->sport = SportType::all();
         $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')
-            ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id')
-            ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id');
+            ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id');
 
         
         $this->employees = $this->employees->select(

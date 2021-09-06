@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\ClientCategory;
 use App\ClientDetails;
+use App\State;
 use App\Country;
 use App\Helper\Reply;
 use App\Http\Requests\Admin\Client\StoreClientCategory;
@@ -37,7 +38,8 @@ class ClientCategoryController extends AdminBaseController
     {
         $this->categories = ClientCategory::all();
       //  dd($this->categories);
-
+         $this->countries = Country::all();
+         $this->countries = State::all();
         return view('admin.clients.companyindex', $this->data);
     }
 
@@ -62,18 +64,22 @@ class ClientCategoryController extends AdminBaseController
                 return $name;
             })
             ->editColumn('category_country', function ($row) {
-                $pin = '';
-
-                $name = ucfirst($row->category_country);
-
-                return $name;
+                $country = '';
+                $country = ucfirst($row->category_country);
+                if($country){
+                    $country = Country::where('id', '=', $row->category_country )->first();
+                }
+                return $country->name;
             })
             ->editColumn('category_state', function ($row) {
-                $pin = '';
+                $state = '';
+                $state = ucfirst($row->category_country);
+                if($state){
+                    $state = State::where('id', '=', $row->category_state )->first();
+                }
 
-                $name = ucfirst($row->category_state);
+                return $state->names;
 
-                return $name;
             })
             ->editColumn('category_phone', function ($row) {
                 $pin = '';
@@ -220,4 +226,41 @@ class ClientCategoryController extends AdminBaseController
         $categoryData = ClientCategory::all();
         return Reply::successWithData(__('messages.categoryDeleted'),['data'=> $categoryData]);
     }
+
+
+    public function country(Request $request, $id)
+    {
+       
+        //  dd($request->country_id);
+          if($request->category_country != 0 || $request->category_country != ''){
+              $states = State::where('country_id', '=', $request->category_country)->get();
+              $option = '' ;
+               $option .= '<option value=""> -- Select -- </option>';
+                   foreach($states as $state){
+                       if($request->category_state == $state->id){
+                           $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
+                       }else{
+                           $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                       }
+                   }
+          }else{
+            $category = ClientCategory::where('id', '=', $id)->first();
+
+            $states = State::where('country_id', '=', $id)->get();
+
+            $option = '' ;
+             $option .= '<option value=""> -- Select -- </option>';
+            // dd($this->clientDetail);
+                 foreach($states as $state){
+                     if($category->category_state == $state->id){
+                         $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
+                     }else{
+                         $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                     }
+                 }
+          }
+  
+          return Reply::dataOnly(['data'=> $option]);
+    }
+
 }

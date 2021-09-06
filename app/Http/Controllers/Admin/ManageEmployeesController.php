@@ -2,25 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Country;
 use App\DataTables\Admin\EmployeesDataTable;
-use App\Designation;
 use App\EmployeeDetails;
+use App\Country;
+use App\State;
 use App\EmployeeDocs;
 use App\EmployeeLeaveQuota;
-use App\EmployeeSkill;
 use App\Helper\Files;
 use App\Helper\Reply;
 use App\Http\Requests\Admin\Employee\StoreRequest;
 use App\Http\Requests\Admin\Employee\UpdateRequest;
-use App\Leave;
-use App\LeaveType;
 use App\Project;
 use App\ProjectMember;
-use App\ProjectTimeLog;
 use App\Role;
 use App\RoleUser;
-use App\Skill;
 use App\Task;
 use App\TaskboardColumn;
 use App\Team;
@@ -217,9 +212,7 @@ class ManageEmployeesController extends AdminBaseController
     {
         $this->userDetail = User::withoutGlobalScope('active')->findOrFail($id);
         $this->employeeDetail = EmployeeDetails::where('user_id', '=', $this->userDetail->id)->first();
-        $this->skills = Skill::all()->pluck('name')->toArray();
         $this->teams  = Team::all();
-        $this->designations = Designation::all();
 
         if (!is_null($this->employeeDetail)) {
             $this->employeeDetail = $this->employeeDetail->withCustomFields();
@@ -245,7 +238,6 @@ class ManageEmployeesController extends AdminBaseController
             $user->password = Hash::make($request->input('password'));
         }
         $user->mobile = $request->input('mobile');
-        $user->country_id = $request->input('phone_code');
         $user->gender = $request->input('gender');
         $user->status = $request->input('status');
         $user->login = $request->login;
@@ -259,22 +251,6 @@ class ManageEmployeesController extends AdminBaseController
 
         $user->save();
 
-        $tags = json_decode($request->tags);
-        if (!empty($tags)) {
-            EmployeeSkill::where('user_id', $user->id)->delete();
-            foreach ($tags as $tag) {
-                // check or store skills
-                $skillData = Skill::firstOrCreate(['name' => strtolower($tag->value)]);
-
-                // Store user skills
-                $skill = new EmployeeSkill();
-                $skill->user_id = $user->id;
-                $skill->skill_id = $skillData->id;
-                $skill->save();
-            }
-        }
-
-
         $employee = EmployeeDetails::where('user_id',$user->id)->first();
         if (empty($employee)) {
             $employee = new EmployeeDetails();
@@ -282,12 +258,12 @@ class ManageEmployeesController extends AdminBaseController
         }
         $employee->employee_id = $request->employee_id;
         $employee->address = $request->address;
+        $employee->country = $request->country;
+        $employee->state = $request->state;
+        $employee->city = $request->city;
+        $employee->postal_code = $request->zip;
         $employee->hourly_rate = $request->hourly_rate;
-        $employee->slack_username = $request->slack_username;
         $employee->department_id = $request->department;
-        $employee->designation_id = $request->designation;
-
-        $employee->joining_date = Carbon::createFromFormat($this->global->date_format, $request->joining_date)->format('Y-m-d');
 
         $employee->last_date = null;
 
@@ -341,9 +317,8 @@ class ManageEmployeesController extends AdminBaseController
             ->withoutGlobalScope('active')
             ->join('role_user', 'role_user.user_id', '=', 'users.id')
             ->leftJoin('employee_details', 'employee_details.user_id', '=', 'users.id')
-            ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id')
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
-            ->select('users.id', 'users.name', 'users.email', 'users.created_at', 'roles.name as roleName', 'roles.id as roleId', 'users.image', 'users.status', \DB::raw("(select user_roles.role_id from role_user as user_roles where user_roles.user_id = users.id ORDER BY user_roles.role_id DESC limit 1) as `current_role`"), 'designations.name as designation_name')
+            ->select('users.id', 'users.name', 'users.email', 'users.created_at', 'roles.name as roleName', 'roles.id as roleId', 'users.image', 'users.status', \DB::raw("(select user_roles.role_id from role_user as user_roles where user_roles.user_id = users.id ORDER BY user_roles.role_id DESC limit 1) as `current_role`"))
             ->where('roles.name', '<>', 'client');
 
         if ($request->status != 'all' && $request->status != '') {
@@ -352,10 +327,6 @@ class ManageEmployeesController extends AdminBaseController
 
         if ($request->employee != 'all' && $request->employee != '') {
             $users = $users->where('users.id', $request->employee);
-        }
-
-        if ($request->designation != 'all' && $request->designation != '') {
-            $users = $users->where('employee_details.designation_id', $request->designation);
         }
 
         if ($request->department != 'all' && $request->department != '') {
@@ -372,10 +343,7 @@ class ManageEmployeesController extends AdminBaseController
                 $users = $users->where(\DB::raw("(select user_roles.role_id from role_user as user_roles where user_roles.user_id = users.id ORDER BY user_roles.role_id DESC limit 1)"), $request->role);
             }
         }
-        if ($request->skill != 'all' && $request->skill != '' && $request->skill != null && $request->skill != 'null') {
-            $users =  $users->join('employee_skills', 'employee_skills.user_id', '=', 'users.id')
-                ->whereIn('employee_skills.skill_id', explode(',', $request->skill));
-        }
+
 
         $users = $users->groupBy('users.id')->get();
         $roles = Role::where('name', '<>', 'client')->get();
@@ -448,9 +416,7 @@ class ManageEmployeesController extends AdminBaseController
 
                 $image = '<img src="' . $row->image_url . '"alt="user" class="img-circle" width="30" height="30"> ';
 
-                $designation = ($row->designation_name) ? ucwords($row->designation_name) : ' ';
-
-                return  '<div class="row"><div class="col-sm-3 col-xs-4">' . $image . '</div><div class="col-sm-9 col-xs-8"><a href="' . route('admin.employees.show', $row->id) . '">' . ucwords($row->name) . '</a><br><span class="text-muted font-12">' . $designation . '</span></div></div>';
+                return  '<div class="row"><div class="col-sm-3 col-xs-4">' . $image . '</div><div class="col-sm-9 col-xs-8"><a href="' . route('admin.employees.show', $row->id) . '">' . ucwords($row->name) . '</a><br></div></div>';
             })
             ->rawColumns(['name', 'action', 'role', 'status'])
             ->removeColumn('roleId')
@@ -502,41 +468,6 @@ class ManageEmployeesController extends AdminBaseController
             ->make(true);
     }
 
-    public function timeLogs($userId)
-    {
-        $timeLogs = ProjectTimeLog::join('projects', 'projects.id', '=', 'project_time_logs.project_id')
-            ->select('project_time_logs.id', 'projects.project_name', 'project_time_logs.start_time', 'project_time_logs.end_time', 'project_time_logs.total_hours', 'project_time_logs.memo', 'project_time_logs.project_id', 'project_time_logs.total_minutes')
-            ->where('project_time_logs.user_id', $userId);
-        $timeLogs->get();
-
-        return DataTables::of($timeLogs)
-            ->editColumn('start_time', function ($row) {
-                return $row->start_time->timezone($this->global->timezone)->format($this->global->date_format . ' ' . $this->global->time_format);
-            })
-            ->editColumn('end_time', function ($row) {
-                if (!is_null($row->end_time)) {
-                    return $row->end_time->timezone($this->global->timezone)->format($this->global->date_format . ' ' . $this->global->time_format);
-                } else {
-                    return "<label class='label label-success'>Active</label>";
-                }
-            })
-            ->editColumn('project_name', function ($row) {
-                return '<a href="' . route('admin.projects.show', $row->project_id) . '">' . ucfirst($row->project_name) . '</a>';
-            })
-            ->editColumn('total_hours', function ($row) {
-                $timeLog = intdiv($row->total_minutes, 60) . ' hrs ';
-
-                if (($row->total_minutes % 60) > 0) {
-                    $timeLog .= ($row->total_minutes % 60) . ' mins';
-                }
-
-                return $timeLog;
-            })
-            ->addIndexColumn()
-            ->rawColumns(['end_time', 'project_name'])
-            ->removeColumn('project_id')
-            ->make(true);
-    }
 
     public function export($status, $employee, $role)
     {
@@ -548,13 +479,11 @@ class ManageEmployeesController extends AdminBaseController
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
             ->where('roles.name', '<>', 'client')
             ->leftJoin('employee_details', 'users.id', '=', 'employee_details.user_id')
-            ->leftJoin('designations', 'designations.id', '=', 'employee_details.designation_id')
             ->select(
                 'users.id',
                 'users.name',
                 'users.email',
                 'users.mobile',
-                'designations.name as designation_name',
                 'employee_details.address',
                 'employee_details.hourly_rate',
 
@@ -589,7 +518,7 @@ class ManageEmployeesController extends AdminBaseController
         $exportArray = [];
 
         // Define the Excel spreadsheet headers
-        $exportArray[] = ['ID', 'Name', 'Email', 'Mobile', 'Designation', 'Address', 'Hourly Rate', 'Created at'];
+        $exportArray[] = ['ID', 'Name', 'Email', 'Mobile', 'Address', 'Hourly Rate', 'Created at'];
 
         // Convert each member of the returned collection into an array,
         // and append it to the payments array.
@@ -647,6 +576,11 @@ class ManageEmployeesController extends AdminBaseController
 
         return Reply::success(__('messages.roleAssigned'));
     }
+
+
+
+
+
 
     public function docsCreate(Request $request, $id)
     {
@@ -744,6 +678,40 @@ class ManageEmployeesController extends AdminBaseController
         session()->forget('user');
 
         return Reply::success(__('messages.leaveTypeAdded'));
+    }
+
+    public function country(Request $request, $id)
+    {
+       
+        //  dd($request->country_id);
+          if($request->country != 0 || $request->country != ''){
+              $states = State::where('country_id', '=', $request->country)->get();
+              $option = '' ;
+               $option .= '<option value=""> -- Select -- </option>';
+                   foreach($states as $state){
+                       if($request->state == $state->id){
+                           $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
+                       }else{
+                           $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                       }
+                   }
+          }else{
+            $this->clientDetail = EmployeeDetails::where('user_id', '=', $id)->first();
+            $states = State::where('country_id', '=', $this->clientDetail->country)->get();
+
+            $option = '' ;
+             $option .= '<option value=""> -- Select -- </option>';
+            // dd($this->clientDetail);
+                 foreach($states as $state){
+                     if($this->clientDetail->state == $state->id){
+                         $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
+                     }else{
+                         $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';
+                     }
+                 }
+          }
+  
+          return Reply::dataOnly(['data'=> $option]);
     }
 
 }

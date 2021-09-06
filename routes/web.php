@@ -69,6 +69,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('clients/export/{status?}/{client?}', ['uses' => 'ManageClientsController@export'])->name('clients.export');
         Route::get('clients/create/{clientID?}', ['uses' => 'ManageClientsController@create'])->name('clients.create');
+        Route::get('clients/country/{id}', ['uses' => 'ManageClientsController@country'])->name('clients.country');
         Route::get('clients/tasks/{clientID?}/{hideCompleted}', ['uses' => 'ManageClientsController@tasks'])->name('clients.tasks');
         Route::resource('clients', 'ManageClientsController', ['except' => ['create']]);
 
@@ -78,6 +79,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('company', ['uses' => 'ClientCategoryController@index'])->name('company.index');
         Route::get('company/data', ['uses' => 'ClientCategoryController@data'])->name('company.data');
         Route::get('company/creates', ['uses' => 'ClientCategoryController@creates'])->name('company.creates');
+        Route::get('company/country/{id}', ['uses' => 'ClientCategoryController@country'])->name('company.country');
         Route::get('company/{id}/edit', ['uses' => 'ClientCategoryController@edit'])->name('company.edit');
         Route::post('company/update/{id}', ['uses' => 'ClientCategoryController@update'])->name('company.update');
         Route::post('company/stores', ['uses' => 'ClientCategoryController@stores'])->name('company.stores');
@@ -88,6 +90,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('show/{id}', ['uses' => 'ManageTaskLabelController@show'])->name('sites.show');
             Route::post('site/store-label', ['uses' => 'ManageTaskLabelController@storeLabel'])->name('site.store-label');
             Route::get('site/create-label', ['uses' => 'ManageTaskLabelController@createLabel'])->name('site.create-label');
+            Route::get('site/country/{id}', ['uses' => 'ManageTaskLabelController@country'])->name('site.country');
             Route::resource('site', 'ManageTaskLabelController');
 
         });
@@ -139,6 +142,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('employees/assignProjectAdmin', ['uses' => 'ManageEmployeesController@assignProjectAdmin'])->name('employees.assignProjectAdmin');
             Route::get('employees/leaveTypeEdit/{id}', ['uses' => 'ManageEmployeesController@leaveTypeEdit'])->name('employees.leaveTypeEdit');
             Route::post('employees/leaveTypeUpdate/{id}', ['uses' => 'ManageEmployeesController@leaveTypeUpdate'])->name('employees.leaveTypeUpdate');
+            Route::get('employees/country/{id}', ['uses' => 'ManageEmployeesController@country'])->name('employees.country');
             Route::resource('employees', 'ManageEmployeesController');
 
             Route::get('department/quick-create', ['uses' => 'ManageTeamsController@quickCreate'])->name('department.quick-create');
@@ -383,7 +387,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('save-consent-purpose-data/{client}', ['uses' => 'ManageClientsController@saveConsentLeadData'])->name('clients.save-consent-purpose-data');
             Route::get('consent-purpose-data/{client}', ['uses' => 'ManageClientsController@consentPurposeData'])->name('clients.consent-purpose-data');
             Route::get('gdpr/{id}', ['uses' => 'ManageClientsController@gdpr'])->name('clients.gdpr');
-          //  Route::get('projects/{id}', ['uses' => 'ManageClientsController@showProjects'])->name('clients.projects');
+            Route::get('projects/{id}', ['uses' => 'ManageClientsController@showProjects'])->name('clients.projects');
             Route::get('invoices/{id}', ['uses' => 'ManageClientsController@showInvoices'])->name('clients.invoices');
            // Route::get('payments/{id}', ['uses' => 'ManageClientsController@showPayments'])->name('clients.payments');
 
@@ -706,6 +710,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('dashboard', ['uses' => 'MemberDashboardController@index'])->name('dashboard');
 
         Route::post('profile/updateOneSignalId', ['uses' => 'MemberProfileController@updateOneSignalId'])->name('profile.updateOneSignalId');
+        Route::get('profile/country/{id}', ['uses' => 'MemberProfileController@country'])->name('profile.country');
         Route::resource('profile', 'MemberProfileController');
 
         Route::get('projects/ajaxCreate/{columnId?}', ['uses' => 'MemberProjectsController@ajaxCreate'])->name('projects.ajaxCreate');

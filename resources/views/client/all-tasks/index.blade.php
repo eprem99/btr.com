@@ -66,6 +66,22 @@
             </div>
         </div>
     </div>
+    <div class="col-md-12">
+        <h5 class="box-title">@lang('app.select') @lang('modules.module.clients')</h5>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <select class="select2 form-control" data-placeholder="@lang('modules.module.clients')" id="client">
+                        <option value="all">@lang('app.all')</option>
+                        @foreach($clients as $client)
+                            <option value="{{ $client->id }}">{{ ucwords($client->name) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="col-md-12">
         <h5 class="box-title">@lang('app.select') @lang('modules.tasks.assignTo')</h5>
@@ -244,6 +260,7 @@
         var assignedTo = $('#assignedTo').val();
         var status = $('#status').val();
         var wo_id = $('#wo_id').val();
+        var client = $('#client').val();
         var label = $('#label').val();
         var category_id = $('#category_id').val();
 
@@ -260,6 +277,7 @@
         data['status'] = status;
         data['label'] = label;
         data['wo_id'] = wo_id;
+        data['client'] = client;
         data['category_id'] = category_id;
         data['hideCompleted'] = hideCompleted;
         data['startDate'] = startDate;
