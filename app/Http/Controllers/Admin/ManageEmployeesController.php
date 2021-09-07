@@ -105,7 +105,6 @@ class ManageEmployeesController extends AdminBaseController
             $user->email = $request->input('email');
             $user->password = Hash::make($request->input('password'));
             $user->mobile = $request->input('mobile');
-            $user->country_id = $request->input('phone_code');
             $user->gender = $request->input('gender');
             if ($request->has('login')) {
                 $user->login = $request->login;
@@ -127,8 +126,11 @@ class ManageEmployeesController extends AdminBaseController
                 $employee->user_id = $user->id;
                 $employee->employee_id = $request->employee_id;
                 $employee->address = $request->address;
+                $employee->country = $request->country;
+                $employee->state = $request->state;
+                $employee->city = $request->city;
+                $employee->postal_code = $request->zip;
                 $employee->hourly_rate = $request->hourly_rate;
-                $employee->slack_username = $request->slack_username;
                 $employee->department_id = $request->department;
 
                 $employee->joining_date = Carbon::createFromFormat($this->global->date_format, $request->joining_date)->format('Y-m-d');
@@ -429,7 +431,6 @@ class ManageEmployeesController extends AdminBaseController
     public function tasks($userId, $hideCompleted)
     {
         $tasks = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')
-            ->leftJoin('projects', 'projects.id', '=', 'tasks.project_id')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
             ->select('tasks.id', 'projects.project_name', 'tasks.heading', 'tasks.due_date', 'taskboard_columns.column_name', 'taskboard_columns.label_color', 'tasks.project_id')
             ->where('task_users.user_id', $userId);
