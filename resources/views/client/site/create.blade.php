@@ -258,10 +258,18 @@
                 data: $('#createContract').serialize()
             })
         });
-        $('#country').select2({
+    $(document).on("change", "#notification", function(evnt){
+        if($(this).is(':checked')){
+            $(this).val(1);
+        }else{
+            $(this).val(0);
+        }
+    });
+
+    $('#country').select2({
         }).on("change", function (e) {
         var id = $(this).val();
-        var url = "{{ route('client.state.country',':id') }}";
+        var url = "{{ route('client.site.country',':id') }}";
         url = url.replace(':id', id);
        // console.log(url);
         $.easyAjax({

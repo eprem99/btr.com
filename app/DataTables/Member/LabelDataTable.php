@@ -62,7 +62,18 @@ class LabelDataTable extends BaseDataTable
 
             })
             ->editColumn('site_state', function ($row) {
-
+                if($row->contacts){
+                    $siteid = json_decode($row->contacts, true);
+                    if($siteid['site_state'] != '' || $siteid['site_state'] != 0 || $siteid['site_state'] != NULL){
+                        $states = State::where('id', '=', $siteid['site_state'])->first();
+                        if($states){
+                            return $states->names;
+                        }
+                        
+                    }else{
+                        return '--';
+                    }
+                }
                 return '--';
 
             })

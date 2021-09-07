@@ -137,7 +137,7 @@ class ManageEmployeesController extends AdminBaseController
                 // if ($request->last_date != '') {
                 //     $employee->last_date = Carbon::createFromFormat($this->global->date_format, $request->last_date)->format('Y-m-d');
                 // }
-                
+               // dd($employee);
                 $employee->save();
                 
             }

@@ -175,7 +175,7 @@ $contacts = json_decode($taskLabel->contacts, true);
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="site_notification"> @lang('app.site.notification') 
-                                <input type="checkbox" class="form-control" name="site_notification" value="true"  @if($taskLabel->notification
+                                <input id="notification" type="checkbox" class="form-control" name="notification" value="{{ $taskLabel->notification }}"  @if($taskLabel->notification
                                         == "1") checked @endif/></label>
                         </div>
                     </div>
@@ -275,6 +275,13 @@ $contacts = json_decode($taskLabel->contacts, true);
             redirect: true,
             data: $('#createContract').serialize()
         })
+    });
+    $(document).on("change", "#notification", function(evnt){
+        if($(this).is(':checked')){
+            $(this).val('1');
+        }else{
+            $(this).val('0');
+        }
     });
     $('#country').select2({
         }).on("change", function (e) {

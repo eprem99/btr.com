@@ -37,7 +37,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>@lang("modules.profile.yourName")</label>
+                                        <label class="required">@lang("modules.profile.yourName")</label>
                                         <input type="text" name="name" id="name"
                                                class="form-control" value="{{ $userDetail->name }}">
                                     </div>
@@ -45,7 +45,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>@lang("modules.profile.yourEmail")</label>
+                                        <label class="required">@lang("modules.profile.yourEmail")</label>
                                         <input type="email" name="email" id="email"
                                                class="form-control"  value="{{ $userDetail->email }}">
                                     </div>
@@ -63,7 +63,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>@lang('modules.stripeCustomerAddress.country')</label>
+                                        <label class="required">@lang('modules.stripeCustomerAddress.country')</label>
                                         <select name="country" class="form-control" id="country">
                                             <option value>@lang('app.site.country')</option>
                                             @foreach ($countries as $item)
@@ -78,7 +78,7 @@
                                 </div>   
                                 <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>@lang('modules.stripeCustomerAddress.state')</label>
+                                            <label class="required">@lang('modules.stripeCustomerAddress.state')</label>
                                             <select name="state" class="form-control" id="state">
                                                 <option value=""> -- Select -- </option>
                                             </select>

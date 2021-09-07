@@ -1096,6 +1096,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('site/store-label', ['uses' => 'ClientTaskLabelController@storeLabel'])->name('site.store-label');
         Route::get('site/create-label', ['uses' => 'ClientTaskLabelController@createLabel'])->name('site.create-label');
         Route::get('show/{id}', ['uses' => 'ClientTaskLabelController@show'])->name('sites.show');
+        Route::get('site/country/{id}', ['uses' => 'ClientTaskLabelController@country'])->name('site.country');
         Route::resource('site', 'ClientTaskLabelController');
         });
 

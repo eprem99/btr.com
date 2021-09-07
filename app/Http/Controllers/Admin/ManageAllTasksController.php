@@ -126,19 +126,11 @@ class ManageAllTasksController extends AdminBaseController
         // save labels
         // $task->labels()->sync($request->task_labels);
 
-        // To add custom fields data
-        if ($request->get('custom_fields_data')) {
-            $task->updateCustomFieldData($request->get('custom_fields_data'));
-        }
 
         // Sync task users
         $task->users()->sync($request->user_id);
 
-        if ($request->project_id != "all") {
-            //calculate project progress if enabled
-            $this->calculateProjectProgress($request->project_id);
-        }
-
+ 
         return Reply::dataOnly(['taskID' => $task->id]);
 
         //        return Reply::redirect(route('admin.all-tasks.index'), __('messages.taskUpdatedSuccessfully'));

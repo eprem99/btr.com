@@ -46,7 +46,7 @@ class ManageTaskLabelController extends AdminBaseController
     {
         $taskLabel = new TaskLabelList();
         $this->storeUpdate($request, $taskLabel);
-        return Reply::redirect(route('admin.site.index'), __('messages.taskLabel.addedSuccess'));
+        return Reply::redirect(route('admin.site.index'), __('messages.workorderLabel.addedSuccess'));
     }
 
     public function edit($id)
@@ -63,7 +63,7 @@ class ManageTaskLabelController extends AdminBaseController
         $taskLabel = TaskLabelList::findOrFail($id);
         $this->storeUpdate($request, $taskLabel);
 
-        return Reply::redirect(route('admin.site.index'), __('messages.taskLabel.updatedSuccess'));
+        return Reply::redirect(route('admin.site.index'), __('messages.workorderLabel.updatedSuccess'));
     }
 
     public function show($id)
@@ -83,7 +83,8 @@ class ManageTaskLabelController extends AdminBaseController
         $taskLabel->label_name  = $request->label_name;
         $taskLabel->company     = $company->category_id;
         $taskLabel->user_id     = $request->user_id;
-        $taskLabel->notification  = $request->site_notification;
+        $taskLabel->notification  = $request->notification;
+        
         $taskLabel->contacts     = $json;
         $taskLabel->description = $request->description;
        // dd($taskLabel->label_name);
@@ -97,7 +98,7 @@ class ManageTaskLabelController extends AdminBaseController
         TaskLabel::where('label_id', $id)->delete();
         TaskLabelList::destroy($id);
 
-        return Reply::success(__('messages.taskLabel.deletedSuccess'));
+        return Reply::success(__('messages.workorderLabel.deletedSuccess'));
     }
     /**
      * Show the form for creating a new resource.
@@ -119,7 +120,7 @@ class ManageTaskLabelController extends AdminBaseController
         foreach ($allTaskLabels as $key => $value) {
             $labels.= '<option data-content="<label class=\'badge b-all\' style=\'background:' . $value->label_color . '\'>' . $value->label_name . '</label> " value="' . $value->id . '">' . $value->label_name . '</option>';
         }
-        return Reply::successWithData(__('messages.taskLabel.addedSuccess'), ['labels' => $labels]);
+        return Reply::successWithData(__('messages.workorderLabel.addedSuccess'), ['labels' => $labels]);
     }
 
     public function country(Request $request, $id)

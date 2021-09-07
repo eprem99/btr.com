@@ -69,7 +69,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="site_phone"> @lang('app.site.phone')</label>
+                            <label for="site_phone" class="required"> @lang('app.site.phone')</label>
                             <input type="text" class="form-control" name="site_phone" value="" />
                         </div>
                     </div>
@@ -169,8 +169,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="site_notification"> @lang('app.site.notification') 
-                                <input type="checkbox" class="form-control" name="site_notification" value="true" /></label>
+                            <label for="notification"> @lang('app.site.notification') 
+                                <input id="notification" type="checkbox"class="form-control" name="notification" value="0" /></label>
                         </div>
                     </div>
                 </div>
@@ -260,13 +260,6 @@
     <script src="{{ asset('plugins/bower_components/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js') }}"></script>
 
     <script>
-        $(".colorpicker").asColorPicker();
-        $(".complex-colorpicker").asColorPicker({
-            mode: 'complex'
-        });
-        $(".gradient-colorpicker").asColorPicker({
-            mode: 'gradient'
-        });
 
         $('#save-form').click(function () {
             $.easyAjax({
@@ -277,13 +270,13 @@
                 data: $('#createContract').serialize()
             })
         });
-
-        $('.suggest-colors a').click(function () {
-            var color = $(this).data('color');
-            $('#color').val(color);
-            $('.asColorPicker-trigger span').css('background', color);
-        });
-
+        $(document).on("change", "#notification", function(evnt){
+        if($(this).is(':checked')){
+            $(this).val(1);
+        }else{
+            $(this).val(0);
+        }
+    });
     $('#country').select2({
         }).on("change", function (e) {
         var id = $(this).val();

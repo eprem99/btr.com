@@ -31,6 +31,8 @@ class StoreRequest extends CoreRequest
             "site_phone" => 'required',
             "site_city" => 'required',
             "site_state" => 'required',
+            "site_zip" => 'required',
+            "site_timezone" => 'required',
             "site_country" => 'required',
             "site_pname" => 'required',
             "site_pphone" => 'required',

@@ -52,7 +52,7 @@ $contacts = json_decode($taskLabel->contacts, true);
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="site_phone"  class="required"> @lang('app.site.phone')</label>
+                            <label for="site_phone" class="required"> @lang('app.site.phone')</label>
                             <input type="text" class="form-control" name="site_phone" value="{{ $contacts['site_phone'] }}" />
                         </div>
                     </div>
@@ -153,8 +153,8 @@ $contacts = json_decode($taskLabel->contacts, true);
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="site_notification"> @lang('app.site.notification') 
-                                <input id="notification" type="checkbox" class="form-control" name="site_notification" value="1" @if($taskLabel->notification
-                                        == "1") checked @endif /></label>
+                                <input id="notification" type="checkbox" class="form-control" name="notification" value="{{ $taskLabel->notification }}"  @if($taskLabel->notification
+                                        == "1") checked @endif/></label>
                         </div>
                     </div>
                 </div>
@@ -244,9 +244,13 @@ $contacts = json_decode($taskLabel->contacts, true);
 <script src="{{ asset('plugins/bower_components/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js') }}"></script>
 
 <script>
-$('#notification').change(function(){
-     $(this).val($(this).attr('checked') ? '1' : '0');
-});
+    $(document).on("change", "#notification", function(evnt){
+        if($(this).is(':checked')){
+            $(this).val(1);
+        }else{
+            $(this).val(0);
+        }
+    });
     $('#save-form').click(function () {
         $.easyAjax({
             url: '{{route('client.site.update', $taskLabel->id)}}',
@@ -259,7 +263,7 @@ $('#notification').change(function(){
     $('#country').select2({
         }).on("change", function (e) {
         var id = $(this).val();
-        var url = "{{ route('client.state.country', $taskLabel->id) }}";
+        var url = "{{ route('client.site.country',':id') }}";
         url = url.replace(':id', id);
        // console.log(url);
         $.easyAjax({
@@ -277,14 +281,14 @@ $('#notification').change(function(){
     jQuery(document).ready(function($) {
         $.each($('#country option:selected'), function(){            
        // var id = $(this).val();
-        var url = "{{ route('client.state.country', $taskLabel->id) }}";
+        var url = "{{ route('client.site.country', $taskLabel->id) }}";
       //  url = url.replace(':id', id);
        // console.log(url);
         $.easyAjax({
             url: url,
             type: "GET",
             redirect: true,
-            data: $('#createContract').serialize(),
+            data: $('').serialize(),
             success: function (data) {
             //  alert(data.data)
                 $('#state').html(data.data);

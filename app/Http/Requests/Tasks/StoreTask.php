@@ -33,19 +33,11 @@ class StoreTask extends CoreRequest
         $rules = [
             'heading' => 'required',
             'due_date' => ['required' , new CheckDateFormat(null,$setting->date_format) , new CheckEqualAfterDate('start_date',$setting->date_format)],
-           //  'priority' => 'required',
+            'start_date' => 'required',
+            'client_id' => 'required',          
             
         ];
-
-        if (request()->has('project_id') && request()->project_id != "all" && request()->project_id != "") {
-            $project = Project::find(request()->project_id);
-
-            $startDate = $project->start_date->format($setting->date_format);
-            $rules['start_date'] = ['required', new CheckDateFormat(null,$setting->date_format), new CheckEqualAfterDate('start_date',$setting->date_format, $startDate, __('messages.projectDateValidation', ['date' => $startDate]))];
-        } else {
-            $rules['start_date'] = ['required', new CheckDateFormat(null,$setting->date_format)];
-        }
-
+   
         if ($this->has('dependent') && $this->dependent == 'yes' && $this->dependent_task_id != '') {
             $dependentTask = Task::find($this->dependent_task_id);
             $endDate = $dependentTask->due_date->format($setting->date_format);
@@ -54,27 +46,6 @@ class StoreTask extends CoreRequest
 
         if ($user->can('add_tasks') || $user->hasRole('admin') || $user->hasRole('client')) {
             $rules['user_id'] = 'required';
-        }
-
-        if ($this->has('repeat') && $this->repeat == 'yes') {
-            $rules['repeat_cycles'] = 'required|numeric';
-        }
-
-        if ($this->has('set_time_estimate')) {
-          //  $rules['estimate_hours'] = 'required|integer|min:0';
-           // $rules['estimate_minutes'] = 'required|integer|min:0';
-        }
-
-        if (request()->get('custom_fields_data')) {
-            $fields = request()->get('custom_fields_data');
-            foreach ($fields as $key => $value) {
-                $idarray = explode('_', $key);
-                $id = end($idarray);
-                $customField = CustomField::findOrFail($id);
-                if ($customField->required == "yes" && (is_null($value) || $value == "")) {
-                    $rules["custom_fields_data[$key]"] = 'required';
-                }
-            }
         }
 
         
@@ -87,23 +58,10 @@ class StoreTask extends CoreRequest
         return [
             'project_id.required' => __('messages.chooseProject'),
             'user_id.required' => 'Choose an assignee',
+            'start_date.required' => 'Select date',
+            'client_id.required' => 'Select client',
+           // 'user_id.required' => 'Choose an assignee',
         ];
     }
 
-    public function attributes()
-    {
-        $attributes = [];
-        if (request()->get('custom_fields_data')) {
-            $fields = request()->get('custom_fields_data');
-            foreach ($fields as $key => $value) {
-                $idarray = explode('_', $key);
-                $id = end($idarray);
-                $customField = CustomField::findOrFail($id);
-                if ($customField->required == "yes") {
-                    $attributes["custom_fields_data[$key]"] = $customField->label;
-                }
-            }
-        }
-        return $attributes;
-    }
 }
