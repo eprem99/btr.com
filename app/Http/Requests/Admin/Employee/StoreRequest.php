@@ -35,6 +35,8 @@ class StoreRequest extends CoreRequest
             'hourly_rate' => 'nullable|numeric',
             'last_date' => ['nullable', new CheckDateFormat(null,$setting->date_format), new CheckEqualAfterDate('joining_date',$setting->date_format)],
             'department' => 'required',
+            'country' => 'required',
+            'state' => 'required',
            // 'phone_code' => 'required_with:mobile',
         ];
 

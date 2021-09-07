@@ -120,7 +120,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>@lang('modules.stripeCustomerAddress.country')</label>
+                                        <label class="required">@lang('modules.stripeCustomerAddress.country')</label>
                                         <select name="country" class="form-control" id="country">
                                            
                                            <option value>@lang('app.site.country')</option>
@@ -132,7 +132,7 @@
                                 </div>   
                                 <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>@lang('modules.stripeCustomerAddress.state')</label>
+                                            <label class="required">@lang('modules.stripeCustomerAddress.state')</label>
                                             <select name="state" class="select2 form-control" id="state">
                                                 <option value="0"> -- Select -- </option>
                                             </select>
