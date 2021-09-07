@@ -103,10 +103,11 @@ $contacts = json_decode($taskLabel->contacts, true);
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="site_country" class="required"> @lang('app.site.country')</label>
-                            <select name="site_country" class="form-control" id="country">
+                        <select name="site_country" class="form-control" id="country">
                                 <option value>@lang('app.site.country')</option>
-                                <option @if($contacts['site_country'] == 1) selected @endif value="1">UNITED STATES</option>
-                                <option @if($contacts['site_country'] == 2) selected @endif value="2">CANADA</option>
+                                @foreach($countries as $country)
+                                <option @if($contacts['site_country'] == $country->id) selected @endif value="{{$country->id}}">{{$country->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>

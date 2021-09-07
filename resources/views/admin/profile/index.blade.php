@@ -124,7 +124,10 @@
                                                 <select name="country" class="form-control" id="country">
                                                     <option value>@lang('app.site.country')</option>
                                                     @foreach($countries as $country)
-                                                    <option value="{{$country->id}}">{{$country->name}}</option>
+                                                    <option 
+                                                @if ($country->id == $userDetail->employee_details->country)
+                                                    selected
+                                                @endif  value="{{$country->id}}">{{$country->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -227,10 +230,12 @@
         }
     });
     $( "#country" ).change(function() {
-        var ids = $(this).val();
+        var id = $(this).val();
+        var url = "{{ route('admin.company.country',':id') }}";
+        url = url.replace(':id', id);
         $.easyAjax({
-            url: '{{route('admin.state.country', [2])}}',
-            type: "POST",
+            url: url,
+            type: "GET",
             data: $('#updateProfile').serialize(),
             success: function (data) {
             //   alert(data.data)
@@ -238,6 +243,24 @@
             }
         })
     });
+        jQuery(document).ready(function($) {
+        $.each($('#country option:selected'), function(){            
+            var id = $(this).val();
+        var url = "{{ route('admin.company.country',':id') }}";
+        url = url.replace(':id', id);
+        $.easyAjax({
+            url: url,
+            type: "GET",
+            redirect: true,
+            data: $('').serialize(),
+            success: function (data) {
+            //  alert(data.data)
+                $('#state').html(data.data);
+                
+            }
+        })
+        });
+	}); 
     $('#save-form-2').click(function () {
         $.easyAjax({
             url: '{{route('member.profile.update', [$userDetail->id])}}',

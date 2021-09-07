@@ -89,7 +89,7 @@
                                 <div class="col-md-4">
                                         <div class="form-group">
                                             <label>@lang('modules.stripeCustomerAddress.city')</label>
-                                            <input type="text" name="city" id="city"  value="{{ $leadDetail->city ?? '' }}"   class="form-control">
+                                            <input type="text" name="city" id="city"  value="{{ $clientDetail->city ?? '' }}"   class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -98,7 +98,7 @@
                             <div class="col-md-4">
                                         <div class="form-group">
                                             <label>@lang('modules.stripeCustomerAddress.postalCode')</label>
-                                            <input type="text" name="postal_code" id="postalCode"  value="{{ $leadDetail->postal_code ?? '' }}"  class="form-control">
+                                            <input type="text" name="postal_code" id="postalCode"  value="{{ $clientDetail->postal_code ?? '' }}"  class="form-control">
                                         </div>
                                     </div>
                                 <!--/span-->                              

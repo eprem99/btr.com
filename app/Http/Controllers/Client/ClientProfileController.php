@@ -150,9 +150,10 @@ class ClientProfileController extends ClientBaseController
             $client->user_id = $user->id;
         }
         $client->address = $request->address;
-        $client->country = $request->input('country_id');
-        $client->state = $request->input('state');
-        $client->city = $request->input('city');
+        $client->country = $request->country_id;
+        $client->state = $request->state;
+        $client->city = $request->city;
+        $client->postal_code = $request->postal_code;
         $client->save();
         session()->forget('user');
 

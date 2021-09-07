@@ -84,7 +84,7 @@
                 </div>
                 <div class="col-xs-6">
                     <div class="form-group">
-                        <label>@lang('modules.stripeCustomerAddress.state')</label>
+                        <label class="required">@lang('modules.stripeCustomerAddress.state')</label>
                         <select name="category_state" class="form-control" id="state">
                             <option value="0"> -- Select -- </option>
                         </select>
@@ -177,10 +177,9 @@ $('#country').select2({
     });
     jQuery(document).ready(function($) {
         $.each($('#country option:selected'), function(){            
-       // var id = $(this).val();
-        var url = '{{route('admin.company.country', [$category->id])}}';
-      //  url = url.replace(':id', id);
-       // console.log(url);
+            var id = $(this).val();
+        var url = "{{ route('admin.company.country',':id') }}";
+        url = url.replace(':id', id);
         $.easyAjax({
             url: url,
             type: "GET",

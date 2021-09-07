@@ -25,12 +25,15 @@ class UpdateRequest extends CoreRequest
     public function rules()
     {
         return [
-            "label_name" => [
-                'required',
-                Rule::unique('task_label_list')->where(function($query){
-                    $query->where('id', '<>', $this->route('task_label'));
-                })
-            ],
+            "label_name" => 'required',
+            "site_address" => 'required',
+            "site_phone" => 'required',
+            "site_city" => 'required',
+            "site_state" => 'required',
+            "site_country" => 'required',
+            "site_pname" => 'required',
+            "site_pphone" => 'required',
+            "site_pemail" => 'required|email',
         ];
     }
 }

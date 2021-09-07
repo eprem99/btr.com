@@ -25,14 +25,13 @@ class StoreClientRequest extends CoreRequest
     public function rules()
     {
         $rules = [
-            "name" => "required",
-            "email" => "required|email|unique:users",
+            "name"     => "required",
+            "email"    => "required|email|unique:users",
             "password" => "required|min:6",
-            'slack_username' => 'nullable|unique:employee_details,slack_username',
-            'website' => 'nullable|url',
-          //  'phone_code' => 'required_with:mobile',
+            'country'  => 'required',
+            'state'    => 'required',
 //            'facebook' => 'nullable|regex:/http(s)?:\/\/(www\.)?(facebook|fb)\.com\/(A-z 0-9)?/',
-//            'twitter' => 'nullable|regex:/http(s)?://(.*\.)?twitter\.com\/[A-z 0-9 _]+\/?/',
+//            'twitter' => 'nullable|reg  ex:/http(s)?://(.*\.)?twitter\.com\/[A-z 0-9 _]+\/?/',
 //            'linkedin' => 'nullable|regex:/((http(s?)://)*([www])*\.|[linkedin])[linkedin/~\-]+\.[a-zA-Z0-9/~\-_,&=\?\.;]+[^\.,\s<]/',
 
         ];

@@ -77,14 +77,16 @@ class ManageTaskLabelController extends AdminBaseController
 
     private function storeUpdate($request, $taskLabel)
     {
-        $this->clientDetail = ClientDetails::where('user_id', '=', $request->user_id)->first();
+      //  dd($request);
+        $company = ClientDetails::where('user_id', '=', $request->user_id)->first();
         $json = json_encode($request->input());
         $taskLabel->label_name  = $request->label_name;
-        $taskLabel->company     = $this->clientDetail->category_id;
+        $taskLabel->company     = $company->category_id;
         $taskLabel->user_id     = $request->user_id;
         $taskLabel->notification  = $request->site_notification;
         $taskLabel->contacts     = $json;
         $taskLabel->description = $request->description;
+       // dd($taskLabel->label_name);
         $taskLabel->save();
 
         return $taskLabel;

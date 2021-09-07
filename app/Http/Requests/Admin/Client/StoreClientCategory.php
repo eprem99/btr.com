@@ -30,6 +30,7 @@ class StoreClientCategory extends CoreRequest
             'category_email' => 'required|email',
             'category_address' => 'required',
             'category_country' => 'required',
+            'category_state' => 'required',
         ];
     }
 }

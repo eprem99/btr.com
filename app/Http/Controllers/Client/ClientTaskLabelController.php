@@ -30,21 +30,21 @@ class ClientTaskLabelController extends ClientBaseController
 
     public function index(LabelDataTable $dataTable)
     {
-        return $dataTable->render('client.task-label.index', $this->data);
+        return $dataTable->render('client.site.index', $this->data);
     }
 
     public function create()
     {
         $this->clients = User::allClients();
         $this->countries = Country::all();
-        return view('client.task-label.create', $this->data);
+        return view('client.site.create', $this->data);
     }
 
     public function store(StoreRequest $request)
     {
         $taskLabel = new TaskLabelList();
         $this->storeUpdate($request, $taskLabel);
-        return Reply::redirect(route('client.task-label.index'), __('messages.workorderLabel.addedSuccess'));
+        return Reply::redirect(route('client.site.index'), __('messages.workorderLabel.addedSuccess'));
     }
 
     public function edit($id)
@@ -52,7 +52,7 @@ class ClientTaskLabelController extends ClientBaseController
 
         $this->taskLabel = TaskLabelList::find($id);
         $this->countries = Country::all();
-        return view('client.task-label.edit', $this->data);
+        return view('client.site.edit', $this->data);
     }
 
     public function update(UpdateRequest $request, $id)
@@ -60,7 +60,7 @@ class ClientTaskLabelController extends ClientBaseController
         $taskLabel = TaskLabelList::findOrFail($id);
         $this->storeUpdate($request, $taskLabel);
 
-        return Reply::redirect(route('client.task-label.index'), __('messages.workorderLabel.updatedSuccess'));
+        return Reply::redirect(route('client.site.index'), __('messages.workorderLabel.updatedSuccess'));
     }
 
     public function show($id)
@@ -69,7 +69,7 @@ class ClientTaskLabelController extends ClientBaseController
         $contact = json_decode($this->taskLabel->contacts, true);
         $this->countries = Country::where('id', '=', $contact['site_country'])->first();
         $this->state = State::where('id', '=', $contact['site_state'])->first();
-        return view('client.task-label.show', $this->data);
+        return view('client.site.show', $this->data);
     }
 
     private function storeUpdate($request, $taskLabel)
@@ -101,7 +101,7 @@ class ClientTaskLabelController extends ClientBaseController
      */
     public function createLabel()
     {
-        return view('client.task-label.create-ajax', $this->data);
+        return view('client.site.create-ajax', $this->data);
     }
 
     public function storeLabel(StoreRequest $request)
