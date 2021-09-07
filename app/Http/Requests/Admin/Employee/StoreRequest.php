@@ -32,42 +32,13 @@ class StoreRequest extends CoreRequest
             "name" => "required",
             "email" => "required|email|unique:users",
             "password" => "required|min:6",
-            'slack_username' => 'nullable|unique:employee_details,slack_username',
             'hourly_rate' => 'nullable|numeric',
             'last_date' => ['nullable', new CheckDateFormat(null,$setting->date_format), new CheckEqualAfterDate('joining_date',$setting->date_format)],
             'department' => 'required',
            // 'phone_code' => 'required_with:mobile',
         ];
 
-        if (request()->get('custom_fields_data')) {
-            $fields = request()->get('custom_fields_data');
-            foreach ($fields as $key => $value) {
-                $idarray = explode('_', $key);
-                $id = end($idarray);
-                $customField = \App\CustomField::findOrFail($id);
-                if ($customField->required == "yes" && (is_null($value) || $value == "")) {
-                    $rules["custom_fields_data[$key]"] = 'required';
-                }
-            }
-        }
-
         return $rules;
     }
 
-    public function attributes()
-    {
-        $attributes = [];
-        if (request()->get('custom_fields_data')) {
-            $fields = request()->get('custom_fields_data');
-            foreach ($fields as $key => $value) {
-                $idarray = explode('_', $key);
-                $id = end($idarray);
-                $customField = \App\CustomField::findOrFail($id);
-                if ($customField->required == "yes") {
-                    $attributes["custom_fields_data[$key]"] = $customField->label;
-                }
-            }
-        }
-        return $attributes;
-    }
 }

@@ -36,44 +36,10 @@ class UpdateRequest extends CoreRequest
             'hourly_rate' => 'nullable|numeric',
             'department' => 'required',
             'last_date' => ['nullable', new CheckDateFormat(null,$setting->date_format), new CheckEqualAfterDate('joining_date',$setting->date_format)],
-            'phone_code' => 'required_with:mobile',
+           // 'phone_code' => 'required_with:mobile',
         ];
 
-        if ($detailID) {
-            $rules['slack_username'] = 'nullable|unique:employee_details,slack_username,'.$detailID->id;
-        } else {
-            $rules['slack_username'] = 'nullable|unique:employee_details,slack_username';
-        }
-
-        if (request()->get('custom_fields_data')) {
-            $fields = request()->get('custom_fields_data');
-            foreach ($fields as $key => $value) {
-                $idarray = explode('_', $key);
-                $id = end($idarray);
-                $customField = \App\CustomField::findOrFail($id);
-                if ($customField->required == "yes" && (is_null($value) || $value == "")) {
-                    $rules["custom_fields_data[$key]"] = 'required';
-                }
-            }
-        }
 
         return $rules;
-    }
-
-    public function attributes()
-    {
-        $attributes = [];
-        if (request()->get('custom_fields_data')) {
-            $fields = request()->get('custom_fields_data');
-            foreach ($fields as $key => $value) {
-                $idarray = explode('_', $key);
-                $id = end($idarray);
-                $customField = \App\CustomField::findOrFail($id);
-                if ($customField->required == "yes") {
-                    $attributes["custom_fields_data[$key]"] = $customField->label;
-                }
-            }
-        }
-        return $attributes;
     }
 }

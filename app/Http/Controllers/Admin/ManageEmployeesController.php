@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\DataTables\Admin\EmployeesDataTable;
 use App\EmployeeDetails;
-use App\Country;
-use App\State;
 use App\EmployeeDocs;
-use App\EmployeeLeaveQuota;
+// use App\EmployeeLeaveQuota;
 use App\Helper\Files;
 use App\Helper\Reply;
 use App\Http\Requests\Admin\Employee\StoreRequest;
@@ -28,6 +26,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
+use App\Country;
+use App\State;
 
 class ManageEmployeesController extends AdminBaseController
 {
@@ -76,17 +76,16 @@ class ManageEmployeesController extends AdminBaseController
      */
     public function create()
     {
-        $employee = new EmployeeDetails();
-        $this->fields = $employee->getCustomFieldGroupsWithFields()->fields;
+      //  $employee = new EmployeeDetails();
+      //  $this->fields = $employee->getCustomFieldGroupsWithFields()->fields;
 
         $this->teams = Team::all();
-
         $this->countries = Country::all();
         $this->lastEmployeeID = EmployeeDetails::max('id');
 
-        if (request()->ajax()) {
-            return view('admin.employees.ajax-create', $this->data);
-        }
+        // if (request()->ajax()) {
+        //     return view('admin.employees.ajax-create', $this->data);
+        // }
 
         return view('admin.employees.create', $this->data);
     }
@@ -98,6 +97,7 @@ class ManageEmployeesController extends AdminBaseController
      */
     public function store(StoreRequest $request)
     {
+       
         DB::beginTransaction();
         try {
             $user = new User();
@@ -109,7 +109,6 @@ class ManageEmployeesController extends AdminBaseController
             if ($request->has('login')) {
                 $user->login = $request->login;
             }
-
             if ($request->has('email_notifications')) {
                 $user->email_notifications = $request->email_notifications;
             }
@@ -120,31 +119,29 @@ class ManageEmployeesController extends AdminBaseController
             }
 
             $user->save();
+           
 
             if ($user->id) {
                 $employee = new EmployeeDetails();
+                
                 $employee->user_id = $user->id;
                 $employee->employee_id = $request->employee_id;
                 $employee->address = $request->address;
                 $employee->country = $request->country;
                 $employee->state = $request->state;
                 $employee->city = $request->city;
-                $employee->postal_code = $request->zip;
-                $employee->hourly_rate = $request->hourly_rate;
+               // $employee->postal_code = $request->zip;
+               // $employee->hourly_rate = $request->hourly_rate;
                 $employee->department_id = $request->department;
-
-                $employee->joining_date = Carbon::createFromFormat($this->global->date_format, $request->joining_date)->format('Y-m-d');
-                if ($request->last_date != '') {
-                    $employee->last_date = Carbon::createFromFormat($this->global->date_format, $request->last_date)->format('Y-m-d');
-                }
+                // $employee->joining_date = Carbon::createFromFormat($this->global->date_format, $request->joining_date)->format('Y-m-d');
+                // if ($request->last_date != '') {
+                //     $employee->last_date = Carbon::createFromFormat($this->global->date_format, $request->last_date)->format('Y-m-d');
+                // }
+                
                 $employee->save();
+                
             }
-
-            // To add custom fields data
-            if ($request->get('custom_fields_data')) {
-                $employee->updateCustomFieldData($request->get('custom_fields_data'));
-            }
-
+           // dd($employee);
             $employeeRole = Role::where('name', 'employee')->first();
             $user->attachRole($employeeRole);
 
@@ -216,10 +213,10 @@ class ManageEmployeesController extends AdminBaseController
         $this->employeeDetail = EmployeeDetails::where('user_id', '=', $this->userDetail->id)->first();
         $this->teams  = Team::all();
 
-        if (!is_null($this->employeeDetail)) {
-            $this->employeeDetail = $this->employeeDetail->withCustomFields();
-            $this->fields = $this->employeeDetail->getCustomFieldGroupsWithFields()->fields;
-        }
+        // if (!is_null($this->employeeDetail)) {
+        //     $this->employeeDetail = $this->employeeDetail->withCustomFields();
+        //     $this->fields = $this->employeeDetail->getCustomFieldGroupsWithFields()->fields;
+        // }
         $this->countries = Country::all();
 
         return view('admin.employees.edit', $this->data);
@@ -273,11 +270,6 @@ class ManageEmployeesController extends AdminBaseController
             $employee->last_date = Carbon::createFromFormat($this->global->date_format, $request->last_date)->format('Y-m-d');
         }
         $employee->save();
-
-        // To add custom fields data
-        if ($request->get('custom_fields_data')) {
-            $employee->updateCustomFieldData($request->get('custom_fields_data'));
-        }
 
         if (user()->id == $user->id) {
             session()->forget('user');
@@ -661,25 +653,25 @@ class ManageEmployeesController extends AdminBaseController
         return view('admin.department.quick-create', $this->data);
     }
 
-    public function leaveTypeEdit($id)
-    {
-        $this->employeeLeavesQuota = User::with('leaveTypes', 'leaveTypes.leaveType')->withoutGlobalScope('active')->findOrFail($id)->leaveTypes;
-        return view('admin.employees.leave_type_edit', $this->data);
-    }
+    // public function leaveTypeEdit($id)
+    // {
+    //     $this->employeeLeavesQuota = User::with('leaveTypes', 'leaveTypes.leaveType')->withoutGlobalScope('active')->findOrFail($id)->leaveTypes;
+    //     return view('admin.employees.leave_type_edit', $this->data);
+    // }
 
-    public function leaveTypeUpdate(Request $request, $id)
-    {
-        if ($request->leaves < 0) {
-            return Reply::error('messages.leaveTypeValueError');
-        }
-        $type = EmployeeLeaveQuota::findOrFail($id);
-        $type->no_of_leaves = $request->leaves;
-        $type->save();
+    // public function leaveTypeUpdate(Request $request, $id)
+    // {
+    //     if ($request->leaves < 0) {
+    //         return Reply::error('messages.leaveTypeValueError');
+    //     }
+    //     $type = EmployeeLeaveQuota::findOrFail($id);
+    //     $type->no_of_leaves = $request->leaves;
+    //     $type->save();
 
-        session()->forget('user');
+    //     session()->forget('user');
 
-        return Reply::success(__('messages.leaveTypeAdded'));
-    }
+    //     return Reply::success(__('messages.leaveTypeAdded'));
+    // }
 
     public function country(Request $request, $id)
     {

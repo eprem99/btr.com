@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class EmployeeDetails extends BaseModel
 {
-    use CustomFieldsTrait;
+  //  use CustomFieldsTrait;
 
     protected $table = 'employee_details';
 
@@ -18,7 +18,7 @@ class EmployeeDetails extends BaseModel
     protected static function boot()
     {
         parent::boot();
-        static::observe(EmployeeDetailsObserver::class);
+      //  static::observe(EmployeeDetailsObserver::class);
     }
 
     public function user()
