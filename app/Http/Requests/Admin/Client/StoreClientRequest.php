@@ -30,6 +30,7 @@ class StoreClientRequest extends CoreRequest
             "password" => "required|min:6",
             'country'  => 'required',
             'state'    => 'required',
+            'category_id'    => 'required',
 //            'facebook' => 'nullable|regex:/http(s)?:\/\/(www\.)?(facebook|fb)\.com\/(A-z 0-9)?/',
 //            'twitter' => 'nullable|reg  ex:/http(s)?://(.*\.)?twitter\.com\/[A-z 0-9 _]+\/?/',
 //            'linkedin' => 'nullable|regex:/((http(s?)://)*([www])*\.|[linkedin])[linkedin/~\-]+\.[a-zA-Z0-9/~\-_,&=\?\.;]+[^\.,\s<]/',

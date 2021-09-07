@@ -106,7 +106,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="">@lang('modules.client.clientCategory')
+                                                <label class="required" for="">@lang('modules.client.clientCategory')
                                                         <a href="javascript:;" id="addClientCategory" class="text-info"><i
                                                                 class="ti-settings text-info"></i> </a>
                                                 </label>

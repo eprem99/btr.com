@@ -23,64 +23,7 @@
 <link rel="stylesheet" href="{{ asset('plugins/bower_components/switchery/dist/switchery.min.css') }}">
 @endpush
 
-@section('content')
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-inverse">
-                <div class="panel-heading ">@lang('app.menu.moduleSettings')
-                </div>
-
-
-                <div class="vtabs customvtab m-t-10">
-                    @include('sections.module_setting_menu')
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="white-box">
-                                <h3 class="box-title m-b-0">{{ ucfirst($type) }} @lang("modules.moduleSettings.moduleSetting")</h3>
-
-                                <p class="text-muted m-b-10 font-13">
-                                    @lang("modules.moduleSettings.employeeSubTitle") {{ ucfirst($type) }} @lang("modules.moduleSettings.section")
-                                </p>
-
-                                <div class="row">
-                                    <div class="col-sm-12 col-xs-12 b-t p-t-20">
-                                        {!! Form::open(['id'=>'editSettings','class'=>'ajax-form form-horizontal','method'=>'PUT']) !!}
-
-                                        @foreach($modulesData as $setting)
-                                            <div class="form-group col-md-4">
-                                                <label class="control-label col-xs-6" >@lang('modules.module.'.$setting->module_name)</label>
-                                                <div class="col-xs-6">
-                                                    <div class="switchery-demo">
-                                                        <input type="checkbox" @if($setting->status == 'active') checked @endif class="js-switch change-module-setting" data-setting-id="{{ $setting->id }}" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-
-                                        {!! Form::close() !!}
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <!-- .row -->
-                    <div class="clearfix"></div>
-                </div>
-
-            </div>
-        </div>
-
-
-    </div>
-    <!-- .row -->
-
-
-
-@endsection
 
 @push('footer-script')
 <script src="{{ asset('plugins/bower_components/switchery/dist/switchery.min.js') }}"></script>

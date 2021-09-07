@@ -27,6 +27,7 @@ class UpdateClientRequest extends CoreRequest
         $rules = [
             'email' => 'required|unique:users,email,'.$this->route('client'),
             'name'  => 'required',
+            'category_id'    => 'required',
          //   'phone_code' => 'required_with:mobile',
         ];
 
