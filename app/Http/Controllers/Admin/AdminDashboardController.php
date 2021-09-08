@@ -101,6 +101,7 @@ class AdminDashboardController extends AdminBaseController
             ->get();
 
             $this->newTasks = Task::with('project')
+            ->where('board_column_id', '=', '1')
             ->orderBy('id', 'desc')
             ->select('tasks.*')
             ->limit(15)

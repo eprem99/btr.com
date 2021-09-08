@@ -122,7 +122,7 @@
                                                     @if($task->labels->id)<P><strong>Work Order:  </strong>{{ ucwords($task->id) }}</P>@endif
                                                    @if($task->task_category_id)<p><strong>Project:  </strong>{{ ucwords($task->category->category_name) }}</p>@endif
                                                    <!-- @if($task->p_order)<p><strong>PO Number:  </strong> {{ ucwords($task->p_order) }}</p>@endif -->
-                                                   @if($task->start_date)<p><strong>Order Date:  </strong> {{ $task->start_date->format($global->date_format) }}</p>@endif
+                                                   @if($task->created_at)<p><strong>Order Date:  </strong> {{ $task->created_at->format($global->date_format) }}</p>@endif
                                                    @if($task->heading)<p><strong>Summary:  </strong> {{ ucwords($task->heading) }}</p>@endif
                                                    @if($task->wotype)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
                                                    @if($task->sporttype)<p><strong>Sport Type:  </strong> {{ ucwords($task->sporttype->name) }}</p>@endif
@@ -140,7 +140,7 @@
                                                     @if($task->labels->id)<P><strong>Site ID: </strong> {{$task->labels->id}}</P>@endif
                                                     @if($task->labels->label_name)<P><strong>Site Name:  </strong> {{$task->labels->label_name}}</p>@endif
                                                     @if($task->labels->id)<P><strong>Time Zone:  </strong></p>@endif
-                                                    @if($contacts['site_address'])<P><strong>Address:  </strong>{{$contacts['site_address']}}</p>@endif
+                                                    @if(!empty($contacts['site_address']))<P><strong>Address:  </strong>{{$contacts['site_address']}}</p>@endif
                                                 <h3>
                                                     @lang('modules.tasks.sitecontacts')
                                                 </h3>
