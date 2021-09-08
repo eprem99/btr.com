@@ -67,7 +67,7 @@ $contacts = json_decode($taskLabel->contacts, true);
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="site_address" class="required"> @lang('app.site.address')</label>
-                            <input type="text" class="form-control" name="site_address" value="{{ $contacts['site_address'] }}" />
+                            <input type="text" class="form-control" name="site_address" value="@if(!empty($contacts['site_address'])){{ $contacts['site_address'] }} @endif" />
                         </div>
                     </div>
                     <div class="col-md-6">

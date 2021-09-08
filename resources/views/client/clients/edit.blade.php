@@ -168,7 +168,7 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    
                                 </div>
 
                             </div>
@@ -177,6 +177,7 @@
 
                         </div>
                         <div class="form-actions">
+                        <input type="hidden" name="category_id" id="mobile" class="form-control" autocomplete="nope" value="{{ $user }}">
                             <button type="submit" id="save-form" class="btn btn-success"><i class="fa fa-check"></i>
                                 @lang("app.update")
                             </button>

@@ -79,20 +79,14 @@ class ClientClientsController extends ClientBaseController
 
         $data = $request->all();
         $data['password'] = Hash::make($request->input('password'));
-
+        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user()->id);
         unset($data['phone_code']);
         $data['country'] = $request->input('country');
         $data['state'] = $request->input('state');
         $data['name'] = $request->input('salutation')." ".$request->input('name');
-        $data['category_id'] = $request->input('category_id');
+        $data['category_id'] = $this->clientDetail->category_id;
         $user = User::create($data);
         $user->client_details()->create($data);
-
-        // To add custom fields data
-        if ($request->get('custom_fields_data')) {
-            $client = $user->client_details;
-            $client->updateCustomFieldData($request->get('custom_fields_data'));
-        }
 
         $user->attachRole(3);
 
@@ -134,6 +128,7 @@ class ClientClientsController extends ClientBaseController
        // dd($this->clientDetail);
         $this->countries = Country::all();
         $this->categories = ClientCategory::all();
+        $this->user = $this->user()->categpory_id;
         if (!is_null($this->clientDetail)) {
             $this->clientDetail = $this->clientDetail->withCustomFields();
             $this->fields = $this->clientDetail->getCustomFieldGroupsWithFields()->fields;
@@ -184,7 +179,7 @@ class ClientClientsController extends ClientBaseController
     {
         $user = User::withoutGlobalScope('active')->findOrFail($id);
         $data =  $request->all();
-
+        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user()->id);
         unset($data['password']);
         unset($data['phone_code']);
         if ($request->password != '') {
@@ -194,7 +189,8 @@ class ClientClientsController extends ClientBaseController
         $user->update($data);
 
         if ($user->client_details) {
-            $data['category_id'] = $request->input('category_id');
+
+            $data['category_id'] = $this->clientDetail->category_id;
             $data['country'] = $request->input('country');
             $data['state'] = $request->input('state');
             $fields = $request->only($user->client_details->getFillable());

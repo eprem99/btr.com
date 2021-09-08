@@ -105,6 +105,7 @@ class LabelDataTable extends BaseDataTable
     public function query(TaskLabelList $model)
     {
         $request = $this->request();
+ 
         $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
 
         return $model->select('id', 'label_name', 'user_id', 'contacts', 'created_at')->where('company', '=', $this->clientDetail->category_id);

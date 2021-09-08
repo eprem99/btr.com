@@ -38,11 +38,11 @@ $contacts = json_decode($taskLabel->contacts, true);
                 @if($contacts['site_longitude'] != null)<p>Longitude: {{$contacts['site_longitude']}} </p>@endif
             </div>
             <div class="col-md-12">
-            @if($contacts['description'] != null)
+            @if($taskLabel->description != null)
             <h3>
                     @lang('modules.tasks.sitedescription')
                 </h3>
-             {{$contacts['description']}} @endif
+             {{ $taskLabel->description }} @endif
             </div>
         </div>
 

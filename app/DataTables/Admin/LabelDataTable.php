@@ -5,8 +5,10 @@ namespace App\DataTables\Admin;
 
 use App\DataTables\BaseDataTable;
 use App\TaskLabelList;
-use App\State;
 use Yajra\DataTables\Html\Column;
+use Yajra\DataTables\Html\Button;
+use App\State;
+
 
 class LabelDataTable extends BaseDataTable
 {
@@ -34,7 +36,6 @@ class LabelDataTable extends BaseDataTable
             ->editColumn('id', function ($row) {
                 return ucwords($row->id);
             })
-
             ->editColumn('label_name', function ($row) {
                 return '<a onclick="siteshow('.$row->id.')" data-id="' .$row->id. '" href="#">'.ucwords($row->label_name).'</a>';
             })
@@ -97,7 +98,8 @@ class LabelDataTable extends BaseDataTable
     {
         $request = $this->request();
 
-        return $model->select('id','label_name','contacts', 'created_at');
+
+        return $model->select('id', 'label_name', 'contacts', 'created_at');
     }
 
     /**
@@ -108,32 +110,32 @@ class LabelDataTable extends BaseDataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('taskLabelList-table')
-            ->columns($this->getColumns())
-            ->minifiedAjax()
-            ->dom("<'row'<'col-md-6'l><'col-md-6'Bf>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>")
-            ->orderBy(0)
-            ->destroy(true)
-            ->responsive(true)
-            ->serverSide(true)
-            ->stateSave(true)
-            ->processing(true)
-            ->language(__("app.datatable"))
-            //            ->buttons(
-            //                Button::make(['extend' => 'export', 'buttons' => ['excel', 'csv'], 'text' => '<i class="fa fa-download"></i> ' . trans('app.exportExcel') . '&nbsp;<span class="caret"></span>'])
-            //            )
-            ->parameters([
-                'initComplete' => 'function () {
-                   window.LaravelDataTables["taskLabelList-table"].buttons().container()
-                    .appendTo( ".bg-title .text-right")
-                }',
-                'fnDrawCallback' => 'function( oSettings ) {
-                    $("body").tooltip({
-                        selector: \'[data-toggle="tooltip"]\'
-                    })
-                }',
-            ]);
-    }
+        ->setTableId('taskLabelList-table')
+        ->columns($this->getColumns())
+        ->minifiedAjax()
+        ->dom("<'row'<'col-md-6'l><'col-md-6'Bf>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>")
+        ->orderBy(0)
+        ->destroy(true)
+        ->responsive(true)
+        ->serverSide(true)
+        ->stateSave(true)
+        ->processing(true)
+        ->language(__("app.datatable"))
+       ->buttons(
+           Button::make(['extend' => 'export', 'buttons' => ['excel', 'pdf'], 'text' => '<i class="fa fa-download"></i> ' . trans('app.exportExcel') . '&nbsp;<span class="caret"></span>'])
+       )
+        ->parameters([
+            'initComplete' => 'function () {
+               window.LaravelDataTables["taskLabelList-table"].buttons().container()
+                .appendTo( ".bg-title .text-right")
+            }',
+            'fnDrawCallback' => 'function( oSettings ) {
+                $("body").tooltip({
+                    selector: \'[data-toggle="tooltip"]\'
+                })
+            }',
+        ]);
+}
 
     /**
      * Get columns.
@@ -144,7 +146,7 @@ class LabelDataTable extends BaseDataTable
     {
         return [
             __('app.site.id')  => ['data' => 'id', 'name' => 'id'],
-            __('app.site.name') => ['data' => 'label_name', 'name' => 'label_name'],
+            __('app.site.name') => ['data' => 'label_name', 'name' => 'label_name', 'searchable' => true, 'orderable' => true],
             __('app.site.city')  => ['data' => 'site_city', 'name' => 'contacts'],
             __('app.site.state')  => ['data' => 'site_state', 'name' => 'contacts'],
             __('app.site.phone')  => ['data' => 'site_phone', 'name' => 'contacts'],
@@ -152,9 +154,9 @@ class LabelDataTable extends BaseDataTable
             Column::computed('action', __('app.action'))
                 ->exportable(false)
                 ->printable(false)
-                ->orderable(true)
-                ->searchable(false)
-                ->width(150)
+                ->orderable(false)
+                ->searchable(true)
+                ->width(50)
                 ->addClass('text-center')
         ];
     }
