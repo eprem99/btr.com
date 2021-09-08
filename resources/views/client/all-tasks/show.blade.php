@@ -46,7 +46,7 @@
                         @if($task->labels->id)<P><strong>Site ID: </strong> {{$task->labels->id}}</P>@endif
                         @if($task->labels->label_name)<P><strong>Site Name:  </strong> {{$task->labels->label_name}}</p>@endif
                         @if($task->labels->id)<P><strong>Time Zone:  </strong></p>@endif
-                        @if($contacts['site_address'])<P><strong>Address:  </strong>{{$contacts['site_address']}}</p>@endif
+                        @if(!empty($contacts['site_address']))<P><strong>Address:  </strong>{{$contacts['site_address']}}</p>@endif
                     <h3>
                         @lang('modules.tasks.sitecontacts')
                     </h3>
