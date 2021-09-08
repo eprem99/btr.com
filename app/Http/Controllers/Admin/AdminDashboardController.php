@@ -100,6 +100,12 @@ class AdminDashboardController extends AdminBaseController
             ->limit(15)
             ->get();
 
+            $this->newTasks = Task::with('project')
+            ->orderBy('id', 'desc')
+            ->select('tasks.*')
+            ->limit(15)
+            ->get();
+
         $this->pendingLeadFollowUps = Lead::with('followup')
             ->selectRaw('leads.id,leads.company_name, ( select followup.next_follow_up_date from lead_follow_up as followup where followup.lead_id = leads.id 
             and DATE(followup.next_follow_up_date) <= "'.Carbon::now()->timezone($this->global->timezone)->format('Y-m-d').'" ORDER BY followup.created_at desc limit 1 ) as follow_date')

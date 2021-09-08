@@ -100,6 +100,8 @@ return array(
     'statusWiseTicket' => 'Status Wise Ticket',
     'channelWiseTicket' => 'Channel Wise Ticket',
     'totalAllTasks' => 'All  Work Order',
+    'newTasks' => 'New  Work Orders',
+    'newDate' => 'Created Date',
   ),
   'client' =>
   array(

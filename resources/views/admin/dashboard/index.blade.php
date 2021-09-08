@@ -45,7 +45,7 @@
 
         @media (min-width: 769px) {
             #wrapper .panel-wrapper {
-                max-height: 350px;
+                max-height: 265px;
                 overflow-y: auto;
             }
         }
@@ -103,9 +103,8 @@
 
     <div class="white-box">
         <div class="row dashboard-stats front-dashboard">
-
+            <div class="col-md-4">
             @if(in_array('clients',$modules) && in_array('total_clients',$activeWidgets))
-                <div class="col-md-3 col-sm-6">
                     <a href="{{ route('admin.clients.index') }}">
                         <div class="white-box">
                             <div class="row">
@@ -121,11 +120,9 @@
                             </div>
                         </div>
                     </a>
-                </div>
             @endif
 
             @if(in_array('employees',$modules) && in_array('total_employees',$activeWidgets))
-                <div class="col-md-3 col-sm-6">
                     <a href="{{ route('admin.employees.index') }}">
                         <div class="white-box">
                             <div class="row">
@@ -141,11 +138,9 @@
                             </div>
                         </div>
                     </a>
-                </div>
             @endif
 
             @if(in_array('invoices',$modules) && in_array('total_unpaid_invoices',$activeWidgets))
-                <div class="col-md-3 col-sm-6">
                     <a href="{{ route('admin.all-invoices.index') }}">
                         <div class="white-box">
                             <div class="row">
@@ -161,12 +156,10 @@
                             </div>
                         </div>
                     </a>
-                </div>
             @endif
 
 
             @if(in_array('tasks',$modules) && in_array('total_pending_tasks',$activeWidgets))
-                <div class="col-md-3 col-sm-6">
                     <a href="{{ route('admin.all-tasks.index','stat=0&hideComplet=0') }}">
                         <div class="white-box">
                             <div class="row">
@@ -182,11 +175,9 @@
                             </div>
                         </div>
                     </a>
-                </div>
             @endif
 
             @if(in_array('tasks',$modules) && in_array('total_pending_tasks',$activeWidgets))
-                <div class="col-md-3 col-sm-6">
                     <a href="{{ route('admin.all-tasks.index','stat=11&hideComplet=0') }}">
                         <div class="white-box">
                             <div class="row">
@@ -202,10 +193,8 @@
                             </div>
                         </div>
                     </a>
-                </div>
             @endif
             @if(in_array('attendance',$modules) && in_array('total_today_attendance',$activeWidgets))
-                <div class="col-md-3 col-sm-6">
                     <a href="{{ route('admin.attendances.index') }}">
                         <div class="white-box">
                             <div class="row">
@@ -224,11 +213,9 @@
                             </div>
                         </div>
                     </a>
-                </div>
             @endif
 
             @if(in_array('tickets',$modules) && in_array('total_unresolved_tickets',$activeWidgets))
-                <div class="col-md-3 col-sm-6 dashboard-stats">
                     <a href="{{ route('admin.tickets.index') }}">
                         <div class="white-box">
                             <div class="row">
@@ -244,6 +231,49 @@
                             </div>
                         </div>
                     </a>
+            @endif
+           </div>
+           @if(in_array('employees',$modules) && in_array('user_activity_timeline',$activeWidgets))
+                <div class="col-md-8">
+                    <div class="panel panel-inverse">
+                        <div class="panel-heading">@lang('modules.dashboard.userActivityTimeline')</div>
+                        <div class="panel-wrapper collapse in">
+                            <div class="panel-body">
+                                <div class="steamline">
+                                    @forelse($userActivities as $key=>$activity)
+                                        <div class="sl-item">
+                                            <div class="sl-left">
+                                                <img src="{{ $activity->user->image_url }}" width="40" height="40" alt="user" class="img-circle">
+                                            </div>
+                                            <div class="sl-right">
+                                                <div class="m-l-40"><a
+                                                            href="{{ route('admin.employees.show', $activity->user_id) }}"
+                                                            class="">{{ ucwords($activity->user->name) }}</a>
+                                                    <span class="sl-date">{{ $activity->created_at->diffForHumans() }}</span>
+                                                    <p>{!! ucfirst($activity->activity) !!}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if(count($userActivities) > ($key+1))
+                                            <hr>
+                                        @endif
+                                    @empty
+                                        <div class="text-center">
+                                            <div class="empty-space" style="height: 200px;">
+                                                <div class="empty-space-inner">
+                                                    <div class="icon" style="font-size:20px"><i
+                                                                class="fa fa-history"></i>
+                                                    </div>
+                                                    <div class="title m-b-15">@lang("messages.noActivityByThisUser")
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforelse
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @endif
         </div>
@@ -323,7 +353,48 @@
                     </div>
                 </div>
             @endif
+            @if(in_array('tasks',$modules) && in_array('overdue_tasks',$activeWidgets))
+                <div class="col-md-6">
+                    <div class="panel panel-inverse">
+                        <div class="panel-heading">@lang('modules.dashboard.newTasks')</div>
+                        <div class="panel-wrapper collapse in">
+                            <div class="panel-body">
+                            <ul class="list-task list-group" data-role="tasklist">
+                                    <li class="list-group-item" data-role="task">
+                                        <strong>@lang('app.title')</strong> <span
+                                                class="pull-right"><strong>@lang('modules.dashboard.newDate')</strong></span>
+                                    </li>
+                                    @forelse($newTasks as $key=>$task)
+                                        @if((!is_null($task->project_id) && !is_null($task->project) ) || is_null($task->project_id))
+                                        <li class="list-group-item row" data-role="task">
+                                            <div class="col-xs-9">
+                                                {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
+                                            </div>
+                                            <label class="label label-success pull-right col-xs-3">{{ $task->due_date->format($global->date_format) }}</label>
+                                        </li>
+                                        @endif
+                                    @empty
+                                        <li class="list-group-item" data-role="task">
+                                            <div  class="text-center">
+                                                <div class="empty-space" style="height: 200px;">
+                                                    <div class="empty-space-inner">
+                                                        <div class="icon" style="font-size:20px"><i
+                                                                    class="fa fa-tasks"></i>
+                                                        </div>
+                                                        <div class="title m-b-15">@lang("messages.noOpenTasks")
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
+                                        </li>
+                                    @endforelse
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
             @if(in_array('tasks',$modules) && in_array('overdue_tasks',$activeWidgets))
                 <div class="col-md-6">
                     <div class="panel panel-inverse">
@@ -340,10 +411,6 @@
                                         <li class="list-group-item row" data-role="task">
                                             <div class="col-xs-9">
                                                 {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
-                                                @if(!is_null($task->project_id) && !is_null($task->project))
-                                                    <a href="{{ route('admin.projects.show', $task->project_id) }}"
-                                                    class="font-12">{{ ucwords($task->project->project_name) }}</a>
-                                                @endif
                                             </div>
                                             <label class="label label-danger pull-right col-xs-3">{{ $task->due_date->format($global->date_format) }}</label>
                                         </li>
@@ -370,6 +437,7 @@
                     </div>
                 </div>
             @endif
+  
 
             @if(in_array('leads',$modules) && in_array('pending_follow_up',$activeWidgets))
                 <div class="col-md-6">
@@ -455,49 +523,7 @@
                 </div>
             @endif
 
-            @if(in_array('employees',$modules) && in_array('user_activity_timeline',$activeWidgets))
-                <div class="col-md-6">
-                    <div class="panel panel-inverse">
-                        <div class="panel-heading">@lang('modules.dashboard.userActivityTimeline')</div>
-                        <div class="panel-wrapper collapse in">
-                            <div class="panel-body">
-                                <div class="steamline">
-                                    @forelse($userActivities as $key=>$activity)
-                                        <div class="sl-item">
-                                            <div class="sl-left">
-                                                <img src="{{ $activity->user->image_url }}" width="40" height="40" alt="user" class="img-circle">
-                                            </div>
-                                            <div class="sl-right">
-                                                <div class="m-l-40"><a
-                                                            href="{{ route('admin.employees.show', $activity->user_id) }}"
-                                                            class="text-success">{{ ucwords($activity->user->name) }}</a>
-                                                    <span class="sl-date">{{ $activity->created_at->diffForHumans() }}</span>
-                                                    <p>{!! ucfirst($activity->activity) !!}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @if(count($userActivities) > ($key+1))
-                                            <hr>
-                                        @endif
-                                    @empty
-                                        <div class="text-center">
-                                            <div class="empty-space" style="height: 200px;">
-                                                <div class="empty-space-inner">
-                                                    <div class="icon" style="font-size:20px"><i
-                                                                class="fa fa-history"></i>
-                                                    </div>
-                                                    <div class="title m-b-15">@lang("messages.noActivityByThisUser")
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforelse
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
+
             <div class="col-md-12">
                     <div class="panel panel-inverse">
                         <div class="panel-heading">@lang('modules.taskCalendar.note')</div>
