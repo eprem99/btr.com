@@ -14,7 +14,7 @@ return array(
     'totalPaidAmount' => 'Paid Amount',
     'totalOutstandingAmount' => 'Outstanding Amount',
     'recentEarnings' => 'Recent Earnings (Last 30 days)',
-    'overdueTasks' => 'Overdue Work Order',
+    'overdueTasks' => 'Overdue Work Orders',
     'pendingClientIssues' => 'Pending Issues',
     'projectActivityTimeline' => 'Project Activity Timeline',
     'userActivityTimeline' => 'User Activity Timeline',
