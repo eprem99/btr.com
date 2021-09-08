@@ -365,14 +365,12 @@
                                                 class="pull-right"><strong>@lang('modules.dashboard.newDate')</strong></span>
                                     </li>
                                     @forelse($newTasks as $key=>$task)
-                                        @if((!is_null($task->project_id) && !is_null($task->project) ) || is_null($task->project_id))
                                         <li class="list-group-item row" data-role="task">
                                             <div class="col-xs-9">
                                                 {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
                                             </div>
-                                            <label class="label label-success pull-right col-xs-3">{{ $task->due_date->format($global->date_format) }}</label>
+                                            <label class="label label-success pull-right col-xs-3">{{ $task->created_at->format($global->date_format) }}</label>
                                         </li>
-                                        @endif
                                     @empty
                                         <li class="list-group-item" data-role="task">
                                             <div  class="text-center">

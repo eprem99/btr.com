@@ -168,9 +168,9 @@ class ClientAllTasksController extends ClientBaseController
 
     public function create()
     {
-        // if (!$this->user->can('add_tasks') && $this->global->task_self == 'no') {
-        //     abort(403);
-        // }
+        if (!$this->user->can('add_tasks') && $this->global->task_self == 'no') {
+            abort(403);
+        }
 
         // if (!$this->user->can('view_projects') && $this->global->task_self == 'yes') {
         //     $this->projects = Project::join('project_members', 'project_members.project_id', '=', 'projects.id')
@@ -220,6 +220,7 @@ class ClientAllTasksController extends ClientBaseController
         $task->board_column_id = $this->global->default_task_status;
         $task->task_category_id = $request->category_id;
         $task->site_id = $request->task_labels;
+        $task->client_id = $request->client_id;
         $task->wo_id = $request->task_type;
         $task->sport_id = $request->sport_type;
         $task->qty = $request->task_qty;
