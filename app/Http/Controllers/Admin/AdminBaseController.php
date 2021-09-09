@@ -62,7 +62,6 @@ class AdminBaseController extends Controller
             $this->adminTheme = admin_theme();
             $this->pushSetting = push_setting();
             $this->smtpSetting = smtp_setting();
-            $this->pusherSettings = pusher_settings();
             $this->mainMenuSettings = main_menu_settings();
             $this->subMenuSettings = sub_menu_settings();
             $this->invoiceSetting = invoice_setting();
@@ -80,13 +79,13 @@ class AdminBaseController extends Controller
         });
     }
 
-    public function logProjectActivity($projectId, $text)
-    {
-        $activity = new ProjectActivity();
-        $activity->project_id = $projectId;
-        $activity->activity = $text;
-        $activity->save();
-    }
+    // public function logProjectActivity($projectId, $text)
+    // {
+    //     $activity = new ProjectActivity();
+    //     $activity->project_id = $projectId;
+    //     $activity->activity = $text;
+    //     $activity->save();
+    // }
 
     public function logUserActivity($userId, $text)
     {

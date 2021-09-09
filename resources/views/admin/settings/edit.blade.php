@@ -32,14 +32,6 @@
     @if($global->hide_cron_message == 0)
     <div class="col-md-12">
         <div class="alert alert-info">
-            <h5 class="text-white">Set following cron command on your server (Ignore if already done)</h5>
-            @php
-            try {
-            echo '<code>* * * * * '.PHP_BINDIR.'/php  '. base_path() .'/artisan schedule:run >> /dev/null 2>&1</code>';
-            } catch (\Throwable $th) {
-            echo '<code>* * * * * /php'. base_path() .'/artisan schedule:run >> /dev/null 2>&1</code>';
-            }
-            @endphp
         </div>
     </div>
     @endif
@@ -366,28 +358,6 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label class="control-label">@lang('modules.accountSettings.googleRecaptcha')
-                                            <a class="mytooltip" href="javascript:void(0)">
-                                                <i class="fa fa-info-circle"></i>
-                                                <span class="tooltip-content5">
-                                                    <span class="tooltip-text3">
-                                                        <span class="tooltip-inner2">
-                                                            @lang('modules.accountSettings.googleRecaptchaInfo')
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                            </a>
-                                        </label>
-                                        <div class="switchery-demo">
-                                            <input type="checkbox" id="google_recaptcha" name="google_recaptcha"
-                                                @if($global->google_recaptcha == true) checked
-                                            @endif class="js-switch " data-color="#00c292"
-                                            data-secondary-color="#f96262"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
                                         <label class="control-label">@lang('modules.accountSettings.appDebug')
                                             <a class="mytooltip" href="javascript:void(0)"> <i
                                                     class="fa fa-info-circle"></i><span class="tooltip-content5"><span
@@ -401,69 +371,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3 ">
-                                    <div class="form-group">
-                                        <label
-                                            class="control-label">@lang('modules.accountSettings.updateEnableDisable')
-                                            <a class="mytooltip" href="javascript:void(0)">
-                                                <i class="fa fa-info-circle"></i>
-                                                <span class="tooltip-content5">
-                                                    <span class="tooltip-text3">
-                                                        <span class="tooltip-inner2">
-                                                            @lang('modules.accountSettings.updateEnableDisableTest')
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                            </a>
-                                        </label>
-                                        <div class="switchery-demo">
-                                            <input type="checkbox" id="system_update" name="system_update"
-                                                @if($global->system_update == true) checked
-                                            @endif class="js-switch " data-color="#00c292"
-                                            data-secondary-color="#f96262"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('modules.accountSettings.dashboardClock')
-                                            <a class="mytooltip" href="javascript:void(0)"> <i
-                                                    class="fa fa-info-circle"></i><span class="tooltip-content5"><span
-                                                        class="tooltip-text3"><span
-                                                            class="tooltip-inner2">@lang('modules.accountSettings.showDashboardClock')</span></span></span></a></label>
-                                        <div class="switchery-demo">
-                                            <input type="checkbox" id="app_debug" name="dashboard_clock"
-                                                @if($global->dashboard_clock == true) checked
-                                            @endif class="js-switch " data-color="#00c292"
-                                            data-secondary-color="#f96262"/>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-6" id="google_recaptcha_key_div" @if($global->google_recaptcha ==
-                                    false) style="display: none;" @endif>
-                                    <div class="form-group">
-                                        <label
-                                            for="google_recaptcha_key">@lang('modules.accountSettings.googleRecaptchaKey')</label>
-                                        <input type="text" class="form-control" id="google_recaptcha_key"
-                                            name="google_recaptcha_key" value="{{ $global->google_recaptcha_key }}">
-                                    </div>
-                                </div>
-
-                                <div id="google_recaptcha_secret_div" class="col-sm-6 col-md-6" @if($global->
-                                    google_recaptcha == false) style="display: none;" @endif>
-                                    <div class="form-group">
-                                        <label
-                                            for="google_recaptcha_secret">@lang('modules.accountSettings.googleRecaptchaSecret')</label>
-                                        <input type="password" class="form-control" id="google_recaptcha_secret"
-                                            name="google_recaptcha_secret"
-                                            value="{{ $global->google_recaptcha_secret }}">
-                                        <span class="fa fa-fw fa-eye field-icon toggle-password"></span>
-                                    </div>
-                                </div>
-                            </div>
 
 
                             <button type="submit" id="save-form"
@@ -503,20 +412,6 @@
 
         });
 
-        var changeCheckbox = document.getElementById('google_recaptcha');
-
-        changeCheckbox.onchange = function () {
-            if (changeCheckbox.checked) {
-                $('#google_recaptcha_key_div').show();
-                $('#google_recaptcha_secret_div').show();
-            } else {
-                // $('#google_recaptcha_key').val('');
-                // $('#google_recaptcha_secret').val('');
-
-                $('#google_recaptcha_key_div').hide();
-                $('#google_recaptcha_secret_div').hide();
-            }
-        };
 
         $(".select2").select2({
             formatNoMatches: function () {

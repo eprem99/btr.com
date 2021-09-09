@@ -47,7 +47,7 @@
                        @if($task->created_at)<p><strong>Order Date:  </strong> {{ $task->created_at->format($global->date_format) }}</p>@endif
                        @if($task->heading)<p><strong>Summary:  </strong> {{ ucwords($task->heading) }}</p>@endif
                        @if($task->wotype)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
-                       @if($task->client_id)<p><strong>Client:  </strong> {{ ucwords($user->name) }}</p>@endif
+                       @if($task->client_id)<p><strong>Project Manager:  </strong> {{ ucwords($user->name) }}</p>@endif
                        @if($task->create_by)<p><strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}</p>@endif
                     </div>
                     <div class="col-md-6">

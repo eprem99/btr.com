@@ -232,8 +232,8 @@ class ClientCategoryController extends AdminBaseController
     {
        
         //  dd($request->country_id);
-          if($request->site_country != 0 || $request->site_country != ''){
-              $states = State::where('country_id', '=', $request->site_country)->get();
+          if($request->category_country != 0 || $request->category_country != ''){
+              $states = State::where('country_id', '=', $request->category_country)->get();
               $option = '' ;
                $option .= '<option value=""> -- Select -- </option>';
                    foreach($states as $state){
@@ -246,13 +246,13 @@ class ClientCategoryController extends AdminBaseController
           }else{
             $category = ClientCategory::where('id', '=', $id)->first();
 
-            $states = State::where('country_id', '=', $id)->get();
+            $states = State::where('country_id', '=', $category->category_country)->get();
 
             $option = '' ;
              $option .= '<option value=""> -- Select -- </option>';
             // dd($this->clientDetail);
                  foreach($states as $state){
-                     if($category->site_country == $state->id){
+                     if($category->category_state == $state->id){
                          $option .= '<option selected value="'.$state->id.'">'.$state->names.'</option>';
                      }else{
                          $option .= '<option value="'.$state->id.'">'.$state->names.'</option>';

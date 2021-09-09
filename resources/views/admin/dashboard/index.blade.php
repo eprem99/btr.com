@@ -42,7 +42,12 @@
         .dashboard-settings {
             padding-bottom: 8px !important;
         }
-
+        .panel-heading span {
+            padding: 10px 13px;
+            margin-top: -10px;
+            color: #fff;
+            border-radius: 50%;
+        }
         @media (min-width: 769px) {
             #wrapper .panel-wrapper {
                 max-height: 265px;
@@ -56,52 +61,104 @@
 @section('content')
 
     <div class="col-md-12">
-        @if($global->system_update == 1)
-            @php($updateVersionInfo = \Froiden\Envato\Functions\EnvatoUpdate::updateVersionInfo())
-            @if(isset($updateVersionInfo['lastVersion']))
-                <div class="col-md-12">
-                    <div class="white-box">
-                        <div class="alert alert-info col-md-12">
-
-                            <div class="col-md-10"><i class="ti-gift"></i> @lang('modules.update.newUpdate') <label
-                                        class="label label-success">{{ $updateVersionInfo['lastVersion'] }}</label></div>
-                            <div class="col-md-2"><a href="{{ route('admin.update-settings.index') }}"
-                                                    class="btn btn-success btn-small">@lang('modules.update.updateNow') <i
-                                            class="fa fa-arrow-right"></i></a></div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-        @endif
-
-        @if(!is_null($global->last_cron_run))
-            @if(\Carbon\Carbon::now()->diffInHours($global->last_cron_run) > 48)
-                <div class="clearfix"></div>
-                <div class="col-md-12">
-
-                    <div class="alert alert-danger alert-dismissable">
-                        @lang('messages.cronIsNotRunning')
-                    </div>
-
-                </div>
-            @endif
-        @else
-            <div class="clearfix"></div>
-            <div class="col-md-12">
-
-                <div class="alert alert-danger alert-dismissable" id="{{$global->last_cron_run}}">
-                    @lang('messages.cronIsNotRunning')
-                </div>
-
-            </div>
-        @endif
-
         @if(!$progress['progress_completed'] && App::environment('codecanyon'))
             @include('admin.dashboard.get_started')
         @endif
     </div>
 
     <div class="white-box">
+    <div class="row">
+
+@if(in_array('tasks',$modules) && in_array('overdue_tasks',$activeWidgets))
+    <div class="col-md-6">
+        <div class="panel panel-inverse">
+            @php
+                $totalnew = count($newTasks);
+            @endphp
+            <div class="panel-heading">@lang('modules.dashboard.newTasks') <span class="bg-info pull-right">{{$totalnew}}</span></div>
+            <div class="panel-wrapper collapse in">
+                <div class="panel-body">
+                <ul class="list-task list-group" data-role="tasklist">
+                        <li class="list-group-item" data-role="task">
+                            <strong>@lang('app.title')</strong> <span
+                                    class="pull-right"><strong>@lang('modules.dashboard.newDate')</strong></span>
+                        </li>
+                        @forelse($newTasks as $key=>$task)
+                            <li class="list-group-item row" data-role="task">
+                                <div class="col-xs-9">
+                                    {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
+                                </div>
+                                <label class="label label-success pull-right col-xs-3">{{ $task->created_at->format($global->date_format) }}</label>
+                            </li>
+                        @empty
+                            <li class="list-group-item" data-role="task">
+                                <div  class="text-center">
+                                    <div class="empty-space" style="height: 200px;">
+                                        <div class="empty-space-inner">
+                                            <div class="icon" style="font-size:20px"><i
+                                                        class="fa fa-tasks"></i>
+                                            </div>
+                                            <div class="title m-b-15">@lang("messages.noOpenTasks")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </li>
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+@if(in_array('tasks',$modules) && in_array('overdue_tasks',$activeWidgets))
+    <div class="col-md-6">
+        <div class="panel panel-inverse">
+            @php
+                $totalpanding = count($pendingTasks);
+            @endphp
+            <div class="panel-heading">@lang('modules.dashboard.overdueTasks') <span class="bg-info pull-right">{{ $totalpanding }}</span></div>
+            <div class="panel-wrapper collapse in">
+                <div class="panel-body">
+                    <ul class="list-task list-group" data-role="tasklist">
+                        <li class="list-group-item" data-role="task">
+                            <strong>@lang('app.title')</strong> <span
+                                    class="pull-right"><strong>@lang('modules.dashboard.dueDate')</strong></span>
+                                   
+                        </li>
+                        @forelse($pendingTasks as $key=>$task)
+                            <li class="list-group-item row" data-role="task">
+                                <div class="col-xs-9">
+                                    {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
+                                </div>
+                                <label class="label label-danger pull-right col-xs-3">{{ $task->due_date->format($global->date_format) }}</label>
+                            </li>
+                        @empty
+                            <li class="list-group-item" data-role="task">
+                                <div  class="text-center">
+                                    <div class="empty-space" style="height: 200px;">
+                                        <div class="empty-space-inner">
+                                            <div class="icon" style="font-size:20px"><i
+                                                        class="fa fa-tasks"></i>
+                                            </div>
+                                            <div class="title m-b-15">@lang("messages.noOpenTasks")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </li>
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
+</div>
+
         <div class="row dashboard-stats front-dashboard">
             <div class="col-md-4">
             @if(in_array('clients',$modules) && in_array('total_clients',$activeWidgets))
@@ -194,45 +251,8 @@
                         </div>
                     </a>
             @endif
-            @if(in_array('attendance',$modules) && in_array('total_today_attendance',$activeWidgets))
-                    <a href="{{ route('admin.attendances.index') }}">
-                        <div class="white-box">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <div>
-                                        <span class="bg-danger-gradient"><i class="fa fa-percent"
-                                                                            style="display: inherit;"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <span class="widget-title"> @lang('modules.dashboard.totalTodayAttendance')</span><br>
-                                    <span class="counter">@if($counts->totalEmployees > 0){{ round((($counts->totalTodayAttendance/$counts->totalEmployees)*100), 2) }}@else
-                                            0 @endif</span>%
-                                    <span class="text-muted">({{ $counts->totalTodayAttendance.'/'.$counts->totalEmployees }})</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-            @endif
-
-            @if(in_array('tickets',$modules) && in_array('total_unresolved_tickets',$activeWidgets))
-                    <a href="{{ route('admin.tickets.index') }}">
-                        <div class="white-box">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <div>
-                                        <span class="bg-danger-gradient"><i class="ti-ticket"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <span class="widget-title"> @lang('modules.tickets.totalUnresolvedTickets')</span><br>
-                                    <span class="counter">{{ floor($counts->totalUnResolvedTickets) }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-            @endif
            </div>
+
            @if(in_array('employees',$modules) && in_array('user_activity_timeline',$activeWidgets))
                 <div class="col-md-8">
                     <div class="panel panel-inverse">
@@ -277,251 +297,8 @@
                 </div>
             @endif
         </div>
-        <div class="row">
 
-            @if(in_array('payments',$modules) && in_array('recent_earnings',$activeWidgets))
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <h3 class="box-title m-b-0">@lang('modules.dashboard.recentEarnings')</h3>
-
-                            @if(!empty(json_decode($chartData)))
-                                <div id="morris-area-chart" style="height: 190px;"></div>
-                                <h6 style="line-height: 2em;"><span
-                                            class=" label label-danger">@lang('app.note'):</span> @lang('messages.earningChartNote')
-                                    <a href="{{ route('admin.settings.index') }}"><i class="fa fa-arrow-right"></i></a></h6>
-
-                            @else
-                                <div  class="text-center">
-                                    <div class="empty-space" style="height: 200px;">
-                                        <div class="empty-space-inner">
-                                            <div class="icon" style="font-size:30px">
-                                                <i class="fa fa-money"></i>
-                                            </div>
-                                            <div class="title m-b-15">@lang('messages.noEarningRecordFound')
-                                            </div>
-                                            <div class="subtitle">
-                                                <a href="{{route('admin.payments.index')}}" class="btn btn-info btn-outline btn-sm">
-                                                    <i class="fa fa-plus"></i>
-                                                    @lang('app.manage')
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-
-                    </div>
-
-                </div>
-            @endif
-
-
-            @if(in_array('tickets',$modules) && in_array('new_tickets',$activeWidgets))
-                <div class="col-md-6">
-                    <div class="panel panel-inverse">
-                        <div class="panel-heading">@lang('modules.dashboard.newTickets')</div>
-                        <div class="panel-wrapper collapse in">
-                            <div class="panel-body">
-                                <ul class="list-task list-group" data-role="tasklist">
-                                    @forelse($newTickets as $key=>$newTicket)
-                                        <li class="list-group-item" data-role="task">
-                                            {{ ($key+1) }}. <a href="{{ route('admin.tickets.edit', $newTicket->id) }}"
-                                                            class="font-semi-bold"> {{  ucfirst($newTicket->subject) }}</a>
-                                            <i class="font-12">{{ ucwords($newTicket->created_at->diffForHumans()) }}</i>
-                                        </li>
-                                    @empty
-                                        <li class="list-group-item" data-role="task">
-                                            <div class="text-center">
-                                                <div class="empty-space" style="height: 200px;">
-                                                    <div class="empty-space-inner">
-                                                        <div class="icon" style="font-size:20px"><i
-                                                                    class="ti-ticket"></i>
-                                                        </div>
-                                                        <div class="title m-b-15">@lang("messages.noTicketFound")
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endforelse
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-            @if(in_array('tasks',$modules) && in_array('overdue_tasks',$activeWidgets))
-                <div class="col-md-6">
-                    <div class="panel panel-inverse">
-                        <div class="panel-heading">@lang('modules.dashboard.newTasks')</div>
-                        <div class="panel-wrapper collapse in">
-                            <div class="panel-body">
-                            <ul class="list-task list-group" data-role="tasklist">
-                                    <li class="list-group-item" data-role="task">
-                                        <strong>@lang('app.title')</strong> <span
-                                                class="pull-right"><strong>@lang('modules.dashboard.newDate')</strong></span>
-                                    </li>
-                                    @forelse($newTasks as $key=>$task)
-                                        <li class="list-group-item row" data-role="task">
-                                            <div class="col-xs-9">
-                                                {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
-                                            </div>
-                                            <label class="label label-success pull-right col-xs-3">{{ $task->created_at->format($global->date_format) }}</label>
-                                        </li>
-                                    @empty
-                                        <li class="list-group-item" data-role="task">
-                                            <div  class="text-center">
-                                                <div class="empty-space" style="height: 200px;">
-                                                    <div class="empty-space-inner">
-                                                        <div class="icon" style="font-size:20px"><i
-                                                                    class="fa fa-tasks"></i>
-                                                        </div>
-                                                        <div class="title m-b-15">@lang("messages.noOpenTasks")
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </li>
-                                    @endforelse
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-            @if(in_array('tasks',$modules) && in_array('overdue_tasks',$activeWidgets))
-                <div class="col-md-6">
-                    <div class="panel panel-inverse">
-                        <div class="panel-heading">@lang('modules.dashboard.overdueTasks')</div>
-                        <div class="panel-wrapper collapse in">
-                            <div class="panel-body">
-                                <ul class="list-task list-group" data-role="tasklist">
-                                    <li class="list-group-item" data-role="task">
-                                        <strong>@lang('app.title')</strong> <span
-                                                class="pull-right"><strong>@lang('modules.dashboard.dueDate')</strong></span>
-                                    </li>
-                                    @forelse($pendingTasks as $key=>$task)
-                                        @if((!is_null($task->project_id) && !is_null($task->project) ) || is_null($task->project_id))
-                                        <li class="list-group-item row" data-role="task">
-                                            <div class="col-xs-9">
-                                                {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
-                                            </div>
-                                            <label class="label label-danger pull-right col-xs-3">{{ $task->due_date->format($global->date_format) }}</label>
-                                        </li>
-                                        @endif
-                                    @empty
-                                        <li class="list-group-item" data-role="task">
-                                            <div  class="text-center">
-                                                <div class="empty-space" style="height: 200px;">
-                                                    <div class="empty-space-inner">
-                                                        <div class="icon" style="font-size:20px"><i
-                                                                    class="fa fa-tasks"></i>
-                                                        </div>
-                                                        <div class="title m-b-15">@lang("messages.noOpenTasks")
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </li>
-                                    @endforelse
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-  
-
-            @if(in_array('leads',$modules) && in_array('pending_follow_up',$activeWidgets))
-                <div class="col-md-6">
-                    <div class="panel panel-inverse">
-                        <div class="panel-heading">@lang('modules.dashboard.pendingFollowUp')</div>
-                        <div class="panel-wrapper collapse in">
-                            <div class="panel-body">
-                                <ul class="list-task list-group" data-role="tasklist">
-                                    <li class="list-group-item" data-role="task">
-                                        <strong>@lang('app.title')</strong> <span
-                                                class="pull-right"><strong>@lang('modules.dashboard.followUpDate')</strong></span>
-                                    </li>
-                                    @forelse($pendingLeadFollowUps as $key=>$follows)
-                                        <li class="list-group-item row" data-role="task">
-                                            <div class="col-xs-9">
-                                                {{ ($key+1) }}
-
-                                                <a href="{{ route('admin.leads.show', $follows->id) }}"
-                                                class="show-task-detail">{{ ucwords($follows->company_name) }}</a>
-
-                                            </div>
-                                            <label class="label label-danger pull-right col-xs-3">{{  \Carbon\Carbon::parse($follows->follow_date)->timezone($global->timezone)->format($global->date_format) }}</label>
-                                        </li>
-                                    @empty
-                                        <li class="list-group-item" data-role="task">
-                                            <div class="text-center">
-                                                <div class="empty-space" style="height: 200px;">
-                                                    <div class="empty-space-inner">
-                                                        <div class="icon" style="font-size:20px"><i
-                                                                    class="fa fa-user-plus"></i>
-                                                        </div>
-                                                        <div class="title m-b-15">@lang("messages.noPendingLeadFollowUps")
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endforelse
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-
-            @if(in_array('projects',$modules) && in_array('project_activity_timeline',$activeWidgets))
-                <div class="col-md-6" id="project-timeline">
-                    <div class="panel panel-inverse">
-                        <div class="panel-heading">@lang('modules.dashboard.projectActivityTimeline')</div>
-                        <div class="panel-wrapper collapse in">
-                            <div class="panel-body">
-                                <div class="steamline">
-                                    @forelse($projectActivities as $activ)
-                                        <div class="sl-item">
-                                            <div class="sl-left"><i class="fa fa-circle text-info"></i>
-                                            </div>
-                                            <div class="sl-right">
-                                                <div><h6><a href="{{ route('admin.projects.show', $activ->project_id) }}"
-                                                            class="font-bold">{{ ucwords($activ->project->project_name) }}
-                                                            :</a> {{ $activ->activity }}</h6> <span
-                                                            class="sl-date">{{ $activ->created_at->diffForHumans() }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @empty
-                                        <div class="text-center">
-                                            <div class="empty-space" style="height: 200px;">
-                                                <div class="empty-space-inner">
-                                                    <div class="icon" style="font-size:20px"><i
-                                                                class="ti-ticket"></i>
-                                                    </div>
-                                                    <div class="title m-b-15">@lang("messages.noProjectActivity")
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforelse
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-
+    <div class="row">
             <div class="col-md-12">
                     <div class="panel panel-inverse">
                         <div class="panel-heading">@lang('modules.taskCalendar.note')</div>
@@ -537,84 +314,7 @@
         <!-- .row -->
     </div>
 
-    {{--Ajax Modal--}}
-    <div class="modal fade bs-modal-md in" id="eventDetailModal" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg" id="modal-data-application">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <span class="caption-subject font-red-sunglo bold uppercase" id="modelHeading"></span>
-                </div>
-                <div class="modal-body">
-                    Loading...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn blue">Save changes</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    {{--Ajax Modal Ends--}}
-    {{--Ajax Modal--}}
-    <div class="modal fade bs-modal-md in"  id="subTaskModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md" id="modal-data-application">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <span class="caption-subject font-red-sunglo bold uppercase" id="subTaskModelHeading">Sub Task e</span>
-                </div>
-                <div class="modal-body">
-                    Loading...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn blue">Save changes</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->.
-    </div>
-    {{--Ajax Modal Ends--}}
 
-    <div class="modal fade bs-modal-md in" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModal"
-         aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="myModalLabel">Do you like worksuite? Help us Grow :)</h4>
-
-                </div>
-                <div class="modal-body">
-                    <div class="note note-info font-14 m-l-5">
-
-                        We hope you love it. If you do, would you mind taking 10 seconds to leave me a short review on codecanyon?
-                        <br>
-                        This helps us to continue providing great products, and helps potential buyers to make confident decisions.
-                        <hr>
-                        Thank you in advance for your review and for being a preferred customer.
-
-                        <hr>
-
-                        <p class="text-center">
-                            <a href="{{\Froiden\Envato\Functions\EnvatoUpdate::reviewUrl()}}"> <img src="{{asset('img/review-worksuite.png')}}" alt=""></a>
-                            <button type="button" class="btn btn-link btn-sm" data-dismiss="modal" onclick="hideReviewModal('closed_permanently_button_pressed')">Hide Pop up permanently</button>
-                            <button type="button" class="btn btn-link btn-sm" data-dismiss="modal" onclick="hideReviewModal('already_reviewed_button_pressed')">Already Reviewed</button>
-                        </p>
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="{{\Froiden\Envato\Functions\EnvatoUpdate::reviewUrl()}}" target="_blank" type="button" class="btn btn-success">Give Review</a>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 

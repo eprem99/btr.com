@@ -16,15 +16,6 @@
             @endif
         @endif
     @endforeach
-
-    @foreach ($worksuitePlugins as $item)
-        @if(View::exists(strtolower($item).'::sections.admin_setting_menu'))
-            @include(strtolower($item).'::sections.admin_setting_menu')
-        @endif
-    @endforeach
-
-    <li><a href="https://froiden.freshdesk.com/a/solutions/" target="_blank" class="waves-effect"><span class="hide-menu"> @lang('app.menu.help')</span></a>
-    </li>
 </ul>
 
 <script src="{{ asset('plugins/bower_components/jquery/dist/jquery.min.js') }}"></script>

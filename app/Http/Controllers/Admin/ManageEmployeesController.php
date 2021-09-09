@@ -424,7 +424,7 @@ class ManageEmployeesController extends AdminBaseController
     {
         $tasks = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
-            ->select('tasks.id', 'projects.project_name', 'tasks.heading', 'tasks.due_date', 'taskboard_columns.column_name', 'taskboard_columns.label_color', 'tasks.project_id')
+            ->select('tasks.id', 'tasks.heading', 'tasks.due_date', 'taskboard_columns.column_name', 'taskboard_columns.label_color', 'tasks.project_id')
             ->where('task_users.user_id', $userId);
 
         if ($hideCompleted == '1') {

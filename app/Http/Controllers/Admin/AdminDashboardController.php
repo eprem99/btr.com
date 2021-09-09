@@ -73,24 +73,12 @@ class AdminDashboardController extends AdminBaseController
             ->select(
                 DB::raw('(select count(users.id) from `users` inner join role_user on role_user.user_id=users.id inner join roles on roles.id=role_user.role_id WHERE roles.name = "client") as totalClients'),
                 DB::raw('(select count(users.id) from `users` inner join role_user on role_user.user_id=users.id inner join roles on roles.id=role_user.role_id WHERE roles.name = "employee" and users.status = "active") as totalEmployees'),
-                DB::raw('(select count(projects.id) from `projects`) as totalProjects'),
                 DB::raw('(select count(invoices.id) from `invoices` where status = "unpaid") as totalUnpaidInvoices'),
-                DB::raw('(select sum(project_time_logs.total_minutes) from `project_time_logs`) as totalHoursLogged'),
                 DB::raw('(select count(tasks.id) from `tasks` where tasks.board_column_id=' . $completedTaskColumn->id . ') as totalCompletedTasks'),
                 DB::raw('(select count(tasks.id) from `tasks` where tasks.board_column_id != ' . $completedTaskColumn->id . ') as totalPendingTasks'),
-                DB::raw('(select count(attendances.id) from `attendances` inner join users as atd_user on atd_user.id=attendances.user_id inner join role_user on role_user.user_id=atd_user.id inner join roles on roles.id=role_user.role_id WHERE roles.name = "employee" and DATE(attendances.clock_in_time) = CURDATE() and atd_user.status = "active") as totalTodayAttendance'),
-                DB::raw('(select count(tickets.id) from `tickets` where (status="open" or status="pending") and deleted_at IS NULL) as totalUnResolvedTickets'),
-                DB::raw('(select count(tickets.id) from `tickets` where (status="resolved" or status="closed") and deleted_at IS NULL) as totalResolvedTickets')
             )
             ->first();
 
-        $timeLog = intdiv($this->counts->totalHoursLogged, 60) . ' ' . __('app.hrs') . ' ';
-
-        if (($this->counts->totalHoursLogged % 60) > 0) {
-            $timeLog .= ($this->counts->totalHoursLogged % 60) . ' ' . __('app.mins');
-        }
-
-        $this->counts->totalHoursLogged = $timeLog;
 
         $this->pendingTasks = Task::with('project')
             ->where('tasks.board_column_id', '<>', $completedTaskColumn->id)
@@ -107,22 +95,7 @@ class AdminDashboardController extends AdminBaseController
             ->limit(15)
             ->get();
 
-        $this->pendingLeadFollowUps = Lead::with('followup')
-            ->selectRaw('leads.id,leads.company_name, ( select followup.next_follow_up_date from lead_follow_up as followup where followup.lead_id = leads.id 
-            and DATE(followup.next_follow_up_date) <= "'.Carbon::now()->timezone($this->global->timezone)->format('Y-m-d').'" ORDER BY followup.created_at desc limit 1 ) as follow_date')
-            ->join('lead_follow_up', 'lead_follow_up.lead_id', 'leads.id')
-            ->where(DB::raw('DATE(lead_follow_up.next_follow_up_date)'), '<=', Carbon::now()->timezone($this->global->timezone)->format('Y-m-d'))
-            ->where('leads.next_follow_up', 'yes')
-            ->groupBy('leads.id')
-            ->get();
 
-        $this->newTickets = Ticket::where('status', 'open')
-            ->orderBy('id', 'desc')->get();
-
-        $this->projectActivities = ProjectActivity::with('project')
-            ->join('projects', 'projects.id', '=', 'project_activity.project_id')
-            ->whereNull('projects.deleted_at')->select('project_activity.*')
-            ->limit(15)->orderBy('project_activity.id', 'desc')->groupBy('project_activity.id')->get();
 
         $this->userActivities = UserActivity::with('user')->limit(15)->orderBy('id', 'desc')->get();
 
@@ -173,10 +146,6 @@ class AdminDashboardController extends AdminBaseController
         }
 
         $this->chartData = json_encode($chartData);
-        $this->leaves = Leave::with('user', 'type')
-            ->where('status', '<>', 'rejected')
-            ->whereYear('leave_date', Carbon::now()->timezone($this->global->timezone)->format('Y'))
-            ->get();
 
         $this->progressPercent = $this->progressbarPercent();
         $this->widgets = DashboardWidget::where('dashboard_type', 'admin-dashboard')->get();
@@ -267,22 +236,8 @@ class AdminDashboardController extends AdminBaseController
                 ->whereBetween(DB::raw('DATE(client_details.`created_at`)'), [$this->fromDate, $this->toDate])
                 ->select('users.id')
                 ->get()->count();
-            $this->totalLead = Lead::whereBetween(DB::raw('DATE(`created_at`)'), [$this->fromDate, $this->toDate])
-                ->get()
-                ->count();
 
-            $this->totalLeadConversions = Lead::whereBetween(DB::raw('DATE(`updated_at`)'), [$this->fromDate, $this->toDate])
-                ->whereNotNull('client_id')
-                ->get()
-                ->count();
 
-            $this->totalContractsGenerated = Contract::whereBetween(DB::raw('DATE(`created_at`)'), [$this->fromDate, $this->toDate])
-                ->get()
-                ->count();
-
-            $this->totalContractsSigned = ContractSign::whereBetween(DB::raw('DATE(`created_at`)'), [$this->fromDate, $this->toDate])
-                ->get()
-                ->count();
 
             $this->recentLoginActivities = User::withoutGlobalScope('active')
                 ->join('role_user', 'role_user.user_id', '=', 'users.id')
@@ -308,25 +263,6 @@ class AdminDashboardController extends AdminBaseController
                 ->get();
 
 
-            // client wise earning chart
-
-            $projects = Payment::join('currencies', 'currencies.id', '=', 'payments.currency_id')
-                ->join('projects', 'projects.id', '=', 'payments.project_id')
-                ->join('users', 'users.id', '=', 'projects.client_id')
-                ->whereBetween(DB::raw('DATE(payments.`paid_on`)'), [$this->fromDate, $this->toDate])
-                ->where('payments.status', 'complete')
-                ->groupBy('date')
-                ->orderBy('payments.paid_on', 'ASC')
-                ->select(
-                    DB::raw('DATE_FORMAT(payments.paid_on,"%Y-%m-%d") as date'),
-                    DB::raw('sum(payments.amount) as total'),
-                    'currencies.currency_code',
-                    'currencies.is_cryptocurrency',
-                    'currencies.usd_price',
-                    'currencies.exchange_rate',
-                    'users.name'
-                );
-
             $invoices = Payment::join('currencies', 'currencies.id', '=', 'payments.currency_id')
                 ->join('invoices', 'invoices.id', '=', 'payments.invoice_id')
                 ->join('users', 'users.id', '=', 'invoices.client_id')
@@ -343,7 +279,6 @@ class AdminDashboardController extends AdminBaseController
                     'currencies.exchange_rate',
                     'users.name'
                 )
-                ->union($projects)
                 ->get();
 
             $chartData = array();
@@ -383,36 +318,6 @@ class AdminDashboardController extends AdminBaseController
             $this->chartData = json_encode($chartData);
 
             // client wise timelogs
-
-            $projectTimelogs = ProjectTimeLog::join('projects', 'projects.id', 'project_time_logs.project_id')
-                ->join('users', 'users.id', 'projects.client_id')
-                ->whereBetween(DB::raw('DATE(project_time_logs.`created_at`)'), [$this->fromDate, $this->toDate])
-                ->where('project_time_logs.approved', 1)
-                ->select('project_time_logs.*', 'users.name');
-
-            $allTimelogs = ProjectTimeLog::join('tasks', 'tasks.id', 'project_time_logs.task_id')
-                ->join('projects', 'projects.id', 'tasks.project_id')
-                ->join('users', 'users.id', 'projects.client_id')
-                ->whereBetween(DB::raw('DATE(project_time_logs.`created_at`)'), [$this->fromDate, $this->toDate])
-                ->where('project_time_logs.approved', 1)
-                ->select('project_time_logs.*', 'users.name')
-                ->union($projectTimelogs)
-                ->get();
-
-            $clientWiseTimelogs = array();
-            $clientWiseTimelogChartData = array();
-
-            foreach ($allTimelogs as $timelog) {
-                if (!array_key_exists($timelog->name, $clientWiseTimelogs)) {
-                    $clientWiseTimelogs[$timelog->name] = 0;
-                }
-                $clientWiseTimelogs[$timelog->name] = $clientWiseTimelogs[$timelog->name] + $timelog->total_minutes;
-            }
-            foreach ($clientWiseTimelogs as $key => $clientWiseTimelog) {
-                $totalTime = intdiv($clientWiseTimelog, 60);
-                $clientWiseTimelogChartData[] = ['client' => $key, 'totalHours' => $totalTime];
-            }
-            $this->clientWiseTimelogChartData = json_encode($clientWiseTimelogChartData);
 
             // total lead vs status
             $leadVsStatus = array();
@@ -694,40 +599,6 @@ class AdminDashboardController extends AdminBaseController
                     'projects.id'
                 )->get();
 
-            $projectChartData = array();
-            $earningsByProjects = array();
-            foreach ($invoices as $invoice) {
-                if (!array_key_exists($invoice->project_name, $earningsByProjects)) {
-                    $earningsByProjects[$invoice->project_name] = 0;
-                }
-                if ($invoice->currency_code != $this->global->currency->currency_code) {
-                    if ($invoice->is_cryptocurrency == 'yes') {
-                        if ($invoice->exchange_rate == 0) {
-                            if ($this->updateExchangeRates()) {
-                                $usdTotal = ($invoice->total * $invoice->usd_price);
-                                $earningsByProjects[$invoice->project_name] = $earningsByProjects[$invoice->project_name] + floor($usdTotal / $invoice->exchange_rate);
-                            }
-                        } else {
-                            $usdTotal = ($invoice->total * $invoice->usd_price);
-                            $earningsByProjects[$invoice->project_name] = $earningsByProjects[$invoice->project_name] + floor($usdTotal / $invoice->exchange_rate);
-                        }
-                    } else {
-                        if ($invoice->exchange_rate == 0) {
-                            if ($this->updateExchangeRates()) {
-                                $earningsByProjects[$invoice->project_name] = $earningsByProjects[$invoice->project_name] + floor($invoice->total / $invoice->exchange_rate);
-                            }
-                        } else {
-                            $earningsByProjects[$invoice->project_name] = $earningsByProjects[$invoice->project_name] + floor($invoice->total / $invoice->exchange_rate);
-                        }
-                    }
-                } else {
-                    $earningsByProjects[$invoice->project_name] = $earningsByProjects[$invoice->project_name] + round($invoice->total, 2);
-                }
-            }
-            foreach ($earningsByProjects as $key => $earningsByProject) {
-                $projectChartData[] = ['project' => $key, 'total' => $earningsByProject];
-            }
-            $this->earningsByProjects = json_encode($projectChartData);
 
             // Invoice overview
             $invoiceOverviews = array();
@@ -775,92 +646,7 @@ class AdminDashboardController extends AdminBaseController
             $this->invoiceOverviews = $invoiceOverviews;
             $this->invoiceOverviewCount = $allInvoiceCount;
 
-            // Estimate overview
-            $estimateOverviews = array();
-
-            $allEstimate = Estimate::whereBetween(DB::raw('DATE(`valid_till`)'), [$this->fromDate, $this->toDate])->get();
-            $allEstimateCount = $allEstimate->count();
-
-            $estimateOverviews['estimateDraft']['count'] = $allEstimate->filter(function ($value, $key) {
-                return $value->status == 'draft';
-            })->count();
-            $estimateOverviews['estimateDraft']['color'] = 'blue';
-            $estimateOverviews['estimateDraft']['percent'] = $this->getPercentage($allEstimateCount, $estimateOverviews['estimateDraft']['count']);
-
-            $estimateOverviews['estimateNotSent']['count'] = $allEstimate->filter(function ($value, $key) {
-                return $value->send_status == 0;
-            })->count();
-            $estimateOverviews['estimateNotSent']['color'] = 'gray';
-            $estimateOverviews['estimateNotSent']['percent'] = $this->getPercentage($allEstimateCount, $estimateOverviews['estimateNotSent']['count']);
-
-            $estimateOverviews['estimateSent']['count'] = $allEstimate->filter(function ($value, $key) {
-                return $value->send_status == 1;
-            })->count();
-            $estimateOverviews['estimateSent']['color'] = 'yellow';
-            $estimateOverviews['estimateSent']['percent'] = $this->getPercentage($allEstimateCount, $estimateOverviews['estimateSent']['count']);
-
-            $estimateOverviews['estimateDeclined']['count'] = $allEstimate->filter(function ($value, $key) {
-                return $value->status == 'declined';
-            })->count();
-            $estimateOverviews['estimateDeclined']['color'] = 'orange';
-            $estimateOverviews['estimateDeclined']['percent'] = $this->getPercentage($allEstimateCount, $estimateOverviews['estimateDeclined']['count']);
-
-            $estimateOverviews['estimateExpired']['count'] = $allEstimate->filter(function ($value, $key) {
-                return ($value->status != 'sent' || $value->status == 'waiting') && $value->valid_till->lessThan(Carbon::now());
-            })->count();
-            $estimateOverviews['estimateExpired']['color'] = 'red';
-            $estimateOverviews['estimateExpired']['percent'] = $this->getPercentage($allEstimateCount, $estimateOverviews['estimateExpired']['count']);
-
-            $estimateOverviews['estimateAccepted']['count'] = $allEstimate->filter(function ($value, $key) {
-                return $value->status == 'accepted';
-            })->count();
-            $estimateOverviews['estimateAccepted']['color'] = 'green';
-            $estimateOverviews['estimateAccepted']['percent'] = $this->getPercentage($allEstimateCount, $estimateOverviews['estimateAccepted']['count']);
-
-            $this->estimateOverviews = $estimateOverviews;
-            $this->estimateOverviewCount = $allEstimateCount;
-
-
-            // Proposal overview
-
-            $proposalOverviews = array();
-
-            $allProposal = Proposal::whereBetween(DB::raw('DATE(`created_at`)'), [$this->fromDate, $this->toDate])->get();
-            $allProposalCount = $allProposal->count();
-
-            $proposalOverviews['proposalWaiting']['count'] = $allProposal->filter(function ($value, $key) {
-                return $value->status == 'waiting';
-            })->count();
-            $proposalOverviews['proposalWaiting']['color'] = 'blue';
-            $proposalOverviews['proposalWaiting']['percent'] = $this->getPercentage($allProposalCount, $proposalOverviews['proposalWaiting']['count']);
-
-            $proposalOverviews['proposalDeclined']['count'] = $allProposal->filter(function ($value, $key) {
-                return $value->status == 'declined';
-            })->count();
-            $proposalOverviews['proposalDeclined']['color'] = 'orange';
-            $proposalOverviews['proposalDeclined']['percent'] = $this->getPercentage($allProposalCount, $proposalOverviews['proposalDeclined']['count']);
-
-            $proposalOverviews['proposalExpired']['count'] = $allProposal->filter(function ($value, $key) {
-                return $value->status != 'declined' && $value->valid_till->lessThan(Carbon::now());
-            })->count();
-            $proposalOverviews['proposalExpired']['color'] = 'red';
-            $proposalOverviews['proposalExpired']['percent'] = $this->getPercentage($allProposalCount, $proposalOverviews['proposalExpired']['count']);
-
-            $proposalOverviews['proposalAccepted']['count'] = $allProposal->filter(function ($value, $key) {
-                return $value->status == 'accepted';
-            })->count();
-            $proposalOverviews['proposalAccepted']['color'] = 'yellow';
-            $proposalOverviews['proposalAccepted']['percent'] = $this->getPercentage($allProposalCount, $proposalOverviews['proposalAccepted']['count']);
-
-            $proposalOverviews['proposalConverted']['count'] = $allProposal->filter(function ($value, $key) {
-                return $value->invoice_convert == 1;
-            })->count();
-            $proposalOverviews['proposalConverted']['color'] = 'green';
-            $proposalOverviews['proposalConverted']['percent'] = $this->getPercentage($allProposalCount, $proposalOverviews['proposalConverted']['count']);
-
-            $this->proposalOverviews = $proposalOverviews;
-            $this->proposalOverviewCount = $allProposalCount;
-
+ 
 
             $view = view('admin.dashboard.finance-dashboard', $this->data)->render();
             return Reply::dataOnly(['view' => $view]);
@@ -995,123 +781,6 @@ class AdminDashboardController extends AdminBaseController
         }
 
         return view('admin.dashboard.hr', $this->data);
-    }
-
-    // HR Dashboard end
-
-    // Project Dashboard start
-
-    public function projectDashboard(Request $request)
-    {
-
-        $this->pageTitle = 'app.projectDashboard';
-        $this->fromDate = Carbon::now()->timezone($this->global->timezone)->subDays(30)->toDateString();
-        $this->toDate = Carbon::now()->timezone($this->global->timezone)->toDateString();
-
-        $this->widgets = DashboardWidget::where('dashboard_type', 'admin-project-dashboard')->get();
-        $this->activeWidgets = DashboardWidget::where('dashboard_type', 'admin-project-dashboard')->where('status', 1)->get()->pluck('widget_name')->toArray();
-
-        if (request()->ajax()) {
-            if (!is_null($request->startDate) && $request->startDate != "null" && !is_null($request->endDate) && $request->endDate != "null") {
-                $this->fromDate = Carbon::createFromFormat($this->global->date_format, $request->startDate)->toDateString();
-                $this->toDate = Carbon::createFromFormat($this->global->date_format, $request->endDate)->toDateString();
-            }
-
-            $this->totalProject = Project::whereBetween(DB::raw('DATE(`created_at`)'), [$this->fromDate, $this->toDate])
-                ->get()->count();
-
-            $hoursLogged = ProjectTimeLog::whereBetween(DB::raw('DATE(`created_at`)'), [$this->fromDate, $this->toDate])
-                ->select(DB::raw('(select sum(project_time_logs.total_minutes) from `project_time_logs`) as totalHoursLogged'))
-                ->get()->count();
-
-            $timeLog = intdiv($hoursLogged, 60) . ' ' . __('app.hrs') . ' ';
-            if (($hoursLogged % 60) > 0) {
-                $timeLog .= ($hoursLogged % 60) . ' ' . __('app.mins');
-            }
-
-            $this->totalHoursLogged = $timeLog;
-
-            $this->totalOverdueProject = Project::whereBetween(DB::raw('DATE(`created_at`)'), [$this->fromDate, $this->toDate])
-                ->whereNotNull('deadline')
-                ->where(DB::raw('DATE(deadline)'), '<=', Carbon::now()->timezone($this->global->timezone)->format('Y-m-d'))
-                ->get()->count();
-
-            $this->statusWiseProject = Project::whereBetween(DB::raw('DATE(`created_at`)'), [$this->fromDate, $this->toDate])
-                ->select(DB::raw('count(id) as totalProject'), 'status')
-                ->groupBy('status')
-                ->get()->toJson();
-            // dd($this->statusWiseProject);
-
-            $this->pendingMilestone = ProjectMilestone::whereBetween(DB::raw('DATE(project_milestones.`created_at`)'), [$this->fromDate, $this->toDate])
-                ->join('projects', 'projects.id', 'project_milestones.project_id')
-                ->join('currencies', 'currencies.id', '=', 'projects.currency_id')
-                ->where('project_milestones.status', 'incomplete')
-                ->select('project_milestones.milestone_title', 'project_milestones.project_id', 'project_milestones.cost', 'projects.project_name', 'currencies.currency_symbol')
-                ->get();
-
-            // dd($this->pendingMilestone);
-
-            $view = view('admin.dashboard.project-dashboard', $this->data)->render();
-            return Reply::dataOnly(['view' => $view]);
-        }
-
-        return view('admin.dashboard.project', $this->data);
-    }
-
-    // Project Dashboard end
-
-    // Ticket Dashboard start
-
-    public function ticketDashboard(Request $request)
-    {
-
-        $this->pageTitle = 'app.ticketDashboard';
-        $this->fromDate = Carbon::now()->timezone($this->global->timezone)->subDays(30)->toDateString();
-        $this->toDate = Carbon::now()->timezone($this->global->timezone)->toDateString();
-
-        $this->widgets = DashboardWidget::where('dashboard_type', 'admin-ticket-dashboard')->get();
-        $this->activeWidgets = DashboardWidget::where('dashboard_type', 'admin-ticket-dashboard')->where('status', 1)->get()->pluck('widget_name')->toArray();
-
-        if (request()->ajax()) {
-            if (!is_null($request->startDate) && $request->startDate != "null" && !is_null($request->endDate) && $request->endDate != "null") {
-                $this->fromDate = Carbon::createFromFormat($this->global->date_format, $request->startDate)->toDateString();
-                $this->toDate = Carbon::createFromFormat($this->global->date_format, $request->endDate)->toDateString();
-            }
-
-            $this->totalUnresolvedTickets = Ticket::whereBetween(DB::raw('DATE(`created_at`)'), [$this->fromDate, $this->toDate])
-                ->where('status', '!=', 'resolved')
-                ->get()->count();
-
-            $this->totalUnassignedTicket = Ticket::whereBetween(DB::raw('DATE(`created_at`)'), [$this->fromDate, $this->toDate])
-                ->whereNull('agent_id')
-                ->get()->count();
-
-            $this->statusWiseTicket = Ticket::whereBetween(DB::raw('DATE(`created_at`)'), [$this->fromDate, $this->toDate])
-                ->select(DB::raw('count(id) as totalTicket'), 'status')
-                ->groupBy('status')
-                ->get()->toJson();
-
-            $this->typeWiseTicket = Ticket::whereBetween(DB::raw('DATE(tickets.`created_at`)'), [$this->fromDate, $this->toDate])
-                ->join('ticket_types', 'ticket_types.id', 'tickets.type_id')
-                ->select(DB::raw('count(tickets.id) as totalTicket'), 'ticket_types.type')
-                ->groupBy('ticket_types.type')
-                ->get()->toJson();
-
-            $this->channelWiseTicket = Ticket::whereBetween(DB::raw('DATE(tickets.`created_at`)'), [$this->fromDate, $this->toDate])
-                ->join('ticket_channels', 'ticket_channels.id', 'tickets.channel_id')
-                ->select(DB::raw('count(tickets.id) as totalTicket'), 'ticket_channels.channel_name')
-                ->groupBy('ticket_channels.channel_name')
-                ->get()->toJson();
-
-            $this->newTickets = Ticket::whereBetween(DB::raw('DATE(`created_at`)'), [$this->fromDate, $this->toDate])
-                ->where('status', 'open')
-                ->orderBy('id', 'desc')->get();
-
-            $view = view('admin.dashboard.ticket-dashboard', $this->data)->render();
-            return Reply::dataOnly(['view' => $view]);
-        }
-
-        return view('admin.dashboard.ticket', $this->data);
     }
 
     // Ticket Dashboard end

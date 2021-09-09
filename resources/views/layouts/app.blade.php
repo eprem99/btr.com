@@ -598,12 +598,6 @@
         isMobile = true;
     }
 
-    $('body').on('click', '.timer-modal', function(){
-        var url = '{{ route('admin.all-time-logs.show-active-timer')}}';
-        $('#modelHeading').html('Active Timer');
-        $.ajaxModal('#projectTimerModal',url);
-    });
-
     $('.datepicker, #start-date, #end-date').on('click', function(e) {
         e.preventDefault();
         $(this).attr("autocomplete", "off");
@@ -614,8 +608,6 @@
             $('.ti-angle-double-right').click();
         }else if (event.keyCode === 84 && (event.altKey && event.shiftKey)) {
             window.location.href = "{{ route('admin.all-tasks.create') }}"
-        }else if(event.keyCode === 80 && (event.altKey && event.shiftKey)) {
-            window.location.href = "{{route('admin.projects.create') }}"
         }
         if ((filter)){
              if(event.keyCode === 191 && (event.altKey && event.shiftKey)) {
@@ -960,22 +952,7 @@
 
 </script>
 
-@if ($pusherSettings->status)
-<script>
 
-// Enable pusher logging - don't include this in production
-// Pusher.logToConsole = true;
-
-var pusher = new Pusher("{{ $pusherSettings->pusher_app_key }}", {
-  cluster: "{{ $pusherSettings->pusher_cluster }}",
-  forceTLS: "{{ $pusherSettings->force_tls }}"
-});
-
-</script>
-
-@yield('pusher-event')
-
-@endif
 
 @stack('footer-script')
 <script>

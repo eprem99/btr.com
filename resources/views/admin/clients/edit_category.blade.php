@@ -168,17 +168,18 @@ $('#country').select2({
             url: url,
             type: "GET",
             redirect: true,
-            data: $('#updateEmployee').serialize(),
+            data: $('').serialize(),
             success: function (data) {
             //  alert(data.data)
                 $('#state').html(data.data);
             }
         })
     });
+
     jQuery(document).ready(function($) {
         $.each($('#country option:selected'), function(){            
             var id = $(this).val();
-        var url = "{{ route('admin.company.country',':id') }}";
+        var url = '{{route('admin.company.country', [$category->id])}}';
         url = url.replace(':id', id);
         $.easyAjax({
             url: url,

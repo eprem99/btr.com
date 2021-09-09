@@ -31,7 +31,7 @@
                        @if($task->wotype)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
                        @if($task->sporttype)<p><strong>Sport Type:  </strong> {{ ucwords($task->sporttype->name) }}</p>@endif
                        @if($task->qty)<p><strong>Surface Quantity: </strong> {{ ucwords($task->qty) }}</p>@endif
-                       @if($task->client_id)<p><strong>Client:  </strong> {{ ucwords($clientDetail->name) }}</p>@endif
+                       @if($task->client_id)<p><strong>Project Manager:  </strong> {{ ucwords($clientDetail->name) }}</p>@endif
                        @if($task->create_by)<p><strong>Submitted By:  </strong> {{ ucwords($task->create_by->name) }}</p>@endif
                     </div>
                     <div class="col-md-6">
