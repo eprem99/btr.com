@@ -101,12 +101,16 @@ class ManageAllTasksController extends AdminBaseController
         $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
         $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
         $task->task_category_id = $request->category_id;
-        $task->board_column_id = $request->status;
-        $task->task_category_id = $request->category_id;
         $task->wo_id = $request->task_type;
         $task->sport_id = $request->sport_type;
         $task->client_id = $request->client_id;
         $task->qty = $request->task_qty;
+            
+        if($request->user_id && $request->status == "1"){
+            $task->board_column_id = 2;
+        }else{
+            $task->board_column_id = $request->status;
+        }
 
         $taskBoardColumn = TaskboardColumn::findOrFail($request->status);
 
@@ -180,11 +184,8 @@ class ManageAllTasksController extends AdminBaseController
 
     public function membersList($projectId)
     {
-        if ($projectId != "all") {
-            $this->members = ProjectMember::byProject($projectId);
-        } else {
-            $this->employees = User::allEmployees();
-        }
+
+        $this->employees = User::allEmployees();
         $list = view('admin.tasks.members-list', $this->data)->render();
         return Reply::dataOnly(['html' => $list]);
     }
@@ -223,16 +224,20 @@ class ManageAllTasksController extends AdminBaseController
         }
         $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
         $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
-        $task->board_column_id = $request->status;
+            
         $task->task_category_id = $request->category_id;
         $task->site_id = $request->task_labels;
         $task->wo_id = $request->task_type;
         $task->sport_id = $request->sport_type;
         $task->client_id = $request->client_id;
         $task->qty = $request->task_qty;
-        $task->p_order = $request->task_purchase;
 
-        if ($request->board_column_id) {
+        // if ($request->board_column_id) {
+        //     $task->board_column_id = $request->board_column_id;
+        // }
+        if($request->user_id && $request->board_column_id == "1"){
+            $task->board_column_id = 2;
+        }else{
             $task->board_column_id = $request->board_column_id;
         }
         $task->save();

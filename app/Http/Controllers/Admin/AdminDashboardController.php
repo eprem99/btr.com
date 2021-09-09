@@ -80,19 +80,15 @@ class AdminDashboardController extends AdminBaseController
             ->first();
 
 
-        $this->pendingTasks = Task::with('project')
-            ->where('tasks.board_column_id', '<>', $completedTaskColumn->id)
+        $this->pendingTasks = Task::where('tasks.board_column_id', '<>', $completedTaskColumn->id)
             ->where(DB::raw('DATE(due_date)'), '<=', Carbon::now()->timezone($this->global->timezone)->format('Y-m-d'))
             ->orderBy('due_date', 'desc')
             ->select('tasks.*')
-            ->limit(15)
             ->get();
 
-            $this->newTasks = Task::with('project')
-            ->where('board_column_id', '=', '1')
+            $this->newTasks = Task::where('board_column_id', '=', '1')
             ->orderBy('id', 'desc')
             ->select('tasks.*')
-            ->limit(15)
             ->get();
 
 

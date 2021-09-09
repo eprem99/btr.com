@@ -78,19 +78,18 @@ class ManageTasksController extends AdminBaseController
 
         $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
         $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
-        $task->project_id = $request->project_id;
-        $task->priority = $request->priority;
         $task->board_column_id = $taskBoardColumn->id;
         $task->task_category_id = $request->category_id;
-        $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
-        $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-        $task->estimate_hours = $request->estimate_hours;
-        $task->estimate_minutes = $request->estimate_minutes;
+        $task->site_id = $request->task_labels;
+        $task->client_id = $request->client_id;
+        $task->wo_id = $request->task_type;
+        $task->sport_id = $request->sport_type;
+        $task->qty = $request->task_qty;
 
-        if ($request->milestone_id != '') {
-            $task->milestone_id = $request->milestone_id;
+        if ($request->board_column_id) {
+            $task->board_column_id = $request->board_column_id;
         }
+        $task->project_id = 1;
 
         $task->save();
 
@@ -146,10 +145,6 @@ class ManageTasksController extends AdminBaseController
             $this->allTasks = Task::where('board_column_id', '<>', $completedTaskColumn->id)
                 ->where('id', '!=', $id);
 
-            if ($this->task->project_id != '') {
-                $this->allTasks = $this->allTasks->where('project_id', $this->task->project_id);
-            }
-
             $this->allTasks = $this->allTasks->get();
         } else {
             $this->allTasks = [];
@@ -175,24 +170,24 @@ class ManageTasksController extends AdminBaseController
         }
         $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
         $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
-        $task->priority = $request->priority;
         $task->task_category_id = $request->category_id;
         $task->board_column_id = $request->status;
-        $task->dependent_task_id = $request->has('dependent') && $request->dependent == 'yes' && $request->has('dependent_task_id') && $request->dependent_task_id != '' ? $request->dependent_task_id : null;
-        $task->is_private = $request->has('is_private') && $request->is_private == 'true' ? 1 : 0;
-        $task->billable = $request->has('billable') && $request->billable == 'true' ? 1 : 0;
-        $task->estimate_hours = $request->estimate_hours;
-        $task->estimate_minutes = $request->estimate_minutes;
+        $task->site_id = $request->task_labels;
+        $task->client_id = $request->client_id;
+        $task->wo_id = $request->task_type;
+        $task->sport_id = $request->sport_type;
+        $task->qty = $request->task_qty;
+
+        if ($request->board_column_id) {
+            $task->board_column_id = $request->board_column_id;
+        }
+        $task->project_id = 1;
 
         $taskBoardColumn = TaskboardColumn::findOrFail($request->status);
         if ($taskBoardColumn->slug == 'completed') {
             $task->completed_on = Carbon::now();
         } else {
             $task->completed_on = null;
-        }
-
-        if ($request->milestone_id != '') {
-            $task->milestone_id = $request->milestone_id;
         }
 
         $task->save();
@@ -290,20 +285,18 @@ class ManageTasksController extends AdminBaseController
     public function data(Request $request, $projectId = null)
     {
 
-        $tasks = Task::leftJoin('projects', 'projects.id', '=', 'tasks.project_id')
-            ->leftJoin('users as client', 'client.id', '=', 'tasks.client_id')
+        $tasks = Task::leftJoin('users as client', 'client.id', '=', 'tasks.client_id')
             ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
             ->join('users as member', 'task_users.user_id', '=', 'member.id')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
             ->leftJoin('users as creator_user', 'creator_user.id', '=', 'tasks.created_by')
             ->select('tasks.id', 'tasks.heading', 'client.name as clientName', 'creator_user.name as created_by', 'creator_user.image as created_image', 'tasks.due_date', 'taskboard_columns.column_name as board_column', 'taskboard_columns.label_color', 'tasks.project_id')
-            ->where('projects.id', $projectId)
             ->with('users')
             ->groupBy('tasks.id');
 
         $tasks->get();
 
-        $taskBoardColumns = TaskboardColumn::orderBy('priority', 'asc')->get();
+        $taskBoardColumns = TaskboardColumn::orderBy('id', 'desc')->get();
 
         return DataTables::of($tasks)
             ->addColumn('action', function ($row) {
