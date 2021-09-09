@@ -61,9 +61,7 @@
 @section('content')
 
     <div class="col-md-12">
-        @if(!$progress['progress_completed'] && App::environment('codecanyon'))
-            @include('admin.dashboard.get_started')
-        @endif
+
     </div>
 
     <div class="white-box">
@@ -158,7 +156,28 @@
 @endif
 
 </div>
-
+<div class="row">
+            <div class="col-md-12">
+                    <div class="panel panel-inverse">
+                        <div class="panel-heading">@lang('modules.taskCalendar.note')</div>
+                        <div class="row">
+                            <div class="col-md-6">
+                            <select id="calendaremployer">
+                                @foreach($employee as $emp)
+                                           <option value="{{$emp->user_id}}">{{ $emp->user->name }}</option>
+                                @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="collapse in" style="overflow: auto">
+                            <div class="panel-body">
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <!-- .row -->
         <div class="row dashboard-stats front-dashboard">
             <div class="col-md-4">
             @if(in_array('clients',$modules) && in_array('total_clients',$activeWidgets))
@@ -298,20 +317,7 @@
             @endif
         </div>
 
-    <div class="row">
-            <div class="col-md-12">
-                    <div class="panel panel-inverse">
-                        <div class="panel-heading">@lang('modules.taskCalendar.note')</div>
-                        <div class="panel-wrapper collapse in" style="overflow: auto">
-                            <div class="panel-body">
-                                <div id="calendar"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-        </div>
-        <!-- .row -->
     </div>
 
 

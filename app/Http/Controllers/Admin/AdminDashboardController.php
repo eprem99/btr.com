@@ -2,10 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Attendance;
-use App\ClientDetails;
-use App\Contract;
-use App\ContractSign;
 use App\DashboardWidget;
 use App\DataTables\Admin\EstimatesDataTable;
 use App\DataTables\Admin\ExpensesDataTable;
@@ -14,27 +10,17 @@ use App\DataTables\Admin\PaymentsDataTable;
 use App\DataTables\Admin\ProposalDataTable;
 use App\Designation;
 use App\EmployeeDetails;
-use App\Estimate;
 use App\Expense;
 use App\Helper\Reply;
 use App\Invoice;
-use App\InvoiceItems;
 use App\Lead;
-use App\LeadFollowUp;
 use App\LeadSource;
 use App\LeadStatus;
 use App\Leave;
 use App\Payment;
-use App\Project;
-use App\ProjectActivity;
-use App\ProjectMilestone;
-use App\ProjectTimeLog;
-use App\Proposal;
-use App\Setting;
 use App\Task;
 use App\TaskboardColumn;
 use App\Team;
-use App\Ticket;
 use App\Traits\CurrencyExchange;
 use App\User;
 use App\UserActivity;
@@ -91,7 +77,7 @@ class AdminDashboardController extends AdminBaseController
             ->select('tasks.*')
             ->get();
 
-
+            $this->employee = EmployeeDetails::with('user')->get();
 
         $this->userActivities = UserActivity::with('user')->limit(15)->orderBy('id', 'desc')->get();
 
@@ -143,7 +129,7 @@ class AdminDashboardController extends AdminBaseController
 
         $this->chartData = json_encode($chartData);
 
-        $this->progressPercent = $this->progressbarPercent();
+
         $this->widgets = DashboardWidget::where('dashboard_type', 'admin-dashboard')->get();
         $this->activeWidgets = DashboardWidget::where('dashboard_type', 'admin-dashboard')
         ->where('status', 1)->get()->pluck('widget_name')->toArray();
