@@ -55,14 +55,15 @@ Route::group(['middleware' => 'auth'], function () {
         ['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['role:admin']], function () {
 
         Route::get('/dashboard', 'AdminDashboardController@index')->name('dashboard');
-        Route::get('/client-dashboard', 'AdminDashboardController@clientDashboard')->name('clientDashboard');
-        Route::get('/finance-dashboard', 'AdminDashboardController@financeDashboard')->name('financeDashboard');
-        // Route::get('/finance-dashboard/estimate', 'AdminDashboardController@financeDashboardEstimate')->name('financeDashboardEstimate');
-        Route::get('/finance-dashboard/invoice', 'AdminDashboardController@financeDashboardInvoice')->name('financeDashboardInvoice');
-        Route::get('/finance-dashboard/expense', 'AdminDashboardController@financeDashboardExpense')->name('financeDashboardExpense');
-        // Route::get('/finance-dashboard/payment', 'AdminDashboardController@financeDashboardPayment')->name('financeDashboardPayment');
-        Route::get('/finance-dashboard/proposal', 'AdminDashboardController@financeDashboardProposal')->name('financeDashboardProposal');
-        Route::get('/hr-dashboard', 'AdminDashboardController@hrDashboard')->name('hrDashboard');
+        Route::get('/dashboard/filter', 'AdminDashboardController@filter')->name('dashboard.filter');
+      //  Route::get('/client-dashboard', 'AdminDashboardController@clientDashboard')->name('clientDashboard');
+      //  Route::get('/finance-dashboard', 'AdminDashboardController@financeDashboard')->name('financeDashboard');
+      // Route::get('/finance-dashboard/estimate', 'AdminDashboardController@financeDashboardEstimate')->name('financeDashboardEstimate');
+      //  Route::get('/finance-dashboard/invoice', 'AdminDashboardController@financeDashboardInvoice')->name('financeDashboardInvoice');
+      //  Route::get('/finance-dashboard/expense', 'AdminDashboardController@financeDashboardExpense')->name('financeDashboardExpense');
+      // Route::get('/finance-dashboard/payment', 'AdminDashboardController@financeDashboardPayment')->name('financeDashboardPayment');
+      //  Route::get('/finance-dashboard/proposal', 'AdminDashboardController@financeDashboardProposal')->name('financeDashboardProposal');
+       // Route::get('/hr-dashboard', 'AdminDashboardController@hrDashboard')->name('hrDashboard');
         // Route::get('/project-dashboard', 'AdminDashboardController@projectDashboard')->name('projectDashboard');
         // Route::get('/ticket-dashboard', 'AdminDashboardController@ticketDashboard')->name('ticketDashboard');
         Route::post('/dashboard/widget/{dashboardType}', 'AdminDashboardController@widget')->name('dashboard.widget');
@@ -253,10 +254,10 @@ Route::group(['middleware' => 'auth'], function () {
             // Route::post('push-notification-settings/updatePushNotification/{id}', ['uses' => 'PushNotificationController@updatePushNotification'])->name('push-notification-settings.updatePushNotification');
             // Route::resource('push-notification-settings', 'PushNotificationController');
 
-            Route::post('update-settings/deleteFile', ['uses' => 'UpdateDatabaseController@deleteFile'])->name('update-settings.deleteFile');
-            Route::get('update-settings/install', ['uses' => 'UpdateDatabaseController@install'])->name('update-settings.install');
-            Route::get('update-settings/manual-update', ['uses' => 'UpdateDatabaseController@manual'])->name('update-settings.manual');
-            Route::resource('update-settings', 'UpdateDatabaseController');
+            // Route::post('update-settings/deleteFile', ['uses' => 'UpdateDatabaseController@deleteFile'])->name('update-settings.deleteFile');
+            // Route::get('update-settings/install', ['uses' => 'UpdateDatabaseController@install'])->name('update-settings.install');
+            // Route::get('update-settings/manual-update', ['uses' => 'UpdateDatabaseController@manual'])->name('update-settings.manual');
+            // Route::resource('update-settings', 'UpdateDatabaseController');
 
             Route::post('ticket-agents/update-group/{id}', ['uses' => 'TicketAgentsController@updateGroup'])->name('ticket-agents.update-group');
             Route::resource('ticket-agents', 'TicketAgentsController');
@@ -285,9 +286,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('replyTemplates/fetch-template', ['uses' => 'TicketReplyTemplatesController@fetchTemplate'])->name('replyTemplates.fetchTemplate');
             Route::resource('replyTemplates', 'TicketReplyTemplatesController');
 
-            Route::resource('attendance-settings', 'AttendanceSettingController');
+            // Route::resource('attendance-settings', 'AttendanceSettingController');
 
-            Route::resource('leaves-settings', 'LeavesSettingController');
+            // Route::resource('leaves-settings', 'LeavesSettingController');
 
             Route::get('data', ['uses' => 'AdminCustomFieldsController@getFields'])->name('custom-fields.data');
             Route::resource('custom-fields', 'AdminCustomFieldsController');

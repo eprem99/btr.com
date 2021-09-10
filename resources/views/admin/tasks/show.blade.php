@@ -23,8 +23,6 @@
      
                 <a href="javascript:;" id="reminderButton" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right  m-l-5 @if($task->board_column->slug == 'completed') hidden @endif" title="@lang('messages.remindToAssignedEmployee')"><i class="fa fa-bell"></i> @lang('modules.tasks.reminder')</a>
                
-                <a class="dt-button buttons-pdf" tabindex="0" aria-controls="right-sidebar-content"><span><i class="fa fa-file-pdf-o"></i> PDF</span></a>
-
                 @if ($task->board_column->slug != 'completed')
 
                     @if (count($task->activeTimerAll) > 0)

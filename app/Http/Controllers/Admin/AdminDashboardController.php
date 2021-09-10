@@ -10,6 +10,7 @@ use App\DataTables\Admin\PaymentsDataTable;
 use App\DataTables\Admin\ProposalDataTable;
 use App\Designation;
 use App\EmployeeDetails;
+use App\ClientDetails;
 use App\Expense;
 use App\Helper\Reply;
 use App\Invoice;
@@ -49,9 +50,9 @@ class AdminDashboardController extends AdminBaseController
      */
     public function index()
     {
-        $taskBoardColumn = TaskboardColumn::all();
+        $this->taskBoardColumn = TaskboardColumn::all();
 
-        $completedTaskColumn = $taskBoardColumn->filter(function ($value, $key) {
+        $completedTaskColumn = $this->taskBoardColumn->filter(function ($value, $key) {
             return $value->slug == 'completed';
         })->first();
 
@@ -78,6 +79,7 @@ class AdminDashboardController extends AdminBaseController
             ->get();
 
             $this->employee = EmployeeDetails::with('user')->get();
+            $this->clients = ClientDetails::with('user')->get();
 
         $this->userActivities = UserActivity::with('user')->limit(15)->orderBy('id', 'desc')->get();
 
@@ -147,6 +149,26 @@ class AdminDashboardController extends AdminBaseController
 
         return view('admin.dashboard.index', $this->data);
     }
+
+public function filter(Request $request) 
+{
+
+    $tasks = Task::with('board_column')->select('tasks.*')
+    ->join('task_users', 'task_users.task_id', '=', 'tasks.id');
+
+    if($request->tech != 0){
+        $tasks->where('task_users.user_id', '=', $request->tech);
+    }
+    if($request->client != 0){
+        $tasks->where('task_users.user_id', '=', $request->client);
+    }
+    if($request->status != 0){
+        $tasks->where('board_column_id', '=', $request->status);
+    }
+    $task = $tasks->groupBy('tasks.id')->get();
+    //dd($tasks);
+    return Reply::dataOnly($task);
+}
 
     private function progressbarPercent()
     {

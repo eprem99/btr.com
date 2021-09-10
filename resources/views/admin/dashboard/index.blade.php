@@ -23,12 +23,10 @@
     <link rel="stylesheet" href="{{ asset('css/full-calendar/main.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('plugins/bower_components/morrisjs/morris.css') }}"><!--Owl carousel CSS -->
-    <link rel="stylesheet"
-          href="{{ asset('plugins/bower_components/owl.carousel/owl.carousel.min.css') }}"><!--Owl carousel CSS -->
     <link rel="stylesheet"
           href="{{ asset('plugins/bower_components/owl.carousel/owl.theme.default.css') }}"><!--Owl carousel CSS -->
-
+          <link rel="stylesheet" href="{{ asset('plugins/bower_components/bootstrap-select/bootstrap-select.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/bower_components/custom-select/custom-select.css') }}">
     <style>
         .col-in {
             padding: 0 20px !important;
@@ -156,28 +154,51 @@
 @endif
 
 </div>
-<div class="row">
+        <div class="row mt-4">
             <div class="col-md-12">
                     <div class="panel panel-inverse">
-                        <div class="panel-heading">@lang('modules.taskCalendar.note')</div>
-                        <div class="row">
-                            <div class="col-md-6">
-                            <select id="calendaremployer">
-                                @foreach($employee as $emp)
-                                           <option value="{{$emp->user_id}}">{{ $emp->user->name }}</option>
-                                @endforeach
-                                </select>
+                        <div class="panel-heading" style="margin-bottom:20px;">@lang('modules.taskCalendar.note')</div>
+                        {!! Form::open(['id'=>'filter','class'=>'ajax-form','method'=>'PUT']) !!}
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <select name="tech" id="calendaremployer" class="select2 form-control">
+                                    <option value="0">Select Teach</option>
+                                        @foreach($employee as $emp)
+                                                <option value="{{$emp->user_id}}">{{ $emp->user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="client" id="calendarclients" class="select2 form-control">
+                                    <option value="0">Select Client</option>
+                                        @foreach($clients as $emp)
+                                                <option value="{{$emp->user_id}}">{{ $emp->user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="status" id="calendarstatus" class="select2 form-control">
+                                    <option value="0">Select Status</option>
+                                        @foreach($taskBoardColumn as $emp)
+                                                <option value="{{$emp->id}}">{{ $emp->column_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="collapse in" style="overflow: auto">
-                            <div class="panel-body">
-                                <div id="calendar"></div>
+                            {!! Form::close() !!}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="collapse in" style="overflow: auto">
+                                        <div class="">
+                                            <div id="calendar"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-        </div>
-        <!-- .row -->
+                    <!-- .row -->
         <div class="row dashboard-stats front-dashboard">
             <div class="col-md-4">
             @if(in_array('clients',$modules) && in_array('total_clients',$activeWidgets))
@@ -326,33 +347,12 @@
 
 @push('footer-script')
 
-    <script>
-    var taskEvents = [
-        @foreach($tasks as $task)
-        {
-            id: '{{ $task->id }}',
-            title: "{!! ucfirst($task->heading) !!}",
-            start: '{{ $task->start_date->format("Y-m-d") }}',
-            end:  '{{ $task->due_date->addDay()->format("Y-m-d") }}',
-            color  : '{{ $task->board_column->label_color }}'
-        },
-        @endforeach
-    ];
-
-    // only use for sidebar call method
-    function showTable(){}
-    </script>
-
-
     <script src="{{ asset('plugins/bower_components/raphael/raphael-min.js') }}"></script>
     <script src="{{ asset('plugins/bower_components/morrisjs/morris.js') }}"></script>
 
     <script src="{{ asset('plugins/bower_components/waypoints/lib/jquery.waypoints.js') }}"></script>
     <script src="{{ asset('plugins/bower_components/counterup/jquery.counterup.min.js') }}"></script>
 
-    <!-- jQuery for carousel -->
-    <script src="{{ asset('plugins/bower_components/owl.carousel/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('plugins/bower_components/owl.carousel/owl.custom.js') }}"></script>
 
     <!--weather icon -->
 
@@ -362,10 +362,44 @@
     <script src="{{ asset('js/full-calendar/locales-all.min.js') }}"></script>
     <script src="{{ asset('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('js/moment-timezone.js') }}"></script>
+    <script src="{{ asset('plugins/bower_components/custom-select/custom-select.min.js') }}"></script>
+  
     <script>
+        var taskEvents = [
+    @foreach($tasks as $task)
+    {
+        id: '{{ $task->id }}',
+        title: "{!! ucfirst($task->heading) !!}",
+        start: '{{ $task->start_date->format("Y-m-d") }}',
+        end:  '{{ $task->due_date->addDay()->format("Y-m-d") }}',
+        color  : '{{ $task->board_column->label_color }}'
+    },
+    @endforeach
+];
+
+$.date = function(dateObject) {
+    var d = new Date(dateObject);
+    var day = d.getDate();
+    var month = d.getMonth() + 1;
+    var year = d.getFullYear();
+    if (day < 10) {
+        day = "0" + day;
+    }
+    if (month < 10) {
+        month = "0" + month;
+    }
+    var date = year + "-" + month + "-" + day;
+
+    return date;
+};
+
+
+// only use for sidebar call method
+function showTable(){}
+
 
     var initialLocaleCode = '{{ $global->locale }}';
-    document.addEventListener('DOMContentLoaded', function() {
+  //  document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
   
       var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -398,9 +432,52 @@
         dayMaxEvents: true, // allow "more" link when too many events
         events: taskEvents
       });
-  
+
       calendar.render();
+      // calendar.destroy();
+   // });
+
+
+$('#filter .select2').select2({
+        }).on("change", function (e) {
+        var url = "{{ route('admin.dashboard.filter') }}";
+        $.easyAjax({
+            url: url,
+            type: "GET",
+            redirect: true,
+            data: $('#filter').serialize(),
+            success: function (data) {
+            //  alert(data.data)
+            destroy(data);
+
+            }
+        })
     });
+    function destroy(data){
+        console.log(data);
+        if (calendar) {
+            jsonObj = [];
+            
+                $.each(data, function( index, value ) {
+                    var start = moment(value.start_date).format('Y-m-d');
+                    console.log(start);
+                    item = {}
+                    item ["id"] = value.id;
+                    item ["title"] = value.heading;
+                    item ["start"] = $.date(value.start_date);
+                    item ["end"] = $.date(value.due_on);
+                    item ["color"] = value.board_column.label_color;
+                    jsonObj.push(item);
+                
+                })
+            var orgSource = calendar.getEventSources();
+            orgSource[0].remove();
+            calendar.addEventSource(jsonObj);
+          //  $('#calendar').fullCalendar('removeEvents');
+            
+        }
+        // calendar.destroy()
+    };
     var getEventDetail = function (id) {
         $(".right-sidebar").slideDown(50).addClass("shw-rside");
         var url = "{{ route('admin.all-tasks.show',':id') }}";
@@ -416,7 +493,7 @@
             }
         });
     }
-  
+
 </script>
     <script>
         function showTable (){
@@ -456,6 +533,11 @@
             }
         });
 
+        $(".select2").select2({
+            formatNoMatches: function () {
+                return "{{ __('messages.noRecordFound') }}";
+            }
+        });
 
 
     </script>
