@@ -168,11 +168,6 @@
 
                     <ul role="menu" class="dropdown-menu">
                         <li><a class="bg-inverse"><strong class="text-white font-semi-bold">{{ ucwords($user->name) }}</strong></a></li>
-                        <li>
-                            <a href="{{ route('member.dashboard') }}">
-                                <i class="fa fa-sign-in fa-fw"></i> @lang('app.loginAsEmployee')
-                            </a>
-                        </li>
                         <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
                                                                 document.getElementById('logout-form').submit();"
                             ><i class="fa fa-power-off fa-fw"></i> @lang('app.logout')</a>

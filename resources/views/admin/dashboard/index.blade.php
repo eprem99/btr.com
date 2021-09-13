@@ -46,6 +46,9 @@
             color: #fff;
             border-radius: 50%;
         }
+        .panel .panel-body {
+            padding: 25px 5px;
+        }
         @media (min-width: 769px) {
             #wrapper .panel-wrapper {
                 max-height: 265px;
@@ -75,16 +78,20 @@
             <div class="panel-wrapper collapse in">
                 <div class="panel-body">
                 <ul class="list-task list-group" data-role="tasklist">
-                        <li class="list-group-item" data-role="task">
-                            <strong>@lang('app.title')</strong> <span
-                                    class="pull-right"><strong>@lang('modules.dashboard.newDate')</strong></span>
+                        <li class="list-group-item row" data-role="task">
+                            <span class="col-xs-5"><strong>@lang('app.title')</strong></span>
+                            <span class="col-xs-5"><strong>@lang('app.label')</strong></span> 
+                            <span class="col-xs-2"><strong>@lang('modules.dashboard.newDate')</strong></span>
                         </li>
                         @forelse($newTasks as $key=>$task)
                             <li class="list-group-item row" data-role="task">
-                                <div class="col-xs-9">
+                                <div class="col-xs-5">
                                     {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
                                 </div>
-                                <label class="label label-success pull-right col-xs-3">{{ $task->created_at->format($global->date_format) }}</label>
+                                <div class="col-xs-5">
+                                {!! ucfirst($task->labels->label_name) !!}
+                                </div>
+                                <label class="label label-success pull-right col-xs-2">{{ $task->created_at->format($global->date_format) }}</label>
                             </li>
                         @empty
                             <li class="list-group-item" data-role="task">
@@ -118,17 +125,20 @@
             <div class="panel-wrapper collapse in">
                 <div class="panel-body">
                     <ul class="list-task list-group" data-role="tasklist">
-                        <li class="list-group-item" data-role="task">
-                            <strong>@lang('app.title')</strong> <span
-                                    class="pull-right"><strong>@lang('modules.dashboard.dueDate')</strong></span>
-                                   
+                    <li class="list-group-item row" data-role="task">
+                            <span class="col-xs-5"><strong>@lang('app.title')</strong></span>
+                            <span class="col-xs-5"><strong>@lang('app.label')</strong></span> 
+                            <span class="col-xs-2"><strong>@lang('modules.dashboard.newDate')</strong></span>
                         </li>
                         @forelse($pendingTasks as $key=>$task)
                             <li class="list-group-item row" data-role="task">
-                                <div class="col-xs-9">
+                                <div class="col-xs-5">
                                     {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
                                 </div>
-                                <label class="label label-danger pull-right col-xs-3">{{ $task->due_date->format($global->date_format) }}</label>
+                                <div class="col-xs-5">
+                                   {!! ucfirst($task->labels->label_name) !!}
+                                </div>
+                                <label class="label label-danger pull-right col-xs-2">{{ $task->due_date->format($global->date_format) }}</label>
                             </li>
                         @empty
                             <li class="list-group-item" data-role="task">

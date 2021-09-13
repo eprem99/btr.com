@@ -133,18 +133,18 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::group(
                     ['prefix' => 'wotype'], function () {
-                Route::get('wotype/quick-create', ['uses' => 'ManagewotypeController@quickCreate'])->name('wotype.quick-create');
-                Route::post('wotype/quick-store', ['uses' => 'ManagewotypeController@quickStore'])->name('wotype.quick-store');
-                Route::resource('wotype', 'ManagewotypeController');
+                Route::get('wotype/quick-create', ['uses' => 'ManageWotypeController@quickCreate'])->name('wotype.quick-create');
+                Route::post('wotype/quick-store', ['uses' => 'ManageEotypeController@quickStore'])->name('wotype.quick-store');
+                Route::resource('wotype', 'ManageWotypeController');
             });
 
             Route::group(
                     ['prefix' => 'sporttype'], function () {
-                Route::get('sporttype/quick-create', ['uses' => 'ManagesporttypeController@quickCreate'])->name('sporttype.quick-create');
-                Route::post('sporttype/quick-store', ['uses' => 'ManagesporttypeController@quickStore'])->name('sporttype.quick-store');
-                Route::resource('sporttype', 'ManagesporttypeController');
+                Route::get('sporttype/quick-create', ['uses' => 'ManageSporttypeController@quickCreate'])->name('sporttype.quick-create');
+                Route::post('sporttype/quick-store', ['uses' => 'ManageSporttypeController@quickStore'])->name('sporttype.quick-store');
+                Route::resource('sporttype', 'ManageSporttypeController');
             });
-            
+
         Route::group(
             ['prefix' => 'employees'], function () {
 
