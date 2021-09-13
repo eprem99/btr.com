@@ -53,7 +53,6 @@ class MemberEmployeesController extends MemberBaseController
             abort(403);
         }
 
-        $this->skills = Skill::all();
         $this->employees = User::allEmployees();
         return view('member.employees.index', $this->data);
     }
@@ -69,11 +68,8 @@ class MemberEmployeesController extends MemberBaseController
             abort(403);
         }
         $this->countries = Country::all();
-        $this->skills = Skill::all()->pluck('name')->toArray();
         $employee = new EmployeeDetails();
         $this->teams  = Team::all();
-        $this->designations = Designation::all();
-        $this->fields = $employee->getCustomFieldGroupsWithFields()->fields;
         return view('member.employees.create', $this->data);
     }
 
@@ -90,22 +86,8 @@ class MemberEmployeesController extends MemberBaseController
         $user->email = $request->input('email');
         $user->password = Hash::make($request->input('password'));
         $user->mobile = $request->input('mobile');
-        $user->country_id = $request->input('phone_code');
         $user->save();
 
-        $tags = json_decode($request->tags);
-        if (!empty($tags)) {
-            foreach ($tags as $tag) {
-                // check or store skills
-                $skillData = Skill::firstOrCreate(['name' => strtolower($tag->value)]);
-
-                // Store user skills
-                $skill = new EmployeeSkill();
-                $skill->user_id = $user->id;
-                $skill->skill_id = $skillData->id;
-                $skill->save();
-            }
-        }
 
         if ($user->id) {
             $employee = new EmployeeDetails();
@@ -116,12 +98,6 @@ class MemberEmployeesController extends MemberBaseController
             $employee->slack_username = $request->slack_username;
             $employee->department_id = $request->department;
             $employee->save();
-        }
-
-
-        // To add custom fields data
-        if ($request->get('custom_fields_data')) {
-            $employee->updateCustomFieldData($request->get('custom_fields_data'));
         }
 
         $employeeRole = Role::where('name','employee')->first();
@@ -149,12 +125,8 @@ class MemberEmployeesController extends MemberBaseController
         $this->employee = User::with(['employeeDetail', 'employeeDetail.designation', 'employeeDetail.department'])->withoutGlobalScope('active')->findOrFail($id);
 
         $this->taskCompleted = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')->where('task_users.user_id', $id)->where('tasks.board_column_id', $taskBoardColumn->id)->count();
-        $this->hoursLogged = ProjectTimeLog::where('user_id', $id)->sum('total_hours');
-        $this->activities = UserActivity::where('user_id', $id)->orderBy('id', 'desc')->get();
-        $this->projects = Project::select('projects.id', 'projects.project_name', 'projects.deadline', 'projects.completion_percent')
-            ->join('project_members', 'project_members.project_id', '=', 'projects.id')
-            ->where('project_members.user_id', '=', $id)
-            ->get();
+
+
         return view('member.employees.show', $this->data);
     }
 
@@ -269,11 +241,6 @@ class MemberEmployeesController extends MemberBaseController
             $users = $users->where('users.id', $request->employee);
         }
 
-        if ($request->skill != 'all' && $request->skill != '' && $request->skill != null && $request->skill != 'null') {
-            $users =  $users->join('employee_skills', 'employee_skills.user_id', '=', 'users.id')
-                ->whereIn('employee_skills.skill_id', explode(',', $request->skill));
-        }
-
         $users = $users->get();
 
         return DataTables::of($users)
@@ -296,8 +263,6 @@ class MemberEmployeesController extends MemberBaseController
                         $action .= ' <a href="javascript:;" class="btn btn-danger btn-circle sa-params"
                           data-toggle="tooltip" data-user-id="' . $row->id . '" data-original-title="Delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
                     }
-
-
                 }
                 return $action;
             })
@@ -311,9 +276,6 @@ class MemberEmployeesController extends MemberBaseController
                 if ($row->hasRole('admin')) {
                     return '<a href="' . route('member.employees.show', $row->id) . '">' . ucwords($row->name) . '</a><br> <label class="label label-danger">admin</label>';
                 }
-                if ($row->hasRole('project_admin')) {
-                    return '<a href="' . route('member.employees.show', $row->id) . '">' . ucwords($row->name) . '</a><br> <label class="label label-info">project admin</label>';
-                }
                 return '<a href="' . route('member.employees.show', $row->id) . '">' . ucwords($row->name) . '</a>';
             })
             ->addIndexColumn()
@@ -324,8 +286,7 @@ class MemberEmployeesController extends MemberBaseController
     public function tasks($userId, $hideCompleted)
     {
         $tasks = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')
-            ->join('projects', 'projects.id', '=', 'tasks.project_id')
-            ->select('tasks.id', 'projects.project_name', 'tasks.heading', 'tasks.due_date', 'tasks.status', 'tasks.project_id')
+            ->select('tasks.id', 'tasks.heading', 'tasks.due_date', 'tasks.status')
             ->where('task_users.user_id', $userId);
 
         if ($hideCompleted == '1') {
@@ -350,40 +311,12 @@ class MemberEmployeesController extends MemberBaseController
                 }
                 return '<label class="label label-success">Completed</label>';
             })
-            ->editColumn('project_name', function ($row) {
-                return '<a href="' . route('member.projects.show', $row->project_id) . '">' . ucfirst($row->project_name) . '</a>';
-            })
-            ->rawColumns(['status', 'project_name', 'due_date'])
+            ->rawColumns(['status', 'due_date'])
             ->removeColumn('project_id')
             ->make(true);
     }
 
-    public function timeLogs($userId)
-    {
-        $timeLogs = ProjectTimeLog::join('projects', 'projects.id', '=', 'project_time_logs.project_id')
-            ->select('project_time_logs.id', 'projects.project_name', 'project_time_logs.start_time', 'project_time_logs.end_time', 'project_time_logs.total_hours', 'project_time_logs.memo', 'project_time_logs.project_id')
-            ->where('project_time_logs.user_id', $userId);
-        $timeLogs->get();
-
-        return DataTables::of($timeLogs)
-            ->editColumn('start_time', function ($row) {
-                return $row->start_time->format($this->global->date_format . ' ' . $this->global->time_format);
-            })
-            ->editColumn('end_time', function ($row) {
-                if (!is_null($row->end_time)) {
-                    return $row->end_time->format($this->global->date_format . ' ' . $this->global->time_format);
-                } else {
-                    return "<label class='label label-success'>Active</label>";
-                }
-            })
-            ->editColumn('project_name', function ($row) {
-                return '<a href="' . route('member.projects.show', $row->project_id) . '">' . ucfirst($row->project_name) . '</a>';
-            })
-            ->rawColumns(['end_time', 'project_name'])
-            ->removeColumn('project_id')
-            ->make(true);
-    }
-
+ 
     public function export()
     {
         $rows = User::join('role_user', 'role_user.user_id', '=', 'users.id')
@@ -396,7 +329,6 @@ class MemberEmployeesController extends MemberBaseController
                 'users.name',
                 'users.email',
                 'users.mobile',
-                'designations.name as designation_name',
                 'employee_details.address',
                 'employee_details.hourly_rate',
                 'users.created_at'
@@ -409,7 +341,7 @@ class MemberEmployeesController extends MemberBaseController
         $exportArray = [];
 
         // Define the Excel spreadsheet headers
-        $exportArray[] = ['ID', 'Name', 'Email', 'Mobile', 'Designation', 'Address', 'Hourly Rate', 'Created at'];
+        $exportArray[] = ['ID', 'Name', 'Email', 'Mobile', 'Address', 'Hourly Rate', 'Created at'];
 
         // Convert each member of the returned collection into an array,
         // and append it to the payments array.
@@ -445,7 +377,6 @@ class MemberEmployeesController extends MemberBaseController
         $userId = $request->userId;
         $roleName = $request->role;
         $adminRole = Role::where('name', 'admin')->first();
-        $projectAdminRole = Role::where('name', 'project_admin')->first();
         $employeeRole = Role::where('name', 'employee')->first();
         $user = User::findOrFail($userId);
 
@@ -456,28 +387,11 @@ class MemberEmployeesController extends MemberBaseController
                 $user->roles()->attach($employeeRole->id);
                 break;
 
-            case "project_admin":
-                $user->detachRoles($user->roles);
-                $user->roles()->attach($projectAdminRole->id);
-                $user->roles()->attach($employeeRole->id);
-                break;
-
             case "none":
                 $user->detachRoles($user->roles);
                 $user->roles()->attach($employeeRole->id);
                 break;
         }
-        return Reply::success(__('messages.roleAssigned'));
-    }
-
-    public function assignProjectAdmin(Request $request)
-    {
-        $userId = $request->userId;
-        $projectId = $request->projectId;
-        $project = Project::findOrFail($projectId);
-        $project->project_admin = $userId;
-        $project->save();
-
         return Reply::success(__('messages.roleAssigned'));
     }
 

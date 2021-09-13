@@ -22,7 +22,7 @@
 @section('content')
 <div class="vtabs customvtab m-t-10">
 
-@include('sections.admin_setting_menu')
+@include('sections.country_setting_menu')
 
 <div class="tab-content">
     <div id="vhome3" class="tab-pane active">

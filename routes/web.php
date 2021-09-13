@@ -11,12 +11,12 @@
 |
 */
 
-// Route::post('/consent/remove-lead-request', ['uses' => 'PublicLeadGdprController@removeLeadRequest'])->name('front.gdpr.remove-lead-request');
-// Route::post('/consent/l/update/{lead}', ['uses' => 'PublicLeadGdprController@updateConsent'])->name('front.gdpr.consent.update');
-// Route::post('/consent/l/update/{lead}', ['uses' => 'PublicLeadGdprController@updateConsent'])->name('front.gdpr.consent.update');
-// Route::get('/consent/l/{lead}', ['uses' => 'PublicLeadGdprController@consent'])->name('front.gdpr.consent');
-// Route::post('/forms/l/update/{lead}', ['uses' => 'PublicLeadGdprController@updateLead'])->name('front.gdpr.lead.update');
-// Route::get('/forms/l/{lead}', ['uses' => 'PublicLeadGdprController@lead'])->name('front.gdpr.lead');
+Route::post('/consent/remove-lead-request', ['uses' => 'PublicLeadGdprController@removeLeadRequest'])->name('front.gdpr.remove-lead-request');
+Route::post('/consent/l/update/{lead}', ['uses' => 'PublicLeadGdprController@updateConsent'])->name('front.gdpr.consent.update');
+Route::post('/consent/l/update/{lead}', ['uses' => 'PublicLeadGdprController@updateConsent'])->name('front.gdpr.consent.update');
+Route::get('/consent/l/{lead}', ['uses' => 'PublicLeadGdprController@consent'])->name('front.gdpr.consent');
+Route::post('/forms/l/update/{lead}', ['uses' => 'PublicLeadGdprController@updateLead'])->name('front.gdpr.lead.update');
+Route::get('/forms/l/{lead}', ['uses' => 'PublicLeadGdprController@lead'])->name('front.gdpr.lead');
 
 Route::get('/taskboard-data', ['uses' => 'HomeController@taskBoardData'])->name('front.taskBoardData');
 Route::get('/taskboard/{encrypt}', ['uses' => 'HomeController@taskboard'])->name('front.taskboard');
@@ -56,16 +56,16 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/dashboard', 'AdminDashboardController@index')->name('dashboard');
         Route::get('/dashboard/filter', 'AdminDashboardController@filter')->name('dashboard.filter');
-      //  Route::get('/client-dashboard', 'AdminDashboardController@clientDashboard')->name('clientDashboard');
-      //  Route::get('/finance-dashboard', 'AdminDashboardController@financeDashboard')->name('financeDashboard');
-      // Route::get('/finance-dashboard/estimate', 'AdminDashboardController@financeDashboardEstimate')->name('financeDashboardEstimate');
-      //  Route::get('/finance-dashboard/invoice', 'AdminDashboardController@financeDashboardInvoice')->name('financeDashboardInvoice');
-      //  Route::get('/finance-dashboard/expense', 'AdminDashboardController@financeDashboardExpense')->name('financeDashboardExpense');
-      // Route::get('/finance-dashboard/payment', 'AdminDashboardController@financeDashboardPayment')->name('financeDashboardPayment');
-      //  Route::get('/finance-dashboard/proposal', 'AdminDashboardController@financeDashboardProposal')->name('financeDashboardProposal');
-       // Route::get('/hr-dashboard', 'AdminDashboardController@hrDashboard')->name('hrDashboard');
-        // Route::get('/project-dashboard', 'AdminDashboardController@projectDashboard')->name('projectDashboard');
-        // Route::get('/ticket-dashboard', 'AdminDashboardController@ticketDashboard')->name('ticketDashboard');
+        Route::get('/client-dashboard', 'AdminDashboardController@clientDashboard')->name('clientDashboard');
+        Route::get('/finance-dashboard', 'AdminDashboardController@financeDashboard')->name('financeDashboard');
+        Route::get('/finance-dashboard/estimate', 'AdminDashboardController@financeDashboardEstimate')->name('financeDashboardEstimate');
+        Route::get('/finance-dashboard/invoice', 'AdminDashboardController@financeDashboardInvoice')->name('financeDashboardInvoice');
+        Route::get('/finance-dashboard/expense', 'AdminDashboardController@financeDashboardExpense')->name('financeDashboardExpense');
+        Route::get('/finance-dashboard/payment', 'AdminDashboardController@financeDashboardPayment')->name('financeDashboardPayment');
+        Route::get('/finance-dashboard/proposal', 'AdminDashboardController@financeDashboardProposal')->name('financeDashboardProposal');
+        Route::get('/hr-dashboard', 'AdminDashboardController@hrDashboard')->name('hrDashboard');
+        Route::get('/project-dashboard', 'AdminDashboardController@projectDashboard')->name('projectDashboard');
+        Route::get('/ticket-dashboard', 'AdminDashboardController@ticketDashboard')->name('ticketDashboard');
         Route::post('/dashboard/widget/{dashboardType}', 'AdminDashboardController@widget')->name('dashboard.widget');
 
         Route::get('clients/export/{status?}/{client?}', ['uses' => 'ManageClientsController@export'])->name('clients.export');
@@ -131,6 +131,20 @@ Route::group(['middleware' => 'auth'], function () {
                     Route::delete('destroy/{id}', ['uses' => 'StatesController@destroy'])->name('state.destroy');
                 });
 
+            Route::group(
+                    ['prefix' => 'wotype'], function () {
+                Route::get('wotype/quick-create', ['uses' => 'ManagewotypeController@quickCreate'])->name('wotype.quick-create');
+                Route::post('wotype/quick-store', ['uses' => 'ManagewotypeController@quickStore'])->name('wotype.quick-store');
+                Route::resource('wotype', 'ManagewotypeController');
+            });
+
+            Route::group(
+                    ['prefix' => 'sporttype'], function () {
+                Route::get('sporttype/quick-create', ['uses' => 'ManagesporttypeController@quickCreate'])->name('sporttype.quick-create');
+                Route::post('sporttype/quick-store', ['uses' => 'ManagesporttypeController@quickStore'])->name('sporttype.quick-store');
+                Route::resource('sporttype', 'ManagesporttypeController');
+            });
+            
         Route::group(
             ['prefix' => 'employees'], function () {
 
@@ -150,59 +164,59 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('department/quick-store', ['uses' => 'ManageTeamsController@quickStore'])->name('department.quick-store');
             Route::resource('department', 'ManageTeamsController');
 
-            // Route::get('designations/quick-create', ['uses' => 'ManageDesignationController@quickCreate'])->name('designations.quick-create');
-            // Route::post('designations/quick-store', ['uses' => 'ManageDesignationController@quickStore'])->name('designations.quick-store');
-            // Route::resource('designations', 'ManageDesignationController');
+            Route::get('designations/quick-create', ['uses' => 'ManageDesignationController@quickCreate'])->name('designations.quick-create');
+            Route::post('designations/quick-store', ['uses' => 'ManageDesignationController@quickStore'])->name('designations.quick-store');
+            Route::resource('designations', 'ManageDesignationController');
 
-          //  Route::resource('employee-teams', 'ManageEmployeeTeamsController');
+            Route::resource('employee-teams', 'ManageEmployeeTeamsController');
 
             Route::get('employee-docs/download/{id}', ['uses' => 'EmployeeDocsController@download'])->name('employee-docs.download');
             Route::resource('employee-docs', 'EmployeeDocsController');
         });
 
-        // Route::post('projects/gantt-task-update/{id}', ['uses' => 'ManageProjectsController@updateTaskDuration'])->name('projects.gantt-task-update');
-        // Route::get('projects/ajaxCreate/{columnId?}', ['uses' => 'ManageProjectsController@ajaxCreate'])->name('projects.ajaxCreate');
-        // Route::get('projects/archive-data', ['uses' => 'ManageProjectsController@archiveData'])->name('projects.archive-data');
-        // Route::get('projects/archive', ['uses' => 'ManageProjectsController@archive'])->name('projects.archive');
-        // Route::get('projects/archive-restore/{id?}', ['uses' => 'ManageProjectsController@archiveRestore'])->name('projects.archive-restore');
-        // Route::get('projects/archive-delete/{id?}', ['uses' => 'ManageProjectsController@archiveDestroy'])->name('projects.archive-delete');
-        // Route::get('projects/export/{status?}/{clientID?}', ['uses' => 'ManageProjectsController@export'])->name('projects.export');
-        // Route::get('projects/ganttData/{projectId?}', ['uses' => 'ManageProjectsController@ganttData'])->name('projects.ganttData');
-        // Route::get('projects/gantt/{projectId?}', ['uses' => 'ManageProjectsController@gantt'])->name('projects.gantt');
-        // Route::get('projects/burndown/{projectId?}', ['uses' => 'ManageProjectsController@burndownChart'])->name('projects.burndown-chart');
-        // Route::get('projects/discussion-replies/{projectId}/{discussionId}', ['uses' => 'ManageProjectsController@discussionReplies'])->name('projects.discussionReplies');
-        // Route::get('projects/discussion/{projectId}', ['uses' => 'ManageProjectsController@discussion'])->name('projects.discussion');
-        // Route::post('projects/updateStatus/{id}', ['uses' => 'ManageProjectsController@updateStatus'])->name('projects.updateStatus');
-        // Route::post('projects/updateStatus/{id}', ['uses' => 'ManageProjectsController@updateStatus'])->name('projects.updateStatus');
-        // Route::get('projects/pinned-project', ['uses' => 'ManageProjectsController@pinnedItem'])->name('projects.pinned-project');
-        // Route::get('projects/template-data/{templateId}', ['uses' => 'ManageProjectsController@templateData'])->name('projects.template-data');
+        Route::post('projects/gantt-task-update/{id}', ['uses' => 'ManageProjectsController@updateTaskDuration'])->name('projects.gantt-task-update');
+        Route::get('projects/ajaxCreate/{columnId?}', ['uses' => 'ManageProjectsController@ajaxCreate'])->name('projects.ajaxCreate');
+        Route::get('projects/archive-data', ['uses' => 'ManageProjectsController@archiveData'])->name('projects.archive-data');
+        Route::get('projects/archive', ['uses' => 'ManageProjectsController@archive'])->name('projects.archive');
+        Route::get('projects/archive-restore/{id?}', ['uses' => 'ManageProjectsController@archiveRestore'])->name('projects.archive-restore');
+        Route::get('projects/archive-delete/{id?}', ['uses' => 'ManageProjectsController@archiveDestroy'])->name('projects.archive-delete');
+        Route::get('projects/export/{status?}/{clientID?}', ['uses' => 'ManageProjectsController@export'])->name('projects.export');
+        Route::get('projects/ganttData/{projectId?}', ['uses' => 'ManageProjectsController@ganttData'])->name('projects.ganttData');
+        Route::get('projects/gantt/{projectId?}', ['uses' => 'ManageProjectsController@gantt'])->name('projects.gantt');
+        Route::get('projects/burndown/{projectId?}', ['uses' => 'ManageProjectsController@burndownChart'])->name('projects.burndown-chart');
+        Route::get('projects/discussion-replies/{projectId}/{discussionId}', ['uses' => 'ManageProjectsController@discussionReplies'])->name('projects.discussionReplies');
+        Route::get('projects/discussion/{projectId}', ['uses' => 'ManageProjectsController@discussion'])->name('projects.discussion');
+        Route::post('projects/updateStatus/{id}', ['uses' => 'ManageProjectsController@updateStatus'])->name('projects.updateStatus');
+        Route::post('projects/updateStatus/{id}', ['uses' => 'ManageProjectsController@updateStatus'])->name('projects.updateStatus');
+        Route::get('projects/pinned-project', ['uses' => 'ManageProjectsController@pinnedItem'])->name('projects.pinned-project');
+        Route::get('projects/template-data/{templateId}', ['uses' => 'ManageProjectsController@templateData'])->name('projects.template-data');
 
-        // Route::resource('projects', 'ManageProjectsController');
+        Route::resource('projects', 'ManageProjectsController');
 
-        // Route::get('project-template/data', ['uses' => 'ProjectTemplateController@data'])->name('project-template.data');
-        // Route::get('project-template-task/detail/{id?}', ['uses' => 'ProjectTemplateTaskController@taskDetail'])->name('project-template-task.detail');
-        // Route::resource('project-template', 'ProjectTemplateController');
+        Route::get('project-template/data', ['uses' => 'ProjectTemplateController@data'])->name('project-template.data');
+        Route::get('project-template-task/detail/{id?}', ['uses' => 'ProjectTemplateTaskController@taskDetail'])->name('project-template-task.detail');
+        Route::resource('project-template', 'ProjectTemplateController');
 
-        // Route::post('project-template-members/save-group', ['uses' => 'ProjectMemberTemplateController@storeGroup'])->name('project-template-members.storeGroup');
-        // Route::resource('project-template-member', 'ProjectMemberTemplateController');
+        Route::post('project-template-members/save-group', ['uses' => 'ProjectMemberTemplateController@storeGroup'])->name('project-template-members.storeGroup');
+        Route::resource('project-template-member', 'ProjectMemberTemplateController');
 
-        // Route::get('project-template-task/data/{templateId?}', ['uses' => 'ProjectTemplateTaskController@data'])->name('project-template-task.data');
-        // Route::resource('project-template-task', 'ProjectTemplateTaskController');
+        Route::get('project-template-task/data/{templateId?}', ['uses' => 'ProjectTemplateTaskController@data'])->name('project-template-task.data');
+        Route::resource('project-template-task', 'ProjectTemplateTaskController');
 
-        // Route::resource('project-template-sub-task', 'ProjectTemplateSubTaskController');
+        Route::resource('project-template-sub-task', 'ProjectTemplateSubTaskController');
 
-        // Route::post('projectCategory/store-cat', ['uses' => 'ManageProjectCategoryController@storeCat'])->name('projectCategory.store-cat');
-        // Route::get('projectCategory/create-cat', ['uses' => 'ManageProjectCategoryController@createCat'])->name('projectCategory.create-cat');
-        // Route::resource('projectCategory', 'ManageProjectCategoryController');
+        Route::post('projectCategory/store-cat', ['uses' => 'ManageProjectCategoryController@storeCat'])->name('projectCategory.store-cat');
+        Route::get('projectCategory/create-cat', ['uses' => 'ManageProjectCategoryController@createCat'])->name('projectCategory.create-cat');
+        Route::resource('projectCategory', 'ManageProjectCategoryController');
 
-        // Route::resource('productCategory', 'ManageProductCategoryController');
-        // Route::resource('productSubCategory', 'ProductSubCategoryController');
+        Route::resource('productCategory', 'ManageProductCategoryController');
+        Route::resource('productSubCategory', 'ProductSubCategoryController');
 
         Route::resource('pinned', 'ManagePinnedController', ['only' => ['store', 'destroy']]);
 
-        // Route::post('expenseCategory/store-cat', ['uses' => 'ManageExpenseCategoryController@storeCat'])->name('expenseCategory.store-cat');
-        // Route::get('expenseCategory/create-cat', ['uses' => 'ManageExpenseCategoryController@createCat'])->name('expenseCategory.create-cat');
-        // Route::resource('expenseCategory', 'ManageExpenseCategoryController');
+        Route::post('expenseCategory/store-cat', ['uses' => 'ManageExpenseCategoryController@storeCat'])->name('expenseCategory.store-cat');
+        Route::get('expenseCategory/create-cat', ['uses' => 'ManageExpenseCategoryController@createCat'])->name('expenseCategory.create-cat');
+        Route::resource('expenseCategory', 'ManageExpenseCategoryController');
 
         Route::post('taskCategory/store-cat', ['uses' => 'ManageTaskCategoryController@storeCat'])->name('taskCategory.store-cat');
         Route::get('taskCategory/create-cat', ['uses' => 'ManageTaskCategoryController@createCat'])->name('taskCategory.create-cat');
@@ -219,15 +233,15 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('email-settings/updateMailConfig', ['uses' => 'EmailNotificationSettingController@updateMailConfig'])->name('email-settings.updateMailConfig');
             Route::resource('email-settings', 'EmailNotificationSettingController');
             Route::resource('profile-settings', 'AdminProfileSettingsController');
-//            Route::resource('project-settings', 'ProjectSettingController');
+            Route::resource('project-settings', 'ProjectSettingController');
             Route::resource('menu-settings', 'MenuSettingController')->only(['index','update','edit']);
 
-            // Route::get('currency/exchange-key', ['uses' => 'CurrencySettingController@currencyExchangeKey'])->name('currency.exchange-key');
-            // Route::post('currency/exchange-key-store', ['uses' => 'CurrencySettingController@currencyExchangeKeyStore'])->name('currency.exchange-key-store');
-            // Route::resource('currency', 'CurrencySettingController');
-            // Route::get('currency/exchange-rate/{currency}', ['uses' => 'CurrencySettingController@exchangeRate'])->name('currency.exchange-rate');
-            // Route::get('currency/update/exchange-rates', ['uses' => 'CurrencySettingController@updateExchangeRate'])->name('currency.update-exchange-rates');
-            // Route::resource('currency', 'CurrencySettingController');
+            Route::get('currency/exchange-key', ['uses' => 'CurrencySettingController@currencyExchangeKey'])->name('currency.exchange-key');
+            Route::post('currency/exchange-key-store', ['uses' => 'CurrencySettingController@currencyExchangeKeyStore'])->name('currency.exchange-key-store');
+            Route::resource('currency', 'CurrencySettingController');
+            Route::get('currency/exchange-rate/{currency}', ['uses' => 'CurrencySettingController@exchangeRate'])->name('currency.exchange-rate');
+            Route::get('currency/update/exchange-rates', ['uses' => 'CurrencySettingController@updateExchangeRate'])->name('currency.update-exchange-rates');
+            Route::resource('currency', 'CurrencySettingController');
 
 
             Route::post('theme-settings/activeTheme', ['uses' => 'ThemeSettingsController@activeTheme'])->name('theme-settings.activeTheme');
@@ -243,21 +257,21 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::resource('task-settings', 'TaskSettingsController',  ['only' => ['index', 'store']]);
 
-         //   Route::resource('payment-gateway-credential', 'PaymentGatewayCredentialController');
+            Route::resource('payment-gateway-credential', 'PaymentGatewayCredentialController');
             Route::resource('invoice-settings', 'InvoiceSettingController');
 
-            // Route::get('slack-settings/sendTestNotification', ['uses' => 'SlackSettingController@sendTestNotification'])->name('slack-settings.sendTestNotification');
-            // Route::post('slack-settings/updateSlackNotification/{id}', ['uses' => 'SlackSettingController@updateSlackNotification'])->name('slack-settings.updateSlackNotification');
-            // Route::resource('slack-settings', 'SlackSettingController');
+            Route::get('slack-settings/sendTestNotification', ['uses' => 'SlackSettingController@sendTestNotification'])->name('slack-settings.sendTestNotification');
+            Route::post('slack-settings/updateSlackNotification/{id}', ['uses' => 'SlackSettingController@updateSlackNotification'])->name('slack-settings.updateSlackNotification');
+            Route::resource('slack-settings', 'SlackSettingController');
 
-            // Route::get('push-notification-settings/sendTestNotification', ['uses' => 'PushNotificationController@sendTestNotification'])->name('push-notification-settings.sendTestNotification');
-            // Route::post('push-notification-settings/updatePushNotification/{id}', ['uses' => 'PushNotificationController@updatePushNotification'])->name('push-notification-settings.updatePushNotification');
-            // Route::resource('push-notification-settings', 'PushNotificationController');
+            Route::get('push-notification-settings/sendTestNotification', ['uses' => 'PushNotificationController@sendTestNotification'])->name('push-notification-settings.sendTestNotification');
+            Route::post('push-notification-settings/updatePushNotification/{id}', ['uses' => 'PushNotificationController@updatePushNotification'])->name('push-notification-settings.updatePushNotification');
+            Route::resource('push-notification-settings', 'PushNotificationController');
 
-            // Route::post('update-settings/deleteFile', ['uses' => 'UpdateDatabaseController@deleteFile'])->name('update-settings.deleteFile');
-            // Route::get('update-settings/install', ['uses' => 'UpdateDatabaseController@install'])->name('update-settings.install');
-            // Route::get('update-settings/manual-update', ['uses' => 'UpdateDatabaseController@manual'])->name('update-settings.manual');
-            // Route::resource('update-settings', 'UpdateDatabaseController');
+            Route::post('update-settings/deleteFile', ['uses' => 'UpdateDatabaseController@deleteFile'])->name('update-settings.deleteFile');
+            Route::get('update-settings/install', ['uses' => 'UpdateDatabaseController@install'])->name('update-settings.install');
+            Route::get('update-settings/manual-update', ['uses' => 'UpdateDatabaseController@manual'])->name('update-settings.manual');
+            Route::resource('update-settings', 'UpdateDatabaseController');
 
             Route::post('ticket-agents/update-group/{id}', ['uses' => 'TicketAgentsController@updateGroup'])->name('ticket-agents.update-group');
             Route::resource('ticket-agents', 'TicketAgentsController');
@@ -266,19 +280,19 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('ticketTypes/createModal', ['uses' => 'TicketTypesController@createModal'])->name('ticketTypes.createModal');
             Route::resource('ticketTypes', 'TicketTypesController');
 
-            // Route::get('lead-source-settings/createModal', ['uses' => 'LeadSourceSettingController@createModal'])->name('lead-source-settings.createModal');
-            // Route::resource('lead-source-settings', 'LeadSourceSettingController');
+            Route::get('lead-source-settings/createModal', ['uses' => 'LeadSourceSettingController@createModal'])->name('lead-source-settings.createModal');
+            Route::resource('lead-source-settings', 'LeadSourceSettingController');
 
-            // Route::get('lead-status-settings/createModal', ['uses' => 'LeadStatusSettingController@createModal'])->name('leadSetting.createModal');
-            // Route::get('lead-status-update/{statusId}', ['uses' => 'LeadStatusSettingController@statusUpdate'])->name('leadSetting.statusUpdate');
-            // Route::resource('lead-status-settings', 'LeadStatusSettingController');
+            Route::get('lead-status-settings/createModal', ['uses' => 'LeadStatusSettingController@createModal'])->name('leadSetting.createModal');
+            Route::get('lead-status-update/{statusId}', ['uses' => 'LeadStatusSettingController@statusUpdate'])->name('leadSetting.statusUpdate');
+            Route::resource('lead-status-settings', 'LeadStatusSettingController');
 
-            // Route::get('lead-agent-settings/createModal', ['uses' => 'LeadAgentSettingController@createModal'])->name('leadAgentSetting.createModal');
-            // Route::post('lead-agent-settings/create-agent', ['uses' => 'LeadAgentSettingController@storeAgent'])->name('lead-agent-settings.create-agent');
-            // Route::resource('lead-agent-settings', 'LeadAgentSettingController');
+            Route::get('lead-agent-settings/createModal', ['uses' => 'LeadAgentSettingController@createModal'])->name('leadAgentSetting.createModal');
+            Route::post('lead-agent-settings/create-agent', ['uses' => 'LeadAgentSettingController@storeAgent'])->name('lead-agent-settings.create-agent');
+            Route::resource('lead-agent-settings', 'LeadAgentSettingController');
 
-            // Route::get('offline-payment-setting/createModal', ['uses' => 'OfflinePaymentSettingController@createModal'])->name('offline-payment-setting.createModal');
-            // Route::resource('offline-payment-setting', 'OfflinePaymentSettingController');
+            Route::get('offline-payment-setting/createModal', ['uses' => 'OfflinePaymentSettingController@createModal'])->name('offline-payment-setting.createModal');
+            Route::resource('offline-payment-setting', 'OfflinePaymentSettingController');
 
             Route::get('ticket-channels/create-modal', ['uses' => 'TicketChannelsController@createModal'])->name('ticketChannels.createModal');
             Route::resource('ticketChannels', 'TicketChannelsController');
@@ -286,9 +300,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('replyTemplates/fetch-template', ['uses' => 'TicketReplyTemplatesController@fetchTemplate'])->name('replyTemplates.fetchTemplate');
             Route::resource('replyTemplates', 'TicketReplyTemplatesController');
 
-            // Route::resource('attendance-settings', 'AttendanceSettingController');
+            Route::resource('attendance-settings', 'AttendanceSettingController');
 
-            // Route::resource('leaves-settings', 'LeavesSettingController');
+            Route::resource('leaves-settings', 'LeavesSettingController');
 
             Route::get('data', ['uses' => 'AdminCustomFieldsController@getFields'])->name('custom-fields.data');
             Route::resource('custom-fields', 'AdminCustomFieldsController');
@@ -312,35 +326,35 @@ Route::group(['middleware' => 'auth'], function () {
             Route::resource('custom-modules', 'CustomModuleController');
 
 
-            // Route::get('gdpr/lead/approve-reject/{id}/{type}', ['uses' => 'GdprSettingsController@approveRejectLead'])->name('gdpr.lead.approve-reject');
-            // Route::get('gdpr/approve-reject/{id}/{type}', ['uses' => 'GdprSettingsController@approveReject'])->name('gdpr.approve-reject');
+            Route::get('gdpr/lead/approve-reject/{id}/{type}', ['uses' => 'GdprSettingsController@approveRejectLead'])->name('gdpr.lead.approve-reject');
+            Route::get('gdpr/approve-reject/{id}/{type}', ['uses' => 'GdprSettingsController@approveReject'])->name('gdpr.approve-reject');
 
-            // Route::get('gdpr/lead/removal-data', ['uses' => 'GdprSettingsController@removalLeadData'])->name('gdpr.lead.removal-data');
-            // Route::get('gdpr/removal-data', ['uses' => 'GdprSettingsController@removalData'])->name('gdpr.removal-data');
-            // Route::put('gdpr/update-consent/{id}', ['uses' => 'GdprSettingsController@updateConsent'])->name('gdpr.update-consent');
-            // Route::get('gdpr/edit-consent/{id}', ['uses' => 'GdprSettingsController@editConsent'])->name('gdpr.edit-consent');
-            // Route::delete('gdpr/purpose-delete/{id}', ['uses' => 'GdprSettingsController@purposeDelete'])->name('gdpr.purpose-delete');
-            // Route::get('gdpr/consent-data', ['uses' => 'GdprSettingsController@data'])->name('gdpr.purpose-data');
-            // Route::post('gdpr/store-consent', ['uses' => 'GdprSettingsController@storeConsent'])->name('gdpr.store-consent');
-            // Route::get('gdpr/add-consent', ['uses' => 'GdprSettingsController@AddConsent'])->name('gdpr.add-consent');
-            // Route::get('gdpr/consent', ['uses' => 'GdprSettingsController@consent'])->name('gdpr.consent');
-            // Route::get('gdpr/right-of-access', ['uses' => 'GdprSettingsController@rightOfAccess'])->name('gdpr.right-of-access');
-            // Route::get('gdpr/right-to-informed', ['uses' => 'GdprSettingsController@rightToInformed'])->name('gdpr.right-to-informed');
-            // Route::get('gdpr/right-to-data-portability', ['uses' => 'GdprSettingsController@rightToDataPortability'])->name('gdpr.right-to-data-portability');
-            // Route::get('gdpr/right-to-erasure', ['uses' => 'GdprSettingsController@rightToErasure'])->name('gdpr.right-to-erasure');
-            // Route::resource('gdpr' ,'GdprSettingsController', ['only' => ['index', 'store']]);
+            Route::get('gdpr/lead/removal-data', ['uses' => 'GdprSettingsController@removalLeadData'])->name('gdpr.lead.removal-data');
+            Route::get('gdpr/removal-data', ['uses' => 'GdprSettingsController@removalData'])->name('gdpr.removal-data');
+            Route::put('gdpr/update-consent/{id}', ['uses' => 'GdprSettingsController@updateConsent'])->name('gdpr.update-consent');
+            Route::get('gdpr/edit-consent/{id}', ['uses' => 'GdprSettingsController@editConsent'])->name('gdpr.edit-consent');
+            Route::delete('gdpr/purpose-delete/{id}', ['uses' => 'GdprSettingsController@purposeDelete'])->name('gdpr.purpose-delete');
+            Route::get('gdpr/consent-data', ['uses' => 'GdprSettingsController@data'])->name('gdpr.purpose-data');
+            Route::post('gdpr/store-consent', ['uses' => 'GdprSettingsController@storeConsent'])->name('gdpr.store-consent');
+            Route::get('gdpr/add-consent', ['uses' => 'GdprSettingsController@AddConsent'])->name('gdpr.add-consent');
+            Route::get('gdpr/consent', ['uses' => 'GdprSettingsController@consent'])->name('gdpr.consent');
+            Route::get('gdpr/right-of-access', ['uses' => 'GdprSettingsController@rightOfAccess'])->name('gdpr.right-of-access');
+            Route::get('gdpr/right-to-informed', ['uses' => 'GdprSettingsController@rightToInformed'])->name('gdpr.right-to-informed');
+            Route::get('gdpr/right-to-data-portability', ['uses' => 'GdprSettingsController@rightToDataPortability'])->name('gdpr.right-to-data-portability');
+            Route::get('gdpr/right-to-erasure', ['uses' => 'GdprSettingsController@rightToErasure'])->name('gdpr.right-to-erasure');
+            Route::resource('gdpr' ,'GdprSettingsController', ['only' => ['index', 'store']]);
 
-            // Route::resource('pusher-settings', 'PusherSettingsController');
+            Route::resource('pusher-settings', 'PusherSettingsController');
 
             //social auth settings region
             Route::resource('/social-auth-settings', 'SocialAuthSettingsController', ['only' => ['index', 'update']]);
 
         });
 
-         Route::group(
-             ['prefix' => 'projects'], function () {
-        //     Route::post('project-members/save-group', ['uses' => 'ManageProjectMembersController@storeGroup'])->name('project-members.storeGroup');
-        //     Route::resource('project-members', 'ManageProjectMembersController');
+        Route::group(
+            ['prefix' => 'projects'], function () {
+            Route::post('project-members/save-group', ['uses' => 'ManageProjectMembersController@storeGroup'])->name('project-members.storeGroup');
+            Route::resource('project-members', 'ManageProjectMembersController');
 
             Route::post('tasks/data/{startDate?}/{endDate?}/{hideCompleted?}/{projectId?}', ['uses' => 'ManageTasksController@data'])->name('tasks.data');
             Route::get('tasks/export/{startDate?}/{endDate?}/{projectId?}/{hideCompleted?}', ['uses' => 'ManageTasksController@export'])->name('tasks.export');
@@ -350,67 +364,67 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('tasks/kanban-board/{id}', ['uses' => 'ManageTasksController@kanbanboard'])->name('tasks.kanbanboard');
             Route::resource('tasks', 'ManageTasksController');
 
-        //     Route::post('files/store-link', ['uses' => 'ManageProjectFilesController@storeLink'])->name('files.storeLink');
-        //     Route::get('files/download/{id}', ['uses' => 'ManageProjectFilesController@download'])->name('files.download');
-        //     Route::get('files/thumbnail', ['uses' => 'ManageProjectFilesController@thumbnailShow'])->name('files.thumbnail');
-        //     Route::post('files/multiple-upload', ['uses' => 'ManageProjectFilesController@storeMultiple'])->name('files.multiple-upload');
-        //     Route::resource('files', 'ManageProjectFilesController');
+            Route::post('files/store-link', ['uses' => 'ManageProjectFilesController@storeLink'])->name('files.storeLink');
+            Route::get('files/download/{id}', ['uses' => 'ManageProjectFilesController@download'])->name('files.download');
+            Route::get('files/thumbnail', ['uses' => 'ManageProjectFilesController@thumbnailShow'])->name('files.thumbnail');
+            Route::post('files/multiple-upload', ['uses' => 'ManageProjectFilesController@storeMultiple'])->name('files.multiple-upload');
+            Route::resource('files', 'ManageProjectFilesController');
 
-        //     Route::post('contract-files/store-link', ['uses' => 'ManageContractFilesController@storeLink'])->name('contract-files.storeLink');
-        //     Route::get('contract-files/download/{id}', ['uses' => 'ManageContractFilesController@download'])->name('contract-files.download');
-        //     Route::get('contract-files/thumbnail', ['uses' => 'ManageContractFilesController@thumbnailShow'])->name('contract-files.thumbnail');
-        //     Route::post('contract-files/multiple-upload', ['uses' => 'ManageContractFilesController@storeMultiple'])->name('contract-files.multiple-upload');
-        //     Route::resource('contract-files', 'ManageContractFilesController');
+            Route::post('contract-files/store-link', ['uses' => 'ManageContractFilesController@storeLink'])->name('contract-files.storeLink');
+            Route::get('contract-files/download/{id}', ['uses' => 'ManageContractFilesController@download'])->name('contract-files.download');
+            Route::get('contract-files/thumbnail', ['uses' => 'ManageContractFilesController@thumbnailShow'])->name('contract-files.thumbnail');
+            Route::post('contract-files/multiple-upload', ['uses' => 'ManageContractFilesController@storeMultiple'])->name('contract-files.multiple-upload');
+            Route::resource('contract-files', 'ManageContractFilesController');
 
-        //     Route::get('invoices/download/{id}', ['uses' => 'ManageInvoicesController@download'])->name('invoices.download');
-        //     Route::get('invoices/create-invoice/{id}', ['uses' => 'ManageInvoicesController@createInvoice'])->name('invoices.createInvoice');
-        //     Route::resource('invoices', 'ManageInvoicesController');
+            Route::get('invoices/download/{id}', ['uses' => 'ManageInvoicesController@download'])->name('invoices.download');
+            Route::get('invoices/create-invoice/{id}', ['uses' => 'ManageInvoicesController@createInvoice'])->name('invoices.createInvoice');
+            Route::resource('invoices', 'ManageInvoicesController');
 
-        //     Route::resource('issues', 'ManageIssuesController');
+            Route::resource('issues', 'ManageIssuesController');
 
-        //     Route::post('time-logs/stop-timer/{id}', ['uses' => 'ManageTimeLogsController@stopTimer'])->name('time-logs.stopTimer');
-        //     Route::get('time-logs/data/{id}', ['uses' => 'ManageTimeLogsController@data'])->name('time-logs.data');
-        //     Route::resource('time-logs', 'ManageTimeLogsController');
+            Route::post('time-logs/stop-timer/{id}', ['uses' => 'ManageTimeLogsController@stopTimer'])->name('time-logs.stopTimer');
+            Route::get('time-logs/data/{id}', ['uses' => 'ManageTimeLogsController@data'])->name('time-logs.data');
+            Route::resource('time-logs', 'ManageTimeLogsController');
 
-        //     Route::get('milestones/detail/{id}', ['uses' => 'ManageProjectMilestonesController@detail'])->name('milestones.detail');
-        //     Route::get('milestones/data/{id}', ['uses' => 'ManageProjectMilestonesController@data'])->name('milestones.data');
-        //     Route::resource('milestones', 'ManageProjectMilestonesController');
+            Route::get('milestones/detail/{id}', ['uses' => 'ManageProjectMilestonesController@detail'])->name('milestones.detail');
+            Route::get('milestones/data/{id}', ['uses' => 'ManageProjectMilestonesController@data'])->name('milestones.data');
+            Route::resource('milestones', 'ManageProjectMilestonesController');
 
-        //     Route::resource('project-expenses', 'ManageProjectExpensesController');
-        //     Route::resource('project-payments', 'ManageProjectPaymentsController');
+            Route::resource('project-expenses', 'ManageProjectExpensesController');
+            Route::resource('project-payments', 'ManageProjectPaymentsController');
 
-        //     Route::resource('project-ratings', 'ManageProjectRatingController');
+            Route::resource('project-ratings', 'ManageProjectRatingController');
 
-         });
+        });
 
         Route::group(
             ['prefix' => 'clients'], function() {
-          //  Route::post('save-consent-purpose-data/{client}', ['uses' => 'ManageClientsController@saveConsentLeadData'])->name('clients.save-consent-purpose-data');
-          //  Route::get('consent-purpose-data/{client}', ['uses' => 'ManageClientsController@consentPurposeData'])->name('clients.consent-purpose-data');
-          //  Route::get('gdpr/{id}', ['uses' => 'ManageClientsController@gdpr'])->name('clients.gdpr');
+            Route::post('save-consent-purpose-data/{client}', ['uses' => 'ManageClientsController@saveConsentLeadData'])->name('clients.save-consent-purpose-data');
+            Route::get('consent-purpose-data/{client}', ['uses' => 'ManageClientsController@consentPurposeData'])->name('clients.consent-purpose-data');
+            Route::get('gdpr/{id}', ['uses' => 'ManageClientsController@gdpr'])->name('clients.gdpr');
             Route::get('projects/{id}', ['uses' => 'ManageClientsController@showProjects'])->name('clients.projects');
             Route::get('invoices/{id}', ['uses' => 'ManageClientsController@showInvoices'])->name('clients.invoices');
            // Route::get('payments/{id}', ['uses' => 'ManageClientsController@showPayments'])->name('clients.payments');
 
-         //  Route::get('contacts/data/{id}', ['uses' => 'ClientContactController@data'])->name('contacts.data');
+           Route::get('contacts/data/{id}', ['uses' => 'ClientContactController@data'])->name('contacts.data');
             Route::resource('contacts', 'ClientContactController');
         });
 
-      //  Route::get('all-issues/data', ['uses' => 'ManageAllIssuesController@data'])->name('all-issues.data');
-      //  Route::resource('all-issues', 'ManageAllIssuesController');
+        Route::get('all-issues/data', ['uses' => 'ManageAllIssuesController@data'])->name('all-issues.data');
+        Route::resource('all-issues', 'ManageAllIssuesController');
 
-      //  Route::get('all-time-logs/show-active-timer', ['uses' => 'ManageAllTimeLogController@showActiveTimer'])->name('all-time-logs.show-active-timer');
-        // Route::get('all-time-logs/members/{projectId}', ['uses' => 'ManageAllTimeLogController@membersList'])->name('all-time-logs.members');
-        // Route::get('all-time-logs/task-members/{taskId}', ['uses' => 'ManageAllTimeLogController@taskMembersList'])->name('all-time-logs.task-members');
-        // Route::get('all-time-logs/export/{startDate?}/{endDate?}/{projectId?}/{employee?}', ['uses' => 'ManageAllTimeLogController@export'])->name('all-time-logs.export');
-        // Route::post('all-time-logs/stop-timer/{id}', ['uses' => 'ManageAllTimeLogController@stopTimer'])->name('all-time-logs.stopTimer');
-        // Route::post('all-time-logs/data', ['uses' => 'ManageAllTimeLogController@data'])->name('all-time-logs.data');
-        // Route::get('all-time-logs/by-employee', ['uses' => 'ManageAllTimeLogController@byEmployee'])->name('all-time-logs.by-employee');
-        // Route::post('all-time-logs/userTimelogs', ['uses' => 'ManageAllTimeLogController@userTimelogs'])->name('all-time-logs.userTimelogs');
-        // Route::post('all-time-logs/approve-timelog', ['uses' => 'ManageAllTimeLogController@approveTimelog'])->name('all-time-logs.approve-timelog');
-        // Route::get('all-time-logs/active-timelogs', ['uses' => 'ManageAllTimeLogController@activeTimelogs'])->name('all-time-logs.active-timelogs');
-        // Route::get('all-time-logs/calendar', ['uses' => 'ManageAllTimeLogController@calendar'])->name('all-time-logs.calendar');
-        // Route::resource('all-time-logs', 'ManageAllTimeLogController');
+        Route::get('all-time-logs/show-active-timer', ['uses' => 'ManageAllTimeLogController@showActiveTimer'])->name('all-time-logs.show-active-timer');
+        Route::get('all-time-logs/members/{projectId}', ['uses' => 'ManageAllTimeLogController@membersList'])->name('all-time-logs.members');
+        Route::get('all-time-logs/task-members/{taskId}', ['uses' => 'ManageAllTimeLogController@taskMembersList'])->name('all-time-logs.task-members');
+        Route::get('all-time-logs/export/{startDate?}/{endDate?}/{projectId?}/{employee?}', ['uses' => 'ManageAllTimeLogController@export'])->name('all-time-logs.export');
+        Route::post('all-time-logs/stop-timer/{id}', ['uses' => 'ManageAllTimeLogController@stopTimer'])->name('all-time-logs.stopTimer');
+        Route::post('all-time-logs/data', ['uses' => 'ManageAllTimeLogController@data'])->name('all-time-logs.data');
+        Route::get('all-time-logs/by-employee', ['uses' => 'ManageAllTimeLogController@byEmployee'])->name('all-time-logs.by-employee');
+        Route::post('all-time-logs/userTimelogs', ['uses' => 'ManageAllTimeLogController@userTimelogs'])->name('all-time-logs.userTimelogs');
+        Route::post('all-time-logs/approve-timelog', ['uses' => 'ManageAllTimeLogController@approveTimelog'])->name('all-time-logs.approve-timelog');
+        Route::get('all-time-logs/active-timelogs', ['uses' => 'ManageAllTimeLogController@activeTimelogs'])->name('all-time-logs.active-timelogs');
+        Route::get('all-time-logs/calendar', ['uses' => 'ManageAllTimeLogController@calendar'])->name('all-time-logs.calendar');
+        Route::resource('all-time-logs', 'ManageAllTimeLogController');
 
     
          // task routes
@@ -450,19 +464,19 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('task-report/data', ['uses' => 'TaskReportController@data'])->name('task-report.data');
             Route::get('task-report/export/{startDate?}/{endDate?}/{employeeId?}/{projectId?}', ['uses' => 'TaskReportController@export'])->name('task-report.export');
             Route::resource('task-report', 'TaskReportController');
-           // Route::resource('time-log-report', 'TimeLogReportController');
+            Route::resource('time-log-report', 'TimeLogReportController');
             Route::resource('finance-report', 'FinanceReportController');
             Route::resource('income-expense-report', 'IncomeVsExpenseReportController');
             //region Leave Report routes
-            // Route::post('leave-report/data', ['uses' => 'LeaveReportController@data'])->name('leave-report.data');
-            // Route::get('leave-report/export/{id?}/{startDate?}/{endDate?}', 'LeaveReportController@export')->name('leave-report.export');
-            // Route::get('leave-report/pending-leaves/{id?}', 'LeaveReportController@pendingLeaves')->name('leave-report.pending-leaves');
-            // Route::get('leave-report/upcoming-leaves/{id?}', 'LeaveReportController@upcomingLeaves')->name('leave-report.upcoming-leaves');
-            // Route::resource('leave-report', 'LeaveReportController');
+            Route::post('leave-report/data', ['uses' => 'LeaveReportController@data'])->name('leave-report.data');
+            Route::get('leave-report/export/{id?}/{startDate?}/{endDate?}', 'LeaveReportController@export')->name('leave-report.export');
+            Route::get('leave-report/pending-leaves/{id?}', 'LeaveReportController@pendingLeaves')->name('leave-report.pending-leaves');
+            Route::get('leave-report/upcoming-leaves/{id?}', 'LeaveReportController@upcomingLeaves')->name('leave-report.upcoming-leaves');
+            Route::resource('leave-report', 'LeaveReportController');
 
-            // Route::post('attendance-report/report', ['uses' => 'AttendanceReportController@report'])->name('attendance-report.report');
-            // Route::get('attendance-report/export/{startDate}/{endDate}/{employee}', ['uses' => 'AttendanceReportController@reportExport'])->name('attendance-report.reportExport');
-            // Route::resource('attendance-report', 'AttendanceReportController');
+            Route::post('attendance-report/report', ['uses' => 'AttendanceReportController@report'])->name('attendance-report.report');
+            Route::get('attendance-report/export/{startDate}/{endDate}/{employee}', ['uses' => 'AttendanceReportController@reportExport'])->name('attendance-report.reportExport');
+            Route::resource('attendance-report', 'AttendanceReportController');
             //endregion
         });
 
@@ -542,11 +556,11 @@ Route::group(['middleware' => 'auth'], function () {
             Route::resource('all-credit-notes', 'ManageAllCreditNotesController');
 
             //Payments routes
-            // Route::get('payments/export/{startDate}/{endDate}/{status}/{payment}', ['uses' => 'ManagePaymentsController@export'])->name('payments.export');
-            // Route::get('payments/pay-invoice/{invoiceId}', ['uses' => 'ManagePaymentsController@payInvoice'])->name('payments.payInvoice');
-            // Route::get('payments/download', ['uses' => 'ManagePaymentsController@downloadSample'])->name('payments.downloadSample');
-            // Route::post('payments/import', ['uses' => 'ManagePaymentsController@importExcel'])->name('payments.importExcel');
-            // Route::resource('payments', 'ManagePaymentsController');
+            Route::get('payments/export/{startDate}/{endDate}/{status}/{payment}', ['uses' => 'ManagePaymentsController@export'])->name('payments.export');
+            Route::get('payments/pay-invoice/{invoiceId}', ['uses' => 'ManagePaymentsController@payInvoice'])->name('payments.payInvoice');
+            Route::get('payments/download', ['uses' => 'ManagePaymentsController@downloadSample'])->name('payments.downloadSample');
+            Route::post('payments/import', ['uses' => 'ManagePaymentsController@importExcel'])->name('payments.importExcel');
+            Route::resource('payments', 'ManagePaymentsController');
         });
 
         //Ticket routes
@@ -570,22 +584,22 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('user-chat', 'AdminChatController');
 
         // attendance
-        // Route::get('attendances/export/{startDate?}/{endDate?}/{employee?}', ['uses' => 'ManageAttendanceController@export'])->name('attendances.export');
+        Route::get('attendances/export/{startDate?}/{endDate?}/{employee?}', ['uses' => 'ManageAttendanceController@export'])->name('attendances.export');
 
-        // Route::get('attendances/detail', ['uses' => 'ManageAttendanceController@attendanceDetail'])->name('attendances.detail');
-        // Route::get('attendances/data', ['uses' => 'ManageAttendanceController@data'])->name('attendances.data');
-        // Route::get('attendances/check-holiday', ['uses' => 'ManageAttendanceController@checkHoliday'])->name('attendances.check-holiday');
-        // Route::post('attendances/employeeData/{startDate?}/{endDate?}/{userId?}', ['uses' => 'ManageAttendanceController@employeeData'])->name('attendances.employeeData');
-        // Route::post('attendances/refresh-count/{startDate?}/{endDate?}/{userId?}', ['uses' => 'ManageAttendanceController@refreshCount'])->name('attendances.refreshCount');
-        // Route::get('attendances/attendance-by-date', ['uses' => 'ManageAttendanceController@attendanceByDate'])->name('attendances.attendanceByDate');
-        // Route::get('attendances/byDateData', ['uses' => 'ManageAttendanceController@byDateData'])->name('attendances.byDateData');
-        // Route::post('attendances/dateAttendanceCount', ['uses' => 'ManageAttendanceController@dateAttendanceCount'])->name('attendances.dateAttendanceCount');
-        // Route::get('attendances/info/{id}', ['uses' => 'ManageAttendanceController@detail'])->name('attendances.info');
-        // Route::get('attendances/mark/{id}/{day}/{month}/{year}', ['uses' => 'ManageAttendanceController@mark'])->name('attendances.mark');
-        // Route::get('attendances/summary', ['uses' => 'ManageAttendanceController@summary'])->name('attendances.summary');
-        // Route::post('attendances/summaryData', ['uses' => 'ManageAttendanceController@summaryData'])->name('attendances.summaryData');
-        // Route::post('attendances/storeMark', ['uses' => 'ManageAttendanceController@storeMark'])->name('attendances.storeMark');
-        // Route::resource('attendances', 'ManageAttendanceController');
+        Route::get('attendances/detail', ['uses' => 'ManageAttendanceController@attendanceDetail'])->name('attendances.detail');
+        Route::get('attendances/data', ['uses' => 'ManageAttendanceController@data'])->name('attendances.data');
+        Route::get('attendances/check-holiday', ['uses' => 'ManageAttendanceController@checkHoliday'])->name('attendances.check-holiday');
+        Route::post('attendances/employeeData/{startDate?}/{endDate?}/{userId?}', ['uses' => 'ManageAttendanceController@employeeData'])->name('attendances.employeeData');
+        Route::post('attendances/refresh-count/{startDate?}/{endDate?}/{userId?}', ['uses' => 'ManageAttendanceController@refreshCount'])->name('attendances.refreshCount');
+        Route::get('attendances/attendance-by-date', ['uses' => 'ManageAttendanceController@attendanceByDate'])->name('attendances.attendanceByDate');
+        Route::get('attendances/byDateData', ['uses' => 'ManageAttendanceController@byDateData'])->name('attendances.byDateData');
+        Route::post('attendances/dateAttendanceCount', ['uses' => 'ManageAttendanceController@dateAttendanceCount'])->name('attendances.dateAttendanceCount');
+        Route::get('attendances/info/{id}', ['uses' => 'ManageAttendanceController@detail'])->name('attendances.info');
+        Route::get('attendances/mark/{id}/{day}/{month}/{year}', ['uses' => 'ManageAttendanceController@mark'])->name('attendances.mark');
+        Route::get('attendances/summary', ['uses' => 'ManageAttendanceController@summary'])->name('attendances.summary');
+        Route::post('attendances/summaryData', ['uses' => 'ManageAttendanceController@summaryData'])->name('attendances.summaryData');
+        Route::post('attendances/storeMark', ['uses' => 'ManageAttendanceController@storeMark'])->name('attendances.storeMark');
+        Route::resource('attendances', 'ManageAttendanceController');
 
         //Event Calendar
         Route::post('events/removeAttendee', ['as' => 'events.removeAttendee', 'uses' => 'AdminEventCalendarController@removeAttendee']);
@@ -603,15 +617,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('role-permission', 'ManageRolePermissionController');
 
         //Leaves
-        // Route::post('leaves/leaveAction', ['as' => 'leaves.leaveAction', 'uses' => 'ManageLeavesController@leaveAction']);
-        // Route::get('leaves/show-reject-modal', ['as' => 'leaves.show-reject-modal', 'uses' => 'ManageLeavesController@rejectModal']);
-        // Route::get('leaves/all-leaves', ['as' => 'leave.all-leaves', 'uses' => 'ManageLeavesController@allLeaves']);
-        // Route::post('leaves/data', ['as' => 'leaves.data', 'uses' => 'ManageLeavesController@data']);
-        // Route::get('leaves/pending', ['as' => 'leaves.pending', 'uses' => 'ManageLeavesController@pendingLeaves']);
-        // Route::resource('leaves', 'ManageLeavesController');
+        Route::post('leaves/leaveAction', ['as' => 'leaves.leaveAction', 'uses' => 'ManageLeavesController@leaveAction']);
+        Route::get('leaves/show-reject-modal', ['as' => 'leaves.show-reject-modal', 'uses' => 'ManageLeavesController@rejectModal']);
+        Route::get('leaves/all-leaves', ['as' => 'leave.all-leaves', 'uses' => 'ManageLeavesController@allLeaves']);
+        Route::post('leaves/data', ['as' => 'leaves.data', 'uses' => 'ManageLeavesController@data']);
+        Route::get('leaves/pending', ['as' => 'leaves.pending', 'uses' => 'ManageLeavesController@pendingLeaves']);
+        Route::resource('leaves', 'ManageLeavesController');
 
         // LeaveType Resource
-       // Route::resource('leaveType', 'ManageLeaveTypesController');
+        Route::resource('leaveType', 'ManageLeaveTypesController');
 
 
         //sub task routes
@@ -627,37 +641,37 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('taxes', 'TaxSettingsController');
 
         //region Products Routes
-        // Route::get('products/export', ['uses' => 'AdminProductController@export'])->name('products.export');
-        // Route::resource('products', 'AdminProductController');
+        Route::get('products/export', ['uses' => 'AdminProductController@export'])->name('products.export');
+        Route::resource('products', 'AdminProductController');
         //endregion
 
         //region contracts routes
-        // Route::get('contracts/download/{id}', ['as' => 'contracts.download', 'uses' => 'AdminContractController@download']);
-        // Route::get('contracts/sign/{id}', ['as' => 'contracts.sign-modal', 'uses' => 'AdminContractController@signModal']);
-        // Route::post('contracts/sign/{id}', ['as' => 'contracts.sign', 'uses' => 'AdminContractController@sign']);
-        // Route::get('contracts/copy/{id}', ['as' => 'contracts.copy', 'uses' => 'AdminContractController@copy']);
-        // Route::post('contracts/copy-submit', ['as' => 'contracts.copy-submit', 'uses' => 'AdminContractController@copySubmit']);
-        // Route::post('contracts/add-discussion/{id}', ['as' => 'contracts.add-discussion', 'uses' => 'AdminContractController@addDiscussion']);
-        // Route::get('contracts/edit-discussion/{id}', ['as' => 'contracts.edit-discussion', 'uses' => 'AdminContractController@editDiscussion']);
-        // Route::post('contracts/update-discussion/{id}', ['as' => 'contracts.update-discussion', 'uses' => 'AdminContractController@updateDiscussion']);
-        // Route::post('contracts/remove-discussion/{id}', ['as' => 'contracts.remove-discussion', 'uses' => 'AdminContractController@removeDiscussion']);
-        // Route::resource('contracts', 'AdminContractController');
+        Route::get('contracts/download/{id}', ['as' => 'contracts.download', 'uses' => 'AdminContractController@download']);
+        Route::get('contracts/sign/{id}', ['as' => 'contracts.sign-modal', 'uses' => 'AdminContractController@signModal']);
+        Route::post('contracts/sign/{id}', ['as' => 'contracts.sign', 'uses' => 'AdminContractController@sign']);
+        Route::get('contracts/copy/{id}', ['as' => 'contracts.copy', 'uses' => 'AdminContractController@copy']);
+        Route::post('contracts/copy-submit', ['as' => 'contracts.copy-submit', 'uses' => 'AdminContractController@copySubmit']);
+        Route::post('contracts/add-discussion/{id}', ['as' => 'contracts.add-discussion', 'uses' => 'AdminContractController@addDiscussion']);
+        Route::get('contracts/edit-discussion/{id}', ['as' => 'contracts.edit-discussion', 'uses' => 'AdminContractController@editDiscussion']);
+        Route::post('contracts/update-discussion/{id}', ['as' => 'contracts.update-discussion', 'uses' => 'AdminContractController@updateDiscussion']);
+        Route::post('contracts/remove-discussion/{id}', ['as' => 'contracts.remove-discussion', 'uses' => 'AdminContractController@removeDiscussion']);
+        Route::resource('contracts', 'AdminContractController');
         //endregion
 
         //region contracts type routes
-        // Route::get('contract-type/data', ['as' => 'contract-type.data', 'uses' => 'AdminContractTypeController@data']);
-        // Route::post('contract-type/type-store', ['as' => 'contract-type.store-contract-type', 'uses' => 'AdminContractTypeController@storeContractType']);
-        // Route::get('contract-type/type-create', ['as' => 'contract-type.create-contract-type', 'uses' => 'AdminContractTypeController@createContractType']);
+        Route::get('contract-type/data', ['as' => 'contract-type.data', 'uses' => 'AdminContractTypeController@data']);
+        Route::post('contract-type/type-store', ['as' => 'contract-type.store-contract-type', 'uses' => 'AdminContractTypeController@storeContractType']);
+        Route::get('contract-type/type-create', ['as' => 'contract-type.create-contract-type', 'uses' => 'AdminContractTypeController@createContractType']);
 
-        // Route::resource('contract-type', 'AdminContractTypeController')->parameters([
-        //     'contract-type' => 'type'
-        // ]);
+        Route::resource('contract-type', 'AdminContractTypeController')->parameters([
+            'contract-type' => 'type'
+        ]);
         //endregion
 
         //region contract renew routes
-        // Route::get('contract-renew/{id}', ['as' => 'contracts.renew', 'uses' => 'AdminContractRenewController@index']);
-        // Route::post('contract-renew-submit/{id}', ['as' => 'contracts.renew-submit', 'uses' => 'AdminContractRenewController@renew']);
-        // Route::post('contract-renew-remove/{id}', ['as' => 'contracts.renew-remove', 'uses' => 'AdminContractRenewController@destroy']);
+        Route::get('contract-renew/{id}', ['as' => 'contracts.renew', 'uses' => 'AdminContractRenewController@index']);
+        Route::post('contract-renew-submit/{id}', ['as' => 'contracts.renew-submit', 'uses' => 'AdminContractRenewController@renew']);
+        Route::post('contract-renew-remove/{id}', ['as' => 'contracts.renew-remove', 'uses' => 'AdminContractRenewController@destroy']);
         //endregion
 
         //region discussion category routes
@@ -1039,16 +1053,16 @@ Route::group(['middleware' => 'auth'], function () {
              Route::get('tasks/check-task/{taskID}', ['uses' => 'ClientTasksController@checkTask'])->name('tasks.checkTask');
              Route::resource('tasks', 'ClientTasksController');
 
-            Route::post('files/store-link', ['uses' => 'ClientFilesController@storeLink'])->name('files.storeLink');
-            Route::get('files/download/{id}', ['uses' => 'ClientFilesController@download'])->name('files.download');
-            Route::get('files/thumbnail', ['uses' => 'ClientFilesController@thumbnailShow'])->name('files.thumbnail');
-            Route::resource('files', 'ClientFilesController');
+        //     Route::post('files/store-link', ['uses' => 'ClientFilesController@storeLink'])->name('files.storeLink');
+        //     Route::get('files/download/{id}', ['uses' => 'ClientFilesController@download'])->name('files.download');
+        //     Route::get('files/thumbnail', ['uses' => 'ClientFilesController@thumbnailShow'])->name('files.thumbnail');
+        //     Route::resource('files', 'ClientFilesController');
 
         //     Route::get('time-log/data/{id}', ['uses' => 'ClientTimeLogController@data'])->name('time-log.data');
         //     Route::resource('time-log', 'ClientTimeLogController');
 
-            Route::get('project-invoice/download/{id}', ['uses' => 'ClientProjectInvoicesController@download'])->name('project-invoice.download');
-            Route::resource('project-invoice', 'ClientProjectInvoicesController');
+        //     Route::get('project-invoice/download/{id}', ['uses' => 'ClientProjectInvoicesController@download'])->name('project-invoice.download');
+        //     Route::resource('project-invoice', 'ClientProjectInvoicesController');
             
         //     Route::resource('project-expenses', 'ClientProjectExpensesController');
         //     Route::resource('project-payments', 'ClientProjectPaymentsController');

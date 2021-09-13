@@ -30,7 +30,7 @@
                 <div class="panel-heading">@lang($pageTitle)</div>
 
                 <div class="vtabs customvtab">
-                    @include('sections.admin_setting_menu')
+                @include('sections.country_setting_menu')
 
                     <div class="row">
                         <div class="white-box">

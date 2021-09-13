@@ -46,6 +46,12 @@ class TaskReportDataTable extends BaseDataTable
                 }
                 return $members;
             })
+            ->addColumn('created_at', function ($row) {
+                if (is_null($row->created_at)) {
+                    return "";
+                }
+                return $row->created_at->format($this->global->date_format);
+            })
             ->addColumn('name', function ($row) {
                 $members = [];
                 foreach ($row->users as $member) {
@@ -59,14 +65,14 @@ class TaskReportDataTable extends BaseDataTable
             ->editColumn('status', function ($row) {
                 return '<label class="label" style="background-color: ' . $row->label_color . '">' . $row->column_name . '</label>';
             })
-            ->editColumn('project_name', function ($row) {
-                if (is_null($row->project_id)) {
+            ->editColumn('site_name', function ($row) {
+               // dd($row);
+                if (is_null($row->label_name)) {
                     return "";
                 }
-                return '<a href="' . route('admin.projects.show', $row->project_id) . '">' . ucfirst($row->project_name) . '</a>';
+                return ucfirst($row->label_name) ;
             })
-            ->rawColumns(['status', 'project_name', 'due_date', 'users', 'heading'])
-            ->removeColumn('project_id')
+            ->rawColumns(['status', 'due_date', 'users', 'heading', 'label_name'])
             ->removeColumn('image')
             ->addIndexColumn();
 
@@ -82,13 +88,12 @@ class TaskReportDataTable extends BaseDataTable
     {
         $request = $this->request();
         $employeeId = $request->employeeId;
-        $projectId = $request->projectId;
         
-        $model = $model->leftJoin('projects', 'projects.id', '=', 'tasks.project_id')
-            ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
+        $model = $model->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
+            ->join('task_label_list', 'task_label_list.id', '=', 'tasks.site_id')
             ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
             ->join('users as member', 'task_users.user_id', '=', 'member.id')
-            ->select('tasks.id', 'projects.project_name', 'tasks.heading', 'member.name', 'tasks.due_date', 'tasks.status', 'tasks.project_id', 'taskboard_columns.column_name', 'taskboard_columns.label_color')
+            ->select('tasks.id', 'tasks.heading', 'tasks.created_at', 'task_label_list.label_name', 'member.name', 'tasks.due_date', 'tasks.status', 'taskboard_columns.column_name', 'taskboard_columns.label_color')
             ->groupBy('tasks.id');
         
         if ($request->startDate !== null && $request->startDate != 'null' && $request->startDate != '') {
@@ -101,13 +106,6 @@ class TaskReportDataTable extends BaseDataTable
             $model->where(DB::raw('DATE(tasks.`due_date`)'), '<=', $endDate);
         }
 
-        if ($projectId != 0) {
-            $model->where('tasks.project_id', '=', $projectId);
-        }
-
-        if ($request->clientID != '' && $request->clientID !=  null && $request->clientID !=  'all') {
-            $model->where('projects.client_id', '=', $request->clientID);
-        }
 
         if ($request->status != '' && $request->status !=  null && $request->status !=  'all') {
             $model->where('tasks.board_column_id', '=', $request->status);
@@ -117,7 +115,7 @@ class TaskReportDataTable extends BaseDataTable
         if ($employeeId != 0) {
             $model->where('task_users.user_id', '=', $request->employeeId);
         }
-
+  
         return $model;
     }
 
@@ -141,7 +139,7 @@ class TaskReportDataTable extends BaseDataTable
             ->processing(true)
             ->language(__("app.datatable"))
             ->buttons(
-                Button::make(['extend' => 'export', 'buttons' => ['excel', 'csv'], 'text' => '<i class="fa fa-download"></i> ' . trans('app.exportExcel') . '&nbsp;<span class="caret"></span>'])
+                Button::make(['extend' => 'export', 'buttons' => ['excel', 'pdf'], 'text' => '<i class="fa fa-download"></i> ' . trans('app.exportExcel') . '&nbsp;<span class="caret"></span>'])
             )
             ->parameters([
                 'initComplete' => 'function () {
@@ -166,10 +164,11 @@ class TaskReportDataTable extends BaseDataTable
         return [
             __('app.id') => ['data' => 'id', 'name' => 'id', 'visible' => false, 'exportable' => false],
             ' #' => ['data' => 'DT_RowIndex', 'orderable' =>false, 'searchable' => false ],
-            __('app.project')  => ['data' => 'project_name', 'name' => 'projects.project_name'],
             __('app.task') => ['data' => 'heading', 'name' => 'heading'],
+            __('app.menu.taskLabel')  => ['data' => 'site_name', 'name' => 'task_label_list->label_name'],
             __('modules.tasks.assigned') => ['data' => 'name', 'name' => 'name', 'visible' => false],
             __('modules.tasks.assignTo') => ['data' => 'users', 'name' => 'member.name', 'exportable' => false],
+            __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at'],
             __('app.dueDate') => ['data' => 'due_date', 'name' => 'due_date'],
             __('app.status') => ['data' => 'status', 'name' => 'status'],
         ];

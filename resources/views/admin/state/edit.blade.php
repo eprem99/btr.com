@@ -20,7 +20,12 @@
 @endsection
 
 @section('content')
+<div class="vtabs customvtab m-t-10">
 
+@include('sections.country_setting_menu')
+
+<div class="tab-content">
+    <div id="vhome3" class="tab-pane active">
 <div class="row">
         <div class="col-md-12">
             <div class="panel panel-inverse">
@@ -110,7 +115,9 @@
         </div>
     </div>
     <!-- .row -->
-
+    </div>
+        </div>
+    </div>
 @endsection
 
 @push('footer-script')

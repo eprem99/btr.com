@@ -232,6 +232,8 @@ return array (
     'state' => 'State',
     'newstate' => 'Add state',
     'browsestate' => 'all States',
+    'wotype' => 'Work Order Type',
+    'sporttype' => 'Sport Type',
   ),
   'language' => 'Language',
   'delete' => 'Delete',

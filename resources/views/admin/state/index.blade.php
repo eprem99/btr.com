@@ -21,7 +21,12 @@
 @endsection
 
 @section('content')
+<div class="vtabs customvtab m-t-10">
 
+@include('sections.country_setting_menu')
+
+<div class="tab-content">
+    <div id="vhome3" class="tab-pane active">
     <div class="row">
         <div class="col-md-12">
             <div class="row">
@@ -70,29 +75,11 @@
 
 
     </div>
-    <!-- .row -->
-    {{--Ajax Modal--}}
-    <div class="modal fade bs-modal-md in" id="projectCategoryModal" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-md" id="modal-data-application">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <span class="caption-subject font-red-sunglo bold uppercase" id="modelHeading"></span>
-                </div>
-                <div class="modal-body">
-                    Loading...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn blue">Save changes</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
     </div>
-    {{--Ajax Modal Ends--}}
+        </div>
+
+
+    </div>
 
 @endsection
 

@@ -161,36 +161,9 @@
                 }
             });
         });
+   });
 
 
-        $('body').on('change', '.assign_role', function() {
-            var id = $(this).data('user-id');
-            var role = $(this).val();
-            var token = "{{ csrf_token() }}";
-
-            if (typeof id !== 'undefined') {
-
-                $.easyAjax({
-                    url: '{{route('admin.employees.assignRole')}}',
-                    type: "POST",
-                    data: {
-                        role: role,
-                        userId: id,
-                        _token: token
-                    },
-                    success: function(response) {
-                        if (response.status == "success") {
-                            $.easyBlockUI('#employees-table');
-                            window.LaravelDataTables["employees-table"].draw();
-                            $.easyUnblockUI('#employees-table');
-                        }
-                    }
-                })
-            }
-
-        });
-
-    });
     function loadTable(){
         window.LaravelDataTables["employees-table"].draw();
     }
@@ -237,6 +210,30 @@
 
         window.location.href = url;
     }
+    $('body').on('click', '.assign_role', function() {
+            var id = $(this).data('user-id');
+            var role = $(this).data('role-id');;
+            var token = "{{ csrf_token() }}";
+            if (typeof id !== 'undefined') {
 
+                $.easyAjax({
+                    url: '{{route('admin.employees.assignRole')}}',
+                    type: "POST",
+                    data: {
+                        role: role,
+                        userId: id,
+                        _token: token
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            $.easyBlockUI('#employees-table');
+                            window.LaravelDataTables["employees-table"].draw();
+                            $.easyUnblockUI('#employees-table');
+                        }
+                    }
+                })
+            }
+
+        });
 </script>
 @endpush

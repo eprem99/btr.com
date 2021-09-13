@@ -52,24 +52,6 @@
         </div>
     </div>
 
-    <div class="col-md-12 m-t-20">
-        <h5 class="box-title">@lang('app.selectProject')</h5>
-
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-12">
-                    <select class="select2 form-control" data-placeholder="@lang('app.selectProject')" id="project_id">
-                        <option value="">@lang('app.all')</option>
-                        @foreach($projects as $project)
-                            <option
-                                    value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="col-md-12">
         <h5 class="box-title">@lang('app.select') @lang('app.client')</h5>
 
@@ -157,8 +139,6 @@
     <div class="row">
         <div class="col-lg-12 m-t-20">
             <div class="white-box">
-
-                <h3 class="box-title">@lang("modules.taskReport.chartTitle")</h3>
                 <div>
                     <canvas id="chart3" height="50"></canvas>
                 </div>
