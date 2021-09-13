@@ -73,9 +73,12 @@ class AdminDashboardController extends AdminBaseController
             ->orderBy('due_date', 'desc')
             ->select('tasks.*')
             ->get();
-
+            
+            $from = date('Y-m-d', strtotime('-1 day'));
+          
             $this->newTasks = Task::with('labels')
             ->where('board_column_id', '=', '1')
+            ->where('created_at', '>=', $from)
             ->orderBy('id', 'desc')
             ->get();
 

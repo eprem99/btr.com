@@ -12,6 +12,7 @@ use App\InvoiceSetting;
 use App\Notifications\NewInvoice;
 use App\Payment;
 use App\Project;
+use App\Task;
 use App\Setting;
 use App\User;
 use Carbon\Carbon;
@@ -50,7 +51,7 @@ class ManageInvoicesController extends AdminBaseController
      */
     public function create()
     {
-        $this->project = Project::findOrFail();
+        $this->tasks = Task::findOrFail();
         $this->currencies = Currency::all();
         $this->lastInvoice = Invoice::orderBy('id', 'desc')->first();
         $this->invoiceSetting = invoice_setting();
@@ -60,6 +61,7 @@ class ManageInvoicesController extends AdminBaseController
 
     public function createInvoice(Request $request)
     {
+        $this->tasks = Task::findOrFail();
         $this->project = Project::findOrFail($request->id);
         $this->currencies = Currency::all();
         $this->lastInvoice = Invoice::orderBy('id', 'desc')->first();

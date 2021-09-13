@@ -85,13 +85,13 @@
                                 <div class="col-md-4">
 
                                     <div class="form-group" >
-                                        <label class="control-label">@lang('app.project')</label>
+                                        <label class="control-label">@lang('app.task')</label>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <select class="select2 form-control" onchange="getCompanyName()" data-placeholder="Choose Project" name="project_id" id="project_id">
+                                                <select class="select2 form-control" onchange="getCompanyName()" data-placeholder="Choose Work order" name="task_id" id="task_id">
                                                     <option value="">--</option>
-                                                    @foreach($projects as $project)
-                                                        <option value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
+                                                    @foreach($tasks as $task)
+                                                        <option value="{{ $task->id }}">{{ ucwords($task->heading) }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -102,7 +102,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="control-label">@lang('app.company_name')</label>
+                                        <label class="control-label">@lang('app.client')</label>
                                         <div class="row">
                                             <div class="col-md-12" id="client_company_div">
                                                 <div class="input-icon">
@@ -239,8 +239,8 @@
                             <hr>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group m-b-10 product-select" id="product-select">
-                                        <select id="selectProduct" name="select"  data-placeholder="Select a product">
+                                    <div class="form-group m-b-10 task-select" id="task-select">
+                                        <select id="selectTask" name="select"  data-placeholder="Select a Task">
                                             <option></option>
                                         </select>
                                     </div>

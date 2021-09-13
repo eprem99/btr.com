@@ -65,50 +65,6 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="estimate_prefix">@lang('modules.invoiceSettings.estimatePrefix')</label>
-                                                    <input type="text" class="form-control" id="estimate_prefix" name="estimate_prefix"
-                                                           value="{{ $invoiceSetting->estimate_prefix }}">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="estimate_digit">@lang('modules.invoiceSettings.estimateDigit')</label>
-                                                    <input type="number" min="2" class="form-control" id="estimate_digit" name="estimate_digit"
-                                                           value="{{ $invoiceSetting->estimate_digit }}">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="estimate_look_like">@lang('modules.invoiceSettings.estimateLookLike')</label>
-                                                    <input type="text" class="form-control" id="estimate_look_like" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="credit_note_prefix">@lang('modules.invoiceSettings.credit_notePrefix')</label>
-                                                    <input type="text" class="form-control" id="credit_note_prefix" name="credit_note_prefix"
-                                                           value="{{ $invoiceSetting->credit_note_prefix }}">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="credit_note_digit">@lang('modules.invoiceSettings.credit_noteDigit')</label>
-                                                    <input type="number" min="2" class="form-control" id="credit_note_digit" name="credit_note_digit"
-                                                           value="{{ $invoiceSetting->credit_note_digit }}">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="credit_note_look_like">@lang('modules.invoiceSettings.credit_noteLookLike')</label>
-                                                    <input type="text" class="form-control" id="credit_note_look_like" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="col-sm-12 col-xs-12">
                                                 <div class="form-group">
                                                     <label for="template" class="required">@lang('modules.invoiceSettings.template')</label>
@@ -163,20 +119,6 @@
                                                 </div>
 
                                             </div>
-                                            <div class="col-md-8">
-                                                <div class="form-group">
-                                                    <label for="gst_number">@lang('app.gstNumber')</label>
-                                                    <input type="text" id="gst_number" name="gst_number" class="form-control" value="{{ $invoiceSetting->gst_number }}">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="control-label" >@lang('app.showGst')</label>
-                                                    <div class="switchery-demo">
-                                                        <input type="checkbox" name="show_gst" @if($invoiceSetting->show_gst == 'yes') checked @endif class="js-switch " data-color="#99d683"  />
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <div class="col-xs-6">
                                                 <div class="form-group">
                                                     <label class="control-label" for="hsn_sac_code_show" >@lang('app.hsnSacCodeShow')</label>
@@ -190,13 +132,6 @@
                                                     <label for="invoice_terms" class="required">@lang('modules.invoiceSettings.invoiceTerms')</label>
                             <textarea name="invoice_terms" id="invoice_terms" class="form-control"
                                       rows="4">{{ $invoiceSetting->invoice_terms }}</textarea>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="estimate_terms" class="required">@lang('modules.invoiceSettings.estimateTerms')</label>
-                                                      <textarea name="estimate_terms" id="estimate_terms" class="form-control"
-                                                      rows="4">{{ $invoiceSetting->estimate_terms }}</textarea>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">

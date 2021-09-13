@@ -18,6 +18,7 @@ use App\Notifications\PaymentReminder;
 use App\Payment;
 use App\Product;
 use App\Project;
+use App\Task;
 use App\Proposal;
 use App\Setting;
 use App\Tax;
@@ -248,6 +249,7 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function create()
     {
+        $this->tasks = Task::get();
         $this->projects = Project::whereNotNull('client_id')->get();
         $this->currencies = Currency::all();
         $this->lastInvoice = Invoice::lastInvoiceNumber() + 1;;

@@ -79,9 +79,9 @@
                                             <div class="col-xs-12">
                                                 <select class="select2 form-control" onchange="getCompanyName()" data-placeholder="Choose Project" id="project_id" name="project_id">
                                                     <option value="">--</option>
-                                                    @foreach($projects as $project)
+                                                    @foreach($tasks as $task)
                                                         <option
-                                                        value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
+                                                        value="{{ $task->id }}">{{ ucwords($task->heading) }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

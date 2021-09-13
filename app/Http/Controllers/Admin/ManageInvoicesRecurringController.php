@@ -15,6 +15,7 @@ use App\InvoiceSetting;
 use App\Notifications\NewInvoice;
 use App\Product;
 use App\Project;
+use App\Task;
 use App\RecurringInvoice;
 use App\RecurringInvoiceItems;
 use App\Tax;
@@ -44,6 +45,7 @@ class ManageInvoicesRecurringController extends AdminBaseController
      */
     public function index(InvoiceRecurringDataTable $dataTable)
     {
+        $this->tasks = Task::findOrFail();
         $this->projects = Project::all();
         $this->clients = User::allClients();
         return $dataTable->render('admin.invoice-recurring.index', $this->data);
