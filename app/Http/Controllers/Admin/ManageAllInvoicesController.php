@@ -311,7 +311,7 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function create()
     {
-        $this->tasks = Task::get();
+        $this->tasks = Task::whereNotNull('client_id')->where('tasks.board_column_id', '=', 10)->get();
         $this->projects = Project::whereNotNull('client_id')->get();
         $this->currencies = Currency::all();
         $this->lastInvoice = Invoice::lastInvoiceNumber() + 1;;
@@ -323,6 +323,7 @@ class ManageAllInvoicesController extends AdminBaseController
             }
         }
         $this->taxes = Tax::all();
+        $this->wotypes = WoType::all();
         $this->products = Product::select('id', 'name as title', 'name as text')->get();
         $this->clients = User::allClients();
 
@@ -764,8 +765,8 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function getClient($projectID)
     {
-        $companyName = Project::where('id', $projectID)->with('clientdetails')->first();
-        return $companyName->clientdetails->company_name;
+        $companyName = Task::where('id', $projectID)->with('users')->first();
+        return $companyName->users->name;
     }
 
     public function getClientOrCompanyName($projectID = '')

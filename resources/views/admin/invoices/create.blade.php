@@ -88,7 +88,7 @@
                                         <label class="control-label">@lang('app.task')</label>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <select class="select2 form-control" onchange="getCompanyName()" data-placeholder="Choose Work order" name="task_id" id="task_id">
+                                                <select class="select2 form-control" onchange="getCompanyName()" data-placeholder="Choose Work order" name="task_id" id="project_id">
                                                     <option value="">--</option>
                                                     @foreach($tasks as $task)
                                                         <option value="{{ $task->id }}">{{ ucwords($task->heading) }}</option>
@@ -179,68 +179,10 @@
                                     </div>
                                 </div>
                             </div>
-
-                            @if(count($fields) > 0)
-                                <h3 class="box-title">@lang('modules.projects.otherInfo')</h3>
-                                <div class="row">
-                                    @foreach($fields as $field)
-                                        <div class="col-md-3">
-                                            <label>{{ ucfirst($field->label) }}</label>
-                                            <div class="form-group">
-                                                @if( $field->type == 'text')
-                                                    <input type="text" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}" value="{{$editUser->custom_fields_data['field_'.$field->id] ?? ''}}">
-                                                @elseif($field->type == 'password')
-                                                    <input type="password" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}" value="{{$editUser->custom_fields_data['field_'.$field->id] ?? ''}}">
-                                                @elseif($field->type == 'number')
-                                                    <input type="number" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}" value="{{$editUser->custom_fields_data['field_'.$field->id] ?? ''}}">
-
-                                                @elseif($field->type == 'textarea')
-                                                    <textarea name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" id="{{$field->name}}" cols="3">{{$editUser->custom_fields_data['field_'.$field->id] ?? ''}}</textarea>
-
-                                                @elseif($field->type == 'radio')
-                                                    <div class="radio-list">
-                                                        @foreach($field->values as $key=>$value)
-                                                            <label class="radio-inline @if($key == 0) p-0 @endif">
-                                                                <div class="radio radio-info">
-                                                                    <input type="radio" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" id="optionsRadios{{$key.$field->id}}" value="{{$value}}" @if(isset($editUser) && $editUser->custom_fields_data['field_'.$field->id] == $value) checked @elseif($key==0) checked @endif>>
-                                                                    <label for="optionsRadios{{$key.$field->id}}">{{$value}}</label>
-                                                                </div>
-                                                            </label>
-                                                        @endforeach
-                                                    </div>
-                                                @elseif($field->type == 'select')
-                                                    {!! Form::select('custom_fields_data['.$field->name.'_'.$field->id.']',
-                                                            $field->values,
-                                                            isset($editUser)?$editUser->custom_fields_data['field_'.$field->id]:'',['class' => 'form-control gender'])
-                                                    !!}
-
-                                                @elseif($field->type == 'checkbox')
-                                                    <div class="mt-checkbox-inline">
-                                                        @foreach($field->values as $key => $value)
-                                                            <label class="mt-checkbox mt-checkbox-outline">
-                                                                <input name="custom_fields_data[{{$field->name.'_'.$field->id}}][]" type="checkbox" value="{{$key}}"> {{$value}}
-                                                                <span></span>
-                                                            </label>
-                                                        @endforeach
-                                                    </div>
-                                                @elseif($field->type == 'date')
-                                                    <input type="text" class="form-control date-picker" size="16" name="custom_fields_data[{{$field->name.'_'.$field->id}}]"
-                                                        value="{{ isset($editUser->dob)?Carbon\Carbon::parse($editUser->dob)->format('Y-m-d'):Carbon\Carbon::now()->format($global->date_format)}}">
-                                                @endif
-                                                <div class="form-control-focus"> </div>
-                                                <span class="help-block"></span>
-
-                                            </div>
-                                        </div>
-                                    @endforeach
-
-                                </div>
-                            @endif
-                            <hr>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group m-b-10 task-select" id="task-select">
-                                        <select id="selectTask" name="select"  data-placeholder="Select a Task">
+                                        <select id="selectProduct" name="select"  data-placeholder="Select a Work Order Type">
                                             <option></option>
                                         </select>
                                     </div>
@@ -463,11 +405,11 @@
 
 <script>
     $(document).ready(function(){
-        var products = {!! json_encode($products) !!}
+        var products = {!! json_encode($wotypes) !!}
         var  selectedID = '';
         $("#selectProduct").select2({
             data: products,
-            placeholder: "Select a Product",
+            placeholder: "Select a Work Order Type",
             allowClear: true,
             escapeMarkup: function(markup) {
                 return markup;
@@ -477,7 +419,7 @@
                 return htmlData;
             },
             templateSelection: function(data) {
-                $('#select2-selectProduct-container').html('@lang('app.add') @lang('app.menu.products')');
+                $('#select2-selectProduct-container').html('@lang('app.add') @lang('app.menu.wotype')');
                 $("#selectProduct").val('');
                 selectedID = data.id;
                 return '';
@@ -485,7 +427,7 @@
         }).on('change', function (e) {
             if(selectedID){
                 addProduct(selectedID);
-                $('#select2-selectProduct-container').html('@lang('app.add') @lang('app.menu.products')');
+                $('#select2-selectProduct-container').html('@lang('app.add') @lang('app.menu.wotype')');
             }
             selectedID = '';
         }).on('select2:open', function (event) {
