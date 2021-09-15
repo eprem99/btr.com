@@ -96,9 +96,9 @@
     'bold_italic' => $fontDir . '/Hind-Regular',
   ),
   'thsarabun' => array(
-    'normal' => $fontDir . '/thsarabun-normal_14fb1109ab4891fce4541d0ddba4e304',
-    'bold' => $fontDir . '/thsarabun-bold_e4060c9e198a65fe79546cd86e4dccf0',
-    'bold_italic' => $fontDir . '/thsarabun-bold-italic_008e3d3d60ce5771925baae45ba93704',
+    'normal' => $fontDir . '/thsarabun-normal_e1edaeeda5c2b1c5e1a59b497fb2afa4',
+    'bold' => $fontDir . '/thsarabun-bold_f68ea4eb0c60cf098455e52cc153622a',
+    'bold_italic' => $fontDir . '/thsarabun-bold-italic_94849bee31bc977ace43dfa79ee2c885',
   ),
   'simhei' => array(
     'normal' => $fontDir . '/simhei-normal_ffd2f0dda6972c62029d66e71acfac36',

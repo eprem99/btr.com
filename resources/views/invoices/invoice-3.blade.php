@@ -148,11 +148,11 @@
             background-size: 100% auto;
             color: #5B6165;
             position: relative;
+            margin:0 30px;
         }
 
         #memo {
-            padding-top: 40px;
-            margin: 0 110px 0 60px;
+            margin: 0;
             border-bottom: 1px solid #ddd;
         }
         #memo .logo {
@@ -160,7 +160,7 @@
             margin-right: 20px;
         }
         #memo .logo img {
-            max-width: 150px;
+            max-width: 120px;
         }
         #memo .company-info {
             /*float: right;*/
@@ -195,8 +195,8 @@
         }
         #invoice-title-number #title {
             text-transform: uppercase;
-            padding: 5px 2px 0 60px;
-            font-size: 50px;
+            padding: 7px 5px 7px 40px;
+            font-size: 36px;
             background: #F4846F;
             color: white;
         }
@@ -217,8 +217,14 @@
             min-width: 20px;
         }
         #client-info span {
-            display: block;
+            display: inline-block;
             min-width: 20px;
+        }
+        #client-info .color {
+            font-size: 20px;
+            color: #B32C39;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
         #client-info > span {
             text-transform: uppercase;
@@ -234,7 +240,7 @@
         }
 
         #items {
-            margin: 25px 30px 0 30px;
+            margin: 25px 0;
         }
         #items .first-cell, #items table th:first-child, #items table td:first-child {
             width: 40px !important;
@@ -255,7 +261,7 @@
             text-transform: uppercase;
         }
         #items table th:nth-child(2) {
-            width: 30%;
+            width: 25%;
             text-align: left;
         }
         #items table th:last-child {
@@ -271,7 +277,7 @@
         }
 
         #itemsPayment {
-            margin: 25px 30px 0 30px;
+            margin: 25px 0;
         }
         #itemsPayment .first-cell, #itemsPayment table th:first-child, #itemsPayment table td:first-child {
             width: 40px !important;
@@ -308,9 +314,10 @@
         }
 
         #sums {
-            margin: 25px 30px 0 0;
+            margin: 25px 0;
             background: url("{{asset("img/total-stripe-firebrick.png")}}") right bottom no-repeat;
             width: 100%;
+            background-position: right bottom;
         }
         #sums table {
             width: 50%;
@@ -345,8 +352,7 @@
         }
 
         #invoice-info {
-            float: left;
-            margin: 50px 40px 0 60px;
+            margin: 30px 40px 40px 0;
         }
         #invoice-info > div > span {
             display: inline-block;
@@ -367,8 +373,7 @@
         }
 
         #terms {
-            float: left;
-            margin-top: 50px;
+            margin-top: 20px;
         }
         #terms .notes {
             min-height: 30px;
@@ -379,17 +384,16 @@
             margin-bottom: 3px;
             min-width: 20px;
         }
-
         .thank-you {
-            margin: 10px 0 30px 0;
-            display: inline-block;
+            margin-top: -50px;
+            margin-right: -80px;
             min-width: 20px;
             text-transform: uppercase;
             font-weight: bold;
             line-height: 0.88em;
             float: right;
-            padding: 5px 30px 0 2px;
-            font-size: 50px;
+            padding: 7px 30px 7px 2px;
+            font-size: 36px;
             background: #F4846F;
             color: white;
         }
@@ -466,75 +470,35 @@
     </section>
 
     <div class="clearfix"></div>
-    @if(!is_null($invoice->project) && !is_null($invoice->project->client))
+    <section id="client-info">
+        <span class="color">@lang('modules.invoices.billedTo'):</span>
+        <div>
+            <span>{!! nl2br($global->address) !!}</span>
+        </div>
+    </section>
+    @if(!is_null($invoice->task) && !is_null($invoice->task->users))
         <section id="client-info">
-            @if(!is_null($invoice->project->client))
-                <span>@lang('modules.invoices.billedTo'):</span>
+            @if(!is_null($invoice->task->users))
+                <span class="color">@lang('modules.invoices.shipedTo'):</span>
                 <div>
-                    <span class="bold">{{ ucwords($invoice->project->client->name) }}</span>
+                    <span class="bold">{{ ucwords($invoice->task->users[0]->name) }}</span>
                 </div>
-
                 <div>
-                    <span>{{ ucwords($invoice->project->client->company_name) }}</span>
+                    <span>@lang('app.site.country') : </span> {{ ucwords($clientDetail->countries->name) }}
                 </div>
-
-                <div class="mb-3">
-                    <b>@lang('app.address') :</b>
-                    <div>{!! nl2br($invoice->project->clientdetails->address) !!}</div>
+                <div>
+                    <span>@lang('app.site.state') : </span> {{ ucwords($clientDetail->states->names) }}
+                </div>
+                <div>
+                    <span>@lang('app.address') : </span> {!! nl2br($clientDetail->address) !!}
                 </div>
                 @if ($invoice->show_shipping_address === 'yes')
                     <div>
                         <b>@lang('app.shippingAddress') :</b>
-                        <div>{!! nl2br($invoice->project->clientdetails->shipping_address) !!}</div>
-                    </div>
-                @endif
-
-                <div>
-                    <span>{{ $invoice->project->client->email }}</span>
-                </div>
-                @if($invoiceSetting->show_gst == 'yes' && !is_null($invoice->project->client) && !is_null($invoice->project->client->gst_number))
-                    <div>
-                        <span> @lang('app.gstIn'): {{ $invoice->project->client->gst_number }} </span>
+                        <div>{!! nl2br($clientDetail->shipping_address) !!}</div>
                     </div>
                 @endif
             @endif
-
-        </section>
-    @elseif(!is_null($invoice->client_id))
-        <section id="client-info">
-            @if(!is_null($invoice->withoutGlobalScopeCompanyClient))
-                <span>@lang('modules.invoices.billedTo'):</span>
-                <div>
-                    <span class="bold">{{ ucwords($invoice->withoutGlobalScopeCompanyClient->name) }}</span>
-                </div>
-
-                @if($invoice->clientdetails)
-                    <div>
-                        <span>{{ ucwords($invoice->clientdetails->company_name) }}</span>
-                    </div>
-
-                    <div class="mb-3">
-                        <b>@lang('app.address') :</b>
-                        <div>{!! nl2br($invoice->clientdetails->address) !!}</div>
-                    </div>
-                    @if ($invoice->show_shipping_address === 'yes')
-                        <div>
-                            <b>@lang('app.shippingAddress') :</b>
-                            <div>{!! nl2br($invoice->clientdetails->shipping_address) !!}</div>
-                        </div>
-                    @endif
-                @endif
-
-                <div>
-                    <span>{{ $invoice->withoutGlobalScopeCompanyClient->email }}</span>
-                </div>
-                @if($invoiceSetting->show_gst == 'yes' && !is_null($invoice->clientdetails) && !is_null($invoice->clientdetails->gst_number))
-                    <div>
-                        <span> @lang('app.gstIn'): {{ $invoice->clientdetails->gst_number }} </span>
-                    </div>
-                @endif
-            @endif
-
         </section>
     @endif
     <div class="clearfix"></div>
@@ -655,91 +619,13 @@
 
     <section id="terms clearfix">
         <div class="notes">
-                <br> {!! nl2br($invoice->note) !!}
-            <br>{!! nl2br($invoiceSetting->invoice_terms) !!}
+            {!! nl2br($invoice->note) !!}
+            <div class="clearfix"></div>
+            {!! nl2br($invoiceSetting->invoice_terms) !!}
         </div>
-
+        <div class="thank-you clearfix">@lang('app.thanks')!</div>
     </section>
-
-    <div class="clearfix"></div>
-    <br>
-    <div class="thank-you clearfix">@lang('app.thanks')!</div>
-
-
-
-    {{--Custom fields data--}}
-    @if(isset($fields) && count($fields) > 0)
-        <div class="page_break"></div>
-        <h3 class="box-title m-t-20 text-center h3-border"> @lang('modules.projects.otherInfo')</h3>
-        <table  style="background: none" border="0" cellspacing="0" cellpadding="0" width="100%">
-            @foreach($fields as $field)
-                <tr>
-                    <td style="text-align: left;background: none;" >
-                        <div class="desc">{{ ucfirst($field->label) }}</div>
-                        <p id="notes">
-                            @if( $field->type == 'text')
-                                {{$invoice->custom_fields_data['field_'.$field->id] ?? '-'}}
-                            @elseif($field->type == 'password')
-                                {{$invoice->custom_fields_data['field_'.$field->id] ?? '-'}}
-                            @elseif($field->type == 'number')
-                                {{$invoice->custom_fields_data['field_'.$field->id] ?? '-'}}
-
-                            @elseif($field->type == 'textarea')
-                                {{$invoice->custom_fields_data['field_'.$field->id] ?? '-'}}
-
-                            @elseif($field->type == 'radio')
-                                {{ !is_null($invoice->custom_fields_data['field_'.$field->id]) ? $invoice->custom_fields_data['field_'.$field->id] : '-' }}
-                            @elseif($field->type == 'select')
-                                {{ (!is_null($invoice->custom_fields_data['field_'.$field->id]) && $invoice->custom_fields_data['field_'.$field->id] != '') ? $field->values[$invoice->custom_fields_data['field_'.$field->id]] : '-' }}
-                            @elseif($field->type == 'checkbox')
-                                {{ !is_null($invoice->custom_fields_data['field_'.$field->id]) ? $field->values[$invoice->custom_fields_data['field_'.$field->id]] : '-' }}
-                            @elseif($field->type == 'date')
-                                {{ !is_null($invoice->custom_fields_data['field_'.$field->id]) ? \Carbon\Carbon::parse($invoice->custom_fields_data['field_'.$field->id])->format($global->date_format) : '--'}}
-                            @endif
-                        </p>
-                    </td>
-                </tr>
-            @endforeach
-        </table>
-    @endif
-
-    @if(!is_null($payments))
-        <div class="clearfix"></div>
-        <div class="page_break"></div>
-        <div class="invoice-body b-all m-b-20">
-            <h3 class="box-title m-t-20 text-center h3-border">@lang('modules.invoices.recentPayments') ({{ $invoice->invoice_number }})</h3>
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="table-responsive m-t-40" id="itemsPayment" style="clear: both;">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th class="text-center">@lang("modules.payments.amount")</th>
-                                <th class="text-center">@lang("modules.invoices.paymentMethod")</th>
-                                <th class="text-center">@lang("modules.invoices.paidOn")</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php $count = 0; ?>
-                            @foreach($payments as $key => $payment)
-                                <tr>
-                                    <td class="text-center">{{ $key+1 }}</td>
-                                    <td class="text-center">{{ number_format((float) $payment->amount, 2, '.', '') }} {{ $payment->currency->currency_code }}</td>
-                                    <td class="text-center">
-                                        @php($method = (!is_null($payment->offline_method_id)?  $payment->offlineMethod->name : $payment->gateway))
-                                        {{ $method }}
-                                    </td>
-                                    <td class="text-center"> {{ $payment->paid_on->format($global->date_format) }} </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
+    
 </div>
 </body>
 </html>

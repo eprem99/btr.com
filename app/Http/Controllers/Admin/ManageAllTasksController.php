@@ -284,14 +284,9 @@ class ManageAllTasksController extends AdminBaseController
     public function show($id)
     {
         $this->task = Task::with('board_column', 'users', 'files', 'comments', 'notes', 'labels', 'wotype', 'sporttype')->findOrFail($id);
-        
-        // $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')
-        //     ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id')
-        //     ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id');
-        
+             
         $this->user = User::where('id', '=', $this->task->client_id)->first();
       
-
         $view = view('admin.tasks.show', $this->data)->render();
         return Reply::dataOnly(['status' => 'success', 'view' => $view]);
     }

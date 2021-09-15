@@ -73,6 +73,10 @@ class Task extends BaseModel
         return $this->belongsTo(TaskCategory::class, 'task_category_id');
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'task_id')->orderBy('id', 'desc');
+    }
 
     public function history()
     {

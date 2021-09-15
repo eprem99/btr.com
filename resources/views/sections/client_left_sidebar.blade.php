@@ -141,19 +141,11 @@
 
             @if(in_array('invoices',$modules))
                 <li><a href="{{ route('client.invoices.index') }}" class="waves-effect"><i class="ti-receipt fa-fw"></i> <span class="hide-menu">@lang('app.menu.invoices') </span></a> </li>
-                <li><a href="{{ route('client.credit-notes.index') }}" class="waves-effect"><i class="ti-credit-card fa-fw"></i> <span class="hide-menu">@lang('app.credit-note') </span></a> </li>
             @endif
             @if(in_array('notices',$modules))
                 <li><a href="{{ route('client.notices.index') }}" class="waves-effect"><i class="ti-layout-media-overlay fa-fw"></i> <span class="hide-menu">@lang("app.menu.noticeBoard") </span></a> </li>
             @endif
-
-            @foreach ($worksuitePlugins as $item)
-                @if(View::exists(strtolower($item).'::sections.client_left_sidebar'))
-                    @include(strtolower($item).'::sections.client_left_sidebar')
-                @endif
-            @endforeach
-
-            
+         
 
         </ul>
     

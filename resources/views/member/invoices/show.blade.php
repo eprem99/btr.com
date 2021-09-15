@@ -11,10 +11,10 @@
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
             <a class="btn btn-default btn-outline "
                href="{{ route('member.all-invoices.download', $invoice->id) }}"> <span><i class="fa fa-file-pdf-o"></i> @lang('modules.invoices.downloadPdf')</span> </a>
-            @if ($user->can('view_payments'))
+            <!-- @if ($user->can('view_payments'))
                 <button type="button" onclick="showPayments()" class="btn btn-info">@lang('app.view') @lang('app.menu.payments')</button>
                 <button type="button" data-clipboard-text="{{ route('front.invoice', [md5($invoice->id)]) }}" class="btn btn-success m-r-10 btn-copy"><i class="fa fa-copy"></i> <span id="copy_payment_text">@lang('modules.invoices.copyPaymentLink')</span></button>
-            @endif
+            @endif -->
 
 
 

@@ -23,7 +23,7 @@
     <div class="input-icon">
         <input type="text" readonly class="form-control" name="" id="company_name" value="{{ $companyName }}">
     </div>
-    <input type="hidden" class="form-control" name="" id="client_id" value="{{ $clientId }}">
+    <input type="hidden" class="form-control" name="client_id" id="client_id" value="{{ $clientId }}">
 @endif
 
 

@@ -49,8 +49,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         'gender',
         'locale',
         'onesignal_player_id',
-        'email_notifications',
-        'country_id'
+        'email_notifications'
     ];
 
     /**

@@ -140,6 +140,7 @@
                 </ul>
             </li>
             @endif
+            <li><a href="{{ route('member.employee-docs.index') }}" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu">@lang("app.menu.employeeDocs") </span></a> </li>
 
             @if(in_array('leads',$modules))
                 <li><a href="{{ route('member.leads.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> <span class="hide-menu">@lang('app.menu.lead') </span></a> </li>
@@ -192,11 +193,11 @@
                     @if(in_array('expenses',$modules))
                         <li><a href="{{ route('member.expenses.index') }}">@lang('app.menu.expenses')</a> </li>
                     @endif
-                    @if(in_array('invoices',$modules))
+                    <!-- @if(in_array('invoices',$modules))
                         @if($user->can('view_invoices'))
                             <li><a href="{{ route('member.all-credit-notes.index') }}">@lang('app.menu.credit-note') </a> </li>
                         @endif
-                    @endif
+                    @endif -->
                 </ul>
             </li>
             @endif
@@ -220,13 +221,6 @@
                 <li><a href="{{ route('member.notices.index') }}" class="waves-effect"><i class="ti-layout-media-overlay fa-fw"></i> <span class="hide-menu">@lang("app.menu.noticeBoard") </span></a> </li>
             @endif
 
-            <li><a href="{{ route('member.employee-docs.index') }}" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu">@lang("app.menu.employeeDocs") </span></a> </li>
-
-            @foreach ($worksuitePlugins as $item)
-                @if(View::exists(strtolower($item).'::sections.member_left_sidebar'))
-                    @include(strtolower($item).'::sections.member_left_sidebar')
-                @endif
-            @endforeach
         </ul>
 
 

@@ -17,9 +17,15 @@ use App\Notifications\NewInvoice;
 use App\Payment;
 use App\Product;
 use App\Project;
+use App\Task;
+use App\WoType;
+use App\SportType;
+use App\Country;
+use App\State;
 use App\Setting;
 use App\Tax;
 use App\User;
+use App\EmployeeDetails;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -48,14 +54,17 @@ class MemberAllInvoicesController extends MemberBaseController
             abort(403);
         }
         $this->projects = Project::allProjects();
+        $this->tasks = Task::get();
         return view('member.invoices.index', $this->data);
     }
 
     public function data(Request $request)
     {
         $firstInvoice = Invoice::latest()->first();
-        $invoices = Invoice::with(['project:id,project_name,client_id', 'currency:id,currency_symbol,currency_code', 'project.client'])
-            ->select('id', 'project_id', 'client_id', 'invoice_number', 'currency_id', 'total', 'status', 'issue_date', 'credit_note', 'show_shipping_address', 'send_status');
+        $invoices = Invoice::
+            join('tasks', 'tasks.id', 'task_id')
+            ->select('invoices.id', 'invoices.task_id', 'invoices.client_id', 'invoices.invoice_number', 'invoices.currency_id', 'invoices.total', 
+            'invoices.status', 'invoices.issue_date', 'invoices.credit_note', 'invoices.show_shipping_address', 'invoices.send_status', 'tasks.heading');
 
         if ($request->startDate !== null && $request->startDate != 'null' && $request->startDate != '') {
             $startDate = Carbon::createFromFormat($this->global->date_format, $request->startDate)->toDateString();
@@ -100,9 +109,9 @@ class MemberAllInvoicesController extends MemberBaseController
                     $action .= '<li><a href="' . route("member.all-invoices.edit", $row->id) . '"><i class="fa fa-pencil"></i> ' . __('app.edit') . '</a></li>';
                 }
 
-                if ($this->user->can('add_payments') && $row->status != 'draft' && $row->status != 'paid' && $row->status != 'canceled') {
-                    $action .= '<li><a href="' . route("member.payments.payInvoice", [$row->id]) . '" data-toggle="tooltip" ><i class="fa fa-plus"></i> ' . __('modules.payments.addPayment') . '</a></li>';
-                }
+                // if ($this->user->can('add_payments') && $row->status != 'draft' && $row->status != 'paid' && $row->status != 'canceled') {
+                //     $action .= '<li><a href="' . route("member.payments.payInvoice", [$row->id]) . '" data-toggle="tooltip" ><i class="fa fa-plus"></i> ' . __('modules.payments.addPayment') . '</a></li>';
+                // }
 
                 if ($row->status != 'canceled') {
                     if ($row->clientdetails) {
@@ -129,13 +138,6 @@ class MemberAllInvoicesController extends MemberBaseController
                         }
                     }
                 }
-
-                if ($this->user->can('delete_invoices') && $firstInvoice->id == $row->id) {
-                    $action .= '<li><a href="javascript:;" data-toggle="tooltip"  data-invoice-id="' . $row->id . '" class="sa-params"><i class="fa fa-times"></i> ' . __('app.delete') . '</a></li>';
-                }
-                if ($firstInvoice->id != $row->id && ($row->status == 'unpaid' || $row->status == 'draft') && $this->user->can('edit_invoices')) {
-                    $action .= '<li><a href="javascript:;" data-toggle="tooltip" title="' . __('app.cancel') . '"  data-invoice-id="' . $row->id . '" class="sa-cancel"><i class="fa fa-times"></i> ' . __('app.cancel') . '</a></li>';
-                }
                 $action .= '</ul>
               </div>
               ';
@@ -143,8 +145,8 @@ class MemberAllInvoicesController extends MemberBaseController
                 return $action;
             })
             ->editColumn('project_name', function ($row) {
-                if ($row->project_id) {
-                    return '<a href="' . route('member.projects.show', $row->project_id) . '">' . ucfirst($row->project->project_name) . '</a>';
+                if ($row->task_id) {
+                    return '<a href="' . route('member.all-tasks.show', $row->task_id) . '">' . ucfirst($row->heading) . '</a>';
                 }
 
                 return '--';
@@ -209,8 +211,10 @@ class MemberAllInvoicesController extends MemberBaseController
     public function download($id)
     {
         //        header('Content-type: application/pdf');
-
-        $this->invoice = Invoice::findOrFail($id)->withCustomFields();
+// dd($this->user->id);
+        $this->invoice = Invoice::with(['task', 'task.users', 'task.users.client_details', 'task.users.client_details.clientCategory'])->findOrFail($id)->withCustomFields();
+        $this->clientDetail = EmployeeDetails::with('countries', 'states')->where('user_id', '=', $this->user->id)->first();
+//dd($this->clientDetail);
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
         if ($this->invoice->credit_note) {
@@ -260,7 +264,7 @@ class MemberAllInvoicesController extends MemberBaseController
         $this->settings = $this->global;
         $this->payments = Payment::with(['offlineMethod'])->where('invoice_id', $this->invoice->id)->where('status', 'complete')->orderBy('paid_on', 'desc')->get();
         $this->invoiceSetting = invoice_setting();
-        //        return view('invoices.'.$this->invoiceSetting->template, $this->data);
+           //     return view('invoices.'.$this->invoiceSetting->template, $this->data);
 
         $pdf = app('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
@@ -301,13 +305,18 @@ class MemberAllInvoicesController extends MemberBaseController
         if (!$this->user->can('add_invoices')) {
             abort(403);
         }
-
+        $this->tasks = Task::join('task_users', 'task_id', '=', 'tasks.id')
+        ->where('task_users.user_id', '=', user()->id)
+        ->where('board_column_id', '=', 10)
+        ->select('tasks.id', 'tasks.heading')
+        ->get();
+        $this->wotypes = WoType::all();
         $this->projects = Project::whereNotNull('client_id')->get();
         $this->currencies = Currency::all();
         $this->lastInvoice = Invoice::orderBy('id', 'desc')->first();
         $this->invoiceSetting = invoice_setting();
         $this->taxes = Tax::all();
-        $this->products = Product::select('id', 'name as title', 'name as text')->get();
+      //  $this->products = Product::select('id', 'name as title', 'name as text')->get();
         return view('member.invoices.create', $this->data);
     }
 
@@ -351,8 +360,8 @@ class MemberAllInvoicesController extends MemberBaseController
         }
 
         $invoice = new Invoice();
-        $invoice->project_id = $request->project_id ?? null;
-        $invoice->client_id = ($request->client_id) ? $request->client_id : null;
+        $invoice->task_id = $request->project_id ?? null;
+        $invoice->client_id = $request->client_id ?? null;
         $invoice->issue_date = Carbon::createFromFormat($this->global->date_format, $request->issue_date)->format('Y-m-d');
         $invoice->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
         $invoice->sub_total = round($request->sub_total, 2);
@@ -387,7 +396,7 @@ class MemberAllInvoicesController extends MemberBaseController
         }
 
         $this->invoice = Invoice::findOrFail($id);
-        $this->projects = Project::whereNotNull('client_id')->get();
+        $this->tasks = Task::whereNotNull('client_id')->where('tasks.board_column_id', '=', 10)->get();
         $this->currencies = Currency::all();
 
         if ($this->invoice->status == 'paid') {
@@ -395,11 +404,19 @@ class MemberAllInvoicesController extends MemberBaseController
         }
 
         $this->taxes = Tax::all();
-        $this->products = Product::select('id', 'name as title', 'name as text')->get();
+        $this->products = Wotype::select('id', 'name as title', 'name as text')->get();
         $this->clients = User::allClients();
-        if ($this->invoice->project_id != '') {
-            $companyName = Project::where('id', $this->invoice->project_id)->with('clientdetails')->first();
-            $this->companyName = $companyName->clientdetails ? $companyName->clientdetails->company_name : '';
+        if ($this->invoice->task_id != '') {
+            $companyName = Task::with('users')->join('task_users', 'task_id', '=', 'tasks.id')
+            ->where('task_users.user_id', '=', user()->id)
+            ->where('tasks.id', '=', $this->invoice->task_id)
+            ->where('tasks.board_column_id', '=', 10)
+            ->select('tasks.id', 'tasks.heading', )
+            ->first();
+
+            $this->wotypes = WoType::all();
+           // $companyName = Task::where('id', $this->invoice->task_id)->with('user')->first();
+            $this->companyName = $companyName->users[0]->name ? $companyName->users[0]->name : '';
         }
         return view('member.invoices.edit', $this->data);
     }
@@ -450,7 +467,7 @@ class MemberAllInvoicesController extends MemberBaseController
             return Reply::error(__('messages.invalidRequest'));
         }
 
-        $invoice->project_id = $request->project_id ?? null;
+        $invoice->task_id = $request->project_id ?? null;
         $invoice->client_id = ($request->client_id) ? $request->client_id : null;
         $invoice->issue_date = Carbon::createFromFormat($this->global->date_format, $request->issue_date)->format('Y-m-d');
         $invoice->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
@@ -568,18 +585,18 @@ class MemberAllInvoicesController extends MemberBaseController
 
     public function addItems(Request $request)
     {
-        $this->items = Product::with('tax')->find($request->id);
+        $this->items = WoType::find($request->id);
         $exchangeRate = Currency::find($request->currencyId);
 
         if (!is_null($exchangeRate) && !is_null($exchangeRate->exchange_rate)) {
-            if ($this->items->total_amount != "") {
-                $this->items->price = floor($this->items->total_amount * $exchangeRate->exchange_rate);
+            if ($this->items->price != "") {
+                $this->items->price = floor($this->items->price * $exchangeRate->exchange_rate);
             } else {
                 $this->items->price = $this->items->price * $exchangeRate->exchange_rate;
             }
         } else {
-            if ($this->items->total_amount != "") {
-                $this->items->price = $this->items->total_amount;
+            if ($this->items->price != "") {
+                $this->items->price = $this->items->price;
             }
         }
         $this->items->price =  number_format((float)$this->items->price, 2, '.', '');
@@ -634,9 +651,19 @@ class MemberAllInvoicesController extends MemberBaseController
         if ($projectID == '') {
             $this->clients = User::allClients();
         } else {
-            $companyName = Project::where('id', $projectID)->with('clientdetails')->first();
-            $this->companyName = $companyName->clientdetails ? $companyName->clientdetails->company_name : '';
-            $this->clientId = $companyName->clientdetails ? $companyName->clientdetails->user_id : '';
+            $clients = Task::where('id', $projectID)->with('users')->first();
+           // dd($clients->client_id);
+            if($clients->client_id != ''){
+                $companyName = User::where('id', $clients->client_id)->first();
+              //  dd($companyName);
+                $this->companyName = $companyName->name ? $companyName->name : '';
+                $this->clientId = $companyName->id ? $companyName->id : '';
+            }else{
+                $companyName = User::where('id', $clients->created_by)->first();
+                $this->companyName = $companyName->name ? $companyName->name : '';
+                $this->clientId = $companyName->id ? $companyName->id : '';
+            }
+
         }
 
         $list = view('member.invoices.client_or_company_name', $this->data)->render();
@@ -727,11 +754,12 @@ class MemberAllInvoicesController extends MemberBaseController
 
     public function sendInvoice($invoiceID)
     {
-        $invoice = Invoice::with(['project', 'project.client'])->findOrFail($invoiceID);
-        if ($invoice->project_id != null && $invoice->project_id != '') {
-            $notifyUser = $invoice->project->client;
+        $invoice = Invoice::with(['task', 'task.users'])->findOrFail($invoiceID)->first();
+       // dd($invoice->task->users);
+        if ($invoice->task_id != null && $invoice->task_id != '') {
+            $notifyUser = $invoice->task->users;
         } elseif ($invoice->client_id != null && $invoice->client_id != '') {
-            $notifyUser = $invoice->client;
+            $notifyUser = $invoice->task->users;
         }
         if (!is_null($notifyUser)) {
             event(new NewInvoiceEvent($invoice, $notifyUser));

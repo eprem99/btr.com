@@ -46,7 +46,7 @@
                         <thead>
                         <tr>
                             <th>@lang("app.id")</th>
-                            <th>@lang("modules.projects.projectName")</th>
+                            <th>@lang("modules.tasks.Task")</th>
                             <th>@lang("app.invoice") #</th>
                             <th>@lang("modules.invoices.currency")</th>
                             <th>@lang("modules.invoices.amount")</th>

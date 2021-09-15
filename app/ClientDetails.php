@@ -41,4 +41,12 @@ class ClientDetails extends BaseModel
     {
         return $this->belongsTo(ClientCategory::class, 'category_id');
     }
+    public function countries()
+    {
+        return $this->belongsTo(Country::class, 'country');
+    }
+    public function states()
+    {
+        return $this->belongsTo(State::class, 'state');
+    }
 }

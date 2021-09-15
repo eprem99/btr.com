@@ -28,6 +28,11 @@ class Invoice extends BaseModel
         return $this->belongsTo(Project::class, 'project_id')->withTrashed();
     }
 
+    public function task()
+    {
+        return $this->belongsTo(Task::class, 'task_id', 'id');
+    }
+
     public function client()
     {
         return $this->belongsTo(User::class, 'client_id')->withoutGlobalScopes(['active']);

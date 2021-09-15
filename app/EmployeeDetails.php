@@ -30,4 +30,12 @@ class EmployeeDetails extends BaseModel
     {
         return $this->belongsTo(Team::class, 'department_id');
     }
+    public function countries()
+    {
+        return $this->belongsTo(Country::class, 'country');
+    }
+    public function states()
+    {
+        return $this->belongsTo(State::class, 'state');
+    }
 }

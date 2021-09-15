@@ -100,7 +100,7 @@
                         <tr>
                             <th>#</th>
                             <th>@lang('app.invoice') #</th>
-                            <th>@lang('app.project')</th>
+                            <th>@lang('modules.tasks.Task')</th>
                             <th>@lang('app.client')</th>
                             <th>@lang('modules.invoices.total')</th>
                             <th>@lang('modules.invoices.invoiceDate')</th>
