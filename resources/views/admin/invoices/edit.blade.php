@@ -84,19 +84,19 @@
 
                                 <div class="col-md-4">
 
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('app.project')</label>
+                                <div class="form-group">
+                                <label class="control-label">@lang('modules.tasks.Task')</label>
 
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <select class="select2 form-control" onchange="getCompanyName()" data-placeholder="Choose Project"
+                                                <select class="select2 form-control" onchange="getCompanyName()" data-placeholder="Choose Work order"
                                                         name="project_id" id="project_id">
                                                     <option value="">--</option>
-                                                    @foreach($projects as $project)
+                                                    @foreach($tasks as $task)
                                                         <option
-                                                                @if($invoice->project_id == $project->id) selected
+                                                                @if($invoice->task_id == $task->id) selected
                                                                 @endif
-                                                                value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
+                                                                value="{{ $task->id }}">{{ ucwords($task->heading) }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -110,7 +110,7 @@
                                         <label class="control-label">@lang('app.company_name')</label>
                                         <div class="row">
                                             <div class="col-md-12" id="client_company_div">
-                                                @if($invoice->project_id == '')
+                                                @if($invoice->task_id == '')
                                                     <select class="form-control select2" name="client_id" id="client_id" data-style="form-control">
                                                         @foreach($clients as $client)
                                                             <option value="{{ $client->id }}" @if($client->id == $invoice->client_id) selected @endif>{{ ucwords($client->name) }}
@@ -224,55 +224,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            @if(count($fields) > 0)
-                            <h3 class="box-title">@lang('modules.projects.otherInfo')</h3>
-                                <div class="row">
-                                    @foreach($fields as $field)
-                                        <div class="col-md-3">
-                                            <label>{{ ucfirst($field->label) }}</label>
-                                            <div class="form-group">
-                                                @if( $field->type == 'text')
-                                                <input type="text" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}"
-                                                    value="{{$invoice->custom_fields_data['field_'.$field->id] ?? ''}}">                                    @elseif($field->type == 'password')
-                                                <input type="password" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}"
-                                                    value="{{$invoice->custom_fields_data['field_'.$field->id] ?? ''}}">                                    @elseif($field->type == 'number')
-                                                <input type="number" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" placeholder="{{$field->label}}"
-                                                    value="{{$invoice->custom_fields_data['field_'.$field->id] ?? ''}}">                                    @elseif($field->type == 'textarea')
-                                                <textarea name="custom_fields_data[{{$field->name.'_'.$field->id}}]" class="form-control" id="{{$field->name}}" cols="3">{{$invoice->custom_fields_data['field_'.$field->id] ?? ''}}</textarea>                                    @elseif($field->type == 'radio')
-                                                <div class="radio-list">
-                                                    @foreach($field->values as $key=>$value)
-                                                    <label class="radio-inline @if($key == 0) p-0 @endif">
-                                                                        <div class="radio radio-info">
-                                                                            <input type="radio" name="custom_fields_data[{{$field->name.'_'.$field->id}}]" id="optionsRadios{{$key.$field->id}}" value="{{$value}}" @if(isset($invoice) && $invoice->custom_fields_data['field_'.$field->id] == $value) checked @elseif($key==0) checked @endif>>
-                                                                            <label for="optionsRadios{{$key.$field->id}}">{{$value}}</label>
-                                                </div>
-                                                </label>
-                                                @endforeach
-                                            </div>
-                                            @elseif($field->type == 'select') {!! Form::select('custom_fields_data['.$field->name.'_'.$field->id.']', $field->values,
-                                            isset($invoice)?$invoice->custom_fields_data['field_'.$field->id]:'',['class' => 'form-control
-                                            gender']) !!} @elseif($field->type == 'checkbox')
-                                            <div class="mt-checkbox-inline">
-                                                @foreach($field->values as $key => $value)
-                                                <label class="mt-checkbox mt-checkbox-outline">
-                                                                        <input name="custom_fields_data[{{$field->name.'_'.$field->id}}][]" type="checkbox" value="{{$key}}"> {{$value}}
-                                                                        <span></span>
-                                                                    </label> @endforeach
-                                            </div>
-                                            @elseif($field->type == 'date')
-                                            <input type="text" class="form-control date-picker" size="16" name="custom_fields_data[{{$field->name.'_'.$field->id}}]"
-                                                   value="{{ ($invoice->custom_fields_data['field_'.$field->id] != '') ? \Carbon\Carbon::parse($invoice->custom_fields_data['field_'.$field->id])->format($global->date_format) : \Carbon\Carbon::now()->format($global->date_format)}}">
-                                            @endif
-                                            <div class="form-control-focus"> </div>
-                                            <span class="help-block"></span>
-    
-                                        </div>
-                                    </div>
-                                    @endforeach
-                            </div>
-                            @endif
-                            <hr>
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -806,7 +757,7 @@
         });
     });
 
-    $('#updatePayments').on('keyup', '.quantity,.cost_per_item,.item_name, .discount_value', function () {
+    $('#updatePayments').on('keyup change click mouseup', '.quantity,.cost_per_item,.item_name, .discount_value', function () {
         var quantity = $(this).closest('.item-row').find('.quantity').val();
 
         var perItemCost = $(this).closest('.item-row').find('.cost_per_item').val();

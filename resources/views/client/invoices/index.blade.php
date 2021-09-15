@@ -9,7 +9,6 @@
         <!-- /.page title -->
         <!-- .breadcrumb -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-            <a href="{{ route('client.invoice-recurring.index') }}" class="btn btn-outline btn-info btn-sm">@lang('app.invoiceRecurring') </a>
             <ol class="breadcrumb">
                 <li><a href="{{ route('client.dashboard.index') }}">@lang("app.menu.home")</a></li>
                 <li class="active">@lang($pageTitle)</li>

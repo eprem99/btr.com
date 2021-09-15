@@ -9,8 +9,6 @@
         <!-- /.page title -->
         <!-- .breadcrumb -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-            <a href="{{ route('admin.invoice-recurring.index') }}" class="btn btn-outline btn-info btn-sm">@lang('app.invoiceRecurring') </a>
-            <a href="{{ route('admin.all-invoices.create', ['type' => 'timelog']) }}" class="btn btn-outline btn-inverse btn-sm">@lang('app.create') @lang('app.timeLog') @lang('app.invoice') <i class="fa fa-plus" aria-hidden="true"></i></a>
             <a href="{{ route('admin.all-invoices.create') }}" class="btn btn-outline btn-success btn-sm">@lang('modules.invoices.addInvoice') <i class="fa fa-plus" aria-hidden="true"></i></a>
 
             <ol class="breadcrumb">
@@ -466,6 +464,22 @@
 
         loadTable();
     })
+    $('#invoices-table').on('click', '.show-task-detail', function () {
+        $(".right-sidebar").slideDown(50).addClass("shw-rside");
 
+        var id = $(this).data('task-id');
+        var url = "{{ route('member.all-tasks.show',':id') }}";
+        url = url.replace(':id', id);
+
+        $.easyAjax({
+            type: 'GET',
+            url: url,
+            success: function (response) {
+                if (response.status == "success") {
+                    $('#right-sidebar-content').html(response.view);
+                }
+            }
+        });
+    })
 </script>
 @endpush

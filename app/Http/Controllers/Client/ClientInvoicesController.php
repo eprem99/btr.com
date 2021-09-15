@@ -10,6 +10,7 @@ use App\InvoiceItems;
 use App\InvoiceSetting;
 use App\OfflinePaymentMethod;
 use App\PaymentGatewayCredentials;
+use App\ClientDetails;
 use App\Setting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -40,16 +41,19 @@ class ClientInvoicesController extends ClientBaseController
 
     public function create()
     {
-        $invoices = Invoice::leftJoin('projects', 'projects.id', '=', 'invoices.project_id')
-            ->join('currencies', 'currencies.id', '=', 'invoices.currency_id')
-            ->select('invoices.id', 'projects.project_name', 'invoices.invoice_number', 'currencies.currency_symbol', 'currencies.currency_code', 'invoices.total', 'invoices.issue_date', 'invoices.status')
+        // $invoices = Invoice::leftJoin('projects', 'projects.id', '=', 'invoices.project_id')
+        //     ->join('currencies', 'currencies.id', '=', 'invoices.currency_id')
+        //     ->select('invoices.id', 'projects.project_name', 'invoices.invoice_number', 'currencies.currency_symbol', 'currencies.currency_code', 'invoices.total', 'invoices.issue_date', 'invoices.status')
+        //     ->where(function ($query) {
+        //         $query->where('projects.client_id', $this->user->id)
+        //             ->orWhere('invoices.client_id', $this->user->id);
+        //     })
+        $invoices = Invoice::with('task','client', 'currency')
+            ->select('invoices.id', 'invoices.task_id', 'invoices.client_id', 'invoices.invoice_number', 'invoices.currency_id', 'invoices.total', 
+            'invoices.status', 'invoices.issue_date', 'invoices.credit_note', 'invoices.show_shipping_address', 'invoices.send_status')
             ->where(function ($query) {
-                $query->where('projects.client_id', $this->user->id)
-                    ->orWhere('invoices.client_id', $this->user->id);
+                $query->Where('invoices.client_id', $this->user->id);
             })
-            ->where('invoices.credit_note', 0)
-            ->where('invoices.status', '<>', 'draft')
-            ->where('invoices.send_status', 1)
 
             ->where('invoices.status', '!=', 'canceled');
 
@@ -58,13 +62,13 @@ class ClientInvoicesController extends ClientBaseController
                 return '<a href="' . route('client.invoices.download', $row->id) . '" data-toggle="tooltip" data-original-title="Download" class="btn  btn-sm btn-outline btn-info"><i class="fa fa-download"></i> ' . __('app.download') . '</a>';
             })
             ->editColumn('project_name', function ($row) {
-                return $row->project_name != '' ? $row->project_name : '--';
+                return $row->task->heading != '' ? $row->task->heading : '--';
             })
             ->editColumn('invoice_number', function ($row) {
                 return '<a style="text-decoration: underline" href="' . route('client.invoices.show', $row->id) . '">' . $row->invoice_number . '</a>';
             })
             ->editColumn('currency_symbol', function ($row) {
-                return $row->currency_symbol . ' (' . $row->currency_code . ')';
+                return $row->currency->currency_symbol . ' (' . $row->currency->currency_code . ')';
             })
             ->editColumn('issue_date', function ($row) {
                 return $row->issue_date->format($this->global->date_format);
@@ -83,13 +87,14 @@ class ClientInvoicesController extends ClientBaseController
 
     public function download($id)
     {
-        $this->invoice = Invoice::select('invoices.*')->leftJoin('projects', 'projects.id', '=', 'invoices.project_id')
-            ->where(function ($query) {
-                $query->where('projects.client_id', $this->user->id)
-                    ->orWhere('invoices.client_id', $this->user->id);
-            })->where('invoices.id', $id)->where('credit_note', 0)->findOrFail($id)->withCustomFields();
+        // $this->invoice = Invoice::select('invoices.*')->leftJoin('projects', 'projects.id', '=', 'invoices.project_id')
+        //     ->where(function ($query) {
+        //         $query->where('projects.client_id', $this->user->id)
+        //             ->orWhere('invoices.client_id', $this->user->id);
+        //     })->where('invoices.id', $id)->where('credit_note', 0)->findOrFail($id)->withCustomFields();
 
-
+        $this->invoice = Invoice::with(['task', 'task.users', 'task.users.client_details', 'task.users.client_details.clientCategory'])->findOrFail($id)->withCustomFields();
+        $this->clientDetail = ClientDetails::with('countries', 'states')->where('user_id', '=', $this->user->id)->first();
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
         // if ($this->invoice->credit_note) {

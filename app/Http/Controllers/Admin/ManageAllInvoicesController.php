@@ -19,10 +19,12 @@ use App\Payment;
 use App\Product;
 use App\Project;
 use App\Task;
+use App\WoType;
 use App\Proposal;
 use App\Setting;
 use App\Tax;
 use App\User;
+use App\ClientDetails;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -55,6 +57,7 @@ class ManageAllInvoicesController extends AdminBaseController
     {
         if (!request()->ajax()) {
             $this->projects = Project::allProjects();
+            $this->tasks = Task::get();
             $this->clients = User::allClients();
         }
         return $dataTable->render('admin.invoices.index', $this->data);
@@ -219,17 +222,76 @@ class ManageAllInvoicesController extends AdminBaseController
     
     public function download($id)
     {
-        $this->invoice = Invoice::findOrFail($id);
+        //        header('Content-type: application/pdf');
+// dd($this->user->id);
+        $this->invoice = Invoice::with(['task', 'task.users', 'task.users.client_details', 'task.users.client_details.clientCategory'])->findOrFail($id);
+      //  dd($this->invoice->task->users[]);
+        $this->clientDetail = ClientDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
+// dd($this->invoice->task->client_id);
+        $this->paidAmount = $this->invoice->getPaidAmount();
+        $this->creditNote = 0;
+        if ($this->invoice->credit_note) {
+            $this->creditNote = CreditNotes::where('invoice_id', $id)
+                ->select('cn_number')
+                ->first();
+        }
 
         // Download file uploaded
         if ($this->invoice->file != null) {
             return response()->download(storage_path('app/public/invoice-files') . '/' . $this->invoice->file);
         }
 
-        $pdfOption = $this->domPdfObjectForDownload($id);
-        $pdf = $pdfOption['pdf'];
-        $filename = $pdfOption['fileName'];
+        if ($this->invoice->discount > 0) {
+            if ($this->invoice->discount_type == 'percent') {
+                $this->discount = (($this->invoice->discount / 100) * $this->invoice->sub_total);
+            } else {
+                $this->discount = $this->invoice->discount;
+            }
+        } else {
+            $this->discount = 0;
+        }
 
+        $taxList = array();
+
+        $items = InvoiceItems::whereNotNull('taxes')
+            ->where('invoice_id', $this->invoice->id)
+            ->get();
+        foreach ($items as $item) {
+            if ($this->invoice->discount > 0 && $this->invoice->discount_type == 'percent') {
+                $item->amount = $item->amount - (($this->invoice->discount / 100) * $item->amount);
+            }
+            foreach (json_decode($item->taxes) as $tax) {
+                $this->tax = InvoiceItems::taxbyid($tax)->first();
+                if ($this->tax) {
+                    if (!isset($taxList[$this->tax->tax_name . ': ' . $this->tax->rate_percent . '%'])) {
+                        $taxList[$this->tax->tax_name . ': ' . $this->tax->rate_percent . '%'] = ($this->tax->rate_percent / 100) * $item->amount;
+                    } else {
+                        $taxList[$this->tax->tax_name . ': ' . $this->tax->rate_percent . '%'] = $taxList[$this->tax->tax_name . ': ' . $this->tax->rate_percent . '%'] + (($this->tax->rate_percent / 100) * $item->amount);
+                    }
+                }
+            }
+        }
+
+        $this->taxes = $taxList;
+
+        $this->settings = $this->global;
+        $this->payments = Payment::with(['offlineMethod'])->where('invoice_id', $this->invoice->id)->where('status', 'complete')->orderBy('paid_on', 'desc')->get();
+        $this->invoiceSetting = invoice_setting();
+             //   return view('invoices.'.$this->invoiceSetting->template, $this->data);
+
+        $pdf = app('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        App::setLocale($this->invoiceSetting->locale);
+        Carbon::setLocale($this->invoiceSetting->locale);
+        $this->fields = $this->invoice->getCustomFieldGroupsWithFields()->fields;
+
+        $pdf->loadView('invoices.' . $this->invoiceSetting->template, $this->data);
+
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf->get_canvas();
+        $canvas->page_text(530, 820, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        $filename = $this->invoice->invoice_number;
+        //       return $pdf->stream();
         return $pdf->download($filename . '.pdf');
     }
 
@@ -318,7 +380,7 @@ class ManageAllInvoicesController extends AdminBaseController
         }
 
         $invoice = new Invoice();
-        $invoice->project_id = $request->project_id ?? null;
+        $invoice->task_id = $request->project_id ?? null;
         $invoice->client_id = ($request->client_id) ? $request->client_id : null;
         $invoice->issue_date = Carbon::createFromFormat($this->global->date_format, $request->issue_date)->format('Y-m-d');
         $invoice->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
@@ -380,23 +442,24 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function edit($id)
     {
-        $this->invoice = Invoice::findOrFail($id)->withCustomFields();
-        $this->fields = $this->invoice->getCustomFieldGroupsWithFields()->fields;
-        $this->projects = Project::whereNotNull('client_id')->get();
+        $this->invoice = Invoice::with(['client'])->findOrFail($id);
+       // $this->fields = $this->invoice->getCustomFieldGroupsWithFields()->fields;
+        $this->tasks = Task::whereNotNull('client_id')->where('tasks.board_column_id', '=', 10)->get();
         $this->currencies = Currency::all();
-
+// dd($this->invoice->client->name);
         if ($this->invoice->status == 'paid') {
             abort(403);
         }
         $this->taxes = Tax::all();
-        $this->products = Product::select('id', 'name as title', 'name as text')->get();
+        $this->products = Wotype::select('id', 'name as title', 'name as text')->get();
         $this->clients = User::allClients();
-        if ($this->invoice->project_id != '') {
-            $companyName = Project::where('id', $this->invoice->project_id)->with('clientdetails')->first();
-            $this->companyName = '';
-            if($companyName){
-                $this->companyName = $companyName->clientdetails ? $companyName->clientdetails->company_name : '';
-            }
+
+        if ($this->invoice->task_id != '') {
+            $companyName = $this->invoice->client->name;
+
+            $this->wotypes = WoType::all();
+           // $companyName = Task::where('id', $this->invoice->task_id)->with('user')->first();
+            $this->companyName = $companyName ? $companyName : '';
         }
         return view('admin.invoices.edit', $this->data);
     }
@@ -407,7 +470,7 @@ class ManageAllInvoicesController extends AdminBaseController
         $itemsSummary = $request->input('item_summary');
         $cost_per_item = $request->input('cost_per_item');
         $quantity = $request->input('quantity');
-        $hsnSacCode = request()->input('hsn_sac_code');
+        $hsnSacCode = $request->input('hsn_sac_code');
         $amount = $request->input('amount');
         $tax = $request->input('taxes');
 
@@ -445,7 +508,7 @@ class ManageAllInvoicesController extends AdminBaseController
             return Reply::error(__('messages.invalidRequest'));
         }
 
-        $invoice->project_id = $request->project_id ?? null;
+        $invoice->task_id = $request->project_id ?? null;
         $invoice->client_id = ($request->client_id) ? $request->client_id : null;
         $invoice->issue_date = Carbon::createFromFormat($this->global->date_format, $request->issue_date)->format('Y-m-d');
         $invoice->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
@@ -487,11 +550,12 @@ class ManageAllInvoicesController extends AdminBaseController
         endforeach;
 
         if ($request->has('shipping_address')) {
-            if ($invoice->project_id != null && $invoice->project_id != '') {
-                $client = $invoice->project->clientdetails;
-            } elseif ($invoice->client_id != null && $invoice->client_id != '') {
-                $client = $invoice->clientdetails;
-            }
+            // if ($invoice->task_id != null && $invoice->task_id != '') {
+            //     $client = $invoice->task->clientdetails;
+            // } elseif ($invoice->client_id != null && $invoice->client_id != '') {
+            //     $client = $invoice->clientdetails;
+            // }
+            $client = $invoice->clientdetails;
             $client->shipping_address = $request->shipping_address;
 
             $client->save();
@@ -502,8 +566,7 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function show($id)
     {
-        $this->invoice = Invoice::findOrFail($id)->withCustomFields();
-        $this->fields = $this->invoice->getCustomFieldGroupsWithFields()->fields;
+        $this->invoice = Invoice::findOrFail($id);
         $this->paidAmount = $this->invoice->getPaidAmount();
 
         if ($this->invoice->discount > 0) {
@@ -638,7 +701,8 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function addItems(Request $request)
     {
-        $this->items = Product::with('tax')->find($request->id);
+        $this->items = WoType::with('tax')->find($request->id);
+       // $this->items = Product::with('tax')->find($request->id);
         $exchangeRate = Currency::find($request->currencyId);
 
         if (!is_null($exchangeRate) && !is_null($exchangeRate->exchange_rate)) {
@@ -707,20 +771,26 @@ class ManageAllInvoicesController extends AdminBaseController
     public function getClientOrCompanyName($projectID = '')
     {
         $this->projectID = $projectID;
+
         if ($projectID == '') {
             $this->clients = User::allClients();
         } else {
-            $companyName = Project::where('id', $projectID)->with('clientdetails')->first();
-            $this->companyName = '';
-            $this->clientId = '';
-            if($companyName){
-                $this->companyName = ($companyName->clientdetails !=null) ? $companyName->clientdetails->company_name : '';
-                $this->clientId = ($companyName->clientdetails != null) ? $companyName->clientdetails->user_id : '';
+            $clients = Task::where('id', $projectID)->with('users')->first();
+           // dd($clients->client_id);
+            if($clients->client_id != ''){
+                $companyName = User::where('id', $clients->client_id)->first();
+              //  dd($companyName);
+                $this->companyName = $companyName->name ? $companyName->name : '';
+                $this->clientId = $companyName->id ? $companyName->id : '';
+            }else{
+                $companyName = User::where('id', $clients->created_by)->first();
+                $this->companyName = $companyName->name ? $companyName->name : '';
+                $this->clientId = $companyName->id ? $companyName->id : '';
             }
 
         }
 
-        $list = view('admin.invoices.client_or_company_name', $this->data)->render();
+        $list = view('member.invoices.client_or_company_name', $this->data)->render();
         return Reply::dataOnly(['html' => $list]);
     }
 
@@ -816,36 +886,6 @@ class ManageAllInvoicesController extends AdminBaseController
         $invoice->save();
 
         return Reply::success(__('messages.invoiceUpdated'));
-    }
-
-    public function fetchTimelogs(Request $request)
-    {
-        $this->taxes = Tax::all();
-        $projectId = $request->projectId;
-        $this->timelogs = [];
-        if(!is_null($request->timelogFrom) &&  $request->timelogFrom != ''){
-            $timelogFrom = Carbon::createFromFormat($this->global->date_format, $request->timelogFrom)->format('Y-m-d');
-            $timelogTo = Carbon::createFromFormat($this->global->date_format, $request->timelogTo)->format('Y-m-d');
-            $this->timelogs = ProjectTimeLog::with('task')
-                ->leftJoin('tasks', 'tasks.id', '=', 'project_time_logs.task_id')
-                ->groupBy('project_time_logs.task_id')
-                ->where('project_time_logs.project_id', $projectId)
-                ->where('project_time_logs.earnings', '>', 0)
-                ->where('project_time_logs.approved', 1)
-                ->where(
-                    function ($query) {
-                        $query->where('tasks.billable', 1)
-                            ->orWhereNull('tasks.billable');
-                    }
-                )
-                ->whereDate('project_time_logs.start_time', '>=', $timelogFrom)
-                ->whereDate('project_time_logs.end_time', '<=', $timelogTo)
-                ->selectRaw('project_time_logs.id, project_time_logs.task_id, sum(project_time_logs.earnings) as sum')
-                ->get();
-        }
-
-        $html = view('admin.invoices.timelog-item', $this->data)->render();
-        return Reply::dataOnly(['html' => $html]);
     }
 
     public function sendInvoice($invoiceID)

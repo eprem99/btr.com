@@ -81,7 +81,7 @@ class MemberAllInvoicesController extends MemberBaseController
         }
 
         if ($request->projectID != 'all' && !is_null($request->projectID)) {
-            $invoices = $invoices->where('invoices.project_id', '=', $request->projectID);
+            $invoices = $invoices->where('invoices.task_id', '=', $request->projectID);
         }
 
         $invoices = $invoices->whereHas('project', function ($q) {
@@ -146,7 +146,7 @@ class MemberAllInvoicesController extends MemberBaseController
             })
             ->editColumn('project_name', function ($row) {
                 if ($row->task_id) {
-                    return '<a href="' . route('member.all-tasks.show', $row->task_id) . '">' . ucfirst($row->heading) . '</a>';
+                    return '<a class="show-task-detail" data-task-id="'.$row->task_id.'" href="#">' . ucfirst($row->heading) . '</a>';
                 }
 
                 return '--';
@@ -264,7 +264,7 @@ class MemberAllInvoicesController extends MemberBaseController
         $this->settings = $this->global;
         $this->payments = Payment::with(['offlineMethod'])->where('invoice_id', $this->invoice->id)->where('status', 'complete')->orderBy('paid_on', 'desc')->get();
         $this->invoiceSetting = invoice_setting();
-           //     return view('invoices.'.$this->invoiceSetting->template, $this->data);
+             //   return view('invoices.'.$this->invoiceSetting->template, $this->data);
 
         $pdf = app('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
@@ -311,7 +311,6 @@ class MemberAllInvoicesController extends MemberBaseController
         ->select('tasks.id', 'tasks.heading')
         ->get();
         $this->wotypes = WoType::all();
-        $this->projects = Project::whereNotNull('client_id')->get();
         $this->currencies = Currency::all();
         $this->lastInvoice = Invoice::orderBy('id', 'desc')->first();
         $this->invoiceSetting = invoice_setting();
@@ -326,7 +325,6 @@ class MemberAllInvoicesController extends MemberBaseController
         $itemsSummary = $request->input('item_summary');
         $cost_per_item = $request->input('cost_per_item');
         $quantity = $request->input('quantity');
-        $hsnSacCode = request()->input('hsn_sac_code');
         $amount = $request->input('amount');
         $type = $request->input('type');
         $tax = $request->input('taxes');
@@ -585,7 +583,7 @@ class MemberAllInvoicesController extends MemberBaseController
 
     public function addItems(Request $request)
     {
-        $this->items = WoType::find($request->id);
+        $this->items = WoType::with('tax')->find($request->id);
         $exchangeRate = Currency::find($request->currencyId);
 
         if (!is_null($exchangeRate) && !is_null($exchangeRate->exchange_rate)) {

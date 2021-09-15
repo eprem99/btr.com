@@ -334,6 +334,24 @@
         loadTable();
     })
 
+    $('#invoice-table').on('click', '.show-task-detail', function () {
+        $(".right-sidebar").slideDown(50).addClass("shw-rside");
+
+        var id = $(this).data('task-id');
+        var url = "{{ route('member.all-tasks.show',':id') }}";
+        url = url.replace(':id', id);
+
+        $.easyAjax({
+            type: 'GET',
+            url: url,
+            success: function (response) {
+                if (response.status == "success") {
+                    $('#right-sidebar-content').html(response.view);
+                }
+            }
+        });
+    })
+
     // Change Status As cancelled
     $('body').on('click', '.sa-cancel', function(){
         var id = $(this).data('invoice-id');

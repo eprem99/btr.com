@@ -54,31 +54,31 @@ class InvoicesDataTable extends BaseDataTable
                     }
                 }
 
-                if ($row->status != 'canceled') {
-                    if ($row->clientdetails) {
-                        if (!is_null($row->clientdetails->shipping_address)) {
-                            if ($row->show_shipping_address === 'yes') {
-                                $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
-                            } else {
-                                $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
-                            }
-                        } else {
-                            $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
-                        }
-                    } else {
-                        if ($row->project->clientdetails) {
-                            if (!is_null($row->project->clientdetails->shipping_address)) {
-                                if ($row->show_shipping_address === 'yes') {
-                                    $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
-                                } else {
-                                    $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
-                                }
-                            } else {
-                                $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
-                            }
-                        }
-                    }
-                }
+                // if ($row->status != 'canceled') {
+                //     if ($row->clientdetails) {
+                //         if (!is_null($row->clientdetails->shipping_address)) {
+                //             if ($row->show_shipping_address === 'yes') {
+                //                 $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
+                //             } else {
+                //                 $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
+                //             }
+                //         } else {
+                //             $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
+                //         }
+                //     } else {
+                //         if ($row->project->clientdetails) {
+                //             if (!is_null($row->project->clientdetails->shipping_address)) {
+                //                 if ($row->show_shipping_address === 'yes') {
+                //                     $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
+                //                 } else {
+                //                     $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
+                //                 }
+                //             } else {
+                //                 $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
+                //             }
+                //         }
+                //     }
+                // }
                 
 
                 if ($firstInvoice->id == $row->id && is_null($row->invoice_recurring_id)) {
@@ -89,16 +89,6 @@ class InvoicesDataTable extends BaseDataTable
                     $action .= '<li><a href="javascript:;" data-toggle="tooltip" title="' . __('app.cancel') . '"  data-invoice-id="' . $row->id . '" class="sa-cancel"><i class="fa fa-times"></i> ' . __('modules.invoices.markCancel') . '</a></li>';
                 }
 
-                if ($row->status != 'paid' && $row->credit_note == 0 && $row->status != 'draft' && $row->status != 'canceled') {
-                    $action .= '<li><a href="' . route("front.invoice", [md5($row->id)]) . '" target="_blank" data-toggle="tooltip" ><i class="fa fa-link"></i> ' . __('modules.payments.paymentLink') . '</a></li>';
-                }
-                if ($row->credit_note == 0 && $row->status != 'draft' && $row->status != 'canceled') {
-                    if ($row->status == 'paid') {
-                        $action .= '<li><a href="' . route('admin.all-credit-notes.convert-invoice', $row->id) . '" data-toggle="tooltip"  data-invoice-id="' . $row->id . '" class="addCreditNote"><i class="fa fa-plus"></i> ' . __('modules.credit-notes.addCreditNote') . '</a></li>';
-                    } else {
-                        $action .= '<li><a href="javascript:;" data-toggle="tooltip"  data-invoice-id="' . $row->id . '" class="unpaidAndPartialPaidCreditNote"><i class="fa fa-plus"></i> ' . __('modules.credit-notes.addCreditNote') . '</a></li>';
-                    }
-                }
                 if ($row->status != 'paid' && $row->status != 'draft' && $row->status != 'canceled') {
                     $action .= '<li><a href="javascript:;" data-toggle="tooltip"  data-invoice-id="' . $row->id . '" class="reminderButton"><i class="fa fa-money"></i> ' . __('app.paymentReminder') . '</a></li>';
                 }
@@ -108,8 +98,8 @@ class InvoicesDataTable extends BaseDataTable
                 return $action;
             })
             ->editColumn('project_name', function ($row) {
-                if ($row->project_id != null) {
-                    return '<a href="' . route('admin.projects.show', $row->project_id) . '">' . ucfirst($row->project->project_name) . '</a>';
+                if ($row->task_id) {
+                    return '<a class="show-task-detail" data-task-id="'.$row->task_id.'" href="#">' . ucfirst($row->heading) . '</a>';
                 }
 
                 return '--';
@@ -187,17 +177,10 @@ class InvoicesDataTable extends BaseDataTable
         $request = $this->request();
         
         $this->firstInvoice = Invoice::orderBy('id', 'desc')->first();
-        $model = Invoice::with(
-            [
-                'project' => function ($q) {
-                    $q->withTrashed();
-                    $q->select('id', 'project_name', 'client_id');
-                },
-                'currency:id,currency_symbol,currency_code', 'project.client', 'client'
-            ]
-        )
-            ->select('invoices.id', 'invoices.due_amount', 'invoices.project_id', 'invoices.client_id', 'invoices.invoice_number', 'invoices.currency_id', 'invoices.total', 'invoices.status', 'invoices.issue_date', 'invoices.credit_note', 'invoices.show_shipping_address', 'invoices.send_status', 'invoices.invoice_recurring_id');
-
+        $model =         $invoices = Invoice::
+        join('tasks', 'tasks.id', 'task_id')
+        ->select('invoices.id', 'invoices.task_id', 'invoices.client_id', 'invoices.invoice_number', 'invoices.currency_id', 'invoices.total', 
+        'invoices.status', 'invoices.issue_date', 'invoices.credit_note', 'invoices.show_shipping_address', 'invoices.send_status', 'tasks.heading');
         if ($request->startDate !== null && $request->startDate != 'null' && $request->startDate != '') {
             $startDate = Carbon::createFromFormat($this->global->date_format, $request->startDate)->toDateString();
             $model = $model->where(DB::raw('DATE(invoices.`issue_date`)'), '>=', $startDate);
@@ -213,16 +196,13 @@ class InvoicesDataTable extends BaseDataTable
         }
 
         if ($request->projectID != 'all' && !is_null($request->projectID)) {
-            $model = $model->where('invoices.project_id', '=', $request->projectID);
+            $model = $model->where('invoices.task_id', '=', $request->projectID);
         }
 
         if ($request->clientID != 'all' && !is_null($request->clientID)) {
             $model = $model->where('client_id', '=', $request->clientID);
         }
 
-        $model = $model->whereHas('project', function ($q) {
-            $q->whereNull('deleted_at');
-        }, '>=', 0);
         return $model;
     }
 

@@ -106,10 +106,6 @@
                                     @if(!is_null($settings))
                                         <p class="text-muted m-l-5">{!! nl2br($global->address) !!}</p>
                                     @endif
-                                    @if($invoiceSetting->show_gst == 'yes' && !is_null($invoiceSetting->gst_number))
-                                        <p class="text-muted m-l-5"><b>@lang('app.gstIn')
-                                                :</b>{{ $invoiceSetting->gst_number }}</p>
-                                    @endif
                                 </address>
                             </div>
                             <div class="pull-right text-right">
@@ -118,20 +114,7 @@
                                         <h3>@lang('modules.invoices.to'),</h3>
                                         <h4 class="font-bold">{{ ucwords($invoice->project->client->name) }}</h4>
                                         @if(!is_null($invoice->project->client->client_details))
-                                            <p class="m-l-30">
-                                                <b>@lang('app.address') :</b>
-                                                <span class="text-muted">
-                                                    {!! nl2br($invoice->project->clientdetails->address) !!}
-                                                </span>
-                                            </p>
-                                            @if($invoice->show_shipping_address === 'yes')
-                                                <p class="m-t-5">
-                                                    <b>@lang('app.shippingAddress') :</b>
-                                                    <span class="text-muted">
-                                                        {!! nl2br($invoice->project->clientdetails->shipping_address) !!}
-                                                    </span>
-                                                </p>
-                                            @endif
+
                                             @if($invoiceSetting->show_gst == 'yes' && !is_null($invoice->project->client->client_details->gst_number))
                                                 <p class="m-t-5"><b>@lang('app.gstIn')
                                                         :</b>  {{ $invoice->project->client->client_details->gst_number }}
@@ -141,27 +124,6 @@
                                     @elseif(!is_null($invoice->client_id))
                                         <h3>@lang('modules.invoices.to'),</h3>
                                         <h4 class="font-bold">{{ ucwords($invoice->client->name) }}</h4>
-                                        @if(!is_null($invoice->clientdetails))
-                                            <p class="m-l-30">
-                                                <b>@lang('app.address') :</b>
-                                                <span class="text-muted">
-                                                    {!! nl2br($invoice->clientdetails->address) !!}
-                                                </span>
-                                            </p>
-                                            @if($invoice->show_shipping_address === 'yes')
-                                                <p class="m-t-5">
-                                                    <b>@lang('app.shippingAddress') :</b>
-                                                    <span class="text-muted">
-                                                        {!! nl2br($invoice->clientdetails->shipping_address) !!}
-                                                    </span>
-                                                </p>
-                                            @endif
-                                            @if($invoiceSetting->show_gst == 'yes' && !is_null($invoice->clientdetails->gst_number))
-                                                <p class="m-t-5"><b>@lang('app.gstIn')
-                                                        :</b>  {{ $invoice->clientdetails->gst_number }}
-                                                </p>
-                                            @endif
-                                        @endif
                                     @endif
 
                                     <p class="m-t-30"><b>@lang('modules.invoices.invoiceDate') :</b> <i

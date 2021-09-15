@@ -218,7 +218,7 @@
         }
         #client-info span {
             display: inline-block;
-            min-width: 20px;
+            text-transform: uppercase;
         }
         #client-info .color {
             font-size: 20px;
@@ -226,10 +226,6 @@
             font-weight: bold;
             margin-bottom: 10px;
         }
-        #client-info > span {
-            text-transform: uppercase;
-        }
-
         table {
             table-layout: fixed;
         }
@@ -471,7 +467,7 @@
 
     <div class="clearfix"></div>
     <section id="client-info">
-        <span class="color">@lang('modules.invoices.billedTo'):</span>
+        <span class="color">@lang('modules.invoices.billedTo')</span>
         <div>
             <span>{!! nl2br($global->address) !!}</span>
         </div>
@@ -479,7 +475,7 @@
     @if(!is_null($invoice->task) && !is_null($invoice->task->users))
         <section id="client-info">
             @if(!is_null($invoice->task->users))
-                <span class="color">@lang('modules.invoices.shipedTo'):</span>
+                <span class="color">@lang('modules.invoices.shipedTo')</span>
                 <div>
                     <span class="bold">{{ ucwords($invoice->task->users[0]->name) }}</span>
                 </div>
@@ -494,8 +490,7 @@
                 </div>
                 @if ($invoice->show_shipping_address === 'yes')
                     <div>
-                        <b>@lang('app.shippingAddress') :</b>
-                        <div>{!! nl2br($clientDetail->shipping_address) !!}</div>
+                    <span>@lang('app.shippingAddress') : </span> {!! nl2br($clientDetail->shipping_address) !!}
                     </div>
                 @endif
             @endif

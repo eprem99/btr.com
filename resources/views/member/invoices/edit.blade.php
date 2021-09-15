@@ -85,7 +85,7 @@
                                 <div class="col-md-4">
 
                                     <div class="form-group">
-                                        <label class="control-label">@lang('app.project')</label>
+                                    <label class="control-label">@lang('modules.tasks.Task')</label>
 
                                         <div class="row">
                                             <div class="col-md-12">
@@ -475,7 +475,7 @@
         var  selectedID = '';
         $("#selectProduct").select2({
             data: products,
-            placeholder: "Select a Product",
+            placeholder: "Select a Work order Type",
             allowClear: true,
             escapeMarkup: function(markup) {
                 return markup;
@@ -485,7 +485,7 @@
                 return htmlData;
             },
             templateSelection: function(data) {
-                $('#select2-selectProduct-container').html('@lang('app.add') @lang('app.menu.products')');
+                $('#select2-selectProduct-container').html('@lang('app.add') @lang('app.menu.wotype')');
                 $("#selectProduct").val('');
                 selectedID = data.id;
                 return '';
@@ -493,7 +493,7 @@
         }).on('change', function (e) {
             if(selectedID){
                 addProduct(selectedID);
-                $('#select2-selectProduct-container').html('@lang('app.add') @lang('app.menu.products')');
+                $('#select2-selectProduct-container').html('@lang('app.add') @lang('app.menu.wotype')');
             }
             selectedID = '';
         }).on('select2:open', function (event) {
@@ -731,7 +731,7 @@
         });
     });
 
-    $('#updatePayments').on('keyup', '.quantity,.cost_per_item,.item_name, .discount_value', function () {
+    $('#updatePayments').on('keyup change click mouseup', '.quantity, .cost_per_item, .item_name, .discount_value', function () {
         var quantity = $(this).closest('.item-row').find('.quantity').val();
 
         var perItemCost = $(this).closest('.item-row').find('.cost_per_item').val();
@@ -746,7 +746,7 @@
 
     });
 
-    $('#updatePayments').on('change','.type, #discount_type', function () {
+    $('#updatePayments').on('keyup change','.type, #discount_type', function () {
         var quantity = $(this).closest('.item-row').find('.quantity').val();
 
         var perItemCost = $(this).closest('.item-row').find('.cost_per_item').val();

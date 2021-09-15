@@ -15,12 +15,6 @@
             <button type="button" onclick="showPayments()" class="btn btn-info btn-sm">
                 @lang('app.view') @lang('app.menu.payments')
             </button>
-            <button type="button" data-clipboard-text="{{ route('front.invoice', [md5($invoice->id)]) }}" class="btn btn-success btn-sm btn-copy">
-                <i class="fa fa-copy"></i>
-                <span id="copy_payment_text">
-                    @lang('modules.invoices.copyPaymentLink')
-                </span>
-            </button>
             @if ($invoice->credit_notes->count() > 0)
                 <a href="javascript:;" onclick="showAppliedCredits('{{ route('admin.all-invoices.applied-credits', $invoice->id) }}')" class="btn btn-info  btn-sm">
                     @lang('app.appliedCredits')
@@ -130,77 +124,20 @@
                             </div>
                             <div class="pull-right text-right">
                                 <address>
-                                    @if(!is_null($invoice->project_id) && !is_null($invoice->project->client))
-                                        <h4>@lang('app.to'),</h4>
+                                    @if(!is_null($invoice->project) && !is_null($invoice->project->client))
+                                        <h3>@lang('modules.invoices.to'),</h3>
                                         <h4 class="font-bold">{{ ucwords($invoice->project->client->name) }}</h4>
+                                        @if(!is_null($invoice->project->client->client_details))
 
-                                        <p class="m-l-30">
-                                            <b>@lang('app.address') :</b>
-                                            <span class="text-muted">
-                                                {!! nl2br($invoice->project->client->client_details->address) !!}
-                                            </span>
-                                        </p>
-                                        @if($invoice->show_shipping_address === 'yes')
-                                            <p class="m-t-5">
-                                                <b>@lang('app.shippingAddress') :</b>
-                                                <span class="text-muted">
-                                                    {!! nl2br($invoice->project->client->client_details->shipping_address) !!}
-                                                </span>
-                                            </p>
-                                        @endif
-                                        @if($invoiceSetting->show_gst == 'yes' && !is_null($invoice->project->client->client_details->gst_number))
-                                            <p class="m-t-5"><b>@lang('app.gstIn')
-                                                    :</b>  {{ $invoice->project->client->client_details->gst_number }}
-                                            </p>
+                                            @if($invoiceSetting->show_gst == 'yes' && !is_null($invoice->project->client->client_details->gst_number))
+                                                <p class="m-t-5"><b>@lang('app.gstIn')
+                                                        :</b>  {{ $invoice->project->client->client_details->gst_number }}
+                                                </p>
+                                            @endif
                                         @endif
                                     @elseif(!is_null($invoice->client_id))
                                         <h3>@lang('modules.invoices.to'),</h3>
                                         <h4 class="font-bold">{{ ucwords($invoice->client->name) }}</h4>
-                                        <p class="m-l-30">
-                                            <b>@lang('app.address') :</b>
-                                            <span class="text-muted">
-                                                {!! nl2br($invoice->clientdetails->address) !!}
-                                            </span>
-                                        </p>
-                                        @if($invoice->show_shipping_address === 'yes')
-                                            <p class="m-t-5">
-                                                <b>@lang('app.shippingAddress') :</b>
-                                                <span class="text-muted">
-                                                    {!! nl2br($invoice->clientdetails->shipping_address) !!}
-                                                </span>
-                                            </p>
-                                        @endif
-                                        @if($invoiceSetting->show_gst == 'yes' && !is_null($invoice->clientdetails->gst_number))
-                                            <p class="m-t-5"><b>@lang('app.gstIn')
-                                                    :</b>  {{ $invoice->clientdetails->gst_number }}
-                                            </p>
-                                        @endif
-                                    @endif
-
-                                    @if(is_null($invoice->project) && !is_null($invoice->estimate) && !is_null($invoice->estimate->client))
-                                        <h3>@lang('modules.invoices.to'),</h3>
-                                        <h4 class="font-bold">{{ ucwords($invoice->estimate->client->name) }}</h4>
-                                        @if(!is_null($invoice->estimate->client->client_details))
-                                            <p class="m-l-30">
-                                                <b>@lang('app.address') :</b>
-                                                <span class="text-muted">
-                                                    {!! nl2br($invoice->estimate->client->client_details->address) !!}
-                                                </span>
-                                            </p>
-                                            @if($invoice->show_shipping_address === 'yes')
-                                                <p class="m-t-5">
-                                                    <b>@lang('app.shippingAddress') :</b>
-                                                    <span class="text-muted">
-                                                        {!! nl2br($invoice->estimate->client->client_details->shipping_address) !!}
-                                                    </span>
-                                                </p>
-                                            @endif
-                                            @if($invoiceSetting->show_gst == 'yes' && !is_null($invoice->estimate->client->client_details->gst_number))
-                                                <p class="m-t-5"><b>@lang('app.gstIn')
-                                                        :</b>  {{ $invoice->estimate->client->client_details->gst_number }}
-                                                </p>
-                                            @endif
-                                        @endif
                                     @endif
 
                                     <p class="m-t-30"><b>@lang('modules.invoices.invoiceDate') :</b> <i
@@ -301,41 +238,7 @@
                     </div>
                 </div>
 
-                {{--Custom fields data--}}
-                @if(isset($fields) && count($fields) > 0)
-                <h3 class="box-title m-t-20">@lang('modules.projects.otherInfo')</h3>
-                <div class="row">
-                    @foreach($fields as $field)
-                        <div class="col-md-3">
-                            <strong>{{ ucfirst($field->label) }}</strong> <br>
-                            <p class="text-muted">
-                                @if( $field->type == 'text')
-                                    {{$invoice->custom_fields_data['field_'.$field->id] ?? '-'}}
-                                @elseif($field->type == 'password')
-                                    {{$invoice->custom_fields_data['field_'.$field->id] ?? '-'}}
-                                @elseif($field->type == 'number')
-                                    {{$invoice->custom_fields_data['field_'.$field->id] ?? '-'}}
-
-                                @elseif($field->type == 'textarea')
-                                    {{$invoice->custom_fields_data['field_'.$field->id] ?? '-'}}
-
-                                @elseif($field->type == 'radio')
-                                    {{ !is_null($invoice->custom_fields_data['field_'.$field->id]) ? $invoice->custom_fields_data['field_'.$field->id] : '-' }}
-                                @elseif($field->type == 'select')
-                                    {{ (!is_null($invoice->custom_fields_data['field_'.$field->id]) && $invoice->custom_fields_data['field_'.$field->id] != '') ? $field->values[$invoice->custom_fields_data['field_'.$field->id]] : '-' }}
-                                @elseif($field->type == 'checkbox')
-                                    {{ !is_null($invoice->custom_fields_data['field_'.$field->id]) ? $field->values[$invoice->custom_fields_data['field_'.$field->id]] : '-' }}
-                                @elseif($field->type == 'date')
-                                    {{ !is_null($invoice->custom_fields_data['field_'.$field->id]) ? \Carbon\Carbon::parse($invoice->custom_fields_data['field_'.$field->id])->format($global->date_format) : '--'}}
-                                @endif
-                            </p>
-
-                        </div>
-                    @endforeach
-                </div>
-                @endif
-                {{--custom fields data end--}}
-                @if(!is_null($payments))
+               @if(!is_null($payments))
                     <div class="b-all m-t-20 m-b-20">
                         <h3 class="box-title m-t-20 text-center">Recent Payments</h3>
                         <hr>
