@@ -816,7 +816,9 @@ class HomeController extends Controller
 
     public function domPdfObjectForDownload($id)
     {
-        $this->invoice = Invoice::whereRaw('md5(id) = ?', $id)->firstOrFail()->withCustomFields();
+       // $this->invoice = Invoice::whereRaw('md5(id) = ?', $id)->firstOrFail()->withCustomFields();
+        $this->invoice = Invoice::with(['items', 'task', 'task.users', 'task.users.client_details', 'task.users.client_details.clientCategory'])->whereRaw('md5(id) = ?', $id)->firstOrFail();
+        $this->clientDetail = ClientDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
         App::setLocale(isset($this->invoice->company->locale) ? $this->invoice->company->locale : 'en');
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
@@ -886,7 +888,10 @@ class HomeController extends Controller
     public function downloadInvoice($id)
     {
 
-        $this->invoice = Invoice::whereRaw('md5(id) = ?', $id)->firstOrFail();
+       // $this->invoice = Invoice::whereRaw('md5(id) = ?', $id)->firstOrFail();
+        $this->invoice = Invoice::with(['items', 'task', 'task.users', 'task.users.client_details', 'task.users.client_details.clientCategory'])->whereRaw('md5(id) = ?', $id)->firstOrFail();
+        $this->clientDetail = ClientDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
+
         $this->invoiceSetting = InvoiceSetting::first();
         App::setLocale($this->invoiceSetting->locale);
         // Download file uploaded
