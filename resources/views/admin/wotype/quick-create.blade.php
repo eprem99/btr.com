@@ -12,6 +12,10 @@
                         <label class="required">@lang('app.name')</label>
                         <input type="text" name="name" id="name" class="form-control">
                     </div>
+                    <div class="form-group">
+                        <label class="required">@lang('app.price')</label>
+                        <input type="text" name="price" id="price" class="form-control">
+                    </div>
                 </div>
             </div>
         </div>
@@ -33,12 +37,13 @@ $(document).ready(function() {
 });
     function savewotype() {
         var wotypetName = $('#name').val();
+        var wotypetPrice = $('#price').val();
         var token = "{{ csrf_token() }}";
         $.easyAjax({
             url: '{{route('admin.wotype.quick-store')}}',
             container: '#createwotype',
             type: "POST",
-            data: { 'name':wotypetName, '_token':token},
+            data: { 'name':wotypetName, 'price':wotypetPrice, '_token':token},
             success: function (response) {
                 if(response.status == 'success'){
                     if ($('#wotype').length !== 0) {

@@ -34,10 +34,13 @@
                             <div class="col-sm-12 col-xs-12">
                                 {!! Form::open(['id'=>'createCurrency','class'=>'ajax-form','method'=>'POST']) !!}
                                 <div class="form-group">
-                                    <label for="company_name" class="required">@lang('app.team')</label>
-                                    <input type="text" class="form-control" id="team_name" name="team_name">
+                                    <label for="wotype_name" class="required">@lang('app.team')</label>
+                                    <input type="text" class="form-control" id="wotype_name" name="name">
                                 </div>
-
+                                <div class="form-group">
+                                    <label for="wotype_price" class="required">@lang('app.price')</label>
+                                    <input type="text" class="form-control" id="wotype_price" name="price">
+                                </div>
 
                                 <button type="submit" id="save-form" class="btn btn-success waves-effect waves-light m-r-10">
                                     @lang('app.save')

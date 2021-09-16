@@ -63,7 +63,8 @@ class ManageWotypeController extends AdminBaseController
     public function store(StoreWoType $request)
     {
         $group = new WoType();
-        $group->team_name = $request->team_name;
+        $group->name = $request->name;
+        $group->price = $request->price;
         $group->save();
 
         return Reply::redirect(route('admin.wotype.index'), __('messages.wotypeAdded'));
@@ -77,6 +78,7 @@ class ManageWotypeController extends AdminBaseController
     {
         $group = new WoType();
         $group->name = $request->name;
+        $group->price = $request->price;
         $group->save();
 
         $teams = WoType::all();
@@ -89,7 +91,7 @@ class ManageWotypeController extends AdminBaseController
                 $selected = 'selected';
             }
 
-            $teamData .= '<option ' . $selected . ' value="' . $team->id . '"> ' . $team->team_name . ' </option>';
+            $teamData .= '<option ' . $selected . ' value="' . $team->id . '"> ' . $team->name . ' </option>';
         }
 
         return Reply::successWithData(__('messages.wotypeAdded'), ['teamData' => $teamData]);
@@ -128,6 +130,7 @@ class ManageWotypeController extends AdminBaseController
     {
         $group = WoType::find($id);
         $group->name = $request->name;
+        $group->price = $request->price;
         $group->save();
 
         return Reply::redirect(route('admin.wotype.index'), __('messages.wotypeUpdated'));

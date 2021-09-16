@@ -308,62 +308,7 @@
                                     @endif
                                     <div class="clearfix"></div>
                                     <hr>
-                                    <div class="row">
-                                        <div class="col-md-6 text-left">
-                                            {{--<div class="clearfix"></div>--}}
-                                            @if ($invoice->total > 0)
-                                                <div class="col-md-12 p-l-0 text-left">
-                                                    @if($invoice->status != 'paid' && ($credentials->paypal_status == 'active' || $credentials->stripe_status == 'active'  || $credentials->razorpay_status == 'active'))
 
-                                                        <div class="btn-group" id="onlineBox">
-                                                            <div class="dropup">
-                                                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                    @lang('modules.invoices.payNow') <span class="caret"></span>
-                                                                </button>
-                                                                <ul role="menu" class="dropdown-menu">
-                                                                    @if($credentials->paypal_status == 'active')
-                                                                        <li>
-                                                                            <a href="{{ route('client.paypal-public', [$invoice->id]) }}"><i
-                                                                                        class="fa fa-paypal"></i> @lang('modules.invoices.payPaypal') </a>
-                                                                        </li>
-                                                                    @endif
-                                                                    @if($credentials->razorpay_status == 'active')
-                                                                        @if ($credentials->paypal_status == 'active' || $credentials->stripe_status == 'active')
-                                                                            <li class="divider"></li>
-                                                                        @endif
-                                                                        <li>
-                                                                            <a href="javascript:void(0);" id="razorpayPaymentButton"><i
-                                                                                        class="fa fa-credit-card"></i> @lang('modules.invoices.payRazorpay') </a>
-                                                                        </li>
-                                                                    @endif
-                                                                    @if($credentials->stripe_status == 'active')
-                                                                        @if ($credentials->paypal_status == 'active' || $credentials->razorpay_status == 'active')
-                                                                            <li class="divider"></li>
-                                                                        @endif
-                                                                        <li>
-                                                                            <a href="javascript:void(0);" data-toggle="modal" data-target="#stripeModal"><i
-                                                                                class="fa fa-cc-stripe"></i> @lang('modules.invoices.payStripe') </a>
-                                                                            <a style="display:none;" href="javascript:void(0);" id="stripePaymentButton"><i class="fa fa-cc-stripe"></i> @lang('modules.invoices.payStripe') </a>
-                                                                        </li>
-                                                                    @endif
-                                                                </ul>
-                                                            </div>
-
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                            @else
-                                                <div class="col-md-12 p-l-0 text-left">
-                                                   <strong>@lang('messages.amountIsZero')</strong>
-                                                </div>
-                                            @endif
-
-
-                                        </div>
-                                        <div class="col-md-6 text-right">
-
-                                        </div>
-                                    </div>
                                     <div>
                                         <div class="col-md-12">
                                             <span><p class="displayNone" id="methodDetail"></p></span>
@@ -385,64 +330,7 @@
 
     </div>
     <!-- /#page-wrapper -->
-    <div class="modal" tabindex="-1" role="dialog" id="stripeModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form id="stripeAddress" method="POST" action="{{ route('client.stripe', [$invoice->id]) }}">
-                    {{ csrf_field() }}
-                    <input type="hidden" id="invoiceIdInput" name="invoice_id"  value="{{ $invoice->id }}">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="stripeModalHeading">@lang('modules.stripeCustomerAddress.details')</h5>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row" style="margin-bottom:20px;" id="client-info">
-                            <div class="col-xs-12">
-                                <div class="form-group">
-                                    <label>@lang('modules.stripeCustomerAddress.name')</label>
-                                    <input type="text" required name="clientName" id="clientName" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-xs-12">
-                                <div class="form-group">
-                                    <label>@lang('modules.stripeCustomerAddress.line1')</label>
-                                    <input type="text" required name="line1" id="line1" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-xs-4">
-                                <div class="form-group">
-                                    <label>@lang('modules.stripeCustomerAddress.city')</label>
-                                    <input type="text" required name="city" id="city" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-xs-4">
-                                <div class="form-group">
-                                    <label>@lang('modules.stripeCustomerAddress.state')</label>
-                                    <input type="text" required name="state" id="state" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-xs-4">
-                                <div class="form-group">
-                                    <label>@lang('modules.stripeCustomerAddress.country')</label>
-                                    <input type="text" required name="country" id="country" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-xs-12">
-                                <small>* Address country must be a valid <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">2-alphabet ISO-3166 code</a></small>
-                            </div>
-                        </div>
-                        <div class="row" id="stripe-modal" style="margin-bottom:20px;">
-                            <!-- Stripe Elements Placeholder -->
-                            <div class="flex flex-wrap mt-6" style="margin-top: 15px; text-align: center">
-                                <button type="button" id="next-button"  class="btn btn-success inline-block align-middle text-center select-none border font-bold whitespace-no-wrap py-2 px-4 rounded text-base leading-normal no-underline text-gray-100 bg-blue-500 hover:bg-blue-700">
-                                    @lang('app.submit')
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+
 </div>
 <!-- /#wrapper -->
 

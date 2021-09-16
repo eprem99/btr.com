@@ -47,6 +47,11 @@
                                 <input type="text" class="form-control" id="wotype_name" name="name"
                                     value="{{ $group->name }}">
                             </div>
+                            <div class="form-group">
+                                <label for="wotype_price" class="required">@lang('app.prcie')</label>
+                                <input type="text" class="form-control" id="wotype_price" name="price"
+                                    value="{{ $group->price }}">
+                            </div>
 
                             <button type="submit" id="save-form" class="btn btn-success waves-effect waves-light m-r-10">
                                 @lang('app.save')

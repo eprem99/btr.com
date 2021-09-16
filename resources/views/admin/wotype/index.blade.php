@@ -37,6 +37,7 @@
                         <tr>
                             <th>#</th>
                             <th>@lang('app.menu.wotype')</th>
+                            <th>@lang('app.price')</th>
                             <th>@lang('app.action')</th>
                         </tr>
                         </thead>
@@ -45,6 +46,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $group->name }}</td>
+                                <td>{{ $group->price }}</td>
                                 <td>
 
                                     <div class="btn-group dropdown m-r-10">

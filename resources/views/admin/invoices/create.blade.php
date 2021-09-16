@@ -415,7 +415,7 @@
                 return markup;
             },
             templateResult: function(data) {
-                var htmlData = '<b>'+data.title+'</b> <a href="javascript:;" class="btn btn-success btn btn-outline btn-xs waves-effect pull-right">@lang('app.add') <i class="fa fa-plus" aria-hidden="true"></i></a>';
+                var htmlData = '<b>'+data.name+'</b> <a href="javascript:;" class="btn btn-success btn btn-outline btn-xs waves-effect pull-right">@lang('app.add') <i class="fa fa-plus" aria-hidden="true"></i></a>';
                 return htmlData;
             },
             templateSelection: function(data) {
