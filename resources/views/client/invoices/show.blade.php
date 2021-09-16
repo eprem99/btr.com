@@ -84,69 +84,7 @@
                                     @endif
                                 </address>
                             </div>
-                            <div class="pull-right text-right">
-                                <address>
-                                    @if(!is_null($invoice->project_id) && !is_null($invoice->project->client))
-                                        <h3>@lang('modules.invoices.to'),</h3>
-                                        <h4 class="font-bold">{{ ucwords($invoice->project->client->name) }}</h4>
-                                         @if(!is_null($invoice->project->client->client_details))
-                                            <p class="m-l-30">
-                                                <b>@lang('app.address') :</b>
-                                                <span class="text-muted">
-                                                    {!! nl2br($invoice->project->client->client_details->address) !!}
-                                                </span>
-                                            </p>
-                                            @if($invoice->show_shipping_address === 'yes')
-                                                <p class="m-t-5">
-                                                    <b>@lang('app.shippingAddress') :</b>
-                                                    <span class="text-muted">
-                                                        {!! nl2br($invoice->project->client->client_details->shipping_address) !!}
-                                                    </span>
-                                                </p>
-                                            @endif
-                                            @if($invoiceSetting->show_gst == 'yes' && !is_null($invoice->project->client->client_details->gst_number))
-                                                <p class="m-t-5"><b>@lang('app.gstIn')
-                                                        :</b>  {{ $invoice->project->client->client_details->gst_number }}
-                                                </p>
-                                            @endif
-                                        @endif
-                                    @elseif(!is_null($invoice->client_id))
-                                        <h3>@lang('modules.invoices.to'),</h3>
-                                        <h4 class="font-bold">{{ ucwords($invoice->client->name) }}</h4>
-                                        @if(!is_null($invoice->client->clientdetails))
-                                            <p class="m-l-30">
-                                                <b>@lang('app.address') :</b>
-                                                <span class="text-muted">
-                                                    {!! nl2br($invoice->clientdetails->address) !!}
-                                                </span>
-                                            </p>
-                                            @if($invoice->show_shipping_address === 'yes')
-                                                <p class="m-t-5">
-                                                    <b>@lang('app.shippingAddress') :</b>
-                                                    <span class="text-muted">
-                                                        {!! nl2br($invoice->clientdetails->shipping_address) !!}
-                                                    </span>
-                                                </p>
-                                            @endif
-                                            @if($invoiceSetting->show_gst == 'yes' && !is_null($invoice->client->clientdetails->gst_number))
-                                                <p class="m-t-5"><b>@lang('app.gstIn')
-                                                        :</b>  {{ $invoice->client->clientdetails->gst_number }}
-                                                </p>
-                                            @endif
-                                        @endif
-                                    @endif
-                                    <p class="m-t-30"><b>@lang('modules.invoices.invoiceDate') :</b> <i
-                                                class="fa fa-calendar"></i> {{ $invoice->issue_date->format($global->date_format) }}
-                                    </p>
 
-                                    <p><b>@lang('modules.dashboard.dueDate') :</b> <i
-                                                class="fa fa-calendar"></i> {{ $invoice->due_date->format($global->date_format) }}
-                                    </p>
-                                    @if($invoice->recurring == 'yes')
-                                        <p><b class="text-danger">@lang('modules.invoices.billingFrequency') : </b> {{ $invoice->billing_interval . ' '. ucfirst($invoice->billing_frequency) }} ({{ ucfirst($invoice->billing_cycle) }} cycles)</p>
-                                    @endif
-                                </address>
-                            </div>
                         </div>
                         <div class="col-md-12">
                             <div class="table-responsive m-t-40" style="clear: both;">
@@ -369,121 +307,7 @@
             </div>
         </div>
     </div>
-    {{--<div class="modal" tabindex="-1" role="dialog" id="stripeModal">--}}
-        {{--<div class="modal-dialog" role="document">--}}
-            {{--<div class="modal-content">--}}
-                {{--<form id="stripeAddress">--}}
-                    {{--<div class="modal-header">--}}
-                        {{--<h5 class="modal-title">@lang('modules.stripeCustomerAddress.details')</h5>--}}
-                    {{--</div>--}}
-                    {{--<div class="modal-body">--}}
-                        {{--<div class="row">--}}
-                            {{--<div class="col-xs-12">--}}
-                                {{--<div class="form-group">--}}
-                                    {{--<label>@lang('modules.stripeCustomerAddress.name')</label>--}}
-                                    {{--<input type="text" required name="clientName" id="clientName" class="form-control">--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                            {{--<div class="col-xs-12">--}}
-                                {{--<div class="form-group">--}}
-                                    {{--<label>@lang('modules.stripeCustomerAddress.line1')</label>--}}
-                                    {{--<input type="text" required name="line1" id="line1" class="form-control">--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                            {{--<div class="col-xs-6">--}}
-                                {{--<div class="form-group">--}}
-                                    {{--<label>@lang('modules.stripeCustomerAddress.postalCode')</label>--}}
-                                    {{--<input type="text" required name="postal_code" id="postal_code" class="form-control">--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                            {{--<div class="col-xs-6">--}}
-                                {{--<div class="form-group">--}}
-                                    {{--<label>@lang('modules.stripeCustomerAddress.city')</label>--}}
-                                    {{--<input type="text" required name="city" id="city" class="form-control">--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                            {{--<div class="col-xs-6">--}}
-                                {{--<div class="form-group">--}}
-                                    {{--<label>@lang('modules.stripeCustomerAddress.state')</label>--}}
-                                    {{--<input type="text" required name="state" id="state" class="form-control">--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                            {{--<div class="col-xs-6">--}}
-                                {{--<div class="form-group">--}}
-                                    {{--<label>@lang('modules.stripeCustomerAddress.country')</label>--}}
-                                    {{--<input type="text" required name="country" maxlength="2" id="country" class="form-control">--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                            {{--<div class="col-xs-12">--}}
-                                {{--<small>* Address country must be a valid <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">2-alphabet ISO-3166 code</a></small>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                    {{--<div class="modal-footer">--}}
-                        {{--<button type="submit" class="btn btn-primary stripeAddressSubmit">Submit</button>--}}
-                    {{--</div>--}}
-                {{--</form>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--</div>--}}
-    <div class="modal" tabindex="-1" role="dialog" id="stripeModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form id="stripeAddress" method="POST" action="{{ route('client.stripe', [$invoice->id]) }}">
-                    {{ csrf_field() }}
-                    <input type="hidden" id="invoiceIdInput" name="invoice_id"  value="{{ $invoice->id }}">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="stripeModalHeading">@lang('modules.stripeCustomerAddress.details')</h5>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row" style="margin-bottom:20px;" id="client-info">
-                            <div class="col-xs-12">
-                                <div class="form-group">
-                                    <label>@lang('modules.stripeCustomerAddress.name')</label>
-                                    <input type="text" required name="clientName" id="clientName" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-xs-12">
-                                <div class="form-group">
-                                    <label>@lang('modules.stripeCustomerAddress.line1')</label>
-                                    <input type="text" required name="line1" id="line1" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-xs-4">
-                                <div class="form-group">
-                                    <label>@lang('modules.stripeCustomerAddress.city')</label>
-                                    <input type="text" required name="city" id="city" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-xs-4">
-                                <div class="form-group">
-                                    <label>@lang('modules.stripeCustomerAddress.state')</label>
-                                    <input type="text" required name="state" id="state" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-xs-4">
-                                <div class="form-group">
-                                    <label>@lang('modules.stripeCustomerAddress.country')</label>
-                                    <input type="text" required name="country" id="country" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-xs-12">
-                                <small>* Address country must be a valid <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">2-alphabet ISO-3166 code</a></small>
-                            </div>
-                        </div>
-                        <div class="row" id="stripe-modal" style="margin-bottom:20px;">
-                            <!-- Stripe Elements Placeholder -->
-                            <div class="flex flex-wrap mt-6" style="margin-top: 15px; text-align: center">
-                                <button type="button" id="next-button"  class="btn btn-success inline-block align-middle text-center select-none border font-bold whitespace-no-wrap py-2 px-4 rounded text-base leading-normal no-underline text-gray-100 bg-blue-500 hover:bg-blue-700">
-                                    @lang('app.submit')
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+
 
 @endsection
 
@@ -526,21 +350,6 @@
         });
 
     });
-
-    $('#next-button').click( function () {
-        $('#next-button').attr('disabled', true);
-        var url = "{{ route('client.invoices.stripe-modal')}}";
-        $.easyAjax({
-            type:'POST',
-            url:url,
-            data: $('#stripeAddress').serialize(),
-            success: function(res) {
-                $('#stripeModalHeading').html('@lang('app.cardDetails')');
-                $('#stripe-modal').html(res.view);
-                $('#client-info').hide();
-            }
-        })
-    })
 
     @if($credentials->razorpay_status == 'active')
         $('#razorpayPaymentButton').click(function() {

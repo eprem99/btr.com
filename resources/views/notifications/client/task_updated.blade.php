@@ -1,7 +1,7 @@
 <li class="top-notifications">
     <div class="message-center">
 
-        <a href="{{route('front.task-share',[$notification->data['id']])}}" target="_blank">
+        <a href="javascript:;" onclick="showTaskDetail({{ $notification->data['id'] }})">
             <div class="user-img">
                 <span class="btn btn-circle btn-warning"><i class="fa fa-tasks"></i></span>
             </div>

@@ -62,7 +62,7 @@ class ClientInvoicesController extends ClientBaseController
                 return '<a href="' . route('client.invoices.download', $row->id) . '" data-toggle="tooltip" data-original-title="Download" class="btn  btn-sm btn-outline btn-info"><i class="fa fa-download"></i> ' . __('app.download') . '</a>';
             })
             ->editColumn('project_name', function ($row) {
-                return $row->task->heading != '' ? $row->task->heading : '--';
+                return '<a href="javascript:;" onclick="showTaskDetail('.$row->task->id.')">' . ucfirst($row->task->heading) . '</a>';
             })
             ->editColumn('invoice_number', function ($row) {
                 return '<a style="text-decoration: underline" href="' . route('client.invoices.show', $row->id) . '">' . $row->invoice_number . '</a>';
@@ -80,7 +80,7 @@ class ClientInvoicesController extends ClientBaseController
                     return '<label class="label label-success">' . strtoupper($row->status) . '</label>';
                 }
             })
-            ->rawColumns(['action', 'status', 'invoice_number'])
+            ->rawColumns(['project_name', 'action', 'status', 'invoice_number'])
             ->removeColumn('currency_code')
             ->make(true);
     }

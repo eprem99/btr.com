@@ -65,10 +65,9 @@ class LabelDataTable extends BaseDataTable
                 if($row->contacts){
                     $siteid = json_decode($row->contacts, true);
                     if($siteid['site_state'] != '' || $siteid['site_state'] != 0 || $siteid['site_state'] != NULL){
-                        $states = State::where('id', '=', $siteid['site_state'])->first();
-                        if($states){
-                            return $states->names;
-                        }
+                       // $states = State::where('id', '=', $siteid['site_state'])->first();
+                        return $siteid['site_state'];
+
                         
                     }else{
                         return '--';

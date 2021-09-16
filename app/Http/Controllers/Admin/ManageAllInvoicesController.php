@@ -82,7 +82,8 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function domPdfObjectForDownload($id)
     {
-        $this->invoice = Invoice::with('items')->findOrFail($id)->withCustomFields();
+        $this->invoice = Invoice::with(['items', 'task', 'task.users', 'task.users.client_details', 'task.users.client_details.clientCategory'])->findOrFail($id);
+        $this->clientDetail = ClientDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
         if ($this->invoice->credit_note) {
@@ -153,7 +154,8 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function domPdfObjectForConsoleDownload($id)
     {
-        $this->invoice = Invoice::with('items')->findOrFail($id);
+        $this->invoice = Invoice::with(['items', 'task', 'task.users', 'task.users.client_details', 'task.users.client_details.clientCategory'])->findOrFail($id);
+        $this->clientDetail = ClientDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
         if ($this->invoice->credit_note) {
@@ -891,12 +893,13 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function sendInvoice($invoiceID)
     {
-        $invoice = Invoice::with(['project', 'project.client'])->findOrFail($invoiceID);
-        if ($invoice->project_id != null && $invoice->project_id != '') {
-            $notifyUser = $invoice->project->client;
+        $invoice = Invoice::with(['task', 'task.users'])->findOrFail($invoiceID);
+        if ($invoice->task_id != null && $invoice->task_id != '') {
+            $notifyUser = $invoice->task->users;
         } elseif ($invoice->client_id != null && $invoice->client_id != '') {
             $notifyUser = $invoice->client;
         }
+
         if (!is_null($notifyUser)) {
             event(new NewInvoiceEvent($invoice, $notifyUser));
         }

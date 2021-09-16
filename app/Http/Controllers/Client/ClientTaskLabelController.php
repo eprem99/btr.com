@@ -69,6 +69,7 @@ class ClientTaskLabelController extends ClientBaseController
         $this->taskLabel = TaskLabelList::find($id);
         $contact = json_decode($this->taskLabel->contacts, true);
         $this->countries = Country::where('id', '=', $contact['site_country'])->first();
+       // dd($contact);
         $this->state = State::where('id', '=', $contact['site_state'])->first();
         return view('client.site.show', $this->data);
     }

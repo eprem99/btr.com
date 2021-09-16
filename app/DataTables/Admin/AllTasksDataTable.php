@@ -191,23 +191,21 @@ class AllTasksDataTable extends BaseDataTable
         $hideCompleted = $request->hideCompleted;
         $taskBoardColumn = TaskboardColumn::completeColumn();
 
-        $model = $model->join('task_users', 'task_users.task_id', '=', 'tasks.id')
+        $model = $model->with('users')->join('task_users', 'task_users.task_id', '=', 'tasks.id')
             ->join('users as client', 'task_users.user_id', '=', 'client.id')
             ->leftJoin('users as creator_user', 'creator_user.id', '=', 'tasks.created_by')
-            ->leftJoin('role_user as role', 'tasks.created_by', '=', 'role.user_id')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
             ->join('task_label_list', 'tasks.site_id', '=', 'task_label_list.id')
             ->selectRaw('tasks.id, tasks.heading, tasks.hash, task_label_list.contacts, task_label_list.label_name, task_label_list.id as ids, creator_user.name as created_by, 
             creator_user.id as created_by_id, creator_user.image as created_image,
-             tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color, role.role_id')
-            ->with('users')
+             tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color')
             ->groupBy('tasks.id');
             if($this->user->can('delete_tasks')){
                 
             }else{
-                $model = $model->where('task_users.user_id', '=', user()->id);
+                $model = $model->where('task_users.user_id', '=',user()->id);
             }
-          //  dd(user()->id);
+         //   dd(user()->id);
 
         if ($startDate !== null && $endDate !== null) {
             $model->where(function ($q) use ($startDate, $endDate) {

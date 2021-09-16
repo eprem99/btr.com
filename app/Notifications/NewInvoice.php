@@ -46,7 +46,7 @@ class NewInvoice extends Notification implements ShouldQueue
         if ($this->emailSetting->send_push == 'yes') {
             array_push($via, OneSignalChannel::class);
         }
-
+// dd($via);
         return $via;
     }
 
@@ -60,7 +60,7 @@ class NewInvoice extends Notification implements ShouldQueue
     {
         $url = route('client.invoices.index');
 
-        if (($this->invoice->project && !is_null($this->invoice->project->client)) || !is_null($this->invoice->client_id)) {
+        if (($this->invoice->task && !is_null($this->invoice->task->users)) || !is_null($this->invoice->client_id)) {
             // For Sending pdf to email
             $invoiceController = new ManageAllInvoicesController();
             if ($pdfOption = $invoiceController->domPdfObjectForDownload($this->invoice->id)) {

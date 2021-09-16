@@ -780,7 +780,23 @@
         $('.data-section').toggleClass("col-md-9 col-md-12")
         $('.filter-section').toggle();
     });
-    
+    function showTaskDetail (taskId) {
+        $(".right-sidebar").slideDown(50).addClass("shw-rside");
+
+        var id = taskId;
+        var url = "{{ route('client.all-tasks.show',':id') }}";
+        url = url.replace(':id', id);
+
+        $.easyAjax({
+            type: 'GET',
+            url: url,
+            success: function (response) {
+                if (response.status == "success") {
+                    $('#right-sidebar-content').html(response.view);
+                }
+            }
+        });
+    }   
     
 </script>
 
