@@ -41,6 +41,10 @@ class InvoicesDataTable extends BaseDataTable
                     $action .= '<li><a href="javascript:;" data-toggle="tooltip"  data-invoice-id="' . $row->id . '" class="sendButton"><i class="fa fa-send"></i> ' . __('app.send') . '</a></li>';
                 }
 
+                if ($row->status != 'paid' && $row->status != 'draft' && $row->status != 'canceled') {
+                    $action .= '<li><a href="javascript:;" data-toggle="tooltip"  data-invoice-id="' . $row->id . '" class="reminderButton"><i class="fa fa-money"></i> ' . __('app.paymentReminder') . '</a></li>';
+                }
+                
                 if ($row->status == 'paid') {
                     $action .= ' <li><a href="javascript:" data-invoice-id="' . $row->id . '" class="invoice-upload" data-toggle="modal" data-target="#invoiceUploadModal"><i class="fa fa-upload"></i> ' . __('app.upload') . ' </a></li>';
                 }
@@ -54,31 +58,31 @@ class InvoicesDataTable extends BaseDataTable
                     }
                 }
 
-                // if ($row->status != 'canceled') {
-                //     if ($row->clientdetails) {
-                //         if (!is_null($row->clientdetails->shipping_address)) {
-                //             if ($row->show_shipping_address === 'yes') {
-                //                 $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
-                //             } else {
-                //                 $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
-                //             }
-                //         } else {
-                //             $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
-                //         }
-                //     } else {
-                //         if ($row->project->clientdetails) {
-                //             if (!is_null($row->project->clientdetails->shipping_address)) {
-                //                 if ($row->show_shipping_address === 'yes') {
-                //                     $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
-                //                 } else {
-                //                     $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
-                //                 }
-                //             } else {
-                //                 $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
-                //             }
-                //         }
-                //     }
-                // }
+                if ($row->status != 'canceled') {
+                    if ($row->clientdetails) {
+                        if (!is_null($row->clientdetails->shipping_address)) {
+                            if ($row->show_shipping_address === 'yes') {
+                                $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
+                            } else {
+                                $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
+                            }
+                        } else {
+                            $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
+                        }
+                    } else {
+                        if ($row->project->clientdetails) {
+                            if (!is_null($row->project->clientdetails->shipping_address)) {
+                                if ($row->show_shipping_address === 'yes') {
+                                    $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
+                                } else {
+                                    $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
+                                }
+                            } else {
+                                $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
+                            }
+                        }
+                    }
+                }
                 
 
                 if ($firstInvoice->id == $row->id && is_null($row->invoice_recurring_id)) {
@@ -88,11 +92,6 @@ class InvoicesDataTable extends BaseDataTable
                 if ($firstInvoice->id != $row->id && ($row->status == 'unpaid' || $row->status == 'draft')) {
                     $action .= '<li><a href="javascript:;" data-toggle="tooltip" title="' . __('app.cancel') . '"  data-invoice-id="' . $row->id . '" class="sa-cancel"><i class="fa fa-times"></i> ' . __('modules.invoices.markCancel') . '</a></li>';
                 }
-
-                if ($row->status != 'paid' && $row->status != 'draft' && $row->status != 'canceled') {
-                    $action .= '<li><a href="javascript:;" data-toggle="tooltip"  data-invoice-id="' . $row->id . '" class="reminderButton"><i class="fa fa-money"></i> ' . __('app.paymentReminder') . '</a></li>';
-                }
-
                 $action .= '</ul> </div>';
 
                 return $action;

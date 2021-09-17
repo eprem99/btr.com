@@ -113,10 +113,7 @@ class ClientsDataTable extends BaseDataTable
         if ($request->status != 'all' && $request->status != '') {
             $users = $users->where('users.status', $request->status);
         }
-        if (!is_null($request->country_id) && $request->country_id != 'all') {   
-            $users->whereHas('country', function ($query)use($request) {
-                return $query->where('id',  $request->country_id);
-            });      
+    
         }
         return $users;
     }

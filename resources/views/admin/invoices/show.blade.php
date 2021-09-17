@@ -12,15 +12,6 @@
             <a class="btn btn-default btn-outline btn-sm"
                 href="{{ route('admin.all-invoices.download', $invoice->id) }}"> <span><i class="fa fa-file-pdf-o"></i> @lang('modules.invoices.downloadPdf')</span> </a>
 
-            <button type="button" onclick="showPayments()" class="btn btn-info btn-sm">
-                @lang('app.view') @lang('app.menu.payments')
-            </button>
-            @if ($invoice->credit_notes->count() > 0)
-                <a href="javascript:;" onclick="showAppliedCredits('{{ route('admin.all-invoices.applied-credits', $invoice->id) }}')" class="btn btn-info  btn-sm">
-                    @lang('app.appliedCredits')
-                </a>
-            @endif
-
             <ol class="breadcrumb">
                 <li><a href="{{ route('admin.dashboard') }}">@lang("app.menu.home")</a></li>
                 <li><a href="{{ route('admin.all-invoices.index') }}">@lang("app.menu.invoices")</a></li>
@@ -237,44 +228,6 @@
                         </div>
                     </div>
                 </div>
-
-               @if(!is_null($payments))
-                    <div class="b-all m-t-20 m-b-20">
-                        <h3 class="box-title m-t-20 text-center">Recent Payments</h3>
-                        <hr>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="table-responsive m-t-40" style="clear: both;">
-                                    <table class="table table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th class="text-center">#</th>
-                                            <th class="text-center">@lang("modules.invoices.price")</th>
-                                            <th class="text-center">@lang("modules.invoices.paymentMethod")</th>
-                                            <th class="text-center">@lang("modules.invoices.paidOn")</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php $count = 0; ?>
-                                        @forelse($payments as $key => $payment)
-                                            <tr>
-                                                <td class="text-center">{{ $key+1 }}</td>
-                                                <td class="text-center"> {!! $invoice->currency->currency_symbol !!} {{ number_format((float)$payment->amount, 2, '.', '') }}  </td>
-                                                <td class="text-center">
-                                                    @php($method = (!is_null($payment->offline_method_id)?  $payment->offlineMethod->name : $payment->gateway))
-                                                    {{ $method }}
-                                                </td>
-                                                <td class="text-center"> {{ $payment->paid_on->format($global->date_format) }} </td>
-                                            </tr>
-                                        @empty
-                                        @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
             </div>
         </div>
     </div>

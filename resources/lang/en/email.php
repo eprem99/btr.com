@@ -48,7 +48,7 @@ return array (
   ),
   'newTask' =>
   array (
-    'subject' => 'New Task Assigned to You',
+    'subject' => 'New work order Assigned to You',
   ),
   'newTicket' =>
   array (
@@ -67,11 +67,11 @@ return array (
   ),
   'taskComplete' =>
   array (
-    'subject' => 'Task marked as complete',
+    'subject' => 'Work order marked as complete',
   ),
   'taskUpdate' =>
   array (
-    'subject' => 'Task updated',
+    'subject' => 'Work order updated',
   ),
   'leave' =>
   array (
@@ -81,11 +81,11 @@ return array (
   ),
   'newClientTask' =>
   array (
-    'subject' => 'New Task Generated',
+    'subject' => 'New Work order Generated',
   ),
   'reminder' =>
   array (
-    'subject' => 'Reminder for assigned task',
+    'subject' => 'Reminder for assigned Work order',
   ),
   'invoices' =>
   array (
@@ -118,11 +118,11 @@ return array (
   ),
   'taskComment' =>
   array (
-    'subject' => 'New comment on task',
+    'subject' => 'New comment on work order',
   ),
   'taskNote' =>
   array (
-    'subject' => 'New note added for task',
+    'subject' => 'New note added for work order',
   ),
   'removalRequestAdmin' =>
   array (
@@ -170,13 +170,13 @@ return array (
   ),
   'subTaskComplete' =>
   array (
-    'subject' => 'Sub Task marked as complete',
+    'subject' => 'Sub work order marked as complete',
   ),
   'leadAgent' =>
   array (
     'subject' => 'New lead received.',
   ),
-  'subTaskCreated' => 'Sub task created.',
+  'subTaskCreated' => 'Sub work order created.',
   'discussionReply' =>
   array (
     'subject' => ' replied to ',

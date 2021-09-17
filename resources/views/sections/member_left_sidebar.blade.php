@@ -142,41 +142,12 @@
             @endif
             <li><a href="{{ route('member.employee-docs.index') }}" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu">@lang("app.menu.employeeDocs") </span></a> </li>
 
-            @if(in_array('leads',$modules))
-                <li><a href="{{ route('member.leads.index') }}" class="waves-effect"><i class="icon-doc fa-fw"></i> <span class="hide-menu">@lang('app.menu.lead') </span></a> </li>
-            @endif
 
-            @if(in_array('timelogs',$modules))
-                <li><a href="{{ route('member.all-time-logs.index') }}" class="waves-effect"><i class="icon-clock fa-fw"></i> <span class="hide-menu">@lang('app.menu.timeLogs') </span></a> </li>
-            @endif
-
-            @if(in_array('attendance',$modules))
-                @if($user->can('view_attendance'))
-                    <li><a href="{{ route('member.attendances.summary') }}" class="waves-effect"><i class="icon-clock fa-fw"></i> <span class="hide-menu">@lang("app.menu.attendance") </span></a> </li>
-                @else
-                    <li><a href="{{ route('member.attendances.index') }}" class="waves-effect"><i class="icon-clock fa-fw"></i> <span class="hide-menu">@lang("app.menu.attendance") </span></a> </li>
-                @endif
-            @endif
-
-            @if(in_array('holidays',$modules))
-            <li><a href="{{ route('member.holidays.index') }}" class="waves-effect"><i class="icon-calender fa-fw"></i> <span class="hide-menu">@lang("app.menu.holiday") </span></a> </li>
-            @endif
-
-            @if(in_array('tickets',$modules))
-            <li><a href="{{ route('member.tickets.index') }}" class="waves-effect"><i class="ti-ticket fa-fw"></i> <span class="hide-menu">@lang("app.menu.tickets") </span></a> </li>
-            @endif
-
-            @if((in_array('estimates',$modules) && $user->can('view_estimates'))
-            || (in_array('invoices',$modules)  && $user->can('view_invoices'))
+            @if((in_array('invoices',$modules)  && $user->can('view_invoices'))
             || (in_array('payments',$modules) && $user->can('view_payments'))
             || (in_array('expenses',$modules)))
             <li><a href="{{ route('member.finance.index') }}" class="waves-effect"><i class="fa fa-money fa-fw"></i> <span class="hide-menu"> @lang('app.menu.finance')<span class="fa arrow"></span> </span></a>
                 <ul class="nav nav-second-level">
-                    @if(in_array('estimates',$modules))
-                    @if($user->can('view_estimates'))
-                        <li><a href="{{ route('member.estimates.index') }}">@lang('app.menu.estimates')</a> </li>
-                    @endif
-                    @endif
 
                     @if(in_array('invoices',$modules))
                     @if($user->can('view_invoices'))
@@ -193,11 +164,11 @@
                     @if(in_array('expenses',$modules))
                         <li><a href="{{ route('member.expenses.index') }}">@lang('app.menu.expenses')</a> </li>
                     @endif
-                    <!-- @if(in_array('invoices',$modules))
+                    @if(in_array('invoices',$modules))
                         @if($user->can('view_invoices'))
                             <li><a href="{{ route('member.all-credit-notes.index') }}">@lang('app.menu.credit-note') </a> </li>
                         @endif
-                    @endif -->
+                    @endif
                 </ul>
             </li>
             @endif
