@@ -90,11 +90,11 @@ class TaskObserver
 
                 if ($task->board_column->slug == 'assigned') {
                     // send task complete notification
-                  //  $admins = User::allAdmins();
-                 //   event(new TaskEvent($task, $admins, 'TaskAssignedClient'));
+                    // $admins = User::allAdmins();
+                    // event(new TaskEvent($task, $admins, 'TaskAssignedClient'));
     
-                    $taskUser = $task->users;
-                    event(new TaskEvent($task, $taskUser, 'TaskAssignedClient'));
+                   // $taskUser = $task->users;
+                    event(new TaskEvent($task, $task->users, 'TaskAssignedClient'));
     
             }
 
