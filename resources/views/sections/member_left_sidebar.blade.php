@@ -143,11 +143,17 @@
             <li><a href="{{ route('member.employee-docs.index') }}" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu">@lang("app.menu.employeeDocs") </span></a> </li>
 
 
-            @if((in_array('invoices',$modules)  && $user->can('view_invoices'))
+            @if((in_array('estimates',$modules) && $user->can('view_estimates'))
+            || (in_array('invoices',$modules)  && $user->can('view_invoices'))
             || (in_array('payments',$modules) && $user->can('view_payments'))
             || (in_array('expenses',$modules)))
             <li><a href="{{ route('member.finance.index') }}" class="waves-effect"><i class="fa fa-money fa-fw"></i> <span class="hide-menu"> @lang('app.menu.finance')<span class="fa arrow"></span> </span></a>
                 <ul class="nav nav-second-level">
+                    @if(in_array('estimates',$modules))
+                    @if($user->can('view_estimates'))
+                        <li><a href="{{ route('member.estimates.index') }}">@lang('app.menu.estimates')</a> </li>
+                    @endif
+                    @endif
 
                     @if(in_array('invoices',$modules))
                     @if($user->can('view_invoices'))
@@ -160,15 +166,15 @@
                         <li><a href="{{ route('member.payments.index') }}">@lang('app.menu.payments')</a> </li>
                     @endif
                     @endif
-
+<!-- 
                     @if(in_array('expenses',$modules))
                         <li><a href="{{ route('member.expenses.index') }}">@lang('app.menu.expenses')</a> </li>
-                    @endif
-                    @if(in_array('invoices',$modules))
+                    @endif -->
+                    <!-- @if(in_array('invoices',$modules))
                         @if($user->can('view_invoices'))
                             <li><a href="{{ route('member.all-credit-notes.index') }}">@lang('app.menu.credit-note') </a> </li>
                         @endif
-                    @endif
+                    @endif -->
                 </ul>
             </li>
             @endif
