@@ -16,7 +16,7 @@ use Carbon\Carbon;
 class TaskObserver
 {
 
-    use ProjectProgress;
+  //  use ProjectProgress;
     public function saving(Task $task)
     {
 
@@ -47,11 +47,11 @@ class TaskObserver
                 $log->logTaskActivity($task->id, user()->id, "createActivity", $task->board_column_id);
             }
 
-            if ($task->project_id) {
-                //calculate project progress if enabled
-                $log->logProjectActivity($task->project_id, __('messages.newTaskAddedToTheProject'));
-                $this->calculateProjectProgress($task->project_id);
-            }
+            // if ($task->project_id) {
+            //     //calculate project progress if enabled
+            //     $log->logProjectActivity($task->project_id, __('messages.newTaskAddedToTheProject'));
+            //     $this->calculateProjectProgress($task->project_id);
+            // }
 
             //log search
             $log->logSearchEntry($task->id, 'Task: ' . $task->heading, 'admin.all-tasks.edit', 'task');
@@ -81,33 +81,24 @@ class TaskObserver
                     $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
                     event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
 
-                    $timeLogs = ProjectTimeLog::with('user')->whereNull('end_time')
-                        ->where('task_id', $task->id)
-                        ->get();
-                    if($timeLogs){
-                        foreach($timeLogs as $timeLog){
-
-                            $timeLog->end_time = Carbon::now();
-                            $timeLog->edited_by_user = user()->id;
-                            $timeLog->save();
-
-                            $timeLog->total_hours = ($timeLog->end_time->diff($timeLog->start_time)->format('%d') * 24) + ($timeLog->end_time->diff($timeLog->start_time)->format('%H'));
-
-                            $timeLog->total_hours = $timeLog->end_time->diff($timeLog->start_time)->format('%d') * 24 + $timeLog->end_time->diff($timeLog->start_time)->format('%H');
-                            $timeLog->total_minutes = ($timeLog->total_hours * 60) + ($timeLog->end_time->diff($timeLog->start_time)->format('%i'));
-
-                            $timeLog->save();
-                        }
-                    }
-
                     if ((request()->project_id && request()->project_id != "all") || (!is_null($task->project))) {
                         if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable' && $task->project->client->status != 'deactive') {
                             event(new TaskEvent($task, $task->project->client, 'TaskCompletedClient'));
                         }
                     }
                 }
+
+                if ($task->board_column->slug == 'assigned') {
+                    // send task complete notification
+                  //  $admins = User::allAdmins();
+                 //   event(new TaskEvent($task, $admins, 'TaskAssignedClient'));
+    
+                    $taskUser = $task->users->whereNotIn('id');
+                    event(new TaskEvent($task, $taskUser, 'TaskAssignedClient'));
+    
             }
 
+        }
             if (request('user_id')) {
                 //Send notification to user
                 event(new TaskEvent($task, $task->users, 'TaskUpdated'));
@@ -129,10 +120,10 @@ class TaskObserver
             $log->logTaskActivity($task->id, user()->id, "updateActivity", $task->board_column_id);
         }
 
-        if ($task->project_id) {
-            //calculate project progress if enabled
-            $this->calculateProjectProgress($task->project_id);
-        }
+        // if ($task->project_id) {
+        //     //calculate project progress if enabled
+        //     $this->calculateProjectProgress($task->project_id);
+        // }
     }
 
     public function deleting(Task $task)

@@ -69,6 +69,10 @@ return array (
   array (
     'subject' => 'Work order marked as complete',
   ),
+  'taskAssigned' =>
+  array (
+    'subject' => 'Work order Assigned',
+  ),
   'taskUpdate' =>
   array (
     'subject' => 'Work order updated',
