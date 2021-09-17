@@ -93,7 +93,7 @@ class TaskObserver
                   //  $admins = User::allAdmins();
                  //   event(new TaskEvent($task, $admins, 'TaskAssignedClient'));
     
-                    $taskUser = $task->users->whereNotIn('id');
+                    $taskUser = $task->users;
                     event(new TaskEvent($task, $taskUser, 'TaskAssignedClient'));
     
             }
