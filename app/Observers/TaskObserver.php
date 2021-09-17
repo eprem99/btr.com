@@ -81,11 +81,11 @@ class TaskObserver
                     $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
                     event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
 
-                    if ((request()->project_id && request()->project_id != "all") || (!is_null($task->project))) {
-                        if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable' && $task->project->client->status != 'deactive') {
-                            event(new TaskEvent($task, $task->project->client, 'TaskCompletedClient'));
-                        }
-                    }
+                    // if ((request()->project_id && request()->project_id != "all") || (!is_null($task->project))) {
+                    //     if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable' && $task->project->client->status != 'deactive') {
+                    //         event(new TaskEvent($task, $task->project->client, 'TaskCompletedClient'));
+                    //     }
+                    // }
                 }
 
                 if ($task->board_column->slug == 'assigned') {

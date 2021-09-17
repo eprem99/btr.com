@@ -26,7 +26,7 @@ class TaskAssignedClient extends Notification implements ShouldQueue
     public function __construct(Task $task)
     {
         $this->task = $task;
-        $this->emailSetting = EmailNotificationSetting::where('slug', 'task-assigned')->first();
+        $this->emailSetting = EmailNotificationSetting::where('slug', 'task-completed')->first();
 
     }
 
