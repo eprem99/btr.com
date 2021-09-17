@@ -94,6 +94,7 @@ class TaskObserver
                     // event(new TaskEvent($task, $admins, 'TaskAssignedClient'));
     
                    // $taskUser = $task->users;
+                   dd($task->users);
                     event(new TaskEvent($task, $task->users, 'TaskAssignedClient'));
     
             }
