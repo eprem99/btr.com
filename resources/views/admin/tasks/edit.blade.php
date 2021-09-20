@@ -138,7 +138,6 @@
                                         <select class="select2 select2-multiple " multiple="multiple"
                                                 data-placeholder="@lang('modules.tasks.chooseAssignee')"
                                                 name="user_id[]" id="user_id">
-                                            @if(is_null($task->project_id))
                                                 @foreach($employees as $employee)
 
                                                     @php
@@ -159,25 +158,6 @@
                                                     </option>
 
                                                 @endforeach
-                                            @else
-                                                @foreach($task->project->members as $member)
-                                                    @php
-                                                        $selected = '';
-                                                    @endphp
-
-                                                    @foreach ($task->users as $item)
-                                                        @if($item->id == $member->user->id)
-                                                            @php
-                                                                $selected = 'selected';
-                                                            @endphp
-                                                        @endif
-
-                                                    @endforeach
-
-                                                    <option {{ $selected }}
-                                                        value="{{ $member->user->id }}">{{ $member->user->name }}</option>
-                                                @endforeach
-                                            @endif
                                         </select>
                                     </div>
                                 </div>
