@@ -5,7 +5,6 @@ namespace App\Observers;
 use App\Events\TaskEvent;
 use App\Events\TaskUpdated as EventsTaskUpdated;
 use App\Http\Controllers\Admin\AdminBaseController;
-use App\ProjectTimeLog;
 use App\Task;
 use App\TaskboardColumn;
 use App\Traits\ProjectProgress;
@@ -124,16 +123,16 @@ class TaskObserver
 
             }
 
-            if (request('user_id')) {
-                //Send notification to user
-                event(new TaskEvent($task, $task->users, 'TaskUpdated'));
+            // if (request('user_id')) {
+            //     //Send notification to user
+            //     event(new TaskEvent($task, $task->users, 'TaskUpdated'));
 
-                if ((request()->project_id != "all") && !is_null($task->project)) {
-                    if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable' && $task->project->client->status != 'deactive') {
-                        event(new TaskEvent($task, $task->project->client, 'TaskUpdatedClient'));
-                    }
-                }
-            }
+            //     if ((request()->project_id != "all") && !is_null($task->project)) {
+            //         if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable' && $task->project->client->status != 'deactive') {
+            //             event(new TaskEvent($task, $task->project->client, 'TaskUpdatedClient'));
+            //         }
+            //     }
+            // }
         }
 
         if (!request()->has('draggingTaskId') && !request()->has('draggedTaskId')) {
