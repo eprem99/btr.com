@@ -71,7 +71,12 @@ class TaskObserver
         if (!isRunningInConsoleOrSeeding()) {
 
             if ($task->isDirty('board_column_id')) {
+                $admins = User::allAdmins();
+                event(new TaskEvent($task, $admins, 'TaskCompleted'));
 
+                $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
+                event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
+                
                 if ($task->board_column->slug == 'completed') {
                     // send task complete notification
                  //   dd($task->board_column->slug);
