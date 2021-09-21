@@ -83,49 +83,48 @@ class TaskObserver
 
                 }elseif(request()->status == 'assigned') {
 
-                    $clients = $task->create_by->id;
-                    $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
-                    dd($task->users);
-                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
-                    // $taskUser = $task->users->whereNotIn('id', $clients->pluck('id'));
-                    // dd($taskUser);
                     event(new TaskEvent($task, $task->users, 'TaskUpdated'));
     
                 }elseif(request()->status == 'scheduled') {
-
+                  
+                    $clients = $task->create_by->id;
+                    $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
+                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
+                    
+                    $admins = User::allAdmins();
+                    event(new TaskEvent($task, $admins, 'TaskUpdated'));
+                    
                     event(new TaskEvent($task, $task->users, 'TaskUpdated'));
      
                  }elseif(request()->status == 'tech-Off-Site') {
                   
-                    $clients = User::allClients();
-                    $taskUser = $task->users->whereNotIn('id', $clients->pluck('id'));
+
                     event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
      
                  }elseif(request()->status == 'incomplete') {
 
-                    $clients = User::allClients();
-                    $taskUser = $task->users->whereNotIn('id', $clients->pluck('id'));
                     event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
      
                  }elseif(request()->status == 'off-site-complete') {
 
-                    $clients = User::allClients();
-                    $taskUser = $task->users->whereNotIn('id', $clients->pluck('id'));
                     event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
      
                  }elseif(request()->status == 'off-site-return-trip-required') {
                   
-                    $admins = User::allAdmins();
-                    $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
-                    dd($taskUser);
+                    $clients = $task->create_by->id;
+                    $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
+                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
+                    
                     event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
                      
                 }elseif(request()->status == 'cancelled') {
 
-                    $admins = User::allEmployees();
-                    $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
+                    $clients = $task->create_by->id;
+                    $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
+                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
                     
-                    event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
+                    $admins = User::allAdmins();
+                    event(new TaskEvent($task, $admins, 'TaskUpdated'));
     
                 }
 
