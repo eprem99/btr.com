@@ -71,58 +71,54 @@ class TaskObserver
         if (!isRunningInConsoleOrSeeding()) {
 
             if ($task->isDirty('board_column_id')) {
-                $admins = User::allAdmins();
-                event(new TaskEvent($task, $admins, 'TaskCompleted'));
 
-                $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
-                event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
-                
-                if ($task->board_column->slug == 'completed') {
-                    // send task complete notification
-                 //   dd($task->board_column->slug);
+                if (request()->status == 'completed') {
+
                     $admins = User::allAdmins();
                     event(new TaskEvent($task, $admins, 'TaskCompleted'));
 
                     $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
                     event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
 
-                }elseif($task->board_column->slug == 'assigned') {
+                }elseif(request()->status == 'assigned') {
 
-                //   dd($task->board_column->slug);
-                    event(new TaskEvent($task, $task->users, 'TaskAssignedClient'));
+                    $clients = User::allClients();
+                    $taskUser = $task->users->whereNotIn('id', $clients->pluck('id'));
+                    event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
     
-                }elseif($task->board_column->slug == 'scheduled') {
+                }elseif(request()->status == 'scheduled') {
+
+                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
+     
+                 }elseif(request()->status == 'tech-Off-Site') {
+                  
+                    $clients = User::allClients();
+                    $taskUser = $task->users->whereNotIn('id', $clients->pluck('id'));
+                    event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
+     
+                 }elseif(request()->status == 'incomplete') {
+
+                    $clients = User::allClients();
+                    $taskUser = $task->users->whereNotIn('id', $clients->pluck('id'));
+                    event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
+     
+                 }elseif(request()->status == 'off-site-complete') {
+
+                    $clients = User::allClients();
+                    $taskUser = $task->users->whereNotIn('id', $clients->pluck('id'));
+                    event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
+     
+                 }elseif(request()->status == 'off-site-return-trip-required') {
+                  
                     $admins = User::allAdmins();
                     $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
-                    event(new TaskEvent($task, $taskUser, 'TaskAssignedClient'));
-     
-                 }elseif($task->board_column->slug == 'tech-Off-Site') {
-// dd($task->users);
-                    event(new TaskEvent($task, $task->users, 'TaskAssignedClient'));
-     
-                 }elseif($task->board_column->slug == 'incomplete') {
+                    event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
+                     
+                }elseif(request()->status == 'cancelled') {
 
-                    event(new TaskEvent($task, $task->users, 'TaskAssignedClient'));
-     
-                 }elseif($task->board_column->slug == 'off-site-complete') {
-
-                    event(new TaskEvent($task, $task->users, 'TaskAssignedClient'));
-     
-                 }elseif($task->board_column->slug == 'off-site-return-trip-required') {
-
-                    event(new TaskEvent($task, $task->users, 'TaskAssignedClient'));
-    
-                }elseif($task->board_column->slug == 'in-review') {
-
-                    event(new TaskEvent($task, $task->users, 'TaskAssignedClient'));
-    
-                }elseif($task->board_column->slug == 'complete-ready-for-client-review') {
-
-                    event(new TaskEvent($task, $task->users, 'TaskAssignedClient'));
-    
-                }elseif($task->board_column->slug == 'cancelled') {
-
-                    event(new TaskEvent($task, $task->users, 'TaskAssignedClient'));
+                    $admins = User::allEmployees();
+                    $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
+                    event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
     
                 }
 
