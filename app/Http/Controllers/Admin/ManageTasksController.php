@@ -7,6 +7,7 @@ use App\Http\Requests\Tasks\StoreTask;
 use App\Notifications\NewClientTask;
 use App\Notifications\NewTask;
 use App\Notifications\TaskCompleted;
+use App\Notifications\TaskAssignedClient;
 use App\Notifications\TaskUpdated;
 use App\Notifications\TaskUpdatedClient;
 use App\Project;
@@ -15,7 +16,6 @@ use App\Task;
 use App\TaskboardColumn;
 use App\TaskCategory;
 use App\TaskUser;
-use App\Traits\ProjectProgress;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,8 +25,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ManageTasksController extends AdminBaseController
 {
-
-    use ProjectProgress;
 
     public function __construct()
     {
@@ -198,7 +196,7 @@ class ManageTasksController extends AdminBaseController
 
 
         //calculate project progress if enabled
-        $this->calculateProjectProgress($request->project_id);
+      //  $this->calculateProjectProgress($request->project_id);
 
 
 
