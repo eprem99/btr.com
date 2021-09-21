@@ -78,13 +78,16 @@ class TaskObserver
                     event(new TaskEvent($task, $admins, 'TaskCompleted'));
 
                     $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
+                   
                     event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
 
                 }elseif(request()->status == 'assigned') {
 
-                    $clients = User::allClients();
-                    $taskUser = $task->users->whereNotIn('id', $clients->pluck('id'));
-                    event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
+                    $clients = $task->create_by;
+                    event(new TaskEvent($task, $clients, 'TaskUpdated'));
+                    // $taskUser = $task->users->whereNotIn('id', $clients->pluck('id'));
+                    // dd($taskUser);
+                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
     
                 }elseif(request()->status == 'scheduled') {
 
@@ -112,12 +115,14 @@ class TaskObserver
                   
                     $admins = User::allAdmins();
                     $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
+                    dd($taskUser);
                     event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
                      
                 }elseif(request()->status == 'cancelled') {
 
                     $admins = User::allEmployees();
                     $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
+                    
                     event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
     
                 }
