@@ -83,8 +83,10 @@ class TaskObserver
 
                 }elseif(request()->status == 'assigned') {
 
-                    $clients = $task->create_by;
-                    event(new TaskEvent($task, $clients, 'TaskUpdated'));
+                    $clients = $task->create_by->id;
+                    $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
+                   // dd($task->users);
+                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
                     // $taskUser = $task->users->whereNotIn('id', $clients->pluck('id'));
                     // dd($taskUser);
                     event(new TaskEvent($task, $task->users, 'TaskUpdated'));
