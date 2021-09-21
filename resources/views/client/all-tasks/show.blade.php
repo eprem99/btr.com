@@ -314,15 +314,7 @@
                     </div>
                 @endif
 
-                <div class="col-xs-12 ">
-                    <label class="font-12" for="">@lang('app.dueDate')</label><br>
-                    <span @if($task->due_date->isPast()) class="text-danger" @endif>
-                        {{ $task->due_date->format($global->date_format) }}
-                    </span>
-                    <hr>
-                </div>
-
-            </div>
+           </div>
 
 
         </div>
