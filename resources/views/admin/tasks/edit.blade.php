@@ -115,21 +115,21 @@
                                         <textarea id="description" name="description" class="form-control summernote">{{ $task->description }}</textarea>
                                     </div>
                                 </div>
-
-                                 <div class="col-md-3">
+                                <div class="row">
+                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.startDate')</label>
                                         <input type="text" name="start_date" id="start_date2" class="form-control" autocomplete="off" value="@if($task->start_date != '-0001-11-30 00:00:00' && $task->start_date != null){{ $task->start_date->format($global->date_format) }} @endif">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3" style="display: none">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.dueDate')</label>
                                         <input type="text" name="due_date" id="due_date2" class="form-control" autocomplete="off" value="@if($task->due_date != '-0001-11-30 00:00:00'){{ $task->due_date->format($global->date_format) }}@endif">
                                     </div>
                                 </div>
                                 <!--/span-->
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('modules.tasks.assignTo')
                                             <a href="javascript:;" id="add-employee" class="btn btn-xs btn-success btn-outline"><i class="fa fa-plus"></i></a>
@@ -162,7 +162,7 @@
                                     </div>
                                 </div>
                                 <!--/span-->
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label>@lang('app.status')</label>
                                         <select name="status" id="status" class="form-control">
@@ -172,6 +172,7 @@
                                         </select>
                                     </div>
                                 </div>
+                            </div>
                                 <!--/span-->
                                 <div class="col-md-4">
                                     <div class="form-group">

@@ -53,9 +53,9 @@
 <div class="white-box">
     <div class="row dashboard-stats front-dashboard">
         @if(in_array('tasks',$modules))
-        <div class="col-md-4 col-sm-12">
+        <div class="col-md-12 col-sm-12">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <a href="{{ route('client.all-tasks.index','stat=0&hideComplet=0') }}">
                         <div class="white-box">
                             <div class="row">
@@ -73,7 +73,7 @@
                     </a>
                 </div>
 
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <a href="{{ route('client.all-tasks.index','stat=11&hideComplet=0') }}">
                         <div class="white-box">
                             <div class="row">
@@ -91,7 +91,7 @@
                     </a>
                 </div>
 
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <a href="{{ route('client.all-tasks.index','hideComplet=0') }}">
                         <div class="white-box">
                             <div class="row">
@@ -111,49 +111,7 @@
             </div>
         </div>        
         @endif
-        @if(in_array('tasks',$modules))
-        <div class="col-md-8 col-sm-12">
-            <div class="panel panel-inverse">
-                <div class="panel-heading">@lang('modules.dashboard.overdueTasks')</div>
-                <div class="panel-wrapper collapse in">
-                    <div class="panel-body">
-                        <ul class="list-task list-group" data-role="tasklist">
-                            <li class="list-group-item" data-role="task">
-                                <strong>@lang('app.title')</strong> <span
-                                        class="pull-right"><strong>@lang('app.dueDate')</strong></span>
-                            </li>
-                            @forelse($pendingTasks as $key=>$task)
-                                @if((!is_null($task->project_id) && !is_null($task->project) ) || is_null($task->project_id))
-                                <li class="list-group-item row" data-role="task">
-                                    <div class="col-xs-8">
-                                        {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
 
-                                    </div>
-                                    <label class="label label-danger pull-right col-xs-4">{{ $task->due_date->format($global->date_format) }}</label>
-                                </li>
-                                @endif
-                            @empty
-                                <li class="list-group-item" data-role="task">
-                                    <div  class="text-center">
-                                        <div class="empty-space" style="height: 200px;">
-                                            <div class="empty-space-inner">
-                                                <div class="icon" style="font-size:20px"><i
-                                                            class="fa fa-tasks"></i>
-                                                </div>
-                                                <div class="title m-b-15">@lang("messages.noOpenTasks")
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </li>
-                            @endforelse
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endif
     </div>
     <!-- .row -->
     <div class="row">

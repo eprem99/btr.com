@@ -140,10 +140,10 @@
                                     </div>
                                 </div>
                                 <!--/span-->
-                                <div class="col-md-6">
+                                <div class="col-md-6" style="display: none">
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.dueDate')</label>
-                                        <input type="text" name="due_date" id="due_date2" autocomplete="off" class="form-control">
+                                        <input type="text" name="due_date" id="due_date2" autocomplete="off" class="form-control"  value="{{ \Carbon\Carbon::now($global->timezone)->format($global->date_format)  }}">
                                     </div>
                                 </div>
 

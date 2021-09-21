@@ -118,7 +118,7 @@ class ManageInvoicesController extends AdminBaseController
 
 
         $invoice = new Invoice();
-        $invoice->project_id = $request->project_id ?? NULL;
+        $invoice->task_id = $request->project_id ?? NULL;
         $invoice->issue_date = Carbon::createFromFormat($this->global->date_format, $request->issue_date)->format('Y-m-d');
         $invoice->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
         $invoice->sub_total = $request->sub_total;
@@ -132,7 +132,7 @@ class ManageInvoicesController extends AdminBaseController
 
         $this->logSearchEntry($invoice->id, 'Invoice #'.$invoice->invoice_number, 'admin.all-invoices.show', 'invoice');
 
-        $this->project = Project::findOrFail($request->project_id);
+        $this->project = Task::findOrFail($request->project_id);
         $view = view('admin.projects.invoices.invoice-ajax', $this->data)->render();
         return Reply::successWithData(__('messages.invoiceCreated'), ['html' => $view]);
 

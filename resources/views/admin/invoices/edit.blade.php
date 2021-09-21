@@ -90,7 +90,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <select class="select2 form-control" onchange="getCompanyName()" data-placeholder="Choose Work order"
-                                                        name="project_id" id="project_id">
+                                                        name="task_id" id="project_id">
                                                     <option value="">--</option>
                                                     @foreach($tasks as $task)
                                                         <option
@@ -148,7 +148,7 @@
 
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-4" style="display: none">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.dueDate')</label>
 
@@ -195,7 +195,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">@lang('modules.invoices.showShippingAddress')
@@ -223,7 +223,7 @@
 
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -524,22 +524,22 @@
         new Switchery($(this)[0], $(this).data());
     });
 
-    var showShippingSwitch = document.getElementById('show_shipping_address');
+    // var showShippingSwitch = document.getElementById('show_shipping_address');
 
-    @if($invoice->show_shipping_address === 'yes')
-        showShippingSwitch.click();
-    @else
-        // getCompanyName();
-    @endif
+    // @if($invoice->show_shipping_address === 'yes')
+    //     showShippingSwitch.click();
+    // @else
+    //     // getCompanyName();
+    // @endif
 
-    showShippingSwitch.onchange = function() {
-        if (showShippingSwitch.checked) {
-            checkShippingAddress();
-        }
-        else {
-            $('#shippingAddress').html('');
-        }
-    }
+    // showShippingSwitch.onchange = function() {
+    //     if (showShippingSwitch.checked) {
+    //         checkShippingAddress();
+    //     }
+    //     else {
+    //         $('#shippingAddress').html('');
+    //     }
+    // }
 
     function getCompanyName(){
         var projectID = $('#project_id').val();

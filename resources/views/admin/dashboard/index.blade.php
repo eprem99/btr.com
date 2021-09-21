@@ -41,10 +41,13 @@
             padding-bottom: 8px !important;
         }
         .panel-heading span {
-            padding: 10px 13px;
+            padding: 10px 5px;
             margin-top: -10px;
             color: #fff;
             border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            text-align: center;
         }
         .panel .panel-body {
             padding: 25px 5px;
@@ -66,7 +69,7 @@
     </div>
 
     <div class="white-box">
-    <div class="row">
+    <div class="row  dashboard-stats front-dashboard">
 
 @if(in_array('tasks',$modules) && in_array('overdue_tasks',$activeWidgets))
     <div class="col-md-6">
@@ -117,49 +120,96 @@
 @endif
 @if(in_array('tasks',$modules) && in_array('overdue_tasks',$activeWidgets))
     <div class="col-md-6">
-        <div class="panel panel-inverse">
-            @php
-                $totalpanding = count($pendingTasks);
-            @endphp
-            <div class="panel-heading">@lang('modules.dashboard.overdueTasks') <span class="bg-info pull-right">{{ $totalpanding }}</span></div>
-            <div class="panel-wrapper collapse in">
-                <div class="panel-body">
-                    <ul class="list-task list-group" data-role="tasklist">
-                    <li class="list-group-item row" data-role="task">
-                            <span class="col-xs-5"><strong>@lang('app.title')</strong></span>
-                            <span class="col-xs-5"><strong>@lang('app.label')</strong></span> 
-                            <span class="col-xs-2"><strong>@lang('modules.dashboard.newDate')</strong></span>
-                        </li>
-                        @forelse($pendingTasks as $key=>$task)
-                            <li class="list-group-item row" data-role="task">
-                                <div class="col-xs-5">
-                                    {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
-                                </div>
-                                <div class="col-xs-5">
-                                   {!! ucfirst($task->labels->label_name) !!}
-                                </div>
-                                <label class="label label-danger pull-right col-xs-2">{{ $task->due_date->format($global->date_format) }}</label>
-                            </li>
-                        @empty
-                            <li class="list-group-item" data-role="task">
-                                <div  class="text-center">
-                                    <div class="empty-space" style="height: 200px;">
-                                        <div class="empty-space-inner">
-                                            <div class="icon" style="font-size:20px"><i
-                                                        class="fa fa-tasks"></i>
-                                            </div>
-                                            <div class="title m-b-15">@lang("messages.noOpenTasks")
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </li>
-                        @endforelse
-                    </ul>
+        @if(in_array('clients',$modules) && in_array('total_clients',$activeWidgets))
+        <a href="{{ route('admin.clients.index') }}">
+            <div class="white-box">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <div>
+                            <span class="bg-warning-gradient"><i class="icon-user"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <span class="widget-title"> @lang('modules.dashboard.totalClients')</span><br>
+                        <span class="counter">{{ $counts->totalClients }}</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </a>
+@endif
+
+@if(in_array('employees',$modules) && in_array('total_employees',$activeWidgets))
+        <a href="{{ route('admin.employees.index') }}">
+            <div class="white-box">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <div>
+                            <span class="bg-info-gradient"><i class="icon-people"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <span class="widget-title"> @lang('modules.dashboard.totalEmployees')</span><br>
+                        <span class="counter">{{ $counts->totalEmployees }}</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+@endif
+
+@if(in_array('invoices',$modules) && in_array('total_unpaid_invoices',$activeWidgets))
+        <a href="{{ route('admin.all-invoices.index') }}">
+            <div class="white-box">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <div>
+                            <span class="bg-inverse-gradient"><i class="ti-receipt"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <span class="widget-title"> @lang('modules.dashboard.totalUnpaidInvoices')</span><br>
+                        <span class="counter">{{ $counts->totalUnpaidInvoices }}</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+@endif
+
+
+@if(in_array('tasks',$modules) && in_array('total_pending_tasks',$activeWidgets))
+        <a href="{{ route('admin.all-tasks.index','stat=0&hideComplet=0') }}">
+            <div class="white-box">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <div>
+                            <span class="bg-danger-gradient"><i class="ti-alert"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <span class="widget-title"> @lang('modules.dashboard.totalPendingTasks')</span><br>
+                        <span class="counter">{{ $counts->totalPendingTasks }}</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+@endif
+
+@if(in_array('tasks',$modules) && in_array('total_pending_tasks',$activeWidgets))
+        <a href="{{ route('admin.all-tasks.index','stat=11&hideComplet=0') }}">
+            <div class="white-box">
+                <div class="row">
+                <div class="col-xs-3">
+                        <div>
+                            <span class="bg-success-gradient"><i class="ti-check-box"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <span class="widget-title"> @lang('modules.dashboard.totalCompletedTasks')</span><br>
+                        <span class="counter">{{ $counts->totalCompletedTasks }}</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+@endif
     </div>
 @endif
 
@@ -210,99 +260,6 @@
                 </div>
                     <!-- .row -->
         <div class="row dashboard-stats front-dashboard">
-            <div class="col-md-4">
-            @if(in_array('clients',$modules) && in_array('total_clients',$activeWidgets))
-                    <a href="{{ route('admin.clients.index') }}">
-                        <div class="white-box">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <div>
-                                        <span class="bg-warning-gradient"><i class="icon-user"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <span class="widget-title"> @lang('modules.dashboard.totalClients')</span><br>
-                                    <span class="counter">{{ $counts->totalClients }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-            @endif
-
-            @if(in_array('employees',$modules) && in_array('total_employees',$activeWidgets))
-                    <a href="{{ route('admin.employees.index') }}">
-                        <div class="white-box">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <div>
-                                        <span class="bg-info-gradient"><i class="icon-people"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <span class="widget-title"> @lang('modules.dashboard.totalEmployees')</span><br>
-                                    <span class="counter">{{ $counts->totalEmployees }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-            @endif
-
-            @if(in_array('invoices',$modules) && in_array('total_unpaid_invoices',$activeWidgets))
-                    <a href="{{ route('admin.all-invoices.index') }}">
-                        <div class="white-box">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <div>
-                                        <span class="bg-inverse-gradient"><i class="ti-receipt"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <span class="widget-title"> @lang('modules.dashboard.totalUnpaidInvoices')</span><br>
-                                    <span class="counter">{{ $counts->totalUnpaidInvoices }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-            @endif
-
-
-            @if(in_array('tasks',$modules) && in_array('total_pending_tasks',$activeWidgets))
-                    <a href="{{ route('admin.all-tasks.index','stat=0&hideComplet=0') }}">
-                        <div class="white-box">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <div>
-                                        <span class="bg-danger-gradient"><i class="ti-alert"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <span class="widget-title"> @lang('modules.dashboard.totalPendingTasks')</span><br>
-                                    <span class="counter">{{ $counts->totalPendingTasks }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-            @endif
-
-            @if(in_array('tasks',$modules) && in_array('total_pending_tasks',$activeWidgets))
-                    <a href="{{ route('admin.all-tasks.index','stat=11&hideComplet=0') }}">
-                        <div class="white-box">
-                            <div class="row">
-                            <div class="col-xs-3">
-                                    <div>
-                                        <span class="bg-success-gradient"><i class="ti-check-box"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <span class="widget-title"> @lang('modules.dashboard.totalCompletedTasks')</span><br>
-                                    <span class="counter">{{ $counts->totalCompletedTasks }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-            @endif
-           </div>
-
            @if(in_array('employees',$modules) && in_array('user_activity_timeline',$activeWidgets))
                 <div class="col-md-8">
                     <div class="panel panel-inverse">
@@ -346,6 +303,9 @@
                     </div>
                 </div>
             @endif
+            <div class="col-md-4">
+
+            </div>
         </div>
 
 

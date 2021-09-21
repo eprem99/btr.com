@@ -128,7 +128,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4" style="display: none">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.dueDate')</label>
                                         <div class="input-icon">
@@ -152,33 +152,6 @@
                                 </div>
                             </div>
 
-                           
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('modules.invoices.showShippingAddress')
-                                            <a class="mytooltip" href="javascript:void(0)">
-                                                <i class="fa fa-info-circle"></i>
-                                                <span class="tooltip-content5">
-                                                        <span class="tooltip-text3">
-                                                            <span class="tooltip-inner2">
-                                                                @lang('modules.invoices.showShippingAddressInfo')
-                                                            </span>
-                                                        </span>
-                                                    </span>
-                                            </a>
-                                        </label>
-                                        <div class="switchery-demo">
-                                            <input type="checkbox" id="show_shipping_address" name="show_shipping_address" class="js-switch " data-color="#00c292" data-secondary-color="#f96262" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div id="shippingAddress">
-
-                                    </div>
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group m-b-10 task-select" id="task-select">
@@ -442,16 +415,16 @@
         new Switchery($(this)[0], $(this).data());
     });
 
-    var showShippingSwitch = document.getElementById('show_shipping_address');
+    // var showShippingSwitch = document.getElementById('show_shipping_address');
 
-    showShippingSwitch.onchange = function() {
-        if (showShippingSwitch.checked) {
-            checkShippingAddress();
-        }
-        else {
-            $('#shippingAddress').html('');
-        }
-    }
+    // showShippingSwitch.onchange = function() {
+    //     if (showShippingSwitch.checked) {
+    //         checkShippingAddress();
+    //     }
+    //     else {
+    //         $('#shippingAddress').html('');
+    //     }
+    // }
 
     $(function () {
         $( "#sortable" ).sortable();

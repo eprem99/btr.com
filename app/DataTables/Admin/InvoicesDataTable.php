@@ -58,31 +58,31 @@ class InvoicesDataTable extends BaseDataTable
                     }
                 }
 
-                if ($row->status != 'canceled') {
-                    if ($row->clientdetails) {
-                        if (!is_null($row->clientdetails->shipping_address)) {
-                            if ($row->show_shipping_address === 'yes') {
-                                $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
-                            } else {
-                                $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
-                            }
-                        } else {
-                            $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
-                        }
-                    } else {
-                        if ($row->project->clientdetails) {
-                            if (!is_null($row->project->clientdetails->shipping_address)) {
-                                if ($row->show_shipping_address === 'yes') {
-                                    $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
-                                } else {
-                                    $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
-                                }
-                            } else {
-                                $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
-                            }
-                        }
-                    }
-                }
+                // if ($row->status != 'canceled') {
+                //     if ($row->clientdetails) {
+                //         if (!is_null($row->clientdetails->shipping_address)) {
+                //             if ($row->show_shipping_address === 'yes') {
+                //                 $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
+                //             } else {
+                //                 $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
+                //             }
+                //         } else {
+                //             $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
+                //         }
+                //     } else {
+                //         if ($row->project->clientdetails) {
+                //             if (!is_null($row->project->clientdetails->shipping_address)) {
+                //                 if ($row->show_shipping_address === 'yes') {
+                //                     $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
+                //                 } else {
+                //                     $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
+                //                 }
+                //             } else {
+                //                 $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
+                //             }
+                //         }
+                //     }
+                // }
                 
 
                 if ($firstInvoice->id == $row->id && is_null($row->invoice_recurring_id)) {

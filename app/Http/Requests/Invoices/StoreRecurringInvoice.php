@@ -24,7 +24,7 @@ class StoreRecurringInvoice extends CoreRequest
      */
     public function rules()
     {
-        $this->has('show_shipping_address') ? $this->request->add(['show_shipping_address' => 'yes']) : $this->request->add(['show_shipping_address' => 'no']);
+    //    $this->has('show_shipping_address') ? $this->request->add(['show_shipping_address' => 'yes']) : $this->request->add(['show_shipping_address' => 'no']);
 
         $rules = [
             'issue_date' => 'required',
@@ -32,7 +32,7 @@ class StoreRecurringInvoice extends CoreRequest
             'sub_total' => 'required',
             'total' => 'required',
             'currency_id' => 'required',
-            'shipping_address' => 'sometimes|required'
+           // 'shipping_address' => 'sometimes|required'
         ];
 
         if ($this->project_id == '') {

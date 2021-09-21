@@ -383,7 +383,7 @@ class ManageAllInvoicesController extends AdminBaseController
         }
 
         $invoice = new Invoice();
-        $invoice->task_id = $request->project_id ?? null;
+        $invoice->task_id = $request->task_id ?? null;
         $invoice->client_id = ($request->client_id) ? $request->client_id : null;
         $invoice->issue_date = Carbon::createFromFormat($this->global->date_format, $request->issue_date)->format('Y-m-d');
         $invoice->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
@@ -511,7 +511,7 @@ class ManageAllInvoicesController extends AdminBaseController
             return Reply::error(__('messages.invalidRequest'));
         }
 
-        $invoice->task_id = $request->project_id ?? null;
+        $invoice->task_id = $request->task_id ?? null;
         $invoice->client_id = ($request->client_id) ? $request->client_id : null;
         $invoice->issue_date = Carbon::createFromFormat($this->global->date_format, $request->issue_date)->format('Y-m-d');
         $invoice->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');

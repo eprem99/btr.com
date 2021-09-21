@@ -90,12 +90,14 @@ class AllTasksDataTable extends BaseDataTable
             })
             ->editColumn('due_date', function ($row) {
 
-                if ($row->due_date->endOfDay()->isPast()) {
-                    return '<span class="text-danger">' . $row->due_date->format($this->global->date_format) . '</span>';
-                } elseif ($row->due_date->setTimezone($this->global->timezone)->isToday()) {
-                    return '<span class="text-success">' . __('app.today') . '</span>';
-                }
-                return '<span >' . $row->due_date->format($this->global->date_format) . '</span>';
+                // if ($row->due_date->endOfDay()->isPast()) {
+                //     return '<span class="text-danger">' . $row->due_date->format($this->global->date_format) . '</span>';
+                // } elseif ($row->due_date->setTimezone($this->global->timezone)->isToday()) {
+                //     return '<span class="text-success">' . __('app.today') . '</span>';
+                // }
+                // return '<span >' . $row->due_date->format($this->global->date_format) . '</span>';
+
+                return $row->start_date->format($this->global->date_format);
             })
 
 
@@ -149,7 +151,7 @@ class AllTasksDataTable extends BaseDataTable
                     }
                 }elseif($this->user->can('edit_tasks')){
                     foreach ($taskBoardColumns as $key => $value) {
-                        if($value->role_id == $row->role_id){
+                        if($value->role_id == 3){
                             $status .= '<li><a href="javascript:;" data-task-id="' . $row->id . '" class="change-status" data-status="' . $value->slug . '">' . $value->column_name . '  <span style="width: 15px; height: 15px; border-color: ' . $value->label_color . '; background: ' . $value->label_color . '"
                                 class="btn btn-warning btn-small btn-circle">&nbsp;</span></a></li>';
                         }
@@ -196,7 +198,7 @@ class AllTasksDataTable extends BaseDataTable
             ->leftJoin('users as creator_user', 'creator_user.id', '=', 'tasks.created_by')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
             ->join('task_label_list', 'tasks.site_id', '=', 'task_label_list.id')
-            ->selectRaw('tasks.id, tasks.heading, tasks.hash, task_label_list.contacts, task_label_list.label_name, task_label_list.id as ids, creator_user.name as created_by, 
+            ->selectRaw('tasks.id, tasks.heading, tasks.start_date, tasks.hash, task_label_list.contacts, task_label_list.label_name, task_label_list.id as ids, creator_user.name as created_by, 
             creator_user.id as created_by_id, creator_user.image as created_image,
              tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color')
             ->groupBy('tasks.id');
@@ -311,7 +313,7 @@ class AllTasksDataTable extends BaseDataTable
             __('modules.tasks.city')  => ['data' => 'city', 'name' => 'city'],
             __('modules.tasks.assigned') => ['data' => 'name', 'name' => 'name', 'visible' => false],
             __('modules.tasks.techsite') => ['data' => 'users', 'name' => 'name', 'exportable' => false],
-            __('app.dueDate') => ['data' => 'due_date', 'name' => 'due_date'],
+            __('app.startDate') => ['data' => 'due_date', 'name' => 'due_date'],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'visible' => false],
             __('app.columnStatus') => ['data' => 'board_column', 'name' => 'board_column', 'exportable' => false, 'searchable' => false],
             Column::computed('action', __('app.action'))

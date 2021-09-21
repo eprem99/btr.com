@@ -125,7 +125,7 @@
                                 <!--/span-->
                                 <div class="col-md-12">
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="control-label required">@lang('app.startDate')</label>
                                                 <input type="text" name="start_date" id="start_date2" class="form-control" value="{{ \Carbon\Carbon::now($global->timezone)->format($global->date_format)  }}" autocomplete="off">
@@ -133,17 +133,17 @@
                                         </div>
                                         <!--/span-->
                                         <!--/span-->
-                                        <div class="col-md-3">
+                                        <div class="col-md-3" style="display: none">
                                             <div class="form-group">
                                                 <label class="control-label">@lang('app.dueDate')</label>
-                                                <input type="text" name="due_date" id="due_date2" class="form-control"
+                                                <input type="text" name="due_date" id="due_date2" class="form-control" value="{{ \Carbon\Carbon::now($global->timezone)->format($global->date_format)  }}"
                                                        autocomplete="off">
                                             </div>
                                         </div>
 
 
                                         <!--/span-->
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="control-label required">@lang('modules.tasks.assignTo')</label>
                                                 <a href="javascript:;" id="add-employee" class="btn btn-xs btn-success btn-outline"><i class="fa fa-plus"></i></a>
@@ -160,7 +160,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="" class="control-label">@lang('app.status')</label>
                                                 <select name="board_column_id" id="board_column_id" class="form-control">
