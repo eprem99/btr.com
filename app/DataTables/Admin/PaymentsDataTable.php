@@ -50,7 +50,7 @@ class PaymentsDataTable extends BaseDataTable
 
             ->editColumn('project_id', function ($row) {
                 if (!is_null($row->project)) {
-                    return '<a href="' . route('admin.projects.show', $row->project_id) . '">' . ucfirst($row->project->project_name) . '</a>';
+                    return '<a href="' . route('admin.projects.show', $row->project_id) . '">' . ucfirst($row->project->heading) . '</a>';
                 } else {
                     return '--';
                 }
@@ -107,7 +107,7 @@ class PaymentsDataTable extends BaseDataTable
     {
         $request = $this->request();
 
-        $model = Payment::with(['project:id,project_name', 'currency:id,currency_symbol,currency_code', 'invoice'])
+        $model = Payment::with(['project:id,heading', 'currency:id,currency_symbol,currency_code', 'invoice'])
             ->leftJoin('invoices', 'invoices.id', '=', 'payments.invoice_id')
             ->leftJoin('projects', 'projects.id', '=', 'payments.project_id')
             ->select('payments.id', 'payments.project_id', 'payments.currency_id', 'payments.invoice_id', 'payments.amount', 'payments.status', 'payments.paid_on', 'payments.remarks', 'payments.bill');
@@ -188,7 +188,7 @@ class PaymentsDataTable extends BaseDataTable
         return [
             __('app.id') => ['data' => 'id', 'name' => 'id', 'visible' => false],
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false],
-            __('app.project')  => ['data' => 'project_id', 'name' => 'project_id'],
+            __('app.tasks')  => ['data' => 'project_id', 'name' => 'project_id'],
             __('app.invoice') . '#' => ['data' => 'invoice_number', 'name' => 'invoice.invoice_number'],
             __('modules.invoices.amount') => ['data' => 'amount', 'name' => 'amount'],
             __('modules.payments.paidOn') => ['data' => 'paid_on', 'name' => 'paid_on'],

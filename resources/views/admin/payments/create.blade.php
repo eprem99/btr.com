@@ -56,7 +56,7 @@
                                                     @if (isset($projectId) && $project->id == $projectId)
                                                         selected
                                                     @endif
-                                                        value="{{ $project->id }}">{{ $project->project_name }}</option>
+                                                        value="{{ $project->id }}">{{ $project->heading }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -93,15 +93,6 @@
                                 </div>
                                 <!--/span-->
 
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>@lang('modules.payments.paymentGateway')</label>
-                                        <input type="text" name="gateway" id="gateway" class="form-control">
-                                        <span class="help-block"> Paypal, Authorize.net, Stripe, Bank Transfer, Cash or others.</span>
-                                    </div>
-                                </div>
-                                <!--/span-->
 
                                 <div class="col-md-6">
                                     <div class="form-group">

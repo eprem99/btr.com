@@ -85,7 +85,7 @@ class TaskObserver
 
                     $clients = $task->create_by->id;
                     $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
-                   // dd($task->users);
+                    dd($task->users);
                     event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
                     // $taskUser = $task->users->whereNotIn('id', $clients->pluck('id'));
                     // dd($taskUser);

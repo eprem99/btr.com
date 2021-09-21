@@ -71,7 +71,7 @@
                                 <select class="form-control select2" name="project" id="project" data-style="form-control">
                                     <option value="all">@lang('modules.client.all')</option>
                                     @forelse($projects as $project)
-                                        <option value="{{$project->id}}">{{ $project->project_name }}</option>
+                                        <option value="{{$project->id}}">{{ $project->heading }}</option>
                                     @empty
                                     @endforelse
                                 </select>
@@ -99,44 +99,7 @@
                 </div>
                 @endsection
 
-                <div class="row">
-                    <div class="col-md-12">
-
-                        {!! Form::open(['id'=>'importExcel','class'=>'ajax-form','method'=>'POST']) !!}
-                        <div class="form-group">
-                            <div class="col-md-4">
-                                <div class="checkbox checkbox-info">
-                                    <input id="calculate-task-progress" name="currency_character" value="true"
-                                           type="checkbox">
-                                    <label for="calculate-task-progress">@lang('modules.payments.firstCharacter')</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-8">
-                                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                                    <div class="form-control" data-trigger="fileinput">
-                                        <i class="glyphicon glyphicon-file fileinput-exists"></i>
-                                        <span class="fileinput-filename"></span>
-                                    </div>
-                                    <span class="input-group-addon btn btn-inverse btn-outline btn-file">
-                                        <span class="fileinput-new"><i class="fa fa-file-excel-o text-success"></i> @lang('modules.payments.import')</span>
-                                            <span class="fileinput-exists">@lang('app.change')</span>
-                                            <input type="file" name="import_file" id="import_file">
-                                            </span>
-                                    <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">@lang('app.remove')</a>
-                                    <a href="javascript:;" id="import-excel" class="input-group-addon btn btn-success fileinput-exists text-white" data-dismiss="fileinput">@lang('app.submit')</a>
-                                </div>
-
-                                <a href="{{ route('admin.payments.downloadSample') }}" class="text-success"><i class="fa fa-download"></i> @lang('app.sampleFile')</a>
-
-                            </div>
-                        </div>
-
-                        {!! Form::close() !!}
-
-                    </div>
-                </div>
-                <div class="table-responsive">
+                 <div class="table-responsive">
                     {!! $dataTable->table(['class' => 'table table-bordered table-hover toggle-circle default footable-loaded footable']) !!}
                 </div>
             </div>

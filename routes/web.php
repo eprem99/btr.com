@@ -404,7 +404,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('gdpr/{id}', ['uses' => 'ManageClientsController@gdpr'])->name('clients.gdpr');
             Route::get('projects/{id}', ['uses' => 'ManageClientsController@showProjects'])->name('clients.projects');
             Route::get('invoices/{id}', ['uses' => 'ManageClientsController@showInvoices'])->name('clients.invoices');
-           // Route::get('payments/{id}', ['uses' => 'ManageClientsController@showPayments'])->name('clients.payments');
+            Route::get('payments/{id}', ['uses' => 'ManageClientsController@showPayments'])->name('clients.payments');
 
            Route::get('contacts/data/{id}', ['uses' => 'ClientContactController@data'])->name('contacts.data');
             Route::resource('contacts', 'ClientContactController');
@@ -1065,7 +1065,7 @@ Route::group(['middleware' => 'auth'], function () {
         //     Route::resource('project-invoice', 'ClientProjectInvoicesController');
             
         //     Route::resource('project-expenses', 'ClientProjectExpensesController');
-        //     Route::resource('project-payments', 'ClientProjectPaymentsController');
+             Route::resource('project-payments', 'ClientProjectPaymentsController');
 
         //     Route::get('milestones/data/{id}', ['uses' => 'ClientProjectMilestonesController@data'])->name('milestones.data');
         //     Route::resource('milestones', 'ClientProjectMilestonesController');
@@ -1160,8 +1160,8 @@ Route::group(['middleware' => 'auth'], function () {
         // Route::resource('estimates', 'ClientEstimateController');
 
         // //Payments section
-        // Route::get('payments/data', ['uses' => 'ClientPaymentsController@data'])->name('payments.data');
-        // Route::resource('payments', 'ClientPaymentsController');
+        Route::get('payments/data', ['uses' => 'ClientPaymentsController@data'])->name('payments.data');
+        Route::resource('payments', 'ClientPaymentsController');
 
 
         // // Issues section

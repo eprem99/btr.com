@@ -42,7 +42,7 @@ class Payment extends BaseModel
 
     public function project()
     {
-        return $this->belongsTo(Project::class, 'project_id');
+        return $this->belongsTo(Task::class, 'project_id');
     }
 
     public function currency()

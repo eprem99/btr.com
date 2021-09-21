@@ -50,7 +50,7 @@
                                             @foreach($projects as $project)
                                                 <option
                                                         @if($project->id == $payment->project_id) selected @endif
-                                                        value="{{ $project->id }}">{{ $project->project_name }}</option>
+                                                        value="{{ $project->id }}">{{ $project->heading }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -78,16 +78,6 @@
                                 </div>
                                 <!--/span-->
 
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>@lang('modules.payments.paymentGateway')</label>
-                                        <input type="text" name="gateway" id="gateway" value="{{ $payment->gateway }}" class="form-control">
-                                        <span class="help-block"> Paypal, Authorize.net, Stripe, Bank Transfer, Cash or others.</span>
-                                    </div>
-                                </div>
-                                <!--/span-->
-
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>@lang('modules.payments.transactionId')</label>
@@ -110,38 +100,6 @@
                                             <option @if($payment->status == 'complete') selected @endif value="complete">@lang('app.completed')</option>
                                             <option @if($payment->status == 'pending') selected @endif value="pending">@lang('app.pending')</option>
                                         </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('app.receipt')</label>
-
-                                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                                            <div class="form-control" data-trigger="fileinput">
-                                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
-                                                <span class="fileinput-filename">{{ $payment->bill }}</span>
-                                            </div>
-                                            <span class="input-group-addon btn btn-default btn-file">
-                                                <span class="fileinput-new">@lang('app.selectFile')</span>
-                                                <span class="fileinput-exists">@lang('app.change')</span>
-                                                <input type="file" name="bill" id="bill">
-                                            </span>
-                                            <a href="#" class="input-group-addon btn btn-default fileinput-exists"
-                                               data-dismiss="fileinput">@lang('app.remove')</a>
-                                        </div>
-                                        @if(!is_null($payment->bill))
-                                            <a target="_blank"
-                                               href="{{ $payment->file_url }}">@lang('app.view') @lang('app.receipt')</a>
-                                        @endif
-                                    </div>
-                                </div>
-
-
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('app.remark')</label>
-                                        <textarea id="remarks" name="remarks" class="form-control">{{ $payment->remarks }}</textarea>
                                     </div>
                                 </div>
                             </div>

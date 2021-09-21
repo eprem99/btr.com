@@ -12,6 +12,7 @@ use App\Imports\PaymentImport;
 use App\Invoice;
 use App\Payment;
 use App\Project;
+use App\Task;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -38,7 +39,8 @@ class ManagePaymentsController extends AdminBaseController
     public function index(PaymentsDataTable $dataTable)
     {
         if (!request()->ajax()) {
-            $this->projects = Project::allProjects();
+            $this->projects = Task::whereNotNull('client_id')->where('tasks.board_column_id', '=', 10)->get();
+           //  $this->projects = Project::allProjects();
             $this->clients = User::allClients();
         }
         return $dataTable->render('admin.payments.index', $this->data);
@@ -46,7 +48,8 @@ class ManagePaymentsController extends AdminBaseController
 
     public function create()
     {
-        $this->projects = Project::allProjects();
+        $this->projects = Task::whereNotNull('client_id')->where('tasks.board_column_id', '=', 10)->get();
+       // $this->projects = Project::allProjects();
         $this->currencies = Currency::all();
         if (request()->get('project')) {
             $this->projectId = request()->get('project');
@@ -127,7 +130,7 @@ class ManagePaymentsController extends AdminBaseController
 
     public function edit($id)
     {
-        $this->projects = Project::allProjects();
+        $this->projects = Task::whereNotNull('client_id')->where('tasks.board_column_id', '=', 10)->get();
         $this->currencies = Currency::all();
         $this->payment = Payment::findOrFail($id);
         return view('admin.payments.edit', $this->data);
