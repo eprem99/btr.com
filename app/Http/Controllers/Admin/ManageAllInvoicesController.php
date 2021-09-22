@@ -459,10 +459,12 @@ class ManageAllInvoicesController extends AdminBaseController
 
         if ($this->invoice->task_id != '') {
             $companyName = $this->invoice->client->name;
+            $companyId = $this->invoice->client->id;
 
             $this->wotypes = WoType::all();
            // $companyName = Task::where('id', $this->invoice->task_id)->with('user')->first();
             $this->companyName = $companyName ? $companyName : '';
+            $this->companyId = $companyId ? $companyId : '';
         }
         return view('admin.invoices.edit', $this->data);
     }

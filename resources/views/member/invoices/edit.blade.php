@@ -110,16 +110,18 @@
                                         <label class="control-label">@lang('app.client')</label>
                                         <div class="row">
                                             <div class="col-md-12" id="client_company_div">
-                                                @if($invoice->project_id == '')
+                                                @if($invoice->task_id == '')
                                                     <select class="form-control select2" name="client_id" id="client_id" data-style="form-control">
                                                         @foreach($clients as $client)
+                                                        dd($client);
                                                             <option value="{{ $client->id }}" @if($client->id == $invoice->client_id) selected @endif>{{ ucwords($client->name) }}
-                                                                @if($client->company_name != '') {{ '('.$client->company_name.')' }} @endif</option>
+                                                                </option>
                                                         @endforeach
                                                     </select>
                                                 @else
                                                     <div class="input-icon">
-                                                        <input type="text" readonly class="form-control" name="" id="company_name" value="{{ $companyName }}">
+                                                        <input type="text" readonly class="form-control" name="client_id" id="company_name" value="{{ $companyName }}">
+                                                        <input type="hidden" readonly class="form-control" name="client_id" id="company_name" value="{{ $companyId }}">
                                                     </div>
                                                 @endif
                                             </div>

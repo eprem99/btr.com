@@ -63,6 +63,7 @@ class MemberAllInvoicesController extends MemberBaseController
         $firstInvoice = Invoice::latest()->first();
         $invoices = Invoice::
             join('tasks', 'tasks.id', 'task_id')
+            ->where('tasks.client_id', '=', user()->id)
             ->select('invoices.id', 'invoices.task_id', 'invoices.client_id', 'invoices.invoice_number', 'invoices.currency_id', 'invoices.total', 
             'invoices.status', 'invoices.issue_date', 'invoices.credit_note', 'invoices.show_shipping_address', 'invoices.send_status', 'tasks.heading');
 
@@ -390,7 +391,7 @@ class MemberAllInvoicesController extends MemberBaseController
         }
 
         $this->invoice = Invoice::findOrFail($id);
-        $this->tasks = Task::whereNotNull('client_id')->where('tasks.board_column_id', '=', 10)->get();
+        $this->tasks = Task::whereNotNull('client_id')->where('tasks.board_column_id', '=', 10)->where('client_id', '=', user()->id)->get();
         $this->currencies = Currency::all();
 
         if ($this->invoice->status == 'paid') {
@@ -411,6 +412,7 @@ class MemberAllInvoicesController extends MemberBaseController
             $this->wotypes = WoType::all();
            // $companyName = Task::where('id', $this->invoice->task_id)->with('user')->first();
             $this->companyName = $companyName->users[0]->name ? $companyName->users[0]->name : '';
+            $this->companyId = $companyName->users[0]->id ? $companyName->users[0]->id : '';
         }
         return view('member.invoices.edit', $this->data);
     }
