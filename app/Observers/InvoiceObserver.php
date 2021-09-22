@@ -72,8 +72,8 @@ class InvoiceObserver
                 endforeach;
             }
 
-            if (($invoice->project && $invoice->project->client_id != null) || $invoice->client_id != null) {
-                $clientId = ($invoice->project && $invoice->project->client_id != null) ? $invoice->project->client_id : $invoice->client_id;
+            if (($invoice->task && $invoice->task->client_id != null) || $invoice->client_id != null) {
+                $clientId = ($invoice->task && $invoice->task->client_id != null) ? $invoice->task->client_id : $invoice->client_id;
                 // Notify client
                 $notifyUser = User::withoutGlobalScope('active')->findOrFail($clientId);
                 if (request()->type && request()->type == "send") {

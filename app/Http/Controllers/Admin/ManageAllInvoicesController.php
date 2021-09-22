@@ -397,7 +397,7 @@ class ManageAllInvoicesController extends AdminBaseController
         $invoice->billing_interval = $request->recurring_payment == 'yes' ? $request->billing_interval : null;
         $invoice->billing_cycle = $request->recurring_payment == 'yes' ? $request->billing_cycle : null;
         $invoice->note = $request->note;
-        $invoice->show_shipping_address = $request->show_shipping_address;
+        $invoice->show_shipping_address = 'no';
         $invoice->save();
 
         // To add custom fields data
@@ -525,7 +525,7 @@ class ManageAllInvoicesController extends AdminBaseController
         $invoice->billing_interval = $request->recurring_payment == 'yes' ? $request->billing_interval : null;
         $invoice->billing_cycle = $request->recurring_payment == 'yes' ? $request->billing_cycle : null;
         $invoice->note = $request->note;
-        $invoice->show_shipping_address = $request->show_shipping_address;
+        $invoice->show_shipping_address = 'no';
         $invoice->save();
 
         // To add custom fields data
