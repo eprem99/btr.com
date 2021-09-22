@@ -69,7 +69,7 @@ class ManageAllInvoicesController extends AdminBaseController
         // Send reminder notification to user
         // dd($invoice->client);
         if ($invoice->task_id != null && $invoice->task_id != '') {
-            $notifyUser = $invoice->task->client_id;
+            $notifyUser = User::where('id', '=', $invoice->task->client_id)->first();
         } elseif ($invoice->client_id != null && $invoice->client_id != '') {
             $notifyUser = $invoice->client;
         }
@@ -895,7 +895,9 @@ class ManageAllInvoicesController extends AdminBaseController
     {
         $invoice = Invoice::with('task')->findOrFail($invoiceID);
         if ($invoice->task_id != null && $invoice->task_id != '') {
-            $notifyUser = $invoice->task->client_id;
+           // $notifyUser = $invoice->task->client_id;
+         //  dd($invoice->task->client_id);
+            $notifyUser = User::where('id', '=', $invoice->task->client_id)->first();
         } elseif ($invoice->client_id != null && $invoice->client_id != '') {
             $notifyUser = $invoice->client;
         }
