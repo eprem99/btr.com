@@ -209,9 +209,10 @@ class MemberAllInvoicesController extends MemberBaseController
     {
         //        header('Content-type: application/pdf');
 // dd($this->user->id);
-        $this->invoice = Invoice::with(['task'])->findOrFail($id);
-        $this->clientName = User::where('id', '=', $this->invoice->task->client_id)->first();
-        $this->clientDetail = EmployeeDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
+$this->invoice = Invoice::with(['task'])->findOrFail($id);
+$this->clientName = User::where('id', '=', $this->invoice->task->users[0]->id)->first();
+
+$this->clientDetail = EmployeeDetails::with(['countries', 'states'])->where('user_id', '=', $this->invoice->task->users[0]->id)->first();
 //dd($this->clientDetail);
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
