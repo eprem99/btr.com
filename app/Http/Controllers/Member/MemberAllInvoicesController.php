@@ -61,9 +61,9 @@ class MemberAllInvoicesController extends MemberBaseController
     public function data(Request $request)
     {
         $firstInvoice = Invoice::latest()->first();
-        $invoices = Invoice::
-            join('tasks', 'tasks.id', 'task_id')
-            ->where('tasks.client_id', '=', user()->id)
+        $invoices = Invoice::join('tasks', 'tasks.id', 'task_id')
+            ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
+            ->where('task_users.user_id', '=',user()->id)
             ->select('invoices.id', 'invoices.task_id', 'invoices.client_id', 'invoices.invoice_number', 'invoices.currency_id', 'invoices.total', 
             'invoices.status', 'invoices.issue_date', 'invoices.credit_note', 'invoices.show_shipping_address', 'invoices.send_status', 'tasks.heading');
 
