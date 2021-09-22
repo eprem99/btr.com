@@ -480,13 +480,13 @@
                     <span class="bold">{{ ucwords($invoice->task->users[0]->name) }}</span>
                 </div>
                 <div>
-                    <span>@lang('app.site.country') : </span> {{ ucwords($clientDetail->countries->name) }}
+                   @lang('app.site.country') : {{ ucwords($clientDetail->countries->name) }}
                 </div>
                 <div>
-                    <span>@lang('app.site.state') : </span> {{ ucwords($clientDetail->states->names) }}
+                    @lang('app.site.state') : {{ ucwords($clientDetail->states->names) }}
                 </div>
                 <div>
-                    <span>@lang('app.address') : </span> {!! nl2br($clientDetail->address) !!}
+                    @lang('app.address') : {!! nl2br($clientDetail->address) !!}
                 </div>
                 @if ($invoice->show_shipping_address === 'yes')
                     <div>

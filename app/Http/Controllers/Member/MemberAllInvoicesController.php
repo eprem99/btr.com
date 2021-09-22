@@ -113,31 +113,31 @@ class MemberAllInvoicesController extends MemberBaseController
                 //     $action .= '<li><a href="' . route("member.payments.payInvoice", [$row->id]) . '" data-toggle="tooltip" ><i class="fa fa-plus"></i> ' . __('modules.payments.addPayment') . '</a></li>';
                 // }
 
-                if ($row->status != 'canceled') {
-                    if ($row->clientdetails) {
-                        if (!is_null($row->clientdetails->shipping_address)) {
-                            if ($row->show_shipping_address === 'yes') {
-                                $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
-                            } else {
-                                $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
-                            }
-                        } else {
-                            $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
-                        }
-                    } else {
-                        if ($row->project && $row->project->clientdetails) {
-                            if (!is_null($row->project->clientdetails->shipping_address)) {
-                                if ($row->show_shipping_address === 'yes') {
-                                    $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
-                                } else {
-                                    $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
-                                }
-                            } else {
-                                $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
-                            }
-                        }
-                    }
-                }
+                // if ($row->status != 'canceled') {
+                //     if ($row->clientdetails) {
+                //         if (!is_null($row->clientdetails->shipping_address)) {
+                //             if ($row->show_shipping_address === 'yes') {
+                //                 $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
+                //             } else {
+                //                 $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
+                //             }
+                //         } else {
+                //             $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
+                //         }
+                //     } else {
+                //         if ($row->project && $row->project->clientdetails) {
+                //             if (!is_null($row->project->clientdetails->shipping_address)) {
+                //                 if ($row->show_shipping_address === 'yes') {
+                //                     $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye-slash"></i> ' . __('app.hideShippingAddress') . '</a></li>';
+                //                 } else {
+                //                     $action .= '<li><a href="javascript:toggleShippingAddress(' . $row->id . ');"><i class="fa fa-eye"></i> ' . __('app.showShippingAddress') . '</a></li>';
+                //                 }
+                //             } else {
+                //                 $action .= '<li><a href="javascript:addShippingAddress(' . $row->id . ');"><i class="fa fa-plus"></i> ' . __('app.addShippingAddress') . '</a></li>';
+                //             }
+                //         }
+                //     }
+                // }
                 $action .= '</ul>
               </div>
               ';
@@ -376,7 +376,7 @@ class MemberAllInvoicesController extends MemberBaseController
         $invoice->save();
         if ($request->has('shipping_address')) {
             $client = $invoice->clientdetails;
-            $client->shipping_address = $request->shipping_address;
+            $client->shipping_address = 'no';
 
             $client->save();
         }
@@ -479,7 +479,7 @@ class MemberAllInvoicesController extends MemberBaseController
         $invoice->billing_interval = $request->recurring_payment == 'yes' ? $request->billing_interval : null;
         $invoice->billing_cycle = $request->recurring_payment == 'yes' ? $request->billing_cycle : null;
         $invoice->note = $request->note;
-        $invoice->show_shipping_address = $request->show_shipping_address;
+        $invoice->show_shipping_address = 'no';
         $invoice->save();
 
         // delete and create new
@@ -754,11 +754,12 @@ class MemberAllInvoicesController extends MemberBaseController
     {
         $invoice = Invoice::with(['task', 'task.users'])->findOrFail($invoiceID)->first();
        // dd($invoice->task->users);
-        if ($invoice->task_id != null && $invoice->task_id != '') {
-            $notifyUser = $invoice->task->users;
-        } elseif ($invoice->client_id != null && $invoice->client_id != '') {
-            $notifyUser = $invoice->task->users;
-        }
+        // if ($invoice->task_id != null && $invoice->task_id != '') {
+        //     $notifyUser = $invoice->task->users;
+        // } elseif ($invoice->client_id != null && $invoice->client_id != '') {
+        //     $notifyUser = $invoice->task->users;
+        // }
+        $notifyUser = User::allAdmins();
         if (!is_null($notifyUser)) {
             event(new NewInvoiceEvent($invoice, $notifyUser));
         }
