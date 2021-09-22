@@ -65,11 +65,11 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function remindForPayment($taskID)
     {
-        $invoice = Invoice::with(['project', 'project.client'])->findOrFail($taskID);
+        $invoice = Invoice::with(['task', 'task.users'])->findOrFail($taskID);
         // Send reminder notification to user
         // dd($invoice->client);
-        if ($invoice->project_id != null && $invoice->project_id != '') {
-            $notifyUser = $invoice->project->client;
+        if ($invoice->task_id != null && $invoice->task_id != '') {
+            $notifyUser = $invoice->task->client_id;
         } elseif ($invoice->client_id != null && $invoice->client_id != '') {
             $notifyUser = $invoice->client;
         }
@@ -893,9 +893,9 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function sendInvoice($invoiceID)
     {
-        $invoice = Invoice::with(['task', 'task.users'])->findOrFail($invoiceID);
+        $invoice = Invoice::with('task')->findOrFail($invoiceID);
         if ($invoice->task_id != null && $invoice->task_id != '') {
-            $notifyUser = $invoice->task->users;
+            $notifyUser = $invoice->task->client_id;
         } elseif ($invoice->client_id != null && $invoice->client_id != '') {
             $notifyUser = $invoice->client;
         }
