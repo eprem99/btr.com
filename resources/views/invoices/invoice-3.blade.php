@@ -479,12 +479,16 @@
                 <div>
                     <span class="bold">{{ ucwords($clientName->name) }}</span>
                 </div>
+                @if($clientDetail->countries)
                 <div>
                    @lang('app.site.country') : {{ ucwords($clientDetail->countries->name) }}
                 </div>
+                @endif
+                @if($clientDetail->states)
                 <div>
                     @lang('app.site.state') : {{ ucwords($clientDetail->states->names) }}
                 </div>
+                @endif
                 <div>
                     @lang('app.address') : {!! nl2br($clientDetail->address) !!}
                 </div>
