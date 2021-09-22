@@ -12,6 +12,7 @@ use App\InvoiceSetting;
 use App\Notifications\NewInvoice;
 use App\Payment;
 use App\Project;
+use App\EmployeeDetails;
 use App\Task;
 use App\Setting;
 use App\User;
@@ -187,7 +188,10 @@ class ManageInvoicesController extends AdminBaseController
     public function download($id) {
         //        header('Content-type: application/pdf');
 
-        $this->invoice = Invoice::findOrFail($id);
+        $this->invoice = Invoice::with(['task'])->findOrFail($id);
+      //  dd($this->invoice->task->users[]);
+        $this->clientName = User::where('id', '=', $this->invoice->task->client_id)->first();
+        $this->clientDetail = EmployeeDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
         if ($this->invoice->credit_note) {
