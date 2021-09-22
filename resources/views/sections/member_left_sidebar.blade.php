@@ -143,10 +143,8 @@
             <li><a href="{{ route('member.employee-docs.index') }}" class="waves-effect"><i class="icon-layers fa-fw"></i> <span class="hide-menu">@lang("app.menu.employeeDocs") </span></a> </li>
 
 
-            @if((in_array('estimates',$modules) && $user->can('view_estimates'))
-            || (in_array('invoices',$modules)  && $user->can('view_invoices'))
-            || (in_array('payments',$modules) && $user->can('view_payments'))
-            || (in_array('expenses',$modules)))
+            @if((in_array('invoices',$modules)  && $user->can('view_invoices'))
+            || (in_array('payments',$modules) && $user->can('view_payments')))
             <li><a href="{{ route('member.finance.index') }}" class="waves-effect"><i class="fa fa-money fa-fw"></i> <span class="hide-menu"> @lang('app.menu.finance')<span class="fa arrow"></span> </span></a>
                 <ul class="nav nav-second-level">
                     @if(in_array('estimates',$modules))
