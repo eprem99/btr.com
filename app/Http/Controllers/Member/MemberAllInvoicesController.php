@@ -391,7 +391,11 @@ class MemberAllInvoicesController extends MemberBaseController
         }
 
         $this->invoice = Invoice::findOrFail($id);
-        $this->tasks = Task::whereNotNull('client_id')->where('tasks.board_column_id', '=', 10)->where('client_id', '=', user()->id)->get();
+        $this->tasks = Task::join('task_users', 'task_id', '=', 'tasks.id')
+        ->where('task_users.user_id', '=', user()->id)
+        ->where('board_column_id', '=', 10)
+        ->select('tasks.id', 'tasks.heading')
+        ->get();
         $this->currencies = Currency::all();
 
         if ($this->invoice->status == 'paid') {
@@ -403,16 +407,17 @@ class MemberAllInvoicesController extends MemberBaseController
         $this->clients = User::allClients();
         if ($this->invoice->task_id != '') {
             $companyName = Task::with('users')->join('task_users', 'task_id', '=', 'tasks.id')
-            ->where('task_users.user_id', '=', user()->id)
             ->where('tasks.id', '=', $this->invoice->task_id)
             ->where('tasks.board_column_id', '=', 10)
-            ->select('tasks.id', 'tasks.heading', )
+            ->select('tasks.id', 'tasks.heading', 'tasks.client_id', )
             ->first();
 
+            $client = User::where('id', '=', $companyName->client_id)->first();
+          //  dd($companyName);
             $this->wotypes = WoType::all();
            // $companyName = Task::where('id', $this->invoice->task_id)->with('user')->first();
-            $this->companyName = $companyName->users[0]->name ? $companyName->users[0]->name : '';
-            $this->companyId = $companyName->users[0]->id ? $companyName->users[0]->id : '';
+            $this->companyName = $client->name ? $client->name : '';
+            $this->companyId = $client->id ? $client->id : '';
         }
         return view('member.invoices.edit', $this->data);
     }
