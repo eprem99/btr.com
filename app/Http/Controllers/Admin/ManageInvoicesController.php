@@ -236,7 +236,7 @@ class ManageInvoicesController extends AdminBaseController
         $this->invoiceSetting = invoice_setting();
           
         
-        return view('invoices.'.$this->invoiceSetting->template, $this->data);
+    //    return view('invoices.'.$this->invoiceSetting->template, $this->data);
 
         $pdf = app('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);

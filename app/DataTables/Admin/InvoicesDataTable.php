@@ -45,10 +45,6 @@ class InvoicesDataTable extends BaseDataTable
                     $action .= '<li><a href="javascript:;" data-toggle="tooltip"  data-invoice-id="' . $row->id . '" class="reminderButton"><i class="fa fa-money"></i> ' . __('app.paymentReminder') . '</a></li>';
                 }
                 
-                if ($row->status == 'paid') {
-                    $action .= ' <li><a href="javascript:" data-invoice-id="' . $row->id . '" class="invoice-upload" data-toggle="modal" data-target="#invoiceUploadModal"><i class="fa fa-upload"></i> ' . __('app.upload') . ' </a></li>';
-                }
-
                 if ($row->status != 'paid' && $row->status != 'canceled') {
                     if(is_null($row->invoice_recurring_id)) {
                         $action .= '<li><a href="' . route("admin.all-invoices.edit", $row->id) . '"><i class="fa fa-pencil"></i> ' . __('app.edit') . '</a></li>';

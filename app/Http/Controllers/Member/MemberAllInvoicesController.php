@@ -97,17 +97,13 @@ class MemberAllInvoicesController extends MemberBaseController
                 if ($this->user->can('view_invoices') && $row->status != 'draft') {
                     $action .= '<li><a href="' . route("member.all-invoices.download", $row->id) . '"><i class="fa fa-download"></i> ' . __('app.download') . '</a></li>';
                 }
-                if ($row->status == 'paid') {
-                    $action .= ' <li><a href="javascript:" data-invoice-id="' . $row->id . '" class="invoice-upload" data-toggle="modal" data-target="#invoiceUploadModal"><i class="fa fa-upload"></i> ' . __('app.upload') . ' </a></li>';
-                }
+                // if ($row->status != 'draft' && $row->status != 'canceled') {
+                //     $action .= '<li><a href="javascript:;" data-toggle="tooltip"  data-invoice-id="' . $row->id . '" class="sendButton"><i class="fa fa-send"></i> ' . __('app.send') . '</a></li>';
+                // }
 
-                if ($row->status != 'draft' && $row->status != 'canceled') {
-                    $action .= '<li><a href="javascript:;" data-toggle="tooltip"  data-invoice-id="' . $row->id . '" class="sendButton"><i class="fa fa-send"></i> ' . __('app.send') . '</a></li>';
-                }
-
-                if (($row->status == 'unpaid' || $row->status == 'draft') && $this->user->can('edit_invoices')) {
-                    $action .= '<li><a href="' . route("member.all-invoices.edit", $row->id) . '"><i class="fa fa-pencil"></i> ' . __('app.edit') . '</a></li>';
-                }
+                // if (($row->status == 'unpaid' || $row->status == 'draft') && $this->user->can('edit_invoices')) {
+                //     $action .= '<li><a href="' . route("member.all-invoices.edit", $row->id) . '"><i class="fa fa-pencil"></i> ' . __('app.edit') . '</a></li>';
+                // }
 
                 // if ($this->user->can('add_payments') && $row->status != 'draft' && $row->status != 'paid' && $row->status != 'canceled') {
                 //     $action .= '<li><a href="' . route("member.payments.payInvoice", [$row->id]) . '" data-toggle="tooltip" ><i class="fa fa-plus"></i> ' . __('modules.payments.addPayment') . '</a></li>';
