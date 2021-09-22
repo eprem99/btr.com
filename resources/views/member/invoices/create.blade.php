@@ -129,7 +129,7 @@
 
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-4" style="display:none;">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.dueDate')</label>
                                         <div class="input-icon">
@@ -153,37 +153,6 @@
                             </div>
 
                           
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('modules.invoices.showShippingAddress')
-                                            <a class="mytooltip" href="javascript:void(0)">
-                                                <i class="fa fa-info-circle"></i>
-                                                <span class="tooltip-content5">
-                                                        <span class="tooltip-text3">
-                                                            <span class="tooltip-inner2">
-                                                                @lang('modules.invoices.showShippingAddressInfo')
-                                                            </span>
-                                                        </span>
-                                                    </span>
-                                            </a>
-                                        </label>
-                                        <div class="switchery-demo">
-                                            <input type="checkbox" id="show_shipping_address" name="show_shipping_address"
-                                                   @if($global->show_shipping_address == 'yes') checked
-                                                   @endif class="js-switch " data-color="#00c292"
-                                                   data-secondary-color="#f96262"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div id="shippingAddress">
-
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group m-b-10 product-select" id="product-select">
@@ -464,16 +433,16 @@
 
     });
 
-    var showShippingSwitch = document.getElementById('show_shipping_address');
+    // var showShippingSwitch = document.getElementById('show_shipping_address');
 
-    showShippingSwitch.onchange = function() {
-        if (showShippingSwitch.checked) {
-            checkShippingAddress();
-        }
-        else {
-            $('#shippingAddress').html('');
-        }
-    }
+    // showShippingSwitch.onchange = function() {
+    //     if (showShippingSwitch.checked) {
+    //         checkShippingAddress();
+    //     }
+    //     else {
+    //         $('#shippingAddress').html('');
+    //     }
+    // }
     
     $(function () {
         $( "#sortable" ).sortable();
