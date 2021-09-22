@@ -44,11 +44,11 @@
                                 <div class="col-md-12">
                                    <h2>{{ $invoice->invoice_number }}</h2>
                                 </div>
-                                @if($invoice->project_id)
+                                @if($invoice->task_id)
                                     <div class="col-md-12">
                                         <div class="col-md-4 form-group">
-                                            <label>@lang('app.project')</label>
-                                            <h3 class="form-control-static">{{ $invoice->project->project_name }}</h3>
+                                            <label>@lang('app.task')</label>
+                                            <h3 class="form-control-static">{{ $invoice->task->heading }}</h3>
                                         </div>
                                     </div>
                                 @endif

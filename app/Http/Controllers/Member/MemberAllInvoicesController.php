@@ -209,8 +209,9 @@ class MemberAllInvoicesController extends MemberBaseController
     {
         //        header('Content-type: application/pdf');
 // dd($this->user->id);
-        $this->invoice = Invoice::with(['task', 'task.users', 'task.users.client_details', 'task.users.client_details.clientCategory'])->findOrFail($id)->withCustomFields();
-        $this->clientDetail = EmployeeDetails::with('countries', 'states')->where('user_id', '=', $this->user->id)->first();
+        $this->invoice = Invoice::with(['task'])->findOrFail($id);
+        $this->clientName = User::where('id', '=', $this->invoice->task->client_id)->first();
+        $this->clientDetail = EmployeeDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
 //dd($this->clientDetail);
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
@@ -261,7 +262,7 @@ class MemberAllInvoicesController extends MemberBaseController
         $this->settings = $this->global;
         $this->payments = Payment::with(['offlineMethod'])->where('invoice_id', $this->invoice->id)->where('status', 'complete')->orderBy('paid_on', 'desc')->get();
         $this->invoiceSetting = invoice_setting();
-             //   return view('invoices.'.$this->invoiceSetting->template, $this->data);
+            //    return view('invoices.'.$this->invoiceSetting->template, $this->data);
 
         $pdf = app('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);

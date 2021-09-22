@@ -477,7 +477,7 @@
             @if(!is_null($invoice->task->users))
                 <span class="color">@lang('modules.invoices.shipedTo')</span>
                 <div>
-                    <span class="bold">{{ ucwords($invoice->task->users[0]->name) }}</span>
+                    <span class="bold">{{ ucwords($clientName->name) }}</span>
                 </div>
                 <div>
                    @lang('app.site.country') : {{ ucwords($clientDetail->countries->name) }}

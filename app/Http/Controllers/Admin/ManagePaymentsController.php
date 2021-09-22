@@ -70,7 +70,7 @@ class ManagePaymentsController extends AdminBaseController
             $payment->project_id = $request->project_id;
         } else if ($request->has('invoice_id')) {
             $invoice = Invoice::findOrFail($request->invoice_id);
-            $payment->project_id = $invoice->project_id;
+            $payment->project_id = $invoice->task_id;
             $payment->invoice_id = $invoice->id;
             $payment->currency_id = $invoice->currency->id;
             $paidAmount = $invoice->amountPaid();

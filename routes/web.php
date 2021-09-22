@@ -134,7 +134,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::group(
                     ['prefix' => 'wotype'], function () {
                 Route::get('wotype/quick-create', ['uses' => 'ManageWotypeController@quickCreate'])->name('wotype.quick-create');
-                Route::post('wotype/quick-store', ['uses' => 'ManageEotypeController@quickStore'])->name('wotype.quick-store');
+                Route::post('wotype/quick-store', ['uses' => 'ManageWotypeController@quickStore'])->name('wotype.quick-store');
                 Route::resource('wotype', 'ManageWotypeController');
             });
 

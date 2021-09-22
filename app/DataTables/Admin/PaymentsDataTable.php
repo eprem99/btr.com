@@ -109,7 +109,7 @@ class PaymentsDataTable extends BaseDataTable
 
         $model = Payment::with(['project:id,heading', 'currency:id,currency_symbol,currency_code', 'invoice'])
             ->leftJoin('invoices', 'invoices.id', '=', 'payments.invoice_id')
-            ->leftJoin('projects', 'projects.id', '=', 'payments.project_id')
+            ->leftJoin('tasks', 'tasks.id', '=', 'payments.project_id')
             ->select('payments.id', 'payments.project_id', 'payments.currency_id', 'payments.invoice_id', 'payments.amount', 'payments.status', 'payments.paid_on', 'payments.remarks', 'payments.bill');
 
         if ($request->startDate !== null && $request->startDate != 'null' && $request->startDate != '') {

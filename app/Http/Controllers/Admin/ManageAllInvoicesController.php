@@ -25,6 +25,7 @@ use App\Setting;
 use App\Tax;
 use App\User;
 use App\ClientDetails;
+use App\EmployeeDetails;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -226,9 +227,10 @@ class ManageAllInvoicesController extends AdminBaseController
     {
         //        header('Content-type: application/pdf');
 // dd($this->user->id);
-        $this->invoice = Invoice::with(['task', 'task.users', 'task.users.client_details', 'task.users.client_details.clientCategory'])->findOrFail($id);
+        $this->invoice = Invoice::with(['task'])->findOrFail($id);
       //  dd($this->invoice->task->users[]);
-        $this->clientDetail = ClientDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
+        $this->clientName = User::where('id', '=', $this->invoice->task->client_id)->first();
+        $this->clientDetail = EmployeeDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
 // dd($this->invoice->task->client_id);
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
@@ -279,7 +281,7 @@ class ManageAllInvoicesController extends AdminBaseController
         $this->settings = $this->global;
         $this->payments = Payment::with(['offlineMethod'])->where('invoice_id', $this->invoice->id)->where('status', 'complete')->orderBy('paid_on', 'desc')->get();
         $this->invoiceSetting = invoice_setting();
-             //   return view('invoices.'.$this->invoiceSetting->template, $this->data);
+           //     return view('invoices.'.$this->invoiceSetting->template, $this->data);
 
         $pdf = app('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
