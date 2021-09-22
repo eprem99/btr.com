@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ClientDetails;
+use App\EmployeeDetails;
 use App\CreditNotes;
 use App\Http\Requests\TicketForm\StoreTicket;
 use App\Invoice;
@@ -816,9 +817,9 @@ class HomeController extends Controller
 
     public function domPdfObjectForDownload($id)
     {
-       // $this->invoice = Invoice::whereRaw('md5(id) = ?', $id)->firstOrFail()->withCustomFields();
-        $this->invoice = Invoice::with(['items', 'task', 'task.users', 'task.users.client_details', 'task.users.client_details.clientCategory'])->whereRaw('md5(id) = ?', $id)->firstOrFail();
-        $this->clientDetail = ClientDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
+        $this->invoice = Invoice::with(['task'])->findOrFail($id);
+        $this->clientName = User::where('id', '=', $this->invoice->task->client_id)->first();
+        $this->clientDetail = EmployeeDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
         App::setLocale(isset($this->invoice->company->locale) ? $this->invoice->company->locale : 'en');
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
