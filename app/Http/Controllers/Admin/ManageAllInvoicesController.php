@@ -229,7 +229,7 @@ class ManageAllInvoicesController extends AdminBaseController
         $this->clientName = User::where('id', '=', $this->invoice->task->users[0]->id)->first();
 
         $this->clientDetail = EmployeeDetails::with(['countries', 'states'])->where('user_id', '=', $this->invoice->task->users[0]->id)->first();
-        dd($this->clientDetail);
+       // dd($this->clientDetail);
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
         if ($this->invoice->credit_note) {
