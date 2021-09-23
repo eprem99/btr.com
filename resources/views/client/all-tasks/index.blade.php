@@ -132,10 +132,22 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-12 m-b-10">
         <div class="checkbox checkbox-info">
-            <input type="checkbox" checked id="hide-completed-tasks">
+            <input type="checkbox" id="hide-completed-tasks">
             <label for="hide-completed-tasks">@lang('app.hideCompletedTasks')</label>
+        </div>
+    </div>
+    <div class="col-md-12 m-b-10">
+        <div class="checkbox checkbox-info">
+            <input type="checkbox" checked id="hide-closed-tasks">
+            <label for="hide-closed-tasks">@lang('app.hideClosedTasks')</label>
+        </div>
+    </div>
+    <div class="col-md-12 m-b-10">
+        <div class="checkbox checkbox-info">
+            <input type="checkbox" checked id="hide-canceled-tasks">
+            <label for="hide-canceled-tasks">@lang('app.hideCanceledTasks')</label>
         </div>
     </div>
 
@@ -270,6 +282,16 @@
         } else {
             var hideCompleted = '0';
         }
+        if ($('#hide-closed-tasks').is(':checked')) {
+            var hideClosed = '1';
+        } else {
+            var hideClosed = '0';
+        }
+        if ($('#hide-canceled-tasks').is(':checked')) {
+            var hideCanceled = '1';
+        } else {
+            var hideCanceled = '0';
+        }
 
         data['clientID'] = clientID;
         data['assignedBY'] = assignedBY;
@@ -280,6 +302,8 @@
         data['client'] = client;
         data['category_id'] = category_id;
         data['hideCompleted'] = hideCompleted;
+        data['hideClosed'] = hideClosed;
+        data['hideCanceled'] = hideCanceled;
         data['startDate'] = startDate;
         data['endDate'] = endDate;
     });

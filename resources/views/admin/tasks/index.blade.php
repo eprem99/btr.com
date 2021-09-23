@@ -319,6 +319,7 @@
         } else {
             var hideCanceled = '0';
         }
+        
         data['clientID'] = clientID;
         data['assignedBY'] = assignedBY;
         data['assignedTo'] = assignedTo;
