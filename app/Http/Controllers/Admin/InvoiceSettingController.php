@@ -32,7 +32,7 @@ class InvoiceSettingController extends AdminBaseController
         $setting->credit_note_prefix = $request->credit_note_prefix;
         $setting->credit_note_digit = $request->credit_note_digit;
         $setting->template       = $request->template;
-        $setting->invoice_email  = $request->invoice_email;
+        $setting->email  = $request->invoice_email;
         $setting->due_after      = $request->due_after;
         $setting->invoice_terms  = $request->invoice_terms;
         $setting->estimate_terms  = $request->estimate_terms;
