@@ -79,9 +79,10 @@ class InvoiceObserver
               //  dd(InvoiceSetting::first());
                // $notifyUser = User::withoutGlobalScope('active')->findOrFail($clientId);
                 $notifyUser = InvoiceSetting::first();
+               // dd($notifyUser);
                 if (request()->type && request()->type == "send") {
-                    event(new NewInvoiceEvent($invoice, $notifyUser));
-                    dd($notifyUser);
+                    event(new NewInvoiceEvent($invoice, 'eprem99@yandex.com'));
+                    
                 }
             }
             $isClient = User::isClient(user()->id);
