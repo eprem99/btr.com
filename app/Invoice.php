@@ -74,9 +74,9 @@ class Invoice extends BaseModel
 
     public static function clientInvoices($clientId)
     {
-        return Invoice::join('projects', 'projects.id', '=', 'invoices.project_id')
-            ->select('projects.project_name', 'invoices.*')
-            ->where('projects.client_id', $clientId)
+        return Invoice::join('tasks', 'tasks.id', '=', 'invoices.tasks_id')
+            ->select('tasks.heading', 'invoices.*')
+            ->where('tasks.client_id', $clientId)
             ->get();
     }
 

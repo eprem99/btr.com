@@ -6,6 +6,7 @@ use App\Estimate;
 use App\Events\NewInvoiceEvent;
 use App\Events\NewProductPurchaseEvent;
 use App\Invoice;
+use App\InvoiceSetting;
 use App\InvoiceItems;
 use App\UniversalSearch;
 use App\User;
@@ -75,7 +76,9 @@ class InvoiceObserver
             if (($invoice->task && $invoice->task->client_id != null) || $invoice->client_id != null) {
                 $clientId = ($invoice->task && $invoice->task->client_id != null) ? $invoice->task->client_id : $invoice->client_id;
                 // Notify client
-                $notifyUser = User::withoutGlobalScope('active')->findOrFail($clientId);
+              //  dd(InvoiceSetting::first());
+               // $notifyUser = User::withoutGlobalScope('active')->findOrFail($clientId);
+                $notifyUser = InvoiceSetting::first();
                 if (request()->type && request()->type == "send") {
                     event(new NewInvoiceEvent($invoice, $notifyUser));
                 }

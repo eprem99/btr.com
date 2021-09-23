@@ -9,6 +9,6 @@ class InvoiceSetting extends BaseModel
 
     public function getLogoUrlAttribute()
     {
-        return (is_null($this->logo)) ? asset('img/worksuite-logo.png') : asset_url('app-logo/' . $this->logo);
+        return (is_null($this->logo)) ? asset('img/btr-logo.png') : asset_url('app-logo/' . $this->logo);
     }
 }

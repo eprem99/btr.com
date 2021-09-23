@@ -533,6 +533,7 @@ return array(
     'updateTitle' => 'Update Organization Settings',
     'companyName' => 'Company Name',
     'companyEmail' => 'Company Email',
+    'email' => 'Email',
     'companyPhone' => 'Company Phone',
     'companyWebsite' => 'Company Website',
     'website' => 'Website',

@@ -146,6 +146,12 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="address">@lang('modules.accountSettings.email')</label>
+                                                    <input type="email" id="invoice_email" name="invoice_email" class="form-control" value="{{ $invoiceSetting->invoice_email }}">
+                                                </div>
+                                            </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="exampleInputPassword1"> @lang('modules.invoiceSettings.logo')</label>
