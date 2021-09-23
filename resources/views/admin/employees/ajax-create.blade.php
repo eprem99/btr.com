@@ -55,19 +55,6 @@
             <div class="row">
                 <div class="col-md-6 ">
                     <div class="form-group">
-                        <label class="required">@lang('app.designation')</label>
-                        <select name="designation" id="designation_ajax" class="form-control select2">
-                            <option value="">--</option>
-                            @forelse($designations as $designation)
-                                <option value="{{ $designation->id }}">{{ $designation->name }}</option>
-                            @empty
-                                <option value="">@lang('messages.noRecordFound')</option>
-                            @endforelse()
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6 ">
-                    <div class="form-group">
                         <label class="required">@lang('app.department')</label>
                         <select name="department" id="department_ajax" class="form-control select2">
                             <option value="">--</option>

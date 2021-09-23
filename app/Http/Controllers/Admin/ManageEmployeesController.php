@@ -83,9 +83,9 @@ class ManageEmployeesController extends AdminBaseController
         $this->countries = Country::all();
         $this->lastEmployeeID = EmployeeDetails::max('id');
 
-        // if (request()->ajax()) {
-        //     return view('admin.employees.ajax-create', $this->data);
-        // }
+        if (request()->ajax()) {
+            return view('admin.employees.ajax-create', $this->data);
+        }
 
         return view('admin.employees.create', $this->data);
     }
