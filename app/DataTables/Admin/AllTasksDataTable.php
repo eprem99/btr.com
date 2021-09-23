@@ -248,11 +248,31 @@ class AllTasksDataTable extends BaseDataTable
 
         if(isset($_GET['hideComplet'])){
             if (isset($_GET['hideComplet']) &&  $_GET['hideComplet'] == '1') {
-                $model->where('tasks.board_column_id', '<>', $taskBoardColumn->id);
+                $model->where('tasks.board_column_id', '<>', 10);
             }
         }else{
             if ($hideCompleted == '1') {
-                $model->where('tasks.board_column_id', '<>', $taskBoardColumn->id);
+                $model->where('tasks.board_column_id', '<>', 10);
+            }
+        }
+
+        if(isset($_GET['hideClosed'])){
+            if (isset($_GET['hideClosed']) &&  $_GET['hideClosed'] == '1') {
+                $model->where('tasks.board_column_id', '<>', 11);
+            }
+        }else{
+            if ($request->hideClosed == '1') {
+                $model->where('tasks.board_column_id', '<>', 11);
+            }
+        }
+
+        if(isset($_GET['hideCanceled'])){
+            if (isset($_GET['hideCanceled']) &&  $_GET['hideCanceled'] == '1') {
+                $model->where('tasks.board_column_id', '<>', 12);
+            }
+        }else{
+            if ($request->hideCanceled == '1') {
+                $model->where('tasks.board_column_id', '<>', 12);
             }
         }
 

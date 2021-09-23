@@ -31,6 +31,8 @@ return array (
   'address' => 'Address',
   'completed' => 'Completed',
   'hideCompletedTasks' => 'Hide Completed Work Orders',
+  'hideClosedTasks' => 'Hide Closed Work Orders',
+  'hideCanceledTasks' => 'Hide Canceled Work Orders',
   'dueDate' => 'End Date',
   'status' => 'Status',
   'selectStatus' => 'Select Status',

@@ -26,4 +26,20 @@ class TaskboardColumn extends BaseModel
             }
         );
     }
+    public static function closedColumn()
+    {
+        return cache()->remember(
+            'taskboard-complete', 60*60*24, function () {
+                return TaskboardColumn::where('slug', 'closed')->first();
+            }
+        );
+    }
+    public static function canceledColumn()
+    {
+        return cache()->remember(
+            'taskboard-complete', 60*60*24, function () {
+                return TaskboardColumn::where('slug', 'cancelled')->first();
+            }
+        );
+    }
 }

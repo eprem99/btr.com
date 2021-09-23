@@ -69,8 +69,8 @@ class AdminDashboardController extends AdminBaseController
 
         $this->pendingTasks = Task::with('labels')
             ->where('tasks.board_column_id', '<>', $completedTaskColumn->id)
-            ->where(DB::raw('DATE(due_date)'), '<=', Carbon::now()->timezone($this->global->timezone)->format('Y-m-d'))
-            ->orderBy('due_date', 'desc')
+           // ->where(DB::raw('DATE(due_date)'), '<=', Carbon::now()->timezone($this->global->timezone)->format('Y-m-d'))
+            ->orderBy('start_date', 'desc')
             ->select('tasks.*')
             ->get();
             

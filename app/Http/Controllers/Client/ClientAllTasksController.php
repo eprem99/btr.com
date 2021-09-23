@@ -224,7 +224,6 @@ class ClientAllTasksController extends ClientBaseController
         $task->wo_id = $request->task_type;
         $task->sport_id = $request->sport_type;
         $task->qty = $request->task_qty;
-        $task->p_order = $request->task_purchase;
 
         if ($request->board_column_id) {
             $task->board_column_id = $request->board_column_id;
