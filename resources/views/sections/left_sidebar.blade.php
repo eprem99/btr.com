@@ -187,18 +187,6 @@
                     </a>
                     <ul class="dropdown-menu">
 
-                        @if(in_array('projects',$modules))
-                            <li>
-                                <div class="message-center">
-                                    <a href="{{ route('admin.projects.create') }}">
-                                        <div class="mail-contnet">
-                                            <span class="mail-desc m-0">@lang('app.add') @lang('app.project')</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </li>
-                        @endif
-
                         @if(in_array('tasks',$modules))
                             <li>
                                 <div class="message-center">
@@ -235,31 +223,7 @@
                             </li>
                         @endif
 
-                        @if(in_array('payments',$modules))
-                            <li>
-                                <div class="message-center">
-                                    <a href="{{ route('admin.payments.create') }}">
-                                        <div class="mail-contnet">
-                                            <span class="mail-desc m-0">@lang('modules.payments.addPayment')</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </li>
-                        @endif
-
-                        @if(in_array('tickets',$modules))
-                            <li>
-                                <div class="message-center">
-                                    <a href="{{ route('admin.tickets.create') }}">
-                                        <div class="mail-contnet">
-                                            <span class="mail-desc m-0">@lang('app.add') @lang('modules.tickets.ticket')</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </li>
-                        @endif
-
-                    </ul>
+                   </ul>
                 </div>
             </div>
 
