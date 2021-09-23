@@ -187,11 +187,10 @@ class ManageInvoicesController extends AdminBaseController
 
     public function download($id) {
         //        header('Content-type: application/pdf');
-
         $this->invoice = Invoice::with(['task'])->findOrFail($id);
       //  dd($this->invoice->task->users[]);
-        $this->clientName = User::where('id', '=', $this->invoice->task->client_id)->first();
-        $this->clientDetail = EmployeeDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
+        $this->clientName = User::where('id', '=', $this->invoice->task->users[0]->id)->first();
+        $this->clientDetail = EmployeeDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->users[0]->id)->first();
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
         if ($this->invoice->credit_note) {

@@ -81,6 +81,7 @@ class InvoiceObserver
                 $notifyUser = InvoiceSetting::first();
                 if (request()->type && request()->type == "send") {
                     event(new NewInvoiceEvent($invoice, $notifyUser));
+                    dd($notifyUser);
                 }
             }
             $isClient = User::isClient(user()->id);

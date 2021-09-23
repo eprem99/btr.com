@@ -83,8 +83,10 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function domPdfObjectForDownload($id)
     {
-        $this->invoice = Invoice::with(['items', 'task', 'task.users', 'task.users.client_details', 'task.users.client_details.clientCategory'])->findOrFail($id);
-        $this->clientDetail = ClientDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
+        $this->invoice = Invoice::with(['task'])->findOrFail($id);
+        $this->clientName = User::where('id', '=', $this->invoice->task->users[0]->id)->first();
+
+        $this->clientDetail = EmployeeDetails::with(['countries', 'states'])->where('user_id', '=', $this->invoice->task->users[0]->id)->first();
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
         if ($this->invoice->credit_note) {
@@ -155,8 +157,11 @@ class ManageAllInvoicesController extends AdminBaseController
 
     public function domPdfObjectForConsoleDownload($id)
     {
-        $this->invoice = Invoice::with(['items', 'task', 'task.users', 'task.users.client_details', 'task.users.client_details.clientCategory'])->findOrFail($id);
-        $this->clientDetail = ClientDetails::with('countries', 'states')->where('user_id', '=', $this->invoice->task->client_id)->first();
+        $this->invoice = Invoice::with(['task'])->findOrFail($id);
+        $this->clientName = User::where('id', '=', $this->invoice->task->users[0]->id)->first();
+
+        $this->clientDetail = EmployeeDetails::with(['countries', 'states'])->where('user_id', '=', $this->invoice->task->users[0]->id)->first();
+       
         $this->paidAmount = $this->invoice->getPaidAmount();
         $this->creditNote = 0;
         if ($this->invoice->credit_note) {
