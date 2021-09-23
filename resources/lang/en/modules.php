@@ -341,6 +341,7 @@ return array(
     'assignBy' => 'Submitted By',
     'markComplete' => 'Mark as complete',
     'markIncomplete' => 'Mark as incomplete',
+    'markClosed' => 'Mark as Closed',
     'reminder' => 'Send Reminder',
     'moveToBoard' => 'Move to Board',
     'deleteRecurringTasks' => 'Delete With Recurring Work Orders',

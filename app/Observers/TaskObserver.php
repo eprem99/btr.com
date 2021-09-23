@@ -99,15 +99,15 @@ class TaskObserver
                  }elseif(request()->status == 'tech-Off-Site') {
                   
 
-                    event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
+                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
      
                  }elseif(request()->status == 'incomplete') {
 
-                    event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
+                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
      
                  }elseif(request()->status == 'off-site-complete') {
 
-                    event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
+                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
      
                  }elseif(request()->status == 'off-site-return-trip-required') {
                   
@@ -115,7 +115,7 @@ class TaskObserver
                     $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
                     event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
                     
-                    event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
+                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
                      
                 }elseif(request()->status == 'cancelled') {
 
