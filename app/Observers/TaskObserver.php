@@ -36,10 +36,12 @@ class TaskObserver
     public function created(Task $task)
     {
         if (!isRunningInConsoleOrSeeding()) {
-            if (request()->has('project_id') && request()->project_id != "all" && request()->project_id != '') {
-                if ($task->client_id != null) {
-                    event(new TaskEvent($task, $task->users, 'NewClientTask'));
-                }
+            if ($task->create_by != null) {
+                    
+                event(new TaskEvent($task, $task->create_by, 'NewClientTask'));
+            }
+            if (request()->has('user_id') && request()->user_id != "all" && request()->user_id != '') {
+                event(new TaskEvent($task, $task->users, 'NewTask'));
             }
             // $log = new AdminBaseController();
             // if (\user()) {
@@ -62,7 +64,7 @@ class TaskObserver
 
 
             //Send notification to user
-            event(new TaskEvent($task, $task->users, 'NewTask'));
+            
         }
     }
 
@@ -87,8 +89,6 @@ class TaskObserver
     
                 }elseif(request()->status == 'scheduled') {
                   
-                    $clients = $task->create_by->id;
-                    $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
                     event(new TaskEvent($task, $task->create_by, 'TaskUpdated'));
                     
                     $admins = User::allAdmins();
@@ -110,18 +110,12 @@ class TaskObserver
                     event(new TaskEvent($task, $task->users, 'TaskUpdated'));
      
                  }elseif(request()->status == 'off-site-return-trip-required') {
-                  
-                    $clients = $task->create_by->id;
-                    $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
-                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
-                    
-                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
+                                    
+                    event(new TaskEvent($task, $task->create_by, 'TaskUpdated'));
                      
                 }elseif(request()->status == 'cancelled') {
 
-                    $clients = $task->create_by->id;
-                    $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
-                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
+                    event(new TaskEvent($task, $task->create_by, 'TaskUpdated'));
                     
                     $admins = User::allAdmins();
                     event(new TaskEvent($task, $admins, 'TaskUpdated'));
@@ -131,8 +125,8 @@ class TaskObserver
             }
             
             if (request('user_id')) {
-                //Send notification to user
-                event(new TaskEvent($task, $task->users, 'NewTask'));
+                   //Send notification to user
+                   event(new TaskEvent($task, $task->users, 'NewTask'));
 
                 if ($task->create_by != null && $task->create_by->status != 'deactive') {
                     event(new TaskEvent($task, $task->create_by, 'TaskUpdatedClient'));
