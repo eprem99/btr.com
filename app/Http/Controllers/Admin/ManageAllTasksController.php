@@ -236,6 +236,7 @@ class ManageAllTasksController extends AdminBaseController
         //     $task->board_column_id = $request->board_column_id;
         // }
         if($request->user_id && $request->board_column_id == "1"){
+            $task->users()->sync($request->user_id);
             $task->board_column_id = 2;
         }else{
             $task->board_column_id = $request->board_column_id;
