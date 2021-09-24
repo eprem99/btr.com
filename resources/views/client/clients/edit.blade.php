@@ -87,7 +87,7 @@
                                 <div class="col-md-4">
                                         <div class="form-group">
                                             <label>@lang('modules.stripeCustomerAddress.city')</label>
-                                            <input type="text" name="city" id="city"  value="{{ $leadDetail->city ?? '' }}"   class="form-control">
+                                            <input type="text" name="city" id="city"  value="{{ $clientDetail->city ?? '' }}"   class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>@lang('modules.stripeCustomerAddress.postalCode')</label>
-                                    <input type="text" name="postal_code" id="postalCode"  value="{{ $leadDetail->postal_code ?? '' }}" class="form-control">
+                                    <input type="text" name="postal_code" id="postalCode"  value="{{ $clientDetail->postal_code ?? '' }}" class="form-control">
                                 </div>
                             </div>
                                 <!--/span-->                              
@@ -170,14 +170,16 @@
                                     </div>
                                     
                                 </div>
-
-                            </div>
+             
+                        </div>
                             <!--/span-->
 
 
                         </div>
                         <div class="form-actions">
-                        <input type="hidden" name="category_id" id="mobile" class="form-control" autocomplete="nope" value="{{ $user }}">
+                            <input type="hidden" name="id" value="{{ $userDetail->id }}">
+<input type="hidden" name="category_id" value="{{ $clientDetail->category_id }}">
+                        
                             <button type="submit" id="save-form" class="btn btn-success"><i class="fa fa-check"></i>
                                 @lang("app.update")
                             </button>

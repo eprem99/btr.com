@@ -25,6 +25,10 @@ class ClientDetails extends BaseModel
     protected $default = [
         'id',
         'address',
+        'country',
+        'state',
+        'city',
+        'postal_code',
         'note',
         'name',
         'email',

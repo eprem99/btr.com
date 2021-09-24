@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\ClientDetails;
 use App\Helper\Reply;
+use App\Helper\Files;
 use Illuminate\Http\Request;
 use App\DataTables\Admin\ClientsDataTable;
 use App\Http\Requests\Admin\Client\StoreClientRequest;
@@ -14,6 +15,7 @@ use App\ClientCategory;
 use App\Country;
 use App\State;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Facades\Image;
 
 class ClientClientsController extends ClientBaseController
 {
@@ -79,11 +81,12 @@ class ClientClientsController extends ClientBaseController
 
         $data = $request->all();
         $data['password'] = Hash::make($request->input('password'));
-        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user()->id);
+        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
         unset($data['phone_code']);
         $data['country'] = $request->input('country');
         $data['state'] = $request->input('state');
         $data['name'] = $request->input('salutation')." ".$request->input('name');
+        
         $data['category_id'] = $this->clientDetail->category_id;
         $user = User::create($data);
         $user->client_details()->create($data);
@@ -114,6 +117,11 @@ class ClientClientsController extends ClientBaseController
         }
         return view('client.clients.show', $this->data);
     }
+    
+        public function user()
+    {
+
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -128,11 +136,7 @@ class ClientClientsController extends ClientBaseController
        // dd($this->clientDetail);
         $this->countries = Country::all();
         $this->categories = ClientCategory::all();
-        $this->user = $this->user()->categpory_id;
-        if (!is_null($this->clientDetail)) {
-            $this->clientDetail = $this->clientDetail->withCustomFields();
-            $this->fields = $this->clientDetail->getCustomFieldGroupsWithFields()->fields;
-        }
+
         return view('client.clients.edit', $this->data);
     }
    /**
@@ -175,36 +179,48 @@ class ClientClientsController extends ClientBaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateClientRequest $request, $id)
+    public function update(UpdateClientRequest $request)
     {
-        $user = User::withoutGlobalScope('active')->findOrFail($id);
+        $user = User::withoutGlobalScope('active')->findOrFail($request->id);
         $data =  $request->all();
-        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user()->id);
-        unset($data['password']);
-        unset($data['phone_code']);
+        
+        $this->clientDetail = ClientDetails::where('user_id', '=', $this->user->id)->first();
+       // dd($this->clientDetail);
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->mobile = $request->input('mobile');
+        $user->email_notifications = $request->email_notifications;
         if ($request->password != '') {
-            $data['password'] = Hash::make($request->input('password'));
+            $user->password = Hash::make($request->input('password'));
         }
 
-        $user->update($data);
+        if ($request->hasFile('image')) {
 
-        if ($user->client_details) {
-
-            $data['category_id'] = $this->clientDetail->category_id;
-            $data['country'] = $request->input('country');
-            $data['state'] = $request->input('state');
-            $fields = $request->only($user->client_details->getFillable());
-            $user->client_details->fill($fields);
-            $user->client_details->save();
-        } else {
-            $user->client_details()->create($data);
+            Files::deleteFile($user->image, 'avatar');
+            $user->image = Files::upload($request->image, 'avatar', 300);
         }
 
+        $user->save();
 
-        // To add custom fields data
-        if ($request->get('custom_fields_data')) {
-            $user->client_details->updateCustomFieldData($request->get('custom_fields_data'));
+        $client = ClientDetails::where('user_id',$user->id)->first();
+        if (empty($client)) {
+            $client = new ClientDetails();
+            $client->user_id = $user->id;
         }
+        $client->user_id = $user->id;
+        $client->address = $request->address;
+        $client->country = $request->country;
+        $client->state = $request->state;
+        $client->city = $request->city;
+        $client->postal_code = $request->postal_code;
+        $client->category_id = $request->category_id;
+
+       $client->save();
+
+        if (user()->id == $user->id) {
+            session()->forget('user');
+        }
+
         return Reply::redirect(route('client.clients.index'));
     }
 
@@ -226,29 +242,5 @@ class ClientClientsController extends ClientBaseController
         return Reply::success(__('messages.clientDeleted'));
     }
 
-
-    public function showInvoices($id)
-    {
-        $this->client = User::withoutGlobalScope('active')->findOrFail($id);
-        $this->clientDetail = ClientDetails::where('user_id', '=', $this->client->id)->first();
-        $this->clientStats = $this->clientStats($id);
-
-        if (!is_null($this->clientDetail)) {
-            $this->clientDetail = $this->clientDetail->withCustomFields();
-            $this->fields = $this->clientDetail->getCustomFieldGroupsWithFields()->fields;
-        }
-
-        $this->invoices = Invoice::leftJoin('projects', 'projects.id', '=', 'invoices.project_id')
-            ->join('currencies', 'currencies.id', '=', 'invoices.currency_id')
-            ->selectRaw('invoices.invoice_number, invoices.total, currencies.currency_symbol, invoices.issue_date, invoices.id,invoices.credit_note, invoices.status,
-            ( select payments.amount from payments where invoice_id = invoices.id) as paid_payment')
-            ->where(function ($query) use ($id) {
-                $query->where('projects.client_id', $id)
-                    ->orWhere('invoices.client_id', $id);
-            })
-            ->orderBy('invoices.id', 'desc')
-            ->get();
-        return view('client.clients.invoices', $this->data);
-    }
 
 }

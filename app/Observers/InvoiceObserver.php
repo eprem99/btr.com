@@ -75,13 +75,11 @@ class InvoiceObserver
 
             if (($invoice->task && $invoice->task->client_id != null) || $invoice->client_id != null) {
                 $clientId = ($invoice->task && $invoice->task->client_id != null) ? $invoice->task->client_id : $invoice->client_id;
-                // Notify client
-              //  dd(InvoiceSetting::first());
-               // $notifyUser = User::withoutGlobalScope('active')->findOrFail($clientId);
-                $notifyUser = InvoiceSetting::first();
-               // dd($notifyUser);
+
+                $notifyUser = User::withoutGlobalScope('active')->findOrFail($clientId);
+
                 if (request()->type && request()->type == "send") {
-                    event(new NewInvoiceEvent($invoice, 'eprem99@yandex.com'));
+                    event(new NewInvoiceEvent($invoice, $notifyUser));
                     
                 }
             }
