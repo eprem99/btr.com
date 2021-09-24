@@ -1021,6 +1021,8 @@ Route::group(['middleware' => 'auth'], function () {
         ['namespace' => 'Client', 'prefix' => 'client', 'as' => 'client.', 'middleware' => ['role:client']], function () {
 
         Route::resource('dashboard', 'ClientDashboardController');
+       // Route::get('/dashboard', 'ClientDashboardController@index')->name('dashboard.index');
+        Route::get('dashboard/filter', ['uses' => 'ClientDashboardController@filter'] )->name('dashboard.filter');
 
         Route::resource('profile', 'ClientProfileController');
         Route::get('profile/state/{id}', ['uses' => 'ClientProfileController@state'])->name('profile.state');

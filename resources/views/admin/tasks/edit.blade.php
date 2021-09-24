@@ -174,7 +174,7 @@
                                 </div>
                             </div>
                                 <!--/span-->
-                                <div class="col-md-4">
+                                <!-- <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.type')</label>
                                         <select name="task_type" class="select2 form-control">
@@ -208,7 +208,7 @@
                                         <input type="text" name="task_qty" class="form-control" value="@if($task->qty){{ $task->qty}}@endif" >
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
 
                             <div class="row">

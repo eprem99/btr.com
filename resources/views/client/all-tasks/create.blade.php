@@ -135,8 +135,8 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label required">@lang('app.startDate')</label>
-                                        <input type="text" name="start_date" id="start_date2" class="form-control" autocomplete="off">
+                                        <label class="control-label">@lang('app.startDate')</label>
+                                        <input type="text" name="start_date" id="start_date2" class="form-control" autocomplete="off" value="{{ \Carbon\Carbon::now($global->timezone)->format($global->date_format)  }}">
                                     </div>
                                 </div>
                                 <!--/span-->

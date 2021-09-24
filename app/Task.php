@@ -24,7 +24,7 @@ class Task extends BaseModel
         return $this->user->email;
     }
 
-    protected $dates = ['due_date', 'completed_on', 'start_date'];
+    protected $dates = ['due_date', 'completed_on', 'start_date', 'created_at'];
     protected $appends = ['due_on', 'create_on'];
     protected $guarded = ['id'];
 

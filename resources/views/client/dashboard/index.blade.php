@@ -2,6 +2,8 @@
 @push('head-script')
 <link rel="stylesheet" href="{{ asset('css/full-calendar/main.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/bower_components/bootstrap-select/bootstrap-select.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/bower_components/custom-select/custom-select.css') }}">
 
 @endpush
 @section('page-title')
@@ -114,15 +116,43 @@
 
     </div>
     <!-- .row -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="white-box">
-                <h3 class="box-title">@lang('app.menu.taskCalendar')</h3>
-                <div id="calendar"></div>
-            </div>
-        </div>
-    </div>
-    <!-- .row -->
+    <div class="row mt-4">
+            <div class="col-md-12">
+                    <div class="panel panel-inverse">
+                        <div class="panel-heading" style="margin-bottom:20px;">@lang('modules.taskCalendar.note')</div>
+                        {!! Form::open(['id'=>'filter','class'=>'ajax-form','method'=>'PUT']) !!}
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <select name="tech" id="calendaremployer" class="select2 form-control">
+                                    <option value="0">Select Teach</option>
+                                        @foreach($employee as $emp)
+                                                <option value="{{$emp->user_id}}">{{ $emp->user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="status" id="calendarstatus" class="select2 form-control">
+                                    <option value="0">Select Status</option>
+                                        @foreach($taskBoardColumn as $emp)
+                                                <option value="{{$emp->id}}">{{ $emp->column_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            {!! Form::close() !!}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="collapse in" style="overflow: auto">
+                                        <div class="">
+                                            <div id="calendar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <!-- .row -->
 
     <div class="row" >
 
@@ -167,6 +197,12 @@
 
 <script src="{{ asset('plugins/bower_components/moment/moment.js') }}"></script>
 <script src="{{ asset('js/moment-timezone.js') }}"></script>
+<script src="{{ asset('plugins/bower_components/calendar/jquery-ui.min.js') }}"></script>
+<script src="{{ asset('plugins/bower_components/moment/moment.js') }}"></script>
+<script src="{{ asset('js/full-calendar/main.min.js') }}"></script>
+<script src="{{ asset('js/full-calendar/locales-all.min.js') }}"></script>
+<script src="{{ asset('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('plugins/bower_components/custom-select/custom-select.min.js') }}"></script>
 <script>
 
     $(function () {
@@ -209,20 +245,23 @@
         autoclose: true
     });
 
+
+
+    // only use for sidebar call method
+    function loadData(){}
+
     var taskEvents = [
         @foreach($tasks as $task)
         {
             id: '{{ ucfirst($task->id) }}',
             title: '{{ ucfirst($task->heading) }}',
             start: '{{ $task->start_date->format("Y-m-d") }}',
-            end:  '{{ $task->due_date->format("Y-m-d") }}',
+            end:  '{{ $task->start_date->format("Y-m-d") }}',
             color: '{{ $task->board_column->label_color }}'
         },
         @endforeach
     ];
-
-    // only use for sidebar call method
-    function loadData(){}
+ 
 
     // Task Detail show in sidebar
     var getEventDetail = function (id) {
@@ -246,13 +285,11 @@
     }
 
     var calendarLocale = '{{ $global->locale }}';
+
+   
 </script>
 
-<script src="{{ asset('plugins/bower_components/calendar/jquery-ui.min.js') }}"></script>
-<script src="{{ asset('plugins/bower_components/moment/moment.js') }}"></script>
-<script src="{{ asset('js/full-calendar/main.min.js') }}"></script>
-<script src="{{ asset('js/full-calendar/locales-all.min.js') }}"></script>
-<script src="{{ asset('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+
 <script>
     jQuery('#date-range').datepicker({
         toggleActive: true,
@@ -262,8 +299,23 @@
     });
 </script>
 <script>
-    var initialLocaleCode = '{{ $global->locale }}';
-    document.addEventListener('DOMContentLoaded', function() {
+$.date = function(dateObject) {
+    var d = new Date(dateObject);
+    var day = d.getDate();
+    var month = d.getMonth() + 1;
+    var year = d.getFullYear();
+    if (day < 10) {
+        day = "0" + day;
+    }
+    if (month < 10) {
+        month = "0" + month;
+    }
+    var date = year + "-" + month + "-" + day;
+
+    return date;
+};
+var initialLocaleCode = '{{ $global->locale }}';
+  //  document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
   
       var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -296,9 +348,51 @@
         dayMaxEvents: true, // allow "more" link when too many events
         events: taskEvents
       });
-  
+
       calendar.render();
+
+    $('#filter .select2').select2({
+        }).on("change", function (e) {
+        var url = "{{ route('client.dashboard.filter') }}";
+        $.easyAjax({
+            url: url,
+            type: "GET",
+            redirect: true,
+            data: $('#filter').serialize(),
+            success: function (data) {
+            //  alert(data.data)
+            destroy(data);
+
+            }
+        })
     });
+    function destroy(data){
+        console.log(data);
+        if (calendar) {
+            jsonObj = [];
+            
+                $.each(data, function( index, value ) {
+                    var start = moment(value.start_date).format('Y-m-d');
+                    console.log(start);
+                    item = {}
+                    item ["id"] = value.id;
+                    item ["title"] = value.heading;
+                    item ["start"] = $.date(value.start_date);
+                    item ["end"] = $.date(value.start_date);
+                    item ["color"] = value.board_column.label_color;
+                    jsonObj.push(item);
+                
+                })
+            var orgSource = calendar.getEventSources();
+            orgSource[0].remove();
+            calendar.addEventSource(jsonObj);
+          //  $('#calendar').fullCalendar('removeEvents');
+            
+        }
+        // calendar.destroy()
+    };
+
+
     </script>   
 
 @endpush
