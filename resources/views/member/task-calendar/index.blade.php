@@ -103,7 +103,8 @@
             id: '{{ ucfirst($task->id) }}',
             title: '{{ ucfirst($task->heading) }}',
             start: '{{ $task->start_date->format("Y-m-d") }}',
-            end:  '{{ $task->due_date->format("Y-m-d") }}',
+            end: '{{ $task->start_date->format("Y-m-d") }}',
+           // end:  '{{ $task->due_date->format("Y-m-d") }}',
             color  : '{{ $task->board_column->label_color }}'
         },
         @endforeach

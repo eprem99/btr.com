@@ -58,7 +58,7 @@
         <div class="col-md-12 col-sm-12">
             <div class="row">
                 <div class="col-md-4">
-                    <a href="{{ route('client.all-tasks.index','stat=0&hideComplet=0') }}">
+                    <a href="{{ route('client.all-tasks.index','stat=0&hideComplet=1') }}">
                         <div class="white-box">
                             <div class="row">
                                 <div class="col-xs-3">
@@ -94,7 +94,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <a href="{{ route('client.all-tasks.index','hideComplet=0') }}">
+                    <a href="{{ route('client.all-tasks.index','stat=1&hideComplet=1') }}">
                         <div class="white-box">
                             <div class="row">
                                 <div class="col-xs-3">

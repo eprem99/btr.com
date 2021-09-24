@@ -47,7 +47,7 @@ class ClientAllTasksController extends ClientBaseController
             $this->taskBoardStatus = TaskboardColumn::all();
             $this->taskCategories = TaskCategory::all();
             $this->taskLabels = TaskLabelList::all();
-            $this->startDate = Carbon::today()->subDays(15)->format($this->global->date_format);
+            $this->startDate = Carbon::today()->subDays(30)->format($this->global->date_format);
             $this->endDate = Carbon::today()->addDays(15)->format($this->global->date_format);
         }
 

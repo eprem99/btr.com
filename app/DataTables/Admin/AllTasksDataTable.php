@@ -226,12 +226,19 @@ class AllTasksDataTable extends BaseDataTable
         if ($request->assignedBY != '' && $request->assignedBY !=  null && $request->assignedBY !=  'all') {
             $model->where('creator_user.id', '=', $request->assignedBY);
         }
-
-        if (isset($_GET['stat']) && $_GET['stat'] == '0') {
-            $model->where('tasks.board_column_id', '!=', '11');
-        }elseif(isset($_GET['stat']) && $_GET['stat'] != ''){
-            $model->where('tasks.board_column_id', '=', $_GET['stat']);
-        }elseif($request->status != '' && $request->status !=  null && $request->status !=  'all'){
+        if (isset($_GET['stat']) && $_GET['stat'] == '11') {
+            $model->where('tasks.board_column_id', '=', '10');
+        }
+        if ($request->hideCompleted == '1') {
+            $model->where('tasks.board_column_id', '<>', '10');
+        }
+        if ($request->hideClosed == '1') {
+            $model->where('tasks.board_column_id', '<>', '11');
+        }
+        if ($request->hideCanceled == '1') {
+            $model->where('tasks.board_column_id', '<>', '12');
+        }
+        if($request->status != '' && $request->status !=  null && $request->status !=  'all'){
             $model->where('tasks.board_column_id', '=', $request->status);
         }
         if ($request->label != '' && $request->label !=  null && $request->label !=  'all') {
@@ -248,35 +255,6 @@ class AllTasksDataTable extends BaseDataTable
             $model->where('tasks.client_id', '=', $request->client);
         }
 
-        if(isset($_GET['hideComplet'])){
-            if (isset($_GET['hideComplet']) &&  $_GET['hideComplet'] == '1') {
-                $model->where('tasks.board_column_id', '<>', 10);
-            }
-        }else{
-            if ($hideCompleted == '1') {
-                $model->where('tasks.board_column_id', '<>', 10);
-            }
-        }
-
-        if(isset($_GET['hideClosed'])){
-            if (isset($_GET['hideClosed']) &&  $_GET['hideClosed'] == '1') {
-                $model->where('tasks.board_column_id', '<>', 11);
-            }
-        }else{
-            if ($request->hideClosed == '1') {
-                $model->where('tasks.board_column_id', '<>', 11);
-            }
-        }
-
-        if(isset($_GET['hideCanceled'])){
-            if (isset($_GET['hideCanceled']) &&  $_GET['hideCanceled'] == '1') {
-                $model->where('tasks.board_column_id', '<>', 12);
-            }
-        }else{
-            if ($request->hideCanceled == '1') {
-                $model->where('tasks.board_column_id', '<>', 12);
-            }
-        }
 
 
         return $model;

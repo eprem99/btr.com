@@ -384,7 +384,8 @@
         id: '{{ $task->id }}',
         title: "{!! ucfirst($task->heading) !!}",
         start: '{{ $task->start_date->format("Y-m-d") }}',
-        end:  '{{ $task->due_date->addDay()->format("Y-m-d") }}',
+       // end:  '{{ $task->due_date->addDay()->format("Y-m-d") }}',
+        end:  '{{ $task->start_date->format("Y-m-d") }}',
         color  : '{{ $task->board_column->label_color }}'
     },
     @endforeach
@@ -478,7 +479,8 @@ $('#filter .select2').select2({
                     item ["id"] = value.id;
                     item ["title"] = value.heading;
                     item ["start"] = $.date(value.start_date);
-                    item ["end"] = $.date(value.due_on);
+                   // item ["end"] = $.date(value.due_on);
+                    item ["end"] = $.date(value.start_date);
                     item ["color"] = value.board_column.label_color;
                     jsonObj.push(item);
                 

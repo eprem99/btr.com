@@ -100,4 +100,7 @@ class ClientDashboardController extends ClientBaseController
         return Reply::dataOnly($task);
     }
 
+    public function filter() {
+    
+  }
 }

@@ -52,7 +52,7 @@
             <div class="row">
         @if(in_array('tasks',$modules))
         <div class="col-md-4">
-            <a href="{{ route('member.all-tasks.index','stat=0&hideComplet=0') }}">
+            <a href="{{ route('member.all-tasks.index','stat=0&hideComplet=1') }}">
                 <div class="white-box">
                     <div class="row">
                         <div class="col-xs-3">
@@ -87,7 +87,7 @@
             </a>
         </div>
         <div class="col-md-4">
-            <a href="{{ route('member.all-tasks.index','hideComplet=0') }}">
+            <a href="{{ route('member.all-tasks.index','stat=1&hideComplet=1') }}">
                 <div class="white-box">
                     <div class="row">
                         <div class="col-xs-3">

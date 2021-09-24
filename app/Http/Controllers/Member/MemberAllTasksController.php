@@ -41,7 +41,7 @@ class MemberAllTasksController extends MemberBaseController
             $this->taskBoardStatus = TaskboardColumn::all();
             $this->taskLabels = TaskLabelList::all();
             $this->wotype = WoType::all();
-            $this->startDate = Carbon::today()->subDays(15)->format($this->global->date_format);
+            $this->startDate = Carbon::today()->subDays(30)->format($this->global->date_format);
             $this->endDate = Carbon::today()->addDays(15)->format($this->global->date_format);
         }
 

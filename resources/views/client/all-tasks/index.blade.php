@@ -132,21 +132,21 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12 m-b-10">
+    <div class="col-md-12">
         <div class="checkbox checkbox-info">
-            <input type="checkbox" id="hide-completed-tasks">
+            <input type="checkbox" @if(isset($_GET['stat']) && $_GET['stat'] == '0') checked @endif id="hide-completed-tasks">
             <label for="hide-completed-tasks">@lang('app.hideCompletedTasks')</label>
         </div>
     </div>
     <div class="col-md-12 m-b-10">
         <div class="checkbox checkbox-info">
-            <input type="checkbox" checked id="hide-closed-tasks">
+            <input type="checkbox" @if(isset($_GET['hideComplet']) && $_GET['hideComplet'] == '0') checked @endif id="hide-closed-tasks">
             <label for="hide-closed-tasks">@lang('app.hideClosedTasks')</label>
         </div>
     </div>
     <div class="col-md-12 m-b-10">
         <div class="checkbox checkbox-info">
-            <input type="checkbox" checked id="hide-canceled-tasks">
+            <input type="checkbox" @if(isset($_GET['hideComplet']) && $_GET['hideComplet'] == '0') checked @endif id="hide-canceled-tasks">
             <label for="hide-canceled-tasks">@lang('app.hideCanceledTasks')</label>
         </div>
     </div>
