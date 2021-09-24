@@ -133,9 +133,9 @@ class TaskObserver
                         }
                     }
     
-                    event(new TaskEvent($task, $task->users, 'NewTask'));
+                   
             }
-
+            event(new TaskEvent($task, $task->users, 'NewTask'));
             // if (request('user_id')) {
             //     //Send notification to user
             //     event(new TaskEvent($task, $task->users, 'TaskUpdated'));
