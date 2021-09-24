@@ -135,17 +135,17 @@ class TaskObserver
     
                    
             }
-            event(new TaskEvent($task, $task->users, 'NewTask'));
-            // if (request('user_id')) {
-            //     //Send notification to user
-            //     event(new TaskEvent($task, $task->users, 'TaskUpdated'));
+            
+            if (request('user_id')) {
+                //Send notification to user
+                event(new TaskEvent($task, $task->users, 'NewTask'));
 
-            //     if ((request()->project_id != "all") && !is_null($task->project)) {
-            //         if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable' && $task->project->client->status != 'deactive') {
-            //             event(new TaskEvent($task, $task->project->client, 'TaskUpdatedClient'));
-            //         }
-            //     }
-            // }
+                // if ((request()->project_id != "all") && !is_null($task->project)) {
+                //     if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable' && $task->project->client->status != 'deactive') {
+                //         event(new TaskEvent($task, $task->project->client, 'TaskUpdatedClient'));
+                //     }
+                // }
+            }
         }
 
        // if ($task->project_id) {
