@@ -15,6 +15,7 @@
                 <li class="active">@lang('app.addNew')</li>
             </ol>
         </div>
+        <div> </div>
         <!-- /.breadcrumb -->
     </div>
 @endsection
