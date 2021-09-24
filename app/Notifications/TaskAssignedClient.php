@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class TaskAssignedClient extends Notification implements ShouldQueue
+class TaskUpdatedClient extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -22,11 +22,10 @@ class TaskAssignedClient extends Notification implements ShouldQueue
      * @return void
      */
     private $task;
-
     public function __construct(Task $task)
     {
         $this->task = $task;
-        $this->emailSetting = EmailNotificationSetting::where('slug', 'task-completed')->first();
+        $this->emailSetting = EmailNotificationSetting::userAssignTask();
 
     }
 
@@ -60,9 +59,9 @@ class TaskAssignedClient extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__('email.taskAssigned.subject') . ' #' . $this->task->id . ' - ' . config('app.name') . '!')
+            ->subject(__('email.taskUpdate.subject') . ' - ' . config('app.name') . '!')
             ->greeting(__('email.hello') . ' ' . ucwords($notifiable->name) . '!')
-            ->line(ucfirst($this->task->heading) . ' ' . __('email.taskAssigned.subject') . ' #' . $this->task->id)
+            ->line(ucfirst($this->task->heading) . ' ' . __('email.taskUpdate.subject') . '.')
             ->action(__('email.loginDashboard'), url('/'))
             ->line(__('email.thankyouNote'));
     }
@@ -77,9 +76,9 @@ class TaskAssignedClient extends Notification implements ShouldQueue
     {
         return [
             'id' => $this->task->id,
+            'updated_at' => $this->task->updated_at->format('Y-m-d H:i:s'),
             'created_at' => $this->task->created_at->format('Y-m-d H:i:s'),
-            'heading' => $this->task->heading,
-            'completed_on' => $this->task->completed_on->format('Y-m-d H:i:s')
+            'heading' => $this->task->heading
         ];
     }
 
@@ -97,7 +96,7 @@ class TaskAssignedClient extends Notification implements ShouldQueue
         //                ->from(config('app.name'))
         //                ->image($slack->slack_logo_url)
         //                ->to('@' . $notifiable->employee[0]->slack_username)
-        //                ->content(ucfirst($this->task->heading).' '.__('email.taskComplete.subject').'.');
+        //                ->content(ucfirst($this->task->heading).' '.__('email.taskUpdate.subject').'.');
         //        }
         //        return (new SlackMessage())
         //            ->from(config('app.name'))
