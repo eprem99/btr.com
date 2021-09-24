@@ -127,21 +127,15 @@ class TaskObserver
                     event(new TaskEvent($task, $admins, 'TaskUpdated'));
     
                 }
-                        if ($task->create_by != null && $task->create_by->status != 'deactive') {
-                            event(new TaskEvent($task, $task->create_by, 'TaskCompletedClient'));
-                        }
-    
-                   
+                      
             }
             
             if (request('user_id')) {
                 //Send notification to user
                 event(new TaskEvent($task, $task->users, 'NewTask'));
 
-                if ((request()->project_id != "all") && !is_null($task->project)) {
-                    if ($task->create_by != null && $task->create_by->status != 'deactive') {
-                        event(new TaskEvent($task, $task->create_by, 'TaskUpdatedClient'));
-                    }
+                if ($task->create_by != null && $task->create_by->status != 'deactive') {
+                    event(new TaskEvent($task, $task->create_by, 'TaskUpdatedClient'));
                 }
             }
         }
