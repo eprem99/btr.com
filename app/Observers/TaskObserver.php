@@ -132,9 +132,8 @@ class TaskObserver
                             event(new TaskEvent($task, $task->project->client, 'TaskCompletedClient'));
                         }
                     }
-                }
-
-                event(new TaskEvent($task, $task->users, 'NewTask'));
+    
+                    event(new TaskEvent($task, $task->users, 'NewTask'));
             }
 
             // if (request('user_id')) {
