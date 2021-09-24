@@ -67,9 +67,7 @@ class NewTask extends Notification implements ShouldQueue
     {
         $url = url('/');
 
-        $content = ucfirst($this->task->heading) . ' #' . $this->task->id . '<p>
-            <b style="color: green">' . __('app.dueDate') . ': ' . $this->task->due_date->format('d M, Y') . '</b>
-        </p>';
+        $content = ucfirst($this->task->heading) . ' #' . $this->task->id . '<p>';
 
         return (new MailMessage)
             ->subject(__('email.newTask.subject') . ' #' . $this->task->id . ' - ' . config('app.name') . '!')

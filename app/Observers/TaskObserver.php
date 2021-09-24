@@ -89,7 +89,7 @@ class TaskObserver
                   
                     $clients = $task->create_by->id;
                     $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
-                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
+                    event(new TaskEvent($task, $task->create_by, 'TaskUpdated'));
                     
                     $admins = User::allAdmins();
                     event(new TaskEvent($task, $admins, 'TaskUpdated'));
@@ -127,11 +127,9 @@ class TaskObserver
                     event(new TaskEvent($task, $admins, 'TaskUpdated'));
     
                 }
-                    if ((request()->project_id && request()->project_id != "all") || (!is_null($task->project))) {
-                        if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable' && $task->project->client->status != 'deactive') {
-                            event(new TaskEvent($task, $task->project->client, 'TaskCompletedClient'));
+                        if ($task->create_by != null && $task->create_by->status != 'deactive') {
+                            event(new TaskEvent($task, $task->create_by, 'TaskCompletedClient'));
                         }
-                    }
     
                    
             }
@@ -140,18 +138,15 @@ class TaskObserver
                 //Send notification to user
                 event(new TaskEvent($task, $task->users, 'NewTask'));
 
-                // if ((request()->project_id != "all") && !is_null($task->project)) {
-                //     if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable' && $task->project->client->status != 'deactive') {
-                //         event(new TaskEvent($task, $task->project->client, 'TaskUpdatedClient'));
-                //     }
-                // }
+                if ((request()->project_id != "all") && !is_null($task->project)) {
+                    if ($task->create_by != null && $task->create_by->status != 'deactive') {
+                        event(new TaskEvent($task, $task->create_by, 'TaskUpdatedClient'));
+                    }
+                }
             }
         }
 
-       // if ($task->project_id) {
-        //     //calculate project progress if enabled
-        //     $this->calculateProjectProgress($task->project_id);
-        // }
+
     }
 
     public function deleting(Task $task)
