@@ -204,8 +204,10 @@ class AllTasksDataTable extends BaseDataTable
             ->groupBy('tasks.id');
             if($this->user->can('delete_tasks')){
                 
-            }else{
+            }elseif($this->user->can('edit_tasks')){
                 $model = $model->where('task_users.user_id', '=',user()->id);
+            }else{
+                $model = $model->where('tasks.created_by', '=',user()->id);
             }
          //   dd(user()->id);
 
