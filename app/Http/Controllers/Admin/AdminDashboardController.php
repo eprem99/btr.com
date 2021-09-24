@@ -65,16 +65,15 @@ class AdminDashboardController extends AdminBaseController
                 DB::raw('(select count(tasks.id) from `tasks` where tasks.board_column_id != ' . $completedTaskColumn->id . ') as totalPendingTasks'),
             )
             ->first();
-
-
-        $this->pendingTasks = Task::with('labels')
-            ->where('tasks.board_column_id', '<>', $completedTaskColumn->id)
-           // ->where(DB::raw('DATE(due_date)'), '<=', Carbon::now()->timezone($this->global->timezone)->format('Y-m-d'))
-            ->orderBy('start_date', 'desc')
-            ->select('tasks.*')
-            ->get();
-            
+           
             $from = date('Y-m-d', strtotime('-1 day'));
+        
+            $this->pendingTasks = Task::with('labels')
+            ->where('tasks.board_column_id', '<>', '1')
+            ->where('created_at', '>=', $from)
+           // ->where(DB::raw('DATE(due_date)'), '<=', Carbon::now()->timezone($this->global->timezone)->format('Y-m-d'))
+            ->orderBy('id', 'desc')
+            ->get();
           
             $this->newTasks = Task::with('labels')
             ->where('board_column_id', '=', '1')
@@ -164,7 +163,7 @@ public function filter(Request $request)
         $tasks->where('task_users.user_id', '=', $request->tech);
     }
     if($request->client != 0){
-        $tasks->where('task_users.user_id', '=', $request->client);
+        $tasks->where('tasks.created_by', '=', $request->client);
     }
     if($request->status != 0){
         $tasks->where('board_column_id', '=', $request->status);

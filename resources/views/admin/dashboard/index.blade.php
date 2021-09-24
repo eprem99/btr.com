@@ -123,22 +123,28 @@
     @if(in_array('tasks',$modules))
         <div class="col-md-12 col-sm-12">
             <div class="panel panel-inverse">
-                <div class="panel-heading">@lang('modules.dashboard.overdueTasks')</div>
+                @php
+                   $totalnew = count($pendingTasks);
+                @endphp
+                <div class="panel-heading">@lang('modules.dashboard.overdueTasks')<span class="bg-info pull-right">{{$totalnew}}</span></div>
                 <div class="panel-wrapper collapse in">
                     <div class="panel-body">
                         <ul class="list-task list-group" data-role="tasklist">
-                            <li class="list-group-item" data-role="task">
-                                <strong>@lang('app.title')</strong> <span
-                                        class="pull-right"><strong>@lang('modules.dashboard.newDate')</strong></span>
+                            <li class="list-group-item row" data-role="task">
+                                <span class="col-xs-5"><strong>@lang('app.title')</strong></span>
+                                <span class="col-xs-5"><strong>@lang('app.label')</strong></span> 
+                                <span class="col-xs-2"><strong>@lang('modules.dashboard.newDate')</strong></span>
                             </li>
+
                             @forelse($pendingTasks as $key=>$task)
                                 @if((!is_null($task->project_id) && !is_null($task->project) ) || is_null($task->project_id))
                                 <li class="list-group-item row" data-role="task">
-                                    <div class="col-xs-8">
-                                        {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
-
+                                    <div class="col-xs-5">{!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
                                     </div>
-                                    <label class="label label-danger pull-right col-xs-4">{{ $task->due_date->format($global->date_format) }}</label>
+                                    <div class="col-xs-5">
+                                        {!! ucfirst($task->labels->label_name) !!}
+                                        </div>
+                                    <label class="label label-danger pull-right col-xs-2">{{ $task->due_date->format($global->date_format) }}</label>
                                 </li>
                                 @endif
                             @empty
@@ -178,7 +184,7 @@
                                     <select name="tech" id="calendaremployer" class="select2 form-control">
                                     <option value="0">Select Teach</option>
                                         @foreach($employee as $emp)
-                                                <option value="{{$emp->user_id}}">{{ $emp->user->name }}</option>
+                                                <option value="{{$emp->user->id}}">{{ $emp->user->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -186,7 +192,7 @@
                                     <select name="client" id="calendarclients" class="select2 form-control">
                                     <option value="0">Select Client</option>
                                         @foreach($clients as $emp)
-                                                <option value="{{$emp->user_id}}">{{ $emp->user->name }}</option>
+                                                <option value="{{$emp->user->id}}">{{ $emp->user->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
