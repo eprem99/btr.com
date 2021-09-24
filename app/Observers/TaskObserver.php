@@ -38,7 +38,7 @@ class TaskObserver
         if (!isRunningInConsoleOrSeeding()) {
             if ($task->create_by != null) {
                     
-                event(new TaskEvent($task, $task->create_by, 'NewClientTask'));
+                event(new TaskEvent($task, $task->users, 'NewClientTask'));
             }
             if (request()->has('user_id') && request()->user_id != "all" && request()->user_id != '') {
                 event(new TaskEvent($task, $task->users, 'NewTask'));
