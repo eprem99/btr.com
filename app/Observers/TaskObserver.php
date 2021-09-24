@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Events\TaskEvent;
 use App\Events\TaskUpdated as EventsTaskUpdated;
 use App\Http\Controllers\Admin\AdminBaseController;
+use App\ProjectTimeLog;
 use App\Task;
 use App\TaskboardColumn;
 use App\Traits\ProjectProgress;
@@ -15,7 +16,7 @@ use Carbon\Carbon;
 class TaskObserver
 {
 
-  //  use ProjectProgress;
+    use ProjectProgress;
     public function saving(Task $task)
     {
 
@@ -46,11 +47,11 @@ class TaskObserver
                 $log->logTaskActivity($task->id, user()->id, "createActivity", $task->board_column_id);
             }
 
-            // if ($task->project_id) {
-            //     //calculate project progress if enabled
-            //     $log->logProjectActivity($task->project_id, __('messages.newTaskAddedToTheProject'));
-            //     $this->calculateProjectProgress($task->project_id);
-            // }
+            if ($task->project_id) {
+                //calculate project progress if enabled
+                $log->logProjectActivity($task->project_id, __('messages.newTaskAddedToTheProject'));
+                $this->calculateProjectProgress($task->project_id);
+            }
 
             //log search
             $log->logSearchEntry($task->id, 'Task: ' . $task->heading, 'admin.all-tasks.edit', 'task');
@@ -72,74 +73,51 @@ class TaskObserver
 
             if ($task->isDirty('board_column_id')) {
 
-                if (request()->status == 'completed') {
-
+                if ($task->board_column->slug == 'completed') {
+                    // send task complete notification
                     $admins = User::allAdmins();
                     event(new TaskEvent($task, $admins, 'TaskCompleted'));
 
                     $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
-                   
                     event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
 
-                }elseif(request()->status == 'assigned') {
+                    $timeLogs = ProjectTimeLog::with('user')->whereNull('end_time')
+                        ->where('task_id', $task->id)
+                        ->get();
+                    if($timeLogs){
+                        foreach($timeLogs as $timeLog){
 
-                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
-    
-                }elseif(request()->status == 'scheduled') {
-                  
-                    $clients = $task->create_by->id;
-                    $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
-                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
-                    
-                    $admins = User::allAdmins();
-                    event(new TaskEvent($task, $admins, 'TaskUpdated'));
-                    
-                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
-     
-                 }elseif(request()->status == 'tech-Off-Site') {
-                  
+                            $timeLog->end_time = Carbon::now();
+                            $timeLog->edited_by_user = user()->id;
+                            $timeLog->save();
 
-                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
-     
-                 }elseif(request()->status == 'incomplete') {
+                            $timeLog->total_hours = ($timeLog->end_time->diff($timeLog->start_time)->format('%d') * 24) + ($timeLog->end_time->diff($timeLog->start_time)->format('%H'));
 
-                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
-     
-                 }elseif(request()->status == 'off-site-complete') {
+                            $timeLog->total_hours = $timeLog->end_time->diff($timeLog->start_time)->format('%d') * 24 + $timeLog->end_time->diff($timeLog->start_time)->format('%H');
+                            $timeLog->total_minutes = ($timeLog->total_hours * 60) + ($timeLog->end_time->diff($timeLog->start_time)->format('%i'));
 
-                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
-     
-                 }elseif(request()->status == 'off-site-return-trip-required') {
-                  
-                    $clients = $task->create_by->id;
-                    $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
-                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
-                    
-                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
-                     
-                }elseif(request()->status == 'cancelled') {
+                            $timeLog->save();
+                        }
+                    }
 
-                    $clients = $task->create_by->id;
-                    $notifyUser = User::withoutGlobalScope('active')->findOrFail($clients);
-                    event(new TaskEvent($task, $notifyUser, 'TaskUpdated'));
-                    
-                    $admins = User::allAdmins();
-                    event(new TaskEvent($task, $admins, 'TaskUpdated'));
-    
+                    if ((request()->project_id && request()->project_id != "all") || (!is_null($task->project))) {
+                        if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable' && $task->project->client->status != 'deactive') {
+                            event(new TaskEvent($task, $task->project->client, 'TaskCompletedClient'));
+                        }
+                    }
                 }
-
             }
 
-            // if (request('user_id')) {
-            //     //Send notification to user
-            //     event(new TaskEvent($task, $task->users, 'TaskUpdated'));
+            if (request('user_id')) {
+                //Send notification to user
+                event(new TaskEvent($task, $task->users, 'TaskUpdated'));
 
-            //     if ((request()->project_id != "all") && !is_null($task->project)) {
-            //         if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable' && $task->project->client->status != 'deactive') {
-            //             event(new TaskEvent($task, $task->project->client, 'TaskUpdatedClient'));
-            //         }
-            //     }
-            // }
+                if ((request()->project_id != "all") && !is_null($task->project)) {
+                    if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable' && $task->project->client->status != 'deactive') {
+                        event(new TaskEvent($task, $task->project->client, 'TaskUpdatedClient'));
+                    }
+                }
+            }
         }
 
         if (!request()->has('draggingTaskId') && !request()->has('draggedTaskId')) {
@@ -151,10 +129,10 @@ class TaskObserver
             $log->logTaskActivity($task->id, user()->id, "updateActivity", $task->board_column_id);
         }
 
-        // if ($task->project_id) {
-        //     //calculate project progress if enabled
-        //     $this->calculateProjectProgress($task->project_id);
-        // }
+        if ($task->project_id) {
+            //calculate project progress if enabled
+            $this->calculateProjectProgress($task->project_id);
+        }
     }
 
     public function deleting(Task $task)
