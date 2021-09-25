@@ -159,9 +159,9 @@ class LabelDataTable extends BaseDataTable
             __('app.site.id')  => ['data' => 'id', 'name' => 'contacts'],
             __('app.site.name') => ['data' => 'label_name', 'name' => 'label_name'],
             __('app.site.client') => ['data' => 'client', 'name' => 'client'],
-            __('app.site.city')  => ['data' => 'site_city', 'name' => 'contacts'],
-            __('app.site.state')  => ['data' => 'site_state', 'name' => 'contacts'],
-            __('app.site.phone')  => ['data' => 'site_phone', 'name' => 'contacts'],
+            __('app.site.city')  => ['data' => 'site_city', 'name' => 'contacts', 'searchable' => false, 'orderable' => false],
+            __('app.site.state')  => ['data' => 'site_state', 'name' => 'contacts', 'searchable' => false, 'orderable' => false],
+            __('app.site.phone')  => ['data' => 'site_phone', 'name' => 'contacts', 'searchable' => false, 'orderable' => false],
             __('app.site.scheduled')  => ['data' => 'created_at', 'name' => 'created_at'],
             
             Column::computed('action', __('app.action'))
