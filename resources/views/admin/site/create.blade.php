@@ -28,7 +28,7 @@
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
             <ol class="breadcrumb">
                 <li><a href="{{ route('admin.dashboard') }}">@lang('app.menu.home')</a></li>
-                <li><a href="{{ route('admin.sites.store-label') }}">{{ __($pageTitle) }}</a></li>
+                <li><a href="{{ route('admin.site.index') }}">{{ __($pageTitle) }}</a></li>
                 <li class="active">@lang('app.addNew')</li>
             </ol>
         </div>
@@ -263,7 +263,7 @@
 
         $('#save-form').click(function () {
             $.easyAjax({
-                url: '{{route('admin.sites.store')}}',
+                url: '{{route('admin.site.store')}}',
                 container: '#createContract',
                 type: "POST",
                 redirect: true,
@@ -280,7 +280,7 @@
     $('#country').select2({
         }).on("change", function (e) {
         var id = $(this).val();
-        var url = "{{ route('admin.sites.country',':id') }}";
+        var url = "{{ route('admin.site.country',':id') }}";
         url = url.replace(':id', id);
        // console.log(url);
         $.easyAjax({

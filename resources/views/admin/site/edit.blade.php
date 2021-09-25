@@ -32,7 +32,7 @@ $contacts = json_decode($taskLabel->contacts, true);
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
             <ol class="breadcrumb">
                 <li><a href="{{ route('admin.dashboard') }}">@lang('app.menu.home')</a></li>
-                <li><a href="{{ route('admin.sites.index') }}">{{ __($pageTitle) }}</a></li>
+                <li><a href="{{ route('admin.site.index') }}">{{ __($pageTitle) }}</a></li>
                 <li class="active">@lang('app.addNew')</li>
             </ol>
         </div>
@@ -269,7 +269,7 @@ $contacts = json_decode($taskLabel->contacts, true);
 
     $('#save-form').click(function () {
         $.easyAjax({
-            url: '{{route('admin.sites.update', $taskLabel->id)}}',
+            url: '{{route('admin.site.update', $taskLabel->id)}}',
             container: '#createContract',
             type: "POST",
             redirect: true,
@@ -303,7 +303,7 @@ $contacts = json_decode($taskLabel->contacts, true);
     jQuery(document).ready(function($) {
         $.each($('#country option:selected'), function(){            
        // var id = $(this).val();
-        var url = '{{route('admin.sites.country', [$taskLabel->id])}}';
+        var url = '{{route('admin.site.country', [$taskLabel->id])}}';
       //  url = url.replace(':id', id);
        // console.log(url);
         $.easyAjax({
