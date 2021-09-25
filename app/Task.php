@@ -48,6 +48,11 @@ class Task extends BaseModel
         return $this->belongsToMany(User::class, 'task_users');
     }
 
+    public function notifyusers()
+    {
+        return $this->belongsToMany(User::class, 'task_users')->where('users.email_notifications', '1');
+    }
+
     public function wotype()
     {
         return $this->belongsTo(WoType::class, 'wo_id');

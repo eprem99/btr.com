@@ -11,16 +11,13 @@ class TaskCommentObserver
     public function created(TaskComment $comment)
     {
         if (!isRunningInConsoleOrSeeding() ) {
-            $task = Task::with(['project'])->findOrFail($comment->task_id);
+            $task = Task::findOrFail($comment->task_id);
 
-            if ($task->project_id != null) {
-                if ($task->project->client_id != null && $task->project->allow_client_notification == 'enable') {
-                    event(new TaskCommentEvent($task, $comment->created_at, $task->project->client, 'client'));
+            if ($task->task_id != null) {
+                if ($task->notifyusers != null) {
+                    event(new TaskCommentEvent($task, $comment->created_at, $task->notifyusers, 'client'));
                 }
-                event(new TaskCommentEvent($task, $comment->created_at, $task->project->members_many));
-            }
-            else{
-                event(new TaskCommentEvent($task, $comment->created_at, $task->users));
+                event(new TaskCommentEvent($task, $comment->created_at, $task->notifyusers));
             }
         }
     }

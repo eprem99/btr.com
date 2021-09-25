@@ -36,35 +36,26 @@ class TaskObserver
     public function created(Task $task)
     {
         if (!isRunningInConsoleOrSeeding()) {
-            if ($task->create_by != null) {
-                    
-             //   event(new TaskEvent($task, $task->users, 'NewClientTask'));
-            }
-            if (request()->has('user_id') && request()->user_id != "all" && request()->user_id != '') {
-                dd(request()->user_id);
-                event(new TaskEvent($task, $task->users, 'NewTask'));
-            }
-            // $log = new AdminBaseController();
-            // if (\user()) {
-            //     $log->logTaskActivity($task->id, user()->id, "createActivity", $task->board_column_id);
+            if (request('user_id')) {
+                //Send notification to user
+              //  $notifyuser = User::where('id', '=', $task->client_id)
+                event(new TaskEvent($task, $task->notifyusers, 'NewTask'));
+
+             if ($task->create_by != null && $task->create_by->status != 'deactive') {
+                 event(new TaskEvent($task, $task->create_by, 'TaskUpdatedClient'));
+             }
+         }else{
+            $admins = User::allAdmins();
+            event(new TaskEvent($task, $admins, 'TaskCompleted'));
+         }
+
+
+            // if ($task->create_by != null) {
+            //     event(new TaskEvent($task, $task->users, 'NewClientTask'));
             // }
-
-            // // if ($task->project_id) {
-            // //     //calculate project progress if enabled
-            // //     $log->logProjectActivity($task->project_id, __('messages.newTaskAddedToTheProject'));
-            // //     $this->calculateProjectProgress($task->project_id);
-            // // }
-
-            // //log search
-            // $log->logSearchEntry($task->id, 'Task: ' . $task->heading, 'admin.all-tasks.edit', 'task');
-
-            // // Sync task users
-            // if (!empty(request()->user_id)) {
-            //     $task->users()->sync(request()->user_id);
+            // if (request()->has('user_id') && request()->user_id != "all" && request()->user_id != '') {
+            //     event(new TaskEvent($task, $task->users, 'NewTask'));
             // }
-
-
-            //Send notification to user
             
         }
     }
@@ -80,35 +71,35 @@ class TaskObserver
                     $admins = User::allAdmins();
                     event(new TaskEvent($task, $admins, 'TaskCompleted'));
 
-                    $taskUser = $task->users->whereNotIn('id', $admins->pluck('id'));
+                    $taskUser = $task->notifyusers->whereNotIn('id', $admins->pluck('id'));
                    
                     event(new TaskEvent($task, $taskUser, 'TaskUpdated'));
 
                 }elseif(request()->status == 'assigned') {
 
-                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
+                    event(new TaskEvent($task, $task->notifyusers, 'TaskUpdated'));
     
                 }elseif(request()->status == 'scheduled') {
                   
-                    event(new TaskEvent($task, $task->create_by, 'TaskUpdated'));
+                    event(new TaskEvent($task, $task->create_by, 'TaskCompletedClient'));
                     
                     $admins = User::allAdmins();
                     event(new TaskEvent($task, $admins, 'TaskUpdated'));
                     
-                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
+                    event(new TaskEvent($task, $task->notifyusers, 'TaskUpdated'));
      
                  }elseif(request()->status == 'tech-Off-Site') {
                   
 
-                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
+                    event(new TaskEvent($task, $task->notifyusers, 'TaskUpdated'));
      
                  }elseif(request()->status == 'incomplete') {
 
-                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
+                    event(new TaskEvent($task, $task->notifyusers, 'TaskUpdated'));
      
                  }elseif(request()->status == 'off-site-complete') {
 
-                    event(new TaskEvent($task, $task->users, 'TaskUpdated'));
+                    event(new TaskEvent($task, $task->notifyusers, 'TaskUpdated'));
      
                  }elseif(request()->status == 'off-site-return-trip-required') {
                                     
