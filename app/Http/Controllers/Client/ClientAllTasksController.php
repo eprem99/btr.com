@@ -207,8 +207,6 @@ class ClientAllTasksController extends ClientBaseController
 
     public function store(StoreTask $request)
     {
-
- 
         $task = new Task();
 
         $task->heading = $request->heading;
@@ -231,7 +229,9 @@ class ClientAllTasksController extends ClientBaseController
         $task->project_id = 1;
         $task->save();
 
-        if ($request->board_column_id) {
+       $task->users()->sync(1);
+        
+       if ($request->board_column_id) {
             return Reply::redirect(route('client.taskboard.index'), __('messages.taskCreatedSuccessfully'));
         }
 
