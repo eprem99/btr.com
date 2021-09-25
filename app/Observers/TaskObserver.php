@@ -37,19 +37,13 @@ class TaskObserver
     {
         if (!isRunningInConsoleOrSeeding()) {
             if (request('user_id')) {
-                //Send notification to user
-               $notifyuser = User::whereIn('id', request('user_id'))->where('email_notifications', '=', '1')->get();
-              // dd();
+                $notifyuser = User::whereIn('id', request('user_id'))->where('email_notifications', '=', '1')->get();
                 event(new TaskEvent($task, $notifyuser, 'NewTask'));
-
-             if ($task->create_by != null && $task->create_by->status != 'deactive') {
-                 event(new TaskEvent($task, $task->create_by, 'TaskUpdatedClient'));
-             }
-         }else{
-            $admins = User::allAdmins();
-            event(new TaskEvent($task, $admins, 'TaskCompleted'));
-         }
-           
+            }else{
+                $admins = User::allAdmins();
+                event(new TaskEvent($task, $admins, 'TaskCompleted'));
+            }
+        
         }
     }
 
@@ -119,6 +113,8 @@ class TaskObserver
                       event(new TaskEvent($task, $task->create_by, 'TaskUpdatedClient'));
                    }elseif(User::isClient(user()->id)){
                        event(new TaskEvent($task, $task->users, 'TaskUpdated'));
+                       $admins = User::allAdmins();
+                       event(new TaskEvent($task, $admins, 'TaskUpdated'));
                    }
             }
         }
