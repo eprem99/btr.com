@@ -70,8 +70,13 @@ class ManageTaskLabelController extends AdminBaseController
     {
         $this->taskLabel = TaskLabelList::find($id);
         $contact = json_decode($this->taskLabel->contacts, true);
-        $this->countries = Country::where('id', '=', $contact['site_country'])->first();
-        $this->state = State::where('id', '=', $contact['site_state'])->first();
+        if($contact){
+            $this->countries = Country::where('id', '=', $contact['site_country'])->first();
+            $this->state = State::where('id', '=', $contact['site_state'])->first();   
+        }else{
+            $this->countries = '1';
+            $this->state = '1';
+        }
         return view('admin.site.show', $this->data);
     }
 
