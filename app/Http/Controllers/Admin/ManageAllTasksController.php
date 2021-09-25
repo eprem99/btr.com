@@ -235,13 +235,14 @@ class ManageAllTasksController extends AdminBaseController
         // if ($request->board_column_id) {
         //     $task->board_column_id = $request->board_column_id;
         // }
-
-        $task->save();
         if($request->user_id && $request->board_column_id == "1"){
-            $task->users()->sync($request->user_id);
             $task->board_column_id = 2;
         }else{
             $task->board_column_id = $request->board_column_id;
+        }
+        $task->save();
+        if($request->user_id){
+            $task->users()->sync($request->user_id);
         }
         DB::commit();
         //log search
