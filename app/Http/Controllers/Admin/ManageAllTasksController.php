@@ -101,10 +101,10 @@ class ManageAllTasksController extends AdminBaseController
         $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
         $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
         $task->task_category_id = $request->category_id;
-        $task->wo_id = $request->task_type;
-        $task->sport_id = $request->sport_type;
+      //  $task->wo_id = $request->task_type;
+       // $task->sport_id = $request->sport_type;
         $task->client_id = $request->client_id;
-        $task->qty = $request->task_qty;
+      //  $task->qty = $request->task_qty;
             
         if($request->user_id && $request->status == "1"){
             $task->board_column_id = 2;
