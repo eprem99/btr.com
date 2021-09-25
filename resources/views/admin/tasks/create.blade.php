@@ -175,6 +175,7 @@
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.type')</label>
                                         <select name="task_type" class="select2 form-control">
+                                        <option value=""> --- </option>
                                             @foreach($wotype as $type)
                                                     <option value="{{ $type->id }}">{{ $type->name }}</option>
                                             @endforeach
@@ -185,6 +186,7 @@
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.sporttype')</label>
                                         <select name="sport_type" class="select2 form-control">
+                                        <option value=""> --- </option>
                                             @foreach($sport as $type)
                                                     <option value="{{ $type->id }}">{{ $type->name }}</option>
                                             @endforeach
