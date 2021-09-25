@@ -150,8 +150,9 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.sporttype')</label>
-                                        <option value=""> --- </option>
+                                        
                                         <select name="sport_type" class="select2 form-control">
+                                        <option value=""> --- </option>
                                             @foreach($sport as $type)
                                                 @if($type->id == $task->sport_id)
                                                     <option selected value="{{ $type->id }}">{{ $type->name }}</option>
