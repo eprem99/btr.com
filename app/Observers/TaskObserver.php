@@ -111,6 +111,7 @@ class TaskObserver
                    if(User::isAdmin(user()->id) && $task->board_column_id = 1){
                       $notifyuser = User::whereIn('id', request('user_id'))->where('email_notifications', '=', '1')->get();
                       event(new TaskEvent($task, $notifyuser, 'NewTask'));
+                      event(new TaskEvent($task, $task->create_by, 'TaskUpdatedClient'));
                    }elseif(User::isAdmin(user()->id) && $task->board_column_id != 1){
                       event(new TaskEvent($task, $task->users, 'TaskUpdatedClient'));
                       event(new TaskEvent($task, $task->create_by, 'TaskUpdatedClient'));
