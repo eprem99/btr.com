@@ -88,12 +88,11 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::group(
             ['prefix' => 'sites'], function () {
-            Route::get('show/{id}', ['uses' => 'ManageTaskLabelController@show'])->name('show');
-            Route::post('site/store-label', ['uses' => 'ManageTaskLabelController@storeLabel'])->name('sites.store-label');
-            Route::get('site/create-label', ['uses' => 'ManageTaskLabelController@createLabel'])->name('sites.create-label');
-            Route::get('site/country/{id}', ['uses' => 'ManageTaskLabelController@country'])->name('sites.country');
-            Route::resource('sites', 'ManageTaskLabelController');
-
+        Route::post('site/store-label', ['uses' => 'ManageTaskLabelController@storeLabel'])->name('site.store-label');
+        Route::get('site/create-label', ['uses' => 'ManageTaskLabelController@createLabel'])->name('site.create-label');
+        Route::get('show/{id}', ['uses' => 'ManageTaskLabelController@show'])->name('sites.show');
+        Route::get('site/country/{id}', ['uses' => 'ManageTaskLabelController@country'])->name('site.country');
+        Route::resource('site', 'ManageTaskLabelController');
         });
         // Route::resource('clientSubCategory', 'ClientSubCategoryController');
 
