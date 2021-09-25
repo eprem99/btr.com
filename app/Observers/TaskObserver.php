@@ -36,7 +36,7 @@ class TaskObserver
     public function created(Task $task)
     {
         if (!isRunningInConsoleOrSeeding()) {
-            if (request('user_id')) {
+            if (User::isAdmin(user()->id) && request('user_id')) {
                 $notifyuser = User::whereIn('id', request('user_id'))->where('email_notifications', '=', '1')->get();
                 event(new TaskEvent($task, $notifyuser, 'NewTask'));
             }elseif(User::isClient(user()->id)){
