@@ -37,9 +37,11 @@ class TaskObserver
     {
         if (!isRunningInConsoleOrSeeding()) {
             if (request('user_id')) {
+               $usersid = implode(",", request('user_id'));
                 //Send notification to user
-              //  $notifyuser = User::where('id', '=', $task->client_id)
-                event(new TaskEvent($task, $task->notifyusers, 'NewTask'));
+               $notifyuser = User::whereIn('id', request('user_id'))->get();
+              
+                event(new TaskEvent($task, $notifyuser, 'NewTask'));
 
              if ($task->create_by != null && $task->create_by->status != 'deactive') {
                  event(new TaskEvent($task, $task->create_by, 'TaskUpdatedClient'));
