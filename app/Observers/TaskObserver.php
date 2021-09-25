@@ -39,6 +39,9 @@ class TaskObserver
             if (request('user_id')) {
                 $notifyuser = User::whereIn('id', request('user_id'))->where('email_notifications', '=', '1')->get();
                 event(new TaskEvent($task, $notifyuser, 'NewTask'));
+            }elseif(User::isClient(user()->id)){
+                $admins = User::allAdmins();
+                event(new TaskEvent($task, $admins, 'NewTask'));
             }else{
                 $admins = User::allAdmins();
                 event(new TaskEvent($task, $admins, 'TaskCompleted'));
