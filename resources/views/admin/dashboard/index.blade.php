@@ -144,7 +144,7 @@
                                     <div class="col-xs-5">
                                         {!! ucfirst($task->labels->label_name) !!}
                                         </div>
-                                    <label class="label label-danger pull-right col-xs-2">{{ $task->due_date->format($global->date_format) }}</label>
+                                    <label class="label label-danger pull-right col-xs-2">{{ $task->created_at->format($global->date_format) }}</label>
                                 </li>
                                 @endif
                             @empty
