@@ -37,10 +37,9 @@ class TaskObserver
     {
         if (!isRunningInConsoleOrSeeding()) {
             if (request('user_id')) {
-               $usersid = implode(",", request('user_id'));
                 //Send notification to user
-               $notifyuser = User::whereIn('id', request('user_id'))->get();
-              
+               $notifyuser = User::whereIn('id', request('user_id'))->where('email_notifications', '=', '1')->get();
+              // dd();
                 event(new TaskEvent($task, $notifyuser, 'NewTask'));
 
              if ($task->create_by != null && $task->create_by->status != 'deactive') {
@@ -50,15 +49,7 @@ class TaskObserver
             $admins = User::allAdmins();
             event(new TaskEvent($task, $admins, 'TaskCompleted'));
          }
-
-
-            // if ($task->create_by != null) {
-            //     event(new TaskEvent($task, $task->users, 'NewClientTask'));
-            // }
-            // if (request()->has('user_id') && request()->user_id != "all" && request()->user_id != '') {
-            //     event(new TaskEvent($task, $task->users, 'NewTask'));
-            // }
-            
+           
         }
     }
 
@@ -120,11 +111,15 @@ class TaskObserver
             
             if (request('user_id')) {
                    //Send notification to user
-                   event(new TaskEvent($task, $task->users, 'NewTask'));
-
-                if ($task->create_by != null && $task->create_by->status != 'deactive') {
-                    event(new TaskEvent($task, $task->create_by, 'TaskUpdatedClient'));
-                }
+                   if(User::isAdmin(user()->id) && $task->board_column_id = 1){
+                      $notifyuser = User::whereIn('id', request('user_id'))->where('email_notifications', '=', '1')->get();
+                      event(new TaskEvent($task, $notifyuser, 'NewTask'));
+                   }elseif(User::isAdmin(user()->id) && $task->board_column_id != 1){
+                      event(new TaskEvent($task, $task->users, 'TaskUpdatedClient'));
+                      event(new TaskEvent($task, $task->create_by, 'TaskUpdatedClient'));
+                   }elseif(User::isClient(user()->id)){
+                       event(new TaskEvent($task, $task->users, 'TaskUpdated'));
+                   }
             }
         }
 
