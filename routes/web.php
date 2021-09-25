@@ -88,7 +88,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::group(
             ['prefix' => 'sites'], function () {
-            Route::get('show/{id}', ['uses' => 'ManageTaskLabelController@show'])->name('sites.show');
+            Route::get('show/{id}', ['uses' => 'ManageTaskLabelController@show'])->name('sites.shows');
             Route::post('site/store-label', ['uses' => 'ManageTaskLabelController@storeLabel'])->name('sites.store-label');
             Route::get('site/create-label', ['uses' => 'ManageTaskLabelController@createLabel'])->name('sites.create-label');
             Route::get('site/country/{id}', ['uses' => 'ManageTaskLabelController@country'])->name('sites.country');
