@@ -1658,8 +1658,8 @@ div.dt-buttons {
 }
 
 .h-scroll {
-    min-height:100vh;
-    height:1px;
+    height: 100vh; /* Use vh as a fallback for browsers that do not support Custom Properties */
+    height: calc(var(--vh, 1vh) * 100);
     /* %-height of the viewport */
     overflow-y: scroll;
 }
