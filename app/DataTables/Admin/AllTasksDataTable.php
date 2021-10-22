@@ -45,12 +45,12 @@ class AllTasksDataTable extends BaseDataTable
               //  return $this->user->can('delete_projects');
                return $action;
             })
-            ->addColumn('site', function ($row) {
+            ->editColumn('label_name', function ($row) {
                 $site = '';            
                 if ($row->label_name) {
                     $site = $row->label_name;
                 } 
-               return $site;
+               return ucwords($site);
             })
 
             ->addColumn('siteid', function ($row) {
@@ -61,7 +61,7 @@ class AllTasksDataTable extends BaseDataTable
                 
                return $site;
             })
-            ->addColumn('state', function ($row) {
+            ->addColumn('site_state', function ($row) {
                 $site = '';            
                 if ($row->contacts) {
                    $state = json_decode($row->contacts, true);
@@ -96,8 +96,12 @@ class AllTasksDataTable extends BaseDataTable
                 //     return '<span class="text-success">' . __('app.today') . '</span>';
                 // }
                 // return '<span >' . $row->due_date->format($this->global->date_format) . '</span>';
-
-                return $row->start_date->format($this->global->date_format);
+                if($row->start_date){
+                    return $row->start_date->format($this->global->date_format);
+                }else{
+                    return '---';
+                }
+                
             })
 
 
@@ -169,7 +173,7 @@ class AllTasksDataTable extends BaseDataTable
             ->addColumn('status', function ($row) {
                 return ucfirst($row->column_name);
             })
-            ->rawColumns(['board_column', 'action',  'clientName', 'due_date', 'users', 'created_by', 'heading']);
+            ->rawColumns(['board_column', 'action',  'clientName', 'label_name', 'contacts', 'due_date', 'users', 'created_by', 'heading']);
     }
 
     /**
@@ -189,23 +193,29 @@ class AllTasksDataTable extends BaseDataTable
         if ($request->endDate !== null && $request->endDate != 'null' && $request->endDate != '') {
             $endDate = Carbon::createFromFormat($this->global->date_format, $request->endDate)->toDateString();
         }
-
+        
+        
+        
         $hideCompleted = $request->hideCompleted;
         $taskBoardColumn = TaskboardColumn::completeColumn();
 
-        $model = $model->with('users')->join('task_users', 'task_users.task_id', '=', 'tasks.id')
+        $model = $model->with('users', 'labels')->join('task_users', 'task_users.task_id', '=', 'tasks.id')
             ->join('users as client', 'task_users.user_id', '=', 'client.id')
             ->leftJoin('users as creator_user', 'creator_user.id', '=', 'tasks.created_by')
+            ->join('client_details', 'client_details.user_id', '=', 'tasks.client_id')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
             ->join('task_label_list', 'tasks.site_id', '=', 'task_label_list.id')
             ->selectRaw('tasks.id, tasks.heading, tasks.start_date, tasks.hash, task_label_list.contacts, task_label_list.label_name, task_label_list.id as ids, creator_user.name as created_by, 
             creator_user.id as created_by_id, creator_user.image as created_image,
              tasks.due_date, taskboard_columns.column_name as board_column, taskboard_columns.label_color')
+           //  ->orderBy('id', 'desc')
             ->groupBy('tasks.id');
+            
             if($this->user->can('delete_tasks')){
                 
             }elseif($this->user->can('edit_tasks')){
-                $model = $model->where('tasks.created_by', '=', user()->id);
+               // $model = $model->where('tasks.client_id', '=', $this->user->id);
+               $model = $model->where('client_details.category_id', '=', $this->user->client_details->category_id);
             }else{
                 $model = $model->where('task_users.user_id', '=', user()->id);
             }
@@ -223,8 +233,8 @@ class AllTasksDataTable extends BaseDataTable
             $model->where('task_users.user_id', '=', $request->assignedTo);
         }
 
-        if ($request->assignedBY != '' && $request->assignedBY !=  null && $request->assignedBY !=  'all') {
-            $model->where('creator_user.id', '=', $request->assignedBY);
+        if ($request->clientID != '' && $request->clientID !=  null && $request->clientID !=  'all') {
+            $model->where('tasks.client_id', '=', $request->clientID);
         }
         if (isset($_GET['stat']) && $_GET['stat'] == '11') {
             $model->where('tasks.board_column_id', '=', '10');
@@ -248,7 +258,8 @@ class AllTasksDataTable extends BaseDataTable
             $model->where('tasks.wo_id', '=', $request->wo_id);
         }
         if ($request->category_id != '' && $request->category_id !=  null && $request->category_id !=  'all') {
-            $model->where('tasks.task_category_id', '=', $request->category_id);
+            $model->where('task_label_list.contacts', 'like', '%site_state":"' . $request->category_id . '"%');
+            // $model->WhereJsonContains('contacts', ['site_state' => $request->category_id]);
         }
 
         if ($request->client != '' && $request->client !=  null && $request->client !=  'all') {
@@ -273,6 +284,7 @@ class AllTasksDataTable extends BaseDataTable
             ->minifiedAjax()
             ->dom("<'row'<'col-md-6'l><'col-md-6'Bf>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>")
             ->orderBy(0)
+          // ->orderColumns(['id', 'heading'], '-:column $1')
             ->destroy(true)
             ->responsive(true)
             ->serverSide(true)
@@ -293,7 +305,10 @@ class AllTasksDataTable extends BaseDataTable
                     })
                 }',
             ]);
-    }
+              	search([
+              	   'regex' => true
+              	   ]);
+     }
 
     /**
      * Get columns.
@@ -304,18 +319,18 @@ class AllTasksDataTable extends BaseDataTable
     {
       
         return [
-            __('app.id') => ['data' => 'id', 'name' => 'id', 'visible' => false, 'exportable' => false],
+          //  __('app.id') => ['data' => 'id', 'name' => 'id', 'visible' => false],
             '#' => ['data' => 'id', 'name' => 'id', 'visible' => true],
             __('app.task') => ['data' => 'heading', 'name' => 'heading'],
-            __('modules.tasks.site')  => ['data' => 'site', 'name' => 'site'],
+            __('modules.tasks.site')  => ['data' => 'label_name', 'name' => 'label_name', 'searchable' => false, 'orderable' => true],
           //  __('modules.tasks.siteid')  => ['data' => 'siteid', 'name' => 'siteid'],
-            __('modules.tasks.state')  => ['data' => 'state', 'name' => 'state'],
-            __('modules.tasks.city')  => ['data' => 'city', 'name' => 'city'],
-            __('modules.tasks.assigned') => ['data' => 'name', 'name' => 'name', 'visible' => false],
-            __('modules.tasks.techsite') => ['data' => 'users', 'name' => 'name', 'exportable' => false],
+            __('modules.tasks.state')  => ['data' => 'site_state', 'name' => 'contacts', 'searchable' => false, 'orderable' => false],
+            __('modules.tasks.city')  => ['data' => 'city', 'name' => 'city', 'searchable' => false, 'orderable' => false],
+            __('modules.tasks.assigned') => ['data' => 'name', 'name' => 'name', 'visible' => false, 'orderable' => false],
+            __('modules.tasks.techsite') => ['data' => 'users', 'name' => 'name', 'orderable' => false],
             __('app.startDate') => ['data' => 'due_date', 'name' => 'due_date'],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'visible' => false],
-            __('app.columnStatus') => ['data' => 'board_column', 'name' => 'board_column', 'exportable' => false, 'searchable' => false],
+            __('app.columnStatus') => ['data' => 'board_column', 'name' => 'board_column', 'searchable' => false],
             Column::computed('action', __('app.action'))
                 ->exportable(false)
                 ->printable(false)
@@ -324,6 +339,7 @@ class AllTasksDataTable extends BaseDataTable
                 ->width(40)
                 ->addClass('text-center')
         ];
+        
     }
 
     /**

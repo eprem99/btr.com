@@ -83,18 +83,18 @@
                 <ul class="list-task list-group" data-role="tasklist">
                         <li class="list-group-item row" data-role="task">
                             <span class="col-xs-5"><strong>@lang('app.title')</strong></span>
-                            <span class="col-xs-5"><strong>@lang('app.label')</strong></span> 
-                            <span class="col-xs-2"><strong>@lang('modules.dashboard.newDate')</strong></span>
+                            <span class="col-xs-4"><strong>@lang('app.label')</strong></span> 
+                            <span class="col-xs-3 text-center"><strong>@lang('modules.dashboard.newDate')</strong></span>
                         </li>
                         @forelse($newTasks as $key=>$task)
                             <li class="list-group-item row" data-role="task">
                                 <div class="col-xs-5">
                                     {!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
                                 </div>
-                                <div class="col-xs-5">
+                                <div class="col-xs-4">
                                 {!! ucfirst($task->labels->label_name) !!}
                                 </div>
-                                <label class="label label-success pull-right col-xs-2">{{ $task->created_at->format($global->date_format) }}</label>
+                                <label class="label label-success pull-right col-xs-3">{{ $task->created_at->format($global->date_format) }}</label>
                             </li>
                         @empty
                             <li class="list-group-item" data-role="task">
@@ -132,21 +132,21 @@
                         <ul class="list-task list-group" data-role="tasklist">
                             <li class="list-group-item row" data-role="task">
                                 <span class="col-xs-5"><strong>@lang('app.title')</strong></span>
-                                <span class="col-xs-5"><strong>@lang('app.label')</strong></span> 
-                                <span class="col-xs-2"><strong>@lang('modules.dashboard.newDate')</strong></span>
+                                <span class="col-xs-4"><strong>@lang('app.label')</strong></span> 
+                                <span class="col-xs-3 text-center"><strong>@lang('modules.dashboard.AssignednewDate')</strong></span>
                             </li>
 
                             @forelse($pendingTasks as $key=>$task)
-                                @if((!is_null($task->project_id) && !is_null($task->project) ) || is_null($task->project_id))
+                                
                                 <li class="list-group-item row" data-role="task">
                                     <div class="col-xs-5">{!! ($key+1).'. <a href="javascript:;" data-task-id="'.$task->id.'" class="show-task-detail">'.ucfirst($task->heading).'</a>' !!}
                                     </div>
-                                    <div class="col-xs-5">
+                                    <div class="col-xs-4">
                                         {!! ucfirst($task->labels->label_name) !!}
                                         </div>
-                                    <label class="label label-danger pull-right col-xs-2">{{ $task->created_at->format($global->date_format) }}</label>
+                                    <label class="label label-danger pull-right col-xs-3">{{ $task->start_date->format($global->date_format) }}</label>
                                 </li>
-                                @endif
+                           
                             @empty
                                 <li class="list-group-item" data-role="task">
                                     <div  class="text-center">
@@ -180,23 +180,29 @@
                         <div class="panel-heading" style="margin-bottom:20px;">@lang('modules.taskCalendar.note')</div>
                         {!! Form::open(['id'=>'filter','class'=>'ajax-form','method'=>'PUT']) !!}
                             <div class="row">
-                                <div class="col-md-3">
+                                
+                                @if(count($employee) > 0)
+                                <div class="col-md-4">
                                     <select name="tech" id="calendaremployer" class="select2 form-control">
-                                    <option value="0">Select Teach</option>
+                                    <option value="0">Select Tech</option>
                                         @foreach($employee as $emp)
                                                 <option value="{{$emp->user->id}}">{{ $emp->user->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                 @endif
+                                 
+                                @if(count($clients) > 0)
+                                <div class="col-md-4">
                                     <select name="client" id="calendarclients" class="select2 form-control">
-                                    <option value="0">Select Client</option>
+                                    <option value="0">Select Project manager</option>
                                         @foreach($clients as $emp)
                                                 <option value="{{$emp->user->id}}">{{ $emp->user->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                @endif
+                                <div class="col-md-4">
                                     <select name="status" id="calendarstatus" class="select2 form-control">
                                     <option value="0">Select Status</option>
                                         @foreach($taskBoardColumn as $emp)
@@ -230,7 +236,9 @@
                                     @forelse($userActivities as $key=>$activity)
                                         <div class="sl-item">
                                             <div class="sl-left">
+                                                @if(!empty($activity->user->image_url))
                                                 <img src="{{ $activity->user->image_url }}" width="40" height="40" alt="user" class="img-circle">
+                                                @endif
                                             </div>
                                             <div class="sl-right">
                                                 <div class="m-l-40"><a
@@ -390,7 +398,6 @@
         id: '{{ $task->id }}',
         title: "{!! ucfirst($task->heading) !!}",
         start: '{{ $task->start_date->format("Y-m-d") }}',
-       // end:  '{{ $task->due_date->addDay()->format("Y-m-d") }}',
         end:  '{{ $task->start_date->format("Y-m-d") }}',
         color  : '{{ $task->board_column->label_color }}'
     },
@@ -398,7 +405,7 @@
 ];
 
 $.date = function(dateObject) {
-    var d = new Date(dateObject);
+    var d = new Date(dateObject.toLocaleString("en-US", {timeZone: "America/New_York"}));
     var day = d.getDate();
     var month = d.getMonth() + 1;
     var year = d.getFullYear();
@@ -479,14 +486,14 @@ $('#filter .select2').select2({
             jsonObj = [];
             
                 $.each(data, function( index, value ) {
-                    var start = moment(value.start_date).format('Y-m-d');
+                    var start = moment(value.start_date).tz('Asia/Yerevan').format('Y-MM-DD');
                     console.log(start);
                     item = {}
                     item ["id"] = value.id;
                     item ["title"] = value.heading;
-                    item ["start"] = $.date(value.start_date);
+                    item ["start"] = start;
                    // item ["end"] = $.date(value.due_on);
-                    item ["end"] = $.date(value.start_date);
+                    item ["end"] = start;
                     item ["color"] = value.board_column.label_color;
                     jsonObj.push(item);
                 

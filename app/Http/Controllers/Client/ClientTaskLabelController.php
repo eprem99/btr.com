@@ -35,8 +35,9 @@ class ClientTaskLabelController extends ClientBaseController
     }
 
     public function create()
-    {
-        $this->clients = User::allClients();
+    {   
+
+        $this->clients = User::allClients()->where('client_details.category_id', '=', $this->user->client_details->category_id);
         $this->countries = Country::all();
         return view('client.site.create', $this->data);
     }
@@ -52,6 +53,7 @@ class ClientTaskLabelController extends ClientBaseController
     {
 
         $this->taskLabel = TaskLabelList::find($id);
+        $this->clients = User::allClients()->where('client_details.category_id', '=', $this->user->client_details->category_id);
         $this->countries = Country::all();
         return view('client.site.edit', $this->data);
     }
@@ -81,7 +83,7 @@ class ClientTaskLabelController extends ClientBaseController
         $taskLabel->label_name  = $request->label_name;
         $taskLabel->description = $request->description;
         $taskLabel->company     = $this->clientDetail->category_id;
-        $taskLabel->user_id     = $this->user->id;
+        $taskLabel->user_id     = $request->user_id;
         $taskLabel->notification  = $request->site_notification;
         $taskLabel->contacts     = $json;
         $taskLabel->save();

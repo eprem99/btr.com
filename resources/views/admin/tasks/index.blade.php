@@ -140,15 +140,15 @@
         </div>
     </div>
     <div class="col-md-12">
-        <h5 class="box-title">@lang('modules.taskCategory.taskCategory')</h5>
+        <h5 class="box-title">@lang('app.site.state')</h5>
 
         <div class="form-group">
             <div class="row">
                 <div class="col-md-12">
-                    <select class="select2 form-control" data-placeholder="@lang('modules.taskCategory.taskCategory')" id="category_id">
+                    <select class="select2 form-control" data-placeholder="@lang('app.site.state')" id="category_id">
                         <option value="all">@lang('app.all')</option>
-                        @foreach($taskCategories as $categ)
-                            <option value="{{ $categ->id }}">{{ ucwords($categ->category_name) }}</option>
+                        @foreach($states as $state)
+                            <option value="{{$state->id }}">{{ ucwords($state->names) }}</option>
                         @endforeach
                     </select>
                 </div>

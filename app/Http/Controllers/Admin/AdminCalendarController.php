@@ -24,6 +24,7 @@ class AdminCalendarController extends AdminBaseController
     {
         $this->tasks = Task::select('tasks.*')
             ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
+            ->where('tasks.start_date', '!=', null);
             ->groupBy('tasks.id')
             ->get();
         return view('admin.task-calendar.index', $this->data);

@@ -60,6 +60,7 @@
                                         </label>
                                         <select class="select2 form-control" name="category_id" id="category_id"
                                                 data-style="form-control">
+                                               <option value=""> --- </option>
                                             @forelse($categories as $category)
                                                 @if($category->id == $task->task_category_id)
                                                     <option selected value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
@@ -118,14 +119,14 @@
                                 <div class="row">
                                  <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="control-label required">@lang('app.startDate')</label>
+                                        <label class="control-label">@lang('app.startDate')</label>
                                         <input type="text" name="start_date" id="start_date2" class="form-control" autocomplete="off" value="@if($task->start_date != '-0001-11-30 00:00:00' && $task->start_date != null){{ $task->start_date->format($global->date_format) }} @endif">
                                     </div>
                                 </div>
                                 <div class="col-md-3" style="display: none">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.dueDate')</label>
-                                        <input type="text" name="due_date" id="due_date2" class="form-control" autocomplete="off" value="@if($task->due_date != '-0001-11-30 00:00:00'){{ $task->due_date->format($global->date_format) }}@endif">
+                                        <input type="text" name="due_date" id="due_date2" class="form-control" autocomplete="off" value="@if($task->due_date != '-0001-11-30 00:00:00' && $task->due_date != null){{ $task->due_date->format($global->date_format) }}@endif">
                                     </div>
                                 </div>
                                 <!--/span-->
@@ -337,7 +338,7 @@
         url: "{{ route('admin.task-files.store') }}",
         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
         paramName: "file",
-        maxFilesize: 10,
+        maxFilesize: 100,
         maxFiles: 10,
         // acceptedFiles: "image/*,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/docx,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         autoProcessQueue: false,
@@ -423,23 +424,14 @@
         format: '{{ $global->date_picker_format }}',
         autoclose: true,
         todayHighlight: true,
-        startDate: '{{ $task->due_date->format($global->date_forma) }}'
+        startDate: "@if($task->start_date != '-0001-11-30 00:00:00' && $task->start_date != null){{ $task->start_date->format($global->date_format) }} @endif"
     });
 
     jQuery('#start_date2').datepicker({
         format: '{{ $global->date_picker_format }}',
         autoclose: true,
         todayHighlight: true
-    }).on('changeDate', function (selected) {
-        $('#due_date2').datepicker({
-            format: '{{ $global->date_picker_format }}',
-            autoclose: true,
-            todayHighlight: true
-        });
-        var minDate = new Date(selected.date.valueOf());
-        $('#due_date2').datepicker("update", minDate);
-        $('#due_date2').datepicker('setStartDate', minDate);
-    });
+    })
 
     $(".select2").select2({
         formatNoMatches: function () {

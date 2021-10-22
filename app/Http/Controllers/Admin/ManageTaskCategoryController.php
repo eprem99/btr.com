@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helper\Reply;
 use App\Http\Requests\Tasks\StoreTaskProject;
 use App\TaskCategory;
+use App\Task;
 use Illuminate\Http\Request;
 
 class ManageTaskCategoryController extends AdminBaseController
@@ -121,6 +122,9 @@ class ManageTaskCategoryController extends AdminBaseController
     public function destroy($id)
     {
         TaskCategory::destroy($id);
+        // $task = Task::where('task_category_id', '='. $id)->get();
+        // $task->task_category_id = null;
+        // $task->save();
         return Reply::success(__('messages.categoryDeleted'));
     }
 }

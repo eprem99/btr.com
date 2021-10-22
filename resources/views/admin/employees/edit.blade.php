@@ -114,7 +114,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="required">@lang('modules.stripeCustomerAddress.country')</label>
                                         <select name="country" class="form-control" id="country">
@@ -130,7 +130,7 @@
                                         </select>
                                     </div>
                                 </div>   
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="required">@lang('modules.stripeCustomerAddress.state')</label>
                                             <select name="state" class="form-control" id="state">
@@ -138,10 +138,16 @@
                                             </select>
                                         </div>
                                     </div>
-                                <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>@lang('modules.stripeCustomerAddress.city')</label>
                                             <input type="text" name="city" id="city"  value="{{ $employeeDetail->city ?? '' }}"   class="form-control">
+                                        </div>
+                                    </div>
+                                   <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>@lang('modules.stripeCustomerAddress.postalCode')</label>
+                                            <input type="text" name="postal_code" id="postal_code"  value="{{ $employeeDetail->postal_code ?? '' }}"   class="form-control">
                                         </div>
                                     </div>
                                 </div>

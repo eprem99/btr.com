@@ -36,6 +36,22 @@ class LabelDataTable extends BaseDataTable
             ->editColumn('id', function ($row) {
                 return ucwords($row->id);
             })
+            
+            ->editColumn('client', function ($row) {
+                if($row->user_id){
+                  //  $siteid = json_decode($row->contacts, true);
+                    $client = User::allClients()->where('id', '=', $row->user_id)->first();
+                    if($client){
+                        return $client->name;
+                    }else{
+                         return '--';
+                    }
+                        
+                }
+                return '--';
+
+            })
+            
             ->editColumn('label_name', function ($row) {
                 return '<a onclick="siteshow('.$row->id.')" data-id="' .$row->id. '" href="#">'.ucwords($row->label_name).'</a>';
             })
@@ -146,11 +162,12 @@ class LabelDataTable extends BaseDataTable
     {
         return [
             __('app.site.id')  => ['data' => 'id', 'name' => 'id'],
-            __('app.site.name') => ['data' => 'label_name', 'name' => 'label_name', 'searchable' => true, 'orderable' => true],
+            __('app.site.name') => ['data' => 'label_name', 'name' => 'label_name'],
+            __('app.site.client') => ['data' => 'client', 'name' => 'client', 'searchable' => false, 'orderable' => false],
             __('app.site.city')  => ['data' => 'site_city', 'name' => 'contacts', 'searchable' => false, 'orderable' => false],
             __('app.site.state')  => ['data' => 'site_state', 'name' => 'contacts', 'searchable' => false, 'orderable' => false],
             __('app.site.phone')  => ['data' => 'site_phone', 'name' => 'contacts', 'searchable' => false, 'orderable' => false],
-            __('app.site.scheduled')  => ['data' => 'created_at', 'name' => 'created_at'],
+            __('app.site.scheduled')  => ['data' => 'created_at', 'name' => 'created_at', 'searchable' => true, 'orderable' => true],
             Column::computed('action', __('app.action'))
                 ->exportable(false)
                 ->printable(false)

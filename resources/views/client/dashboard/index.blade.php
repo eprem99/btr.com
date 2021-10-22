@@ -122,15 +122,27 @@
                         <div class="panel-heading" style="margin-bottom:20px;">@lang('modules.taskCalendar.note')</div>
                         {!! Form::open(['id'=>'filter','class'=>'ajax-form','method'=>'PUT']) !!}
                             <div class="row">
-                                <div class="col-md-3">
+                                @if(count($employee) > 0)
+                                <div class="col-md-4">
                                     <select name="tech" id="calendaremployer" class="select2 form-control">
-                                    <option value="0">Select Teach</option>
+                                    <option value="0">Select Tech</option>
                                         @foreach($employee as $emp)
                                                 <option value="{{$emp->user_id}}">{{ $emp->user->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                @endif
+                                @if(count($clients) > 0)
+                                <div class="col-md-4">
+                                    <select name="client" id="calendarclients" class="select2 form-control">
+                                    <option value="0">Select Project manager</option>
+                                        @foreach($clients as $emp)
+                                                <option value="{{$emp->user->id}}">{{ $emp->user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @endif
+                                <div class="col-md-4">
                                     <select name="status" id="calendarstatus" class="select2 form-control">
                                     <option value="0">Select Status</option>
                                         @foreach($taskBoardColumn as $emp)
@@ -199,6 +211,7 @@
 <script src="{{ asset('js/moment-timezone.js') }}"></script>
 <script src="{{ asset('plugins/bower_components/calendar/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('plugins/bower_components/moment/moment.js') }}"></script>
+<script src="{{ asset('js/moment-timezone.js') }}"></script>
 <script src="{{ asset('js/full-calendar/main.min.js') }}"></script>
 <script src="{{ asset('js/full-calendar/locales-all.min.js') }}"></script>
 <script src="{{ asset('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
@@ -300,7 +313,7 @@
 </script>
 <script>
 $.date = function(dateObject) {
-    var d = new Date(dateObject);
+    var d = new Date(dateObject.toLocaleString("en-US", {timeZone: "America/New_York"}));
     var day = d.getDate();
     var month = d.getMonth() + 1;
     var year = d.getFullYear();
@@ -372,13 +385,13 @@ var initialLocaleCode = '{{ $global->locale }}';
             jsonObj = [];
             
                 $.each(data, function( index, value ) {
-                    var start = moment(value.start_date).format('Y-m-d');
+                    var start = moment(value.start_date).tz('Asia/Yerevan').format('Y-MM-DD');
                     console.log(start);
                     item = {}
                     item ["id"] = value.id;
                     item ["title"] = value.heading;
-                    item ["start"] = $.date(value.start_date);
-                    item ["end"] = $.date(value.start_date);
+                    item ["start"] = start;
+                    item ["end"] = start;
                     item ["color"] = value.board_column.label_color;
                     jsonObj.push(item);
                 

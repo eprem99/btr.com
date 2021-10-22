@@ -138,14 +138,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.startDate')</label>
-                                        <input type="text" name="start_date" id="start_date2" class="form-control" autocomplete="off" value="{{ \Carbon\Carbon::now($global->timezone)->format($global->date_format)  }}">
+                                        <input type="text" name="start_date" id="start_date2" class="form-control" autocomplete="off" value="">
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-6" style="display: none">
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.dueDate')</label>
-                                        <input type="text" name="due_date" id="due_date2" autocomplete="off" class="form-control"  value="{{ \Carbon\Carbon::now($global->timezone)->format($global->date_format)  }}">
+                                        <input type="text" name="due_date" id="due_date2" autocomplete="off" class="form-control"  value="">
                                     </div>
                                 </div>
 
@@ -232,7 +232,7 @@
         url: "{{ route('client.task-files.store') }}",
         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
         paramName: "file",
-        maxFilesize: 10,
+        maxFilesize: 100,
         maxFiles: 10,
         //  acceptedFiles: "image/*,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/docx,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         autoProcessQueue: false,

@@ -130,7 +130,7 @@ class ManageEmployeesController extends AdminBaseController
                 $employee->country = $request->country;
                 $employee->state = $request->state;
                 $employee->city = $request->city;
-               // $employee->postal_code = $request->zip;
+                $employee->postal_code = $request->postal_code;
                // $employee->hourly_rate = $request->hourly_rate;
                 $employee->department_id = $request->department;
                 // $employee->joining_date = Carbon::createFromFormat($this->global->date_format, $request->joining_date)->format('Y-m-d');
@@ -260,8 +260,8 @@ class ManageEmployeesController extends AdminBaseController
         $employee->country = $request->country;
         $employee->state = $request->state;
         $employee->city = $request->city;
-        $employee->postal_code = $request->zip;
-        $employee->hourly_rate = $request->hourly_rate;
+        $employee->postal_code = $request->postal_code;
+      //  $employee->hourly_rate = $request->hourly_rate;
         $employee->department_id = $request->department;
 
         $employee->last_date = null;
@@ -298,6 +298,7 @@ class ManageEmployeesController extends AdminBaseController
             }
         }
         User::destroy($id);
+        EmployeeDetails::where('user_id', '=', $id)->delete();
         return Reply::success(__('messages.employeeDeleted'));
     }
 

@@ -61,7 +61,7 @@
                                         </label>
                                         <select class="select2 form-control" name="category_id" id="category_id"
                                                 data-style="form-control">
-                                                <option value="">--</option>
+                                                <option value=""> --- </option>
                                             @forelse($categories as $category)
                                                 <option value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
                                             @empty
@@ -127,8 +127,8 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label class="control-label required">@lang('app.startDate')</label>
-                                                <input type="text" name="start_date" id="start_date2" class="form-control" value="{{ \Carbon\Carbon::now($global->timezone)->format($global->date_format)  }}" autocomplete="off">
+                                                <label class="control-label">@lang('app.startDate')</label>
+                                                <input type="text" name="start_date" id="start_date2" class="form-control" value="" autocomplete="off">
                                             </div>
                                         </div>
                                         <!--/span-->
@@ -136,7 +136,7 @@
                                         <div class="col-md-3" style="display: none">
                                             <div class="form-group">
                                                 <label class="control-label">@lang('app.dueDate')</label>
-                                                <input type="text" name="due_date" id="due_date2" class="form-control" value="{{ \Carbon\Carbon::now($global->timezone)->format($global->date_format)  }}"
+                                                <input type="text" name="due_date" id="due_date2" class="form-control" value=""
                                                        autocomplete="off">
                                             </div>
                                         </div>
@@ -303,7 +303,7 @@
         url: "{{ route('admin.task-files.store') }}",
         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
         paramName: "file",
-        maxFilesize: 10,
+        maxFilesize: 100,
         maxFiles: 10,
         //  acceptedFiles: "image/*,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/docx,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         autoProcessQueue: false,
@@ -389,74 +389,7 @@
         format: '{{ $global->date_picker_format }}'
     });
 
-    $('#project_id').change(function () {
-        var id = $(this).val();
-        var url = '{{route('admin.all-tasks.members', ':id')}}';
-        url = url.replace(':id', id);
 
-        $.easyAjax({
-            url: url,
-            type: "GET",
-            redirect: true,
-            success: function (data) {
-                $('#user_id').html(data.html);
-                $('#user_id').val(null).trigger('change.select2');
-            }
-        });
-
-        // For getting dependent task
-        var dependentTaskUrl = '{{route('admin.all-tasks.dependent-tasks', ':id')}}';
-        dependentTaskUrl = dependentTaskUrl.replace(':id', id);
-        $.easyAjax({
-            url: dependentTaskUrl,
-            type: "GET",
-            success: function (data) {
-                $('#dependent_task_id').html(data.html);
-            }
-        })
-    });
-
-    $('.summernote').summernote({
-        height: 200,                 // set editor height
-        minHeight: null,             // set minimum height of editor
-        maxHeight: null,             // set maximum height of editor
-        focus: false,
-        toolbar: [
-            // [groupName, [list of button]]
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough']],
-            ['fontsize', ['fontsize']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ["view", ["fullscreen"]]
-        ]
-    });
-
-    $('#repeat-task').change(function () {
-        if($(this).is(':checked')){
-            $('#repeat-fields').show();
-        }
-        else{
-            $('#repeat-fields').hide();
-        }
-    })
-
-    $('#set-time-estimate').change(function () {
-        if($(this).is(':checked')){
-            $('#set-time-estimate-fields').show();
-        }
-        else{
-            $('#set-time-estimate-fields').hide();
-        }
-    })
-
-    $('#dependent-task').change(function () {
-        if($(this).is(':checked')){
-            $('#dependent-fields').show();
-        }
-        else{
-            $('#dependent-fields').hide();
-        }
-    })
 
 </script>
 <script>

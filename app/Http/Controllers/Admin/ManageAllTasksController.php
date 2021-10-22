@@ -17,6 +17,8 @@ use App\TaskLabel;
 use App\TaskLabelList;
 use App\TaskUser;
 use App\WoType;
+use App\Country;
+use App\State;
 use App\SportType;
 use App\Traits\ProjectProgress;
 use App\User;
@@ -52,6 +54,7 @@ class ManageAllTasksController extends AdminBaseController
             $this->taskCategories = TaskCategory::all();
             $this->taskLabels = TaskLabelList::all();
             $this->wotype = WoType::all();
+            $this->states = State::all();
             $this->startDate = Carbon::today()->subDays(15)->format($this->global->date_format);
             $this->endDate = Carbon::today()->addDays(15)->format($this->global->date_format);
         }
@@ -98,8 +101,17 @@ class ManageAllTasksController extends AdminBaseController
         if ($request->description != '') {
             $task->description = $request->description;
         }
-        $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
-        $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
+        if($request->start_date){
+            $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
+        }else{
+            $task->start_date = null;
+        }
+        if($request->due_date){
+            $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
+        }else{
+            $task->due_date = null;
+        }
+                
         $task->task_category_id = $request->category_id;
       //  $task->wo_id = $request->task_type;
        // $task->sport_id = $request->sport_type;
@@ -222,8 +234,18 @@ class ManageAllTasksController extends AdminBaseController
         if ($request->description != '') {
             $task->description = $request->description;
         }
-        $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
-        $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
+        if($request->start_date){
+            $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
+        }else{
+            $task->start_date = null;
+        }
+        if($request->due_date){
+            $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
+        }else{
+            $task->due_date = null;
+        }
+        // $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
+        // $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
             
         $task->task_category_id = $request->category_id;
         $task->site_id = $request->task_labels;
@@ -285,10 +307,13 @@ class ManageAllTasksController extends AdminBaseController
 
     public function show($id)
     {
-        $this->task = Task::with('board_column', 'users', 'files', 'comments', 'notes', 'labels', 'wotype', 'sporttype')->findOrFail($id);
-             
+        $this->task = Task::with('board_column', 'users', 'files', 'comments', 'notes', 'labels', 'wotype', 'sporttype', 'category')->findOrFail($id);
+        $state_id = json_decode($this->task->labels->contacts, true);
         $this->user = User::where('id', '=', $this->task->client_id)->first();
-      
+        
+        $this->state = State::where('id', '=', $state_id['site_state'])->first();
+        $this->country = Country::where('id', '=', $this->state->country_id)->first();
+     // dd($this->country);
         $view = view('admin.tasks.show', $this->data)->render();
         return Reply::dataOnly(['status' => 'success', 'view' => $view]);
     }

@@ -49,20 +49,29 @@
                 <div class="panel-body">
             {!! Form::open(['id'=>'createContract','class'=>'ajax-form','method'=>'POST']) !!}
                 <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                         <div class="form-group">
                             <label for="label_name" class="required"> @lang('app.site.name')</label>
                             <input type="text" class="form-control" name="label_name" value="" />
                         </div>
                     </div>
-                    
-                    <div class="col-md-4">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label style="margin-bottom: 9px;" for="client" class="required"> @lang('app.site.client')</label>
+                            <select name="user_id" class="select2 form-control" id="client">
+                                @foreach($clients as $client)
+                                    <option value="{{$client->id}}">{{$client->name}} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="site_phone" class="required"> @lang('app.site.phone')</label>
                             <input type="text" class="form-control" name="site_phone" value="" />
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="site_fax"> @lang('app.site.fax')</label>
                             <input type="text" class="form-control" name="site_fax" value="" />

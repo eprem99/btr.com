@@ -15,6 +15,8 @@ use App\TaskFile;
 use App\TaskLabelList;
 use App\Traits\ProjectProgress;
 use App\User;
+use App\Country;
+use App\State;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\ClientDetails;
@@ -123,9 +125,15 @@ class ClientAllTasksController extends ClientBaseController
         if ($request->description != '') {
             $task->description = $request->description;
         }
-        $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
-        $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
-        $task->priority = $request->priority;
+        // $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
+        // $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
+        if($request->start_date){
+            $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
+        }
+        if($request->due_date){
+            $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
+        }
+       // $task->priority = $request->priority;
         $task->board_column_id = $request->status;
         $task->task_category_id = $request->category_id;
         $task->wo_id = $request->task_type;
@@ -160,7 +168,7 @@ class ClientAllTasksController extends ClientBaseController
         Task::destroy($id);
 
         //calculate project progress if enabled
-        $this->calculateProjectProgress($task->project_id);
+      //  $this->calculateProjectProgress($task->project_id);
 
         return Reply::success(__('messages.taskDeletedSuccessfully'));
     }
@@ -213,8 +221,14 @@ class ClientAllTasksController extends ClientBaseController
         if ($request->description != '') {
             $task->description = $request->description;
         }
-        $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
-        $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
+        // $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
+        // $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
+        if($request->start_date){
+            $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
+        }
+        if($request->due_date){
+            $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
+        }
         $task->board_column_id = $this->global->default_task_status;
         $task->task_category_id = $request->category_id;
         $task->site_id = $request->task_labels;
@@ -259,10 +273,12 @@ class ClientAllTasksController extends ClientBaseController
 
     public function show($id)
     {
-        $this->task = Task::with('board_column', 'users', 'files', 'comments', 'notes', 'labels', 'wotype', 'sporttype')->findOrFail($id);
-        
+        $this->task = Task::with('board_column', 'users', 'files', 'comments', 'notes', 'labels', 'wotype', 'sporttype', 'category')->findOrFail($id);
+         $state_id = json_decode($this->task->labels->contacts, true);
         $this->clientDetail = User::where('id', '=', $this->task->client_id)->first();
 
+        $this->state = State::where('id', '=', $state_id['site_state'])->first();
+        $this->country = Country::where('id', '=', $this->state->country_id)->first();
         $view = view('client.all-tasks.show', $this->data)->render();
         return Reply::dataOnly(['status' => 'success', 'view' => $view]);
     }

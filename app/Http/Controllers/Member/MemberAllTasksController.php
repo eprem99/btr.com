@@ -12,6 +12,8 @@ use App\TaskFile;
 use App\User;
 use App\WoType;
 use App\TaskLabelList;
+use App\Country;
+use App\State;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -134,26 +136,27 @@ class MemberAllTasksController extends MemberBaseController
 
     public function show($id)
     {
-        $this->task = Task::with('board_column', 'users', 'files', 'comments', 'notes', 'labels', 'wotype', 'sporttype')->findOrFail($id);
+        $this->task = Task::with('board_column', 'users', 'files', 'comments', 'notes', 'labels', 'wotype', 'sporttype', 'category')->findOrFail($id);
         
         $this->clientDetail = User::where('id', '=', $this->task->client_id)->first();
-       
+        $state_id = json_decode($this->task->labels->contacts, true);
+        $this->state = State::where('id', '=', $state_id['site_state'])->first();
+        $this->country = Country::where('id', '=', $this->state->country_id)->first();
       //  $this->sport = SportType::all();
-        $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')
-            ->leftJoin('project_time_logs', 'project_time_logs.user_id', '=', 'users.id');
+        // $this->employees = User::join('employee_details', 'users.id', '=', 'employee_details.user_id')->orderBy('users.name')
+        //     ->get();
 
-        
-        $this->employees = $this->employees->select(
-            'users.name',
-            'users.image',
-            'users.id'
-        );
+        // $this->employees = $this->employees->select(
+        //     'users.name',
+        //     'users.image',
+        //     'users.id'
+        // );
 
-        $this->employees = $this->employees->where('project_time_logs.task_id', '=', $id);
+      //  $this->employees = $this->employees->where('project_time_logs.task_id', '=', $id);
 
-        $this->employees = $this->employees->groupBy('project_time_logs.user_id')
-            ->orderBy('users.name')
-            ->get();
+        // $this->employees = $this->employees->groupBy('project_time_logs.user_id')
+        //     ->orderBy('users.name')
+        //     ->get();
             
         
 

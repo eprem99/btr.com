@@ -14,7 +14,7 @@ return array(
     'totalPaidAmount' => 'Paid Amount',
     'totalOutstandingAmount' => 'Outstanding Amount',
     'recentEarnings' => 'Recent Earnings (Last 30 days)',
-    'overdueTasks' => 'Work Orders',
+    'overdueTasks' => 'Daily Work Orders',
     'pendingClientIssues' => 'Pending Issues',
     'projectActivityTimeline' => 'Project Activity Timeline',
     'userActivityTimeline' => 'User Activity Timeline',
@@ -102,6 +102,7 @@ return array(
     'totalAllTasks' => 'All Work Order',
     'newTasks' => 'New Work Orders',
     'newDate' => 'Created Date',
+    'AssignednewDate' => 'Assigned Date',
   ),
   'client' =>
   array(

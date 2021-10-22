@@ -23,16 +23,6 @@
      
                 <a href="javascript:;" id="reminderButton" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right  m-l-5 @if($task->board_column->slug == 'completed') hidden @endif" title="@lang('messages.remindToAssignedEmployee')"><i class="fa fa-bell"></i> @lang('modules.tasks.reminder')</a>
                
-                @if ($task->board_column->slug != 'completed')
-
-                    @if (count($task->activeTimerAll) > 0)
-                        <a href="javascript:;" class="btn btn-default btn-sm m-b-10 btn-rounded btn-outline pull-right  m-l-5 timer-modal"><i class="fa fa-clock-o"></i> @lang('modules.projects.activeTimers')
-                            <span class="badge badge-purple">{{ count($task->activeTimerAll) }}</span>
-                        </a>
-                    @endif
-                @endif
-    
-    
             </div>
             <div class="col-xs-12">
                 <div class="row">
@@ -41,7 +31,7 @@
                         @lang('modules.tasks.wodetails')
                     </h3>
                        @if($task->labels->id)<P><strong>Work Order:  </strong>{{ ucwords($task->id) }}</P>@endif
-                       @if($task->task_category_id)<p><strong>Project:  </strong>{{ ucwords($task->category->category_name) }}</p>@endif
+                       @if($task->category)<p><strong>Project:  </strong>{{ ucwords($task->category->category_name) }}</p>@endif
                        @if($task->created_at)<p><strong>Order Date:  </strong> {{ $task->created_at->format($global->date_format) }}</p>@endif
                        @if($task->heading)<p><strong>Summary:  </strong> {{ ucwords($task->heading) }}</p>@endif
                        @if($task->wotype)<p><strong>Work Order Type:  </strong> {{ ucwords($task->wotype->name) }}</p>@endif
@@ -59,8 +49,14 @@
                     @endphp
                             @if($task->labels->id)<P><strong>Site ID: </strong> {{$task->labels->id}}</P>@endif
                             @if($task->labels->label_name)<P><strong>Site Name:  </strong> {{$task->labels->label_name}}</p>@endif
-                            @if($task->labels->id)<P><strong>Time Zone:  </strong></p>@endif
-                            @if(!empty($contacts['site_address']))<P><strong>Address:  </strong>{{$contacts['site_address']}}</p>@endif
+                            @if(!empty($contacts['site_timezone']))<P><strong>Time Zone:  </strong>{{$contacts['site_timezone']}}</p> @endif
+                            <P><strong>Address:  </strong>                            
+                            @if(!empty($contacts['site_address'])){{$contacts['site_address']}}, @endif 
+                            @if(!empty($contacts['site_city'])) {{$contacts['site_city']}}, @endif 
+                            @if(!empty($state->names)){{$state->names}}, @endif 
+                            @if(!empty($contacts['site_zip'])) {{$contacts['site_zip']}}, @endif  
+                            @if(!empty($country->name)){{$country->name}} @endif </p>
+                                
                        <h3>
                             @lang('modules.tasks.sitecontacts')
                        </h3>
@@ -116,12 +112,13 @@
                                 </div>
                             @endif
                             <div class="col-xs-6 col-md-3 font-12">
+                            @if($task->due_date)
                                 <label class="font-12" for="">@lang('app.dueDate')</label><br>
                                 <span @if($task->due_date->isPast()) class="text-danger" @endif>
                                     {{ $task->due_date->format($global->date_format) }}
                                 </span>
                                 <span style="color: {{ $task->board_column->label_color }}" id="columnStatus"> {{ $task->board_column->column_name }}</span>
-    
+                                @endif
                             </div>
                         </div>
                      
@@ -372,7 +369,7 @@ var myDropzone;
         url: "{{ route('admin.task-files.store') }}",
         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
         paramName: "file",
-        maxFilesize: 10,
+        maxFilesize: 100,
         maxFiles: 10,
         acceptedFiles: "image/*,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/docx,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         uploadMultiple: true,

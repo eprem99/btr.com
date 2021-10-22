@@ -62,16 +62,19 @@ class AdminDashboardController extends AdminBaseController
                 DB::raw('(select count(users.id) from `users` inner join role_user on role_user.user_id=users.id inner join roles on roles.id=role_user.role_id WHERE roles.name = "employee" and users.status = "active") as totalEmployees'),
                 DB::raw('(select count(invoices.id) from `invoices` where status = "unpaid") as totalUnpaidInvoices'),
                 DB::raw('(select count(tasks.id) from `tasks` where tasks.board_column_id=' . $completedTaskColumn->id . ') as totalCompletedTasks'),
-                DB::raw('(select count(tasks.id) from `tasks` where tasks.board_column_id != ' . $completedTaskColumn->id . ') as totalPendingTasks'),
+                DB::raw('(select count(tasks.id) from `tasks` where tasks.board_column_id != ' . $completedTaskColumn->id . ') as totalPendingTasks')
             )
             ->first();
-           
+          // dd(Carbon::today()->timezone($this->global->timezone)->format('Y-m-d'));
             $from = date('Y-m-d', strtotime('-1 day'));
-        
+           // $today = Carbon::now()->format('Y-m-d');
+      //  dd(Carbon::today()->timezone($this->global->timezone)->format('d-m-Y'));
             $this->pendingTasks = Task::with('labels')
             ->where('tasks.board_column_id', '<>', '1')
-            ->where('created_at', '>=', $from)
+          //  ->where('created_at', '>=', $from)
            // ->where(DB::raw('DATE(due_date)'), '<=', Carbon::now()->timezone($this->global->timezone)->format('Y-m-d'))
+           // ->whereRaw('tasks.start_date = CURDATE()')
+           ->where('tasks.start_date', 'LIKE', Carbon::today()->format('Y-m-d'))
             ->orderBy('id', 'desc')
             ->get();
           
@@ -145,8 +148,10 @@ class AdminDashboardController extends AdminBaseController
         if ($exists && is_null($this->global->purchase_code)) {
             return redirect(route('verify-purchase'));
         }
-        $this->tasks = Task::select('tasks.*')
+        
+        $this->tasks = Task::with('board_column')->select('tasks.*')
             ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
+            ->where('tasks.start_date', '!=', null)
             ->groupBy('tasks.id')
             ->get();
 
@@ -157,13 +162,14 @@ public function filter(Request $request)
 {
 
     $tasks = Task::with('board_column')->select('tasks.*')
-    ->join('task_users', 'task_users.task_id', '=', 'tasks.id');
+    ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
+    ->where('tasks.start_date', '!=', null);
 
     if($request->tech != 0){
         $tasks->where('task_users.user_id', '=', $request->tech);
     }
     if($request->client != 0){
-        $tasks->where('tasks.created_by', '=', $request->client);
+        $tasks->where('tasks.client_id', '=', $request->client);
     }
     if($request->status != 0){
         $tasks->where('board_column_id', '=', $request->status);

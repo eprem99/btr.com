@@ -37,7 +37,12 @@ class LabelDataTable extends BaseDataTable
                 if($row->user_id){
                   //  $siteid = json_decode($row->contacts, true);
                     $client = User::allClients()->where('id', '=', $row->user_id)->first();
+                    if($client){
                         return $client->name;
+                    }else{
+                         return '--';
+                    }
+                        
                 }
                 return '--';
 
@@ -65,8 +70,10 @@ class LabelDataTable extends BaseDataTable
                 if($row->contacts){
                     $siteid = json_decode($row->contacts, true);
                     if($siteid['site_state'] != '' || $siteid['site_state'] != 0 || $siteid['site_state'] != NULL){
-                       // $states = State::where('id', '=', $siteid['site_state'])->first();
-                        return $siteid['site_state'];
+                      $states = State::where('id', '=', $siteid['site_state'])->first();
+                        if($states){
+                            return $states->names;
+                        }
 
                         
                     }else{
@@ -158,11 +165,11 @@ class LabelDataTable extends BaseDataTable
            // __('app.subject') => ['data' => 'subject', 'name' => 'subject'],
             __('app.site.id')  => ['data' => 'id', 'name' => 'contacts'],
             __('app.site.name') => ['data' => 'label_name', 'name' => 'label_name'],
-            __('app.site.client') => ['data' => 'client', 'name' => 'client'],
+            __('app.site.client') => ['data' => 'client', 'name' => 'client', 'searchable' => false, 'orderable' => false],
             __('app.site.city')  => ['data' => 'site_city', 'name' => 'contacts', 'searchable' => false, 'orderable' => false],
             __('app.site.state')  => ['data' => 'site_state', 'name' => 'contacts', 'searchable' => false, 'orderable' => false],
             __('app.site.phone')  => ['data' => 'site_phone', 'name' => 'contacts', 'searchable' => false, 'orderable' => false],
-            __('app.site.scheduled')  => ['data' => 'created_at', 'name' => 'created_at'],
+            __('app.site.scheduled')  => ['data' => 'created_at', 'name' => 'created_at', 'searchable' => false, 'orderable' => false],
             
             Column::computed('action', __('app.action'))
                 ->exportable(false)

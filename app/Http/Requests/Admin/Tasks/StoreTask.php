@@ -40,8 +40,10 @@ class StoreTask extends CoreRequest
    
         if ($this->has('dependent') && $this->dependent == 'yes' && $this->dependent_task_id != '') {
             $dependentTask = Task::find($this->dependent_task_id);
-           //  $endDate = $dependentTask->due_date->format($setting->date_format);
-          //  $rules['start_date'] = ['required', new CheckDateFormat(null,$setting->date_format), new CheckEqualAfterDate('',$setting->date_format, $endDate, __('messages.taskDateValidation', ['date' => $endDate]) )];
+            $endDate = $dependentTask->due_date->format($setting->date_format);
+            $rules['start_date'] = ['required', new CheckDateFormat(null,$setting->date_format), new CheckEqualAfterDate('',$setting->date_format, $endDate, __('messages.taskDateValidation', ['date' => $endDate]) )];
+            $rules['due_date'] = ['required' , new CheckDateFormat(null,$setting->date_format) , new CheckEqualAfterDate('start_date',$setting->date_format)],
+            
         }
 
         if ($user->can('add_tasks') || $user->hasRole('admin') || $user->hasRole('client')) {
@@ -58,7 +60,7 @@ class StoreTask extends CoreRequest
         return [
             'project_id.required' => __('messages.chooseProject'),
             'user_id.required' => 'Choose an assignee',
-          //  'start_date.required' => 'Select date',
+            'start_date.required' => 'Select date',
             'client_id.required' => 'Select client',
            // 'user_id.required' => 'Choose an assignee',
         ];

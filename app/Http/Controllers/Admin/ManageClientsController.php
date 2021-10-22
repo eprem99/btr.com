@@ -48,14 +48,16 @@ class ManageClientsController extends AdminBaseController
      */
     public function index(ClientsDataTable $dataTable)
     {
+       // 
         if (!request()->ajax()) {
             $this->categories = ClientCategory::all();
             $this->clients = User::allClients();
             $this->tasks = Task::all();
-            $this->contracts = ContractType::all();
+         //   $this->contracts = ContractType::all();
             $this->countries = Country::all();
 
             $this->totalClients = count($this->clients);
+          //  dd($this->totalClients);
         }
 
         return $dataTable->render('admin.clients.index', $this->data);
@@ -205,6 +207,7 @@ class ManageClientsController extends AdminBaseController
             }
         }
         User::destroy($id);
+        ClientDetails::where('user_id', '=', $id)->delete();
         return Reply::success(__('messages.clientDeleted'));
     }
 

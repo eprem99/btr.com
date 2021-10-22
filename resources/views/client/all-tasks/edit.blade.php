@@ -61,6 +61,7 @@
                                         </label>
                                         <select class="select2 form-control" name="category_id" id="category_id"
                                                 data-style="form-control">
+                                            <option value=""> --- </option>
                                             @forelse($categories as $category)
                                                 @if($category->id == $task->task_category_id)
                                                     <option selected value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
@@ -178,15 +179,15 @@
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label required">@lang('app.startDate')</label>
-                                        <input type="text" name="start_date" autocomplete="off" id="start_date2" class="form-control" autocomplete="off" value="@if($task->start_date != '-0001-11-30 00:00:00' && $task->start_date != null){{ $task->start_date->format($global->date_format) }}@endif">
+                                        <label class="control-label">@lang('app.startDate')</label>
+                                        <input type="text" name="start_date" autocomplete="off" id="start_date2" class="form-control" autocomplete="off" value="@if($task->start_date != '-0001-11-30 00:00:00' && $task->start_date != null){{ $task->start_date->format($global->date_format) }} @endif">
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-6" style="display: none">
                                     <div class="form-group">
                                         <label class="control-label">@lang('app.dueDate')</label>
-                                        <input type="text" name="due_date" id="due_date2" autocomplete="off" class="form-control" value="{{ $task->due_date->format($global->date_format) }}">
+                                        <input type="text" name="due_date" id="due_date2" autocomplete="off" class="form-control" value="@if($task->due_date != '-0001-11-30 00:00:00' && $task->due_date != null){{ $task->due_date->format($global->date_format) }}@endif">
                                     </div>
                                 </div>
 
@@ -320,7 +321,7 @@
         url: "{{ route('client.task-files.store') }}",
         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
         paramName: "file",
-        maxFilesize: 10,
+        maxFilesize: 100,
         maxFiles: 10,
         // acceptedFiles: "image/*,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/docx,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         autoProcessQueue: false,
@@ -415,7 +416,7 @@
         format: '{{ $global->date_picker_format }}',
         autoclose: true,
         todayHighlight: true,
-        startDate: '{{ $task->due_date->format($global->date_forma) }}'
+        startDate: "@if($task->start_date != '-0001-11-30 00:00:00' && $task->start_date != null){{ $task->start_date->format($global->date_format) }} @endif"
     });
 
     jQuery('#start_date2').datepicker({
@@ -463,30 +464,7 @@
         }
     })
 
-    $('#project_id').change(function () {
-        var id = $(this).val();
 
-        // For getting dependent task
-        var dependentTaskUrl = '{{route('client.all-tasks.dependent-tasks', [':id', ':taskId'])}}';
-        dependentTaskUrl = dependentTaskUrl.replace(':id', id);
-        dependentTaskUrl = dependentTaskUrl.replace(':taskId', '{{ $task->id }}');
-        $.easyAjax({
-            url: dependentTaskUrl,
-            type: "GET",
-            success: function (data) {
-                $('#dependent_task_id').html(data.html);
-            }
-        })
-    });
-
-    $('#set-time-estimate').change(function () {
-        if($(this).is(':checked')){
-            $('#set-time-estimate-fields').show();
-        }
-        else{
-            $('#set-time-estimate-fields').hide();
-        }
-    })
 </script>
 @endpush
 
