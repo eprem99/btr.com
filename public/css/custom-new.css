@@ -1658,7 +1658,7 @@ div.dt-buttons {
 }
 
 .h-scroll {
-    height: 90vh;
+    height: 480px;
     max-height: 480px;
     /* %-height of the viewport */
     overflow-y: scroll;
