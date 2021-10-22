@@ -33,20 +33,6 @@
             </li>
             @endif
             
-
-            <li class="dropdown">
-                <select class="selectpicker language-switcher" data-width="fit">
-                    <option value="en" @if($user->locale == "en") selected
-                        @endif data-content='<span class="flag-icon flag-icon-gb"></span> En'>En
-                    </option>
-                    @foreach($languageSettings as $language)
-                        <option value="{{ $language->language_code }}"
-                                @if($user->locale == $language->language_code) selected
-                                @endif  data-content='<span class="flag-icon flag-icon-{{ $language->language_code }}"></span> {{ $language->language_code }}'>{{ $language->language_code }}</option>
-                    @endforeach
-                </select>
-            </li>
-
             <!-- .Task dropdown -->
             <li class="dropdown" id="top-notification-dropdown">
                 <a class="dropdown-toggle waves-effect waves-light show-user-notifications" data-toggle="dropdown" href="#">

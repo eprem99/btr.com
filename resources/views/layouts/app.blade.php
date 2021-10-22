@@ -752,6 +752,28 @@
 
 
 <script>
+    
+    $('#notyfidash').each(function( index ) {
+        var openStatus = $(this).attr('aria-expanded');
+
+        if(typeof openStatus == "undefined" || openStatus == "false") {
+
+            var token = '{{ csrf_token() }}';
+            $.easyAjax({
+                type: 'POST',
+                url: '{{ route("show-admin-notifications") }}',
+                data: {'_token': token},
+                success: function (data) {
+                    if (data.status == 'success') {
+                        $('#notyfidash').html(data.html);
+                    }
+                }
+            });
+
+        }
+    });
+
+
     $('.show-user-notifications').click(function () {
         var openStatus = $(this).attr('aria-expanded');
 

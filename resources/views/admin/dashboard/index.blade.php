@@ -52,6 +52,16 @@
         .panel .panel-body {
             padding: 25px 5px;
         }
+        .mailboxdash {
+            width: 100%;
+            overflow-x: hidden;
+            padding-bottom: 0;
+            list-style: none;
+            padding: 0;
+        }
+        .mailboxdash .drop-title.row {
+            display: none;
+        }
         @media (min-width: 769px) {
             #wrapper .panel-wrapper {
                 max-height: 340px;
@@ -229,42 +239,18 @@
            @if(in_array('employees',$modules) && in_array('user_activity_timeline',$activeWidgets))
                 <div class="col-md-8">
                     <div class="panel panel-inverse">
-                        <div class="panel-heading">@lang('modules.dashboard.userActivityTimeline')</div>
+                        <div class="panel-heading">@lang('app.newNotifications')</div>
                         <div class="panel-wrapper collapse in">
                             <div class="panel-body">
                                 <div class="steamline">
-                                    @forelse($userActivities as $key=>$activity)
-                                        <div class="sl-item">
-                                            <div class="sl-left">
-                                                @if(!empty($activity->user->image_url))
-                                                <img src="{{ $activity->user->image_url }}" width="40" height="40" alt="user" class="img-circle">
-                                                @endif
-                                            </div>
-                                            <div class="sl-right">
-                                                <div class="m-l-40"><a
-                                                            href="{{ route('admin.employees.show', $activity->user_id) }}"
-                                                            class="">{{ ucwords($activity->user->name) }}</a>
-                                                    <span class="sl-date">{{ $activity->created_at->diffForHumans() }}</span>
-                                                    <p>{!! ucfirst($activity->activity) !!}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @if(count($userActivities) > ($key+1))
-                                            <hr>
-                                        @endif
-                                    @empty
-                                        <div class="text-center">
-                                            <div class="empty-space" style="height: 200px;">
-                                                <div class="empty-space-inner">
-                                                    <div class="icon" style="font-size:20px"><i
-                                                                class="fa fa-history"></i>
-                                                    </div>
-                                                    <div class="title m-b-15">@lang("messages.noActivityByThisUser")
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforelse
+
+                                <ul id="notyfidash" class="mailboxdash">
+                                    <li>
+                                        <a href="javascript:;">...</a>
+                                    </li>
+
+                                </ul>
+
                                 </div>
                             </div>
                         </div>
