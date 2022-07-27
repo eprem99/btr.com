@@ -95,7 +95,6 @@
             title: "{!! ucfirst($task->heading) !!}",
             start: '{{ $task->start_date->format("Y-m-d") }}',
             start:  '{{ $task->start_date->format("Y-m-d") }}',
-          //  end:  '{{ $task->due_date->addDay()->format("Y-m-d") }}',
             color  : '{{ $task->board_column->label_color }}'
         },
         @endforeach

@@ -136,7 +136,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>@lang('app.task')</th>
-                                <th>@lang('app.dueDate')</th>
+                                <th>@lang('app.startDate')</th>
                                 <th>@lang('app.status')</th>
                             </tr>
                             </thead>

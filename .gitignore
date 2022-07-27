@@ -2,8 +2,11 @@
 /public/storage
 /public/user-uploads
 /public/hot
+/bootstrap
+/storage
 /storage/*.key
 /vendor
+/tests
 /.idea
 Homestead.json
 Homestead.yaml

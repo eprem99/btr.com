@@ -80,7 +80,7 @@ class AdminDashboardController extends AdminBaseController
           
             $this->newTasks = Task::with('labels')
             ->where('board_column_id', '=', '1')
-            ->where('created_at', '>=', $from)
+           // ->where('created_at', '>=', $from)
             ->orderBy('id', 'desc')
             ->get();
 

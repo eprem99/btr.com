@@ -114,11 +114,17 @@ class MemberEmployeeDocsController extends MemberBaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request, $id)
     {
-        //
+        $this->employeeID = $id;
+        return view('member.employees.docs-create', $this->data);
     }
 
+    public function docsCreate(Request $request, $id)
+    {
+        $this->employeeID = $id;
+        return view('member.employees.docs-create', $this->data);
+    }
 
     /**
      * @param Request $request

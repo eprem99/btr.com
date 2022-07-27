@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Member;
 
 use App\Task;
+use Carbon\Carbon;
 use App\TaskboardColumn;
 
 class MemberCalendarController extends MemberBaseController
@@ -24,13 +25,14 @@ class MemberCalendarController extends MemberBaseController
     {
         $completedTaskColumn = TaskboardColumn::where('slug', '=', 'completed')->first();
         $this->tasks = Task::select('tasks.*')
+            ->with('board_column')
             ->join('task_users', 'task_users.task_id', '=', 'tasks.id')
             ->where('board_column_id', '<>', $completedTaskColumn->id)
-            ->where('tasks.start_date', '!=', null)
+            ->where('tasks.start_date', '!=', NULL)
             ->where('task_users.user_id', $this->user->id);
-        // if (!$this->user->can('view_tasks')) {
-        //     $this->tasks = $this->tasks->where('task_users.user_id', $this->user->id);
-        // }
+
+            // $this->tasks = $this->tasks->where('task_users.user_id', $this->user->id);
+         
         $this->tasks =  $this->tasks->groupBy('tasks.id');
         $this->tasks =  $this->tasks->get();
         return view('member.task-calendar.index', $this->data);

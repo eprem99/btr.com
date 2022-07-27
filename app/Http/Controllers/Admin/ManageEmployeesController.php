@@ -425,7 +425,7 @@ class ManageEmployeesController extends AdminBaseController
     {
         $tasks = Task::join('task_users', 'task_users.task_id', '=', 'tasks.id')
             ->join('taskboard_columns', 'taskboard_columns.id', '=', 'tasks.board_column_id')
-            ->select('tasks.id', 'tasks.heading', 'tasks.due_date', 'taskboard_columns.column_name', 'taskboard_columns.label_color', 'tasks.project_id')
+            ->select('tasks.id', 'tasks.heading', 'tasks.start_date', 'taskboard_columns.column_name', 'taskboard_columns.label_color', 'tasks.project_id')
             ->where('task_users.user_id', $userId);
 
         if ($hideCompleted == '1') {
@@ -436,10 +436,15 @@ class ManageEmployeesController extends AdminBaseController
 
         return DataTables::of($tasks)
             ->editColumn('due_date', function ($row) {
-                if ($row->due_date->isPast()) {
-                    return '<span class="text-danger">' . $row->due_date->format($this->global->date_format) . '</span>';
+                // if ($row->due_date->isPast()) {
+                //     return '<span class="text-danger">' . $row->due_date->format($this->global->date_format) . '</span>';
+                // }
+                // return '<span class="text-success">' . $row->due_date->format($this->global->date_format) . '</span>';
+                                if($row->start_date){
+                    return $row->start_date->format($this->global->date_format);
+                }else{
+                    return '---';
                 }
-                return '<span class="text-success">' . $row->due_date->format($this->global->date_format) . '</span>';
             })
             ->editColumn('heading', function ($row) {
                 $name = '<a href="javascript:;" data-task-id="' . $row->id . '" class="show-task-detail">' . ucfirst($row->heading) . '</a>';

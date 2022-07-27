@@ -7,13 +7,18 @@ use App\Events\TaskReminderEvent;
 use App\Helper\Reply;
 use App\Http\Requests\Tasks\StoreTask;
 use App\Task;
+use App\TaskCategory;
+use App\SportType;
 use App\TaskboardColumn;
 use App\TaskFile;
 use App\User;
+use App\EmployeeDetails;
+use App\Traits\ProjectProgress;
 use App\WoType;
 use App\TaskLabelList;
 use App\Country;
 use App\State;
+use App\ClientDetails;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -79,13 +84,95 @@ class MemberAllTasksController extends MemberBaseController
 
     public function edit($id)
     {
-      //
+        if (!$this->user->can('edit_tasks') && $this->global->task_self == 'no') {
+            abort(403);
+        }
+        $this->task = Task::with('users', 'label')->findOrFail($id);
+        $this->clientDetail = ClientDetails::where('user_id', '=', $this->task->client_id)->first();
+        $this->clients = User::allClients();
+        $this->labelIds = $this->task->label->pluck('label_id')->toArray();
+
+        $this->employees  = User::allEmployees();
+        $this->wotype = WoType::all();
+        $this->sport = SportType::all();
+        $this->categories = TaskCategory::all();
+        $this->taskLabels = TaskLabelList::all();
+        $this->taskBoardColumns = TaskboardColumn::orderBy('priority', 'asc')->get();
+        $completedTaskColumn = TaskboardColumn::where('slug', '=', 'completed')->first();
+        if ($completedTaskColumn) {
+            $this->allTasks = Task::where('board_column_id', '<>', $completedTaskColumn->id)
+                ->where('id', '!=', $id);
+
+            if ($this->task->project_id != '') {
+                $this->allTasks = $this->allTasks->where('project_id', $this->task->project_id);
+            }
+
+            $this->allTasks = $this->allTasks->get();
+        } else {
+            $this->allTasks = [];
+        }
+
+        return view('member.all-tasks.edit', $this->data);
     }
 
-    public function update()
+    public function update(StoreTask $request, $id)
     {
 
-        //
+        $task = Task::findOrFail($id);
+        $oldStatus = TaskboardColumn::findOrFail($task->board_column_id);
+
+        $task->heading = $request->heading;
+        if ($request->description != '') {
+            $task->description = $request->description;
+        }
+        if($request->start_date){
+            $task->start_date = Carbon::createFromFormat($this->global->date_format, $request->start_date)->format('Y-m-d');
+        }else{
+            $task->start_date = null;
+        }
+        if($request->due_date){
+            $task->due_date = Carbon::createFromFormat($this->global->date_format, $request->due_date)->format('Y-m-d');
+        }else{
+            $task->due_date = null;
+        }
+                
+        $task->task_category_id = $request->category_id;
+      //  $task->wo_id = $request->task_type;
+       // $task->sport_id = $request->sport_type;
+        $task->client_id = $request->client_id;
+      //  $task->qty = $request->task_qty;
+            
+        if($request->user_id && $request->status == "1"){
+            $task->board_column_id = 2;
+        }else{
+            $task->board_column_id = $request->status;
+        }
+
+        $taskBoardColumn = TaskboardColumn::findOrFail($request->status);
+
+        if ($taskBoardColumn->slug == 'completed') {
+            $task->completed_on = Carbon::now()->format('Y-m-d');
+        } else {
+            $task->completed_on = null;
+        }
+
+        if ($request->project_id != "all") {
+            $task->project_id = $request->project_id;
+        } else {
+            $task->project_id = null;
+        }
+        $task->save();
+
+        // save labels
+        // $task->labels()->sync($request->task_labels);
+
+
+        // Sync task users
+        $task->users()->sync($request->user_id);
+
+ 
+        return Reply::dataOnly(['taskID' => $task->id]);
+        //        return Reply::redirect(route('client.all-tasks.index'), __('messages.taskUpdatedSuccessfully'));
     }
 
     public function destroy(Request $request, $id)

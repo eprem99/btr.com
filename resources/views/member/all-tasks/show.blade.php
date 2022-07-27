@@ -158,7 +158,7 @@
                                                class="btn btn-info btn-circle"><i
                                                         class="fa fa-search"></i></a>
                                         @if(is_null($file->external_link))
-                                        <a href="{{ route('admin.task-files.download', $file->id) }}"
+                                        <a href="{{ route('member.task-files.download', $file->id) }}"
                                            data-toggle="tooltip" data-original-title="Download"
                                            class="btn btn-inverse btn-circle"><i
                                                     class="fa fa-download"></i></a>

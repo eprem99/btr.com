@@ -345,6 +345,7 @@ class MemberTasksController extends MemberBaseController
 
     public function checkTask($taskID)
     {
+        dd($taskID);
         $task = Task::findOrFail($taskID);
         $subTask = SubTask::where('task_id', $taskID)->where('status', 'incomplete')->count();
 

@@ -35,9 +35,12 @@ class AllTasksDataTable extends BaseDataTable
                   <li><a href="javascript:;"  data-task-id="' . $row->id . '" data-recurring="no" class="sa-params"><i class="fa fa-times" aria-hidden="true"></i> ' . trans('app.delete') . '</a></li>';
 
                 $action .= '</ul> </div>';
-                }elseif($this->user->can('edit_tasks')){
+                }elseif($this->user->can('edit_tasks') && $this->user->hasRole('client')){
                     $action = '<a href="' . route('client.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
                       data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                }elseif($this->user->can('edit_tasks') && $this->user->hasRole('Editors')){
+                    $action = '<a href="' . route('member.all-tasks.edit', $row->id) . '" class="btn btn-info btn-circle"
+                    data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
                 }else{
                     $action = '<a target="_blank" href="' . route('front.task-share', [$row->hash]) . '" class="btn btn-info btn-circle"
                     data-toggle="tooltip" data-original-title="View"><i class="fa fa-share-alt" aria-hidden="true"></i></a>';
@@ -211,9 +214,9 @@ class AllTasksDataTable extends BaseDataTable
            //  ->orderBy('id', 'desc')
             ->groupBy('tasks.id');
             
-            if($this->user->can('delete_tasks')){
+            if($this->user->hasRole('admin') || $this->user->hasRole('Editors') || $this->user->can('delete_tasks')){
                 
-            }elseif($this->user->can('edit_tasks')){
+            }elseif($this->user->hasRole('client') && $this->user->can('edit_tasks')){
                // $model = $model->where('tasks.client_id', '=', $this->user->id);
                $model = $model->where('client_details.category_id', '=', $this->user->client_details->category_id);
             }else{

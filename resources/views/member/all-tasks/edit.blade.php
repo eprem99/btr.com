@@ -10,7 +10,6 @@
         <!-- .breadcrumb -->
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
             <ol class="breadcrumb">
-                <li><a href="{{ route('member.dashboard') }}">@lang('app.menu.home')</a></li>
                 <li><a href="{{ route('member.all-tasks.index') }}">@lang($pageTitle)</a></li>
                 <li class="active">@lang('app.edit')</li>
             </ol>
@@ -51,42 +50,79 @@
 
                         <div class="form-body">
                             <div class="row">
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">@lang('app.project')</label>
-                                        <select class="select2 form-control" data-placeholder="@lang("app.selectProject")" id="project_id" name="project_id">
-                                            <option value=""></option>
-                                            @foreach($projects as $project)
-                                                <option
-                                                        @if($project->id == $task->project_id) selected @endif
-                                                        value="{{ $project->id }}">{{ ucwords($project->project_name) }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
+                                                            <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">@lang('modules.tasks.taskCategory')
+                                        <a href="javascript:;"
+                                               id="createTaskCategory"
+                                               class="btn btn-xs btn-outline btn-success" style="float:right; margin-left:15px;">
+                                                <i class="fa fa-plus"></i> @lang('modules.taskCategory.addTaskCategory')
+                                            </a>
                                         </label>
-                                        <select class="selectpicker form-control" name="category_id" id="category_id"
+                                        <select class="select2 form-control" name="category_id" id="category_id"
                                                 data-style="form-control">
+                                            <option value=""> --- </option>
                                             @forelse($categories as $category)
-                                                <option value="{{ $category->id }}"
-                                                        @if($task->task_category_id == $category->id)
-                                                        selected
-                                                        @endif
-                                                >{{ ucwords($category->category_name) }}</option>
+                                                @if($category->id == $task->task_category_id)
+                                                    <option selected value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
+                                                @else
+                                                    <option value="{{ $category->id }}">{{ ucwords($category->category_name) }}</option>
+                                                @endif
                                             @empty
                                                 <option value="">@lang('messages.noTaskCategoryAdded')</option>
                                             @endforelse
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label required mb-2"><span>@lang('modules.tasks.site')</span>
+                                        <a href="{{ route('client.site.create') }}" class="btn btn-xs btn-outline btn-success" style="float:right; margin-left:15px;">
+                                                <i class="fa fa-plus"></i>@lang('modules.tasks.addsite') 
+                                            </a>
+                                        </label>
+
+                                        <select name="task_labels" class="select2 form-control">
+                                            @foreach($taskLabels as $label)
+                                                @if($label->id == $task->site_id)
+                                                    <option selected value="{{ $label->id }}">{{ $label->label_name }}</option>
+                                                @else
+                                                    <option value="{{ $label->id }}">{{ $label->label_name }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 9px;" for="client" class="required"> @lang('app.site.client')</label>
+                                        <select name="client_id" class="select2 form-control" id="client">
+                                            @foreach($clients as $client)
+                                                <option @if($task->client_id == $client->id) selected @endif value="{{$client->id}}">{{$client->name}} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label required">@lang('app.title')</label>
                                         <input type="text" id="heading" name="heading" class="form-control" value="{{ $task->heading }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>@lang('app.status')</label>
+                                        <select name="status" id="status" class="form-control">
+                                        <option selecte value="{{$task->board_column->id}}">{{ $task->board_column->column_name }}</option>
+                                            @foreach($taskBoardColumns as $taskBoardColumn)
+                                            @if($task->board_column_id == $taskBoardColumn->id)
+
+                                            @else
+                                            <option value="{{$taskBoardColumn->id}}">{{ $taskBoardColumn->column_name }}</option>
+                                            @endif
+                                                
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <!--/span-->
@@ -96,206 +132,70 @@
                                         <textarea id="description" name="description" class="form-control summernote">{{ $task->description }}</textarea>
                                     </div>
                                 </div>
-
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
-
-                                        <div class="checkbox checkbox-info">
-                                            <input id="private-task" name="is_private" value="true"
-                                            @if ($task->is_private)
-                                                checked
-                                            @endif
-                                                   type="checkbox">
-                                            <label for="private-task">@lang('modules.tasks.makePrivate') <a class="mytooltip font-12" href="javascript:void(0)"> <i class="fa fa-info-circle"></i><span class="tooltip-content5"><span class="tooltip-text3"><span class="tooltip-inner2">@lang('modules.tasks.privateInfo')</span></span></span></a></label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <div class="form-group">
-
-                                        <div class="checkbox checkbox-info">
-                                            <input id="billable-task" name="billable" value="true"
-                                            @if ($task->billable)
-                                                checked
-                                            @endif
-                                                   type="checkbox">
-                                            <label for="billable-task">@lang('modules.tasks.billable') <a class="mytooltip font-12" href="javascript:void(0)"> <i class="fa fa-info-circle"></i><span class="tooltip-content5"><span class="tooltip-text3"><span class="tooltip-inner2">@lang('modules.tasks.billableInfo')</span></span></span></a></label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <div class="checkbox checkbox-info">
-                                            <input id="set-time-estimate"
-                                            @if ($task->estimate_hours > 0 || $task->estimate_minutes > 0)
-                                                checked
-                                            @endif
-                                            name="set_time_estimate" value="true" type="checkbox">
-                                            <label for="set-time-estimate">@lang('modules.tasks.setTimeEstimate')</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="set-time-estimate-fields" @if ($task->estimate_hours == 0 && $task->estimate_minutes == 0) style="display: none" @endif>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            
-                                            <input type="number" min="0" value="{{ $task->estimate_hours }}" class="w-50 p-5 p-10" name="estimate_hours" > @lang('app.hrs')
-                                            &nbsp;&nbsp;
-                                            <input type="number" min="0" value="{{ $task->estimate_minutes }}" name="estimate_minutes" class="w-50 p-5 p-10"> @lang('app.mins')
-                                        </div>
-                                    </div>
-                                   
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="form-group">
-
-                                        <div class="checkbox checkbox-info">
-                                            <input id="dependent-task" name="dependent" value="yes"
-                                                   type="checkbox" @if($task->dependent_task_id != '') checked @endif>
-                                            <label for="dependent-task">@lang('modules.tasks.dependent')</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row" id="dependent-fields" @if($task->dependent_task_id == null) style="display: none" @endif>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="control-label">@lang('modules.tasks.dependentTask')</label>
-                                            <select class="select2 form-control" data-placeholder="@lang('modules.tasks.chooseTask')" name="dependent_task_id" id="dependent_task_id" >
-                                                <option value=""></option>
-                                                @foreach($allTasks as $allTask)
-                                                    <option value="{{ $allTask->id }}" @if($allTask->id == $task->dependent_task_id) selected @endif>{{ $allTask->heading }} (@lang('app.dueDate'): {{ $allTask->due_date->format($global->date_format) }})</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="control-label">@lang('app.label')</label>
-                                            <select id="multiselect" name="task_labels[]"  multiple="multiple" class="selectpicker form-control">
-                                                @foreach($taskLabels as $label)
-                                                    <option data-content="<label class='badge' style='background:{{ $label->label_color }};'>{{ $label->label_name }}</label> " value="{{ $label->id }}">{{ $label->label_name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label required">@lang('app.startDate')</label>
-                                        <input type="text" name="start_date" autocomplete="off" id="start_date2" class="form-control" autocomplete="off" value="@if($task->start_date != '-0001-11-30 00:00:00' && $task->start_date != null){{ $task->start_date->format($global->date_format) }}@endif">
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label required">@lang('app.dueDate')</label>
-                                        <input type="text" name="due_date" id="due_date2" autocomplete="off" class="form-control" value="{{ $task->due_date->format($global->date_format) }}">
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                @if($user->can('add_tasks'))
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="control-label required">@lang('modules.tasks.assignTo')</label>
-                                            <select class="select2 select2-multiple " multiple="multiple"
-                                                data-placeholder="@lang('modules.tasks.chooseAssignee')"
-                                                name="user_id[]" id="user_id">
-                                            @if(is_null($task->project_id))
-                                                @foreach($employees as $employee)
-
-                                                    @php
-                                                        $selected = '';
-                                                    @endphp
-
-                                                    @foreach ($task->users as $item)
-                                                        @if($item->id == $employee->id)
-                                                            @php
-                                                                $selected = 'selected';
-                                                            @endphp
-                                                        @endif
-
-                                                    @endforeach
-
-                                                    <option {{ $selected }}
-                                                            value="{{ $employee->id }}">{{ ucwords($employee->name) }}
-                                                    </option>
-
-                                                @endforeach
-                                            @else
-                                                @foreach($task->project->members as $member)
-                                                    @php
-                                                        $selected = '';
-                                                    @endphp
-
-                                                    @foreach ($task->users as $item)
-                                                        @if($item->id == $member->user->id)
-                                                            @php
-                                                                $selected = 'selected';
-                                                            @endphp
-                                                        @endif
-
-                                                    @endforeach
-
-                                                    <option {{ $selected }}
-                                                        value="{{ $member->user->id }}">{{ $member->user->name }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @if($user->hasRole('admin'))
-                                    <input type="hidden" value="{{ $user->id }}" name="user_id">
-                                @endif
-                                <!--/span-->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>@lang('app.status')</label>
-                                        <select name="status" id="status" class="form-control">
-                                            @foreach($taskBoardColumns as $taskBoardColumn)
-                                                <option @if($task->board_column_id == $taskBoardColumn->id) selected @endif value="{{$taskBoardColumn->id}}">{{ $taskBoardColumn->column_name }}</option>
+                                        <label class="control-label">@lang('app.type')</label>
+                                        
+                                        <select name="task_type" class="select2 form-control">
+                                        <option value=""> --- </option>
+                                            @foreach($wotype as $type)
+                                                @if($type->id == $task->wo_id)
+                                                    <option selected value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @else
+                                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <!--/span-->
-                                <!--/span-->
-                                <div class="col-md-12">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="control-label required">@lang('modules.tasks.priority')</label>
-
-                                        <div class="radio radio-danger">
-                                            <input type="radio" name="priority" id="radio13"
-                                                   @if($task->priority == 'high') checked @endif
-                                                   value="high">
-                                            <label for="radio13" class="text-danger">
-                                                @lang('modules.tasks.high') </label>
-                                        </div>
-                                        <div class="radio radio-warning">
-                                            <input type="radio" name="priority"
-                                                   @if($task->priority == 'medium') checked @endif
-                                                   id="radio14" value="medium">
-                                            <label for="radio14" class="text-warning">
-                                                @lang('modules.tasks.medium') </label>
-                                        </div>
-                                        <div class="radio radio-success">
-                                            <input type="radio" name="priority" id="radio15"
-                                                   @if($task->priority == 'low') checked @endif
-                                                   value="low">
-                                            <label for="radio15" class="text-success">
-                                                @lang('modules.tasks.low') </label>
-                                        </div>
+                                        <label class="control-label">@lang('app.sporttype')</label>
+                                        
+                                        <select name="sport_type" class="select2 form-control">
+                                        <option value=""> --- </option>
+                                            @foreach($sport as $type)
+                                                @if($type->id == $task->sport_id)
+                                                    <option selected value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @else
+                                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.qty')</label>
+                                        <input type="text" name="task_qty" class="form-control" value="@if($task->qty){{ $task->qty}}@endif" >
+                                    </div>
+                                </div>
+                                <!-- <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.purchaseorder')</label>
+                                        <input type="text" name="task_purchase" class="form-control" value="@if($task->p_order){{ $task->p_order }}@endif" >
+                                    </div>
+                                </div> -->
+                                <!--/span-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.startDate')</label>
+                                        <input type="text" name="start_date" autocomplete="off" id="start_date2" class="form-control" autocomplete="off" value="@if($task->start_date != '-0001-11-30 00:00:00' && $task->start_date != null){{ $task->start_date->format($global->date_format) }} @endif">
+                                    </div>
+                                </div>
+                                <!--/span-->
+                                <div class="col-md-6" style="display: none">
+                                    <div class="form-group">
+                                        <label class="control-label">@lang('app.dueDate')</label>
+                                        <input type="text" name="due_date" id="due_date2" autocomplete="off" class="form-control" value="@if($task->due_date != '-0001-11-30 00:00:00' && $task->due_date != null){{ $task->due_date->format($global->date_format) }}@endif">
+                                    </div>
+                                </div>
+
+
+
+                                    <input type="hidden" value="{{ $user->id }}" name="user_id">
+                                    <input type="hidden" value="medium" name="priority">
+
                             </div>
                             <!--/row-->
                             <div class="row m-b-20">
@@ -315,7 +215,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <input type="hidden" name="taskID" id="taskID">
+                                    <input type="hidden" name="taskID" id="taskID" value="{{$task->id}}">
                                 </div>
                             </div>
 
@@ -399,7 +299,7 @@
         url: "{{ route('member.task-files.store') }}",
         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
         paramName: "file",
-        maxFilesize: 10,
+        maxFilesize: 100,
         maxFiles: 10,
         // acceptedFiles: "image/*,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/docx,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         autoProcessQueue: false,
@@ -490,7 +390,7 @@
         format: '{{ $global->date_picker_format }}',
         autoclose: true,
         todayHighlight: true,
-        startDate: '{{ $task->due_date->format($global->date_forma) }}'
+        startDate: "@if($task->start_date != '-0001-11-30 00:00:00' && $task->start_date != null){{ $task->start_date->format($global->date_format) }} @endif"
     });
 
     jQuery('#start_date2').datepicker({
@@ -538,30 +438,7 @@
         }
     })
 
-    $('#project_id').change(function () {
-        var id = $(this).val();
 
-        // For getting dependent task
-        var dependentTaskUrl = '{{route('member.all-tasks.dependent-tasks', [':id', ':taskId'])}}';
-        dependentTaskUrl = dependentTaskUrl.replace(':id', id);
-        dependentTaskUrl = dependentTaskUrl.replace(':taskId', '{{ $task->id }}');
-        $.easyAjax({
-            url: dependentTaskUrl,
-            type: "GET",
-            success: function (data) {
-                $('#dependent_task_id').html(data.html);
-            }
-        })
-    });
-
-    $('#set-time-estimate').change(function () {
-        if($(this).is(':checked')){
-            $('#set-time-estimate-fields').show();
-        }
-        else{
-            $('#set-time-estimate-fields').hide();
-        }
-    })
 </script>
 @endpush
 

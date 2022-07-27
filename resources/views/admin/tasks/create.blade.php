@@ -115,9 +115,7 @@
                                             <label class="control-label">@lang('modules.tasks.dependentTask')</label>
                                             <select class="select2 form-control" data-placeholder="@lang('modules.tasks.chooseTask')" name="dependent_task_id" id="dependent_task_id" >
                                                 <option value=""></option>
-                                                @foreach($allTasks as $allTask)
-                                                    <option value="{{ $allTask->id }}">{{ $allTask->heading }} (@lang('app.dueDate'): {{ $allTask->due_date->format($global->date_format) }})</option>
-                                                @endforeach
+
                                             </select>
                                         </div>
                                     </div>

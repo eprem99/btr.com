@@ -41,10 +41,10 @@
 
             <div class="input-daterange input-group" id="date-range">
                 <input type="text" class="form-control" id="start-date" placeholder="@lang('app.startDate')"
-                    value="{{ $startDate }}"/>
+                    value=""/>
                 <span class="input-group-addon bg-info b-0 text-white">@lang('app.to')</span>
                 <input type="text" class="form-control" id="end-date" placeholder="@lang('app.endDate')"
-                    value="{{ $endDate }}"/>
+                    value=""/>
             </div>
         </div>
     </div>
@@ -369,6 +369,7 @@
             success: function (response) {
                 if (response.status == "success") {
                     $('#right-sidebar-content').html(response.view);
+                    $(window).resize();
                 }
             }
         });
